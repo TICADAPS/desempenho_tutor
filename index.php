@@ -4,7 +4,7 @@ include './conexao-agsus.php';
 if (!isset($_SESSION['cpf'])) {
     
 }
-$cpf = '001.417.733-16';
+$cpf = '009.890.092-70';
 date_default_timezone_set('America/Sao_Paulo');
 $anoAtual = date('Y');
 $cpftratado = str_replace("-", "", $cpf);

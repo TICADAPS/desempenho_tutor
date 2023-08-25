@@ -4,7 +4,7 @@ include './conexao-agsus.php';
 if (!isset($_SESSION['cpf'])) {
     
 }
-$cpf = '009.890.092-70';
+$cpf = '001.417.733-16';
 date_default_timezone_set('America/Sao_Paulo');
 $anoAtual = date('Y');
 $cpftratado = str_replace("-", "", $cpf);
@@ -742,9 +742,9 @@ if ($nrrs > 0) {
                                                         <h6 class="small text-info font-weight-bold">
                                                         <?php 
                                                             if($a === 2){
-                                                                echo "Períodos: $periodo[0] e $periodo[1]";
+                                                                echo "Períodos: 1º e 2º Quadrimestre";
                                                             }else{
-                                                                echo "Períodos: $periodo[0], $periodo[1] e $periodo[2]";
+                                                                echo "Períodos: 1º, 2º e 3º Quadrimestre";
                                                             }
                                                         ?>
                                                         </h6>

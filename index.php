@@ -4,7 +4,7 @@ include './conexao-agsus.php';
 if (!isset($_SESSION['cpf'])) {
     
 }
-$cpf = '001.417.733-16';
+$cpf = '001.018.311-61';
 date_default_timezone_set('America/Sao_Paulo');
 $anoAtual = date('Y');
 $cpftratado = str_replace("-", "", $cpf);
@@ -198,7 +198,7 @@ if ($nrrs > 0) {
                                                                 <div class="row">
                                                                     <div class="col-md-12">
                                                                         <label class="small text-justify">
-                                                                            Proporção de gestantes com pelo menos 6 (seis) consultas pré-natal realizadas,
+                                                                            <b>Sinalização semafórica do alcance (metas) dos indicadores - </b>Proporção de gestantes com pelo menos 6 (seis) consultas pré-natal realizadas,
                                                                             sendo a 1ª (primeira) até a 12ª (décima segunda) semana de gestação.
                                                                         </label>
                                                                     </div>
@@ -236,7 +236,7 @@ if ($nrrs > 0) {
                                                                         <div class="row">
                                                                             <div class="col-md-12">
                                                                                 <label class="small text-justify">
-                                                                                    Proporção de gestantes com realização de exames para sífilis e HIV.
+                                                                                    <b>Sinalização semafórica do alcance (metas) dos indicadores - </b>Proporção de gestantes com realização de exames para sífilis e HIV.
                                                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -279,7 +279,7 @@ if ($nrrs > 0) {
                                                                         <div class="row">
                                                                             <div class="col-md-12">
                                                                                 <label class="small text-justify">
-                                                                                    Proporção de mulheres com coleta de citopatológico na APS.
+                                                                                    <b>Sinalização semafórica do alcance (metas) dos indicadores - </b>Proporção de mulheres com coleta de citopatológico na APS.
                                                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -323,7 +323,7 @@ if ($nrrs > 0) {
                                                                         <div class="row">
                                                                             <div class="col-md-12">
                                                                                 <label class="small text-justify">
-                                                                                    Proporção de pessoas com hipertensão, com consulta e pressão arterial aferida no semestre.
+                                                                                    <b>Sinalização semafórica do alcance (metas) dos indicadores - </b>Proporção de pessoas com hipertensão, com consulta e pressão arterial aferida no semestre.
                                                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -363,7 +363,7 @@ if ($nrrs > 0) {
                                                                         <div class="row">
                                                                             <div class="col-md-12">
                                                                                 <label class="small text-justify">
-                                                                                    Proporção de pessoas com diabetes, com consulta e hemoglobina glicada solicitada no semestre.
+                                                                                    <b>Sinalização semafórica do alcance (metas) dos indicadores - </b>Proporção de pessoas com diabetes, com consulta e hemoglobina glicada solicitada no semestre.
                                                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -788,7 +788,7 @@ if ($nrrs > 0) {
                                                                 <div class="row">
                                                                     <div class="col-md-12">
                                                                         <label class="small text-justify">
-                                                                            Proporção de gestantes com pelo menos 6 (seis) consultas pré-natal realizadas,
+                                                                            <b>Sinalização semafórica do alcance (metas) dos indicadores - </b>Proporção de gestantes com pelo menos 6 (seis) consultas pré-natal realizadas,
                                                                             sendo a 1ª (primeira) até a 12ª (décima segunda) semana de gestação.
                                                                         </label>
                                                                     </div>
@@ -855,7 +855,7 @@ if ($nrrs > 0) {
                                                                 <div class="row">
                                                                     <div class="col-md-12">
                                                                         <label class="small text-justify">
-                                                                            Proporção de gestantes com realização de exames para sífilis e HIV.
+                                                                            <b>Sinalização semafórica do alcance (metas) dos indicadores - </b>Proporção de gestantes com realização de exames para sífilis e HIV.
                                                                         </label>
                                                                     </div>
                                                                 </div>
@@ -921,7 +921,7 @@ if ($nrrs > 0) {
                                                                 <div class="row">
                                                                     <div class="col-md-12">
                                                                         <label class="small text-justify">
-                                                                            Proporção de mulheres com coleta de citopatológico na APS.
+                                                                            <b>Sinalização semafórica do alcance (metas) dos indicadores - </b>Proporção de mulheres com coleta de citopatológico na APS.
                                                                         </label>
                                                                     </div>
                                                                 </div>
@@ -989,7 +989,7 @@ if ($nrrs > 0) {
                                                                 <div class="row">
                                                                     <div class="col-md-12">
                                                                         <label class="small text-justify">
-                                                                            Proporção de pessoas com hipertensão, com consulta e pressão arterial aferida no semestre.
+                                                                            <b>Sinalização semafórica do alcance (metas) dos indicadores - </b>Proporção de pessoas com hipertensão, com consulta e pressão arterial aferida no semestre.
                                                                         </label>
                                                                     </div>
                                                                 </div>
@@ -1055,7 +1055,7 @@ if ($nrrs > 0) {
                                                                 <div class="row">
                                                                     <div class="col-md-12">
                                                                         <label class="small text-justify">
-                                                                            Proporção de pessoas com diabetes, com consulta e hemoglobina glicada solicitada no semestre.
+                                                                            <b>Sinalização semafórica do alcance (metas) dos indicadores - </b>Proporção de pessoas com diabetes, com consulta e hemoglobina glicada solicitada no semestre.
                                                                         </label>
                                                                     </div>
                                                                 </div>
@@ -1120,13 +1120,16 @@ if ($nrrs > 0) {
                         <div class="mt-3 mb-3 pl-4 pr-4">
                             <div class="row mt-5 mb-5 mr-2 ml-2 pt-5 pb-5 pl-2 pr-2">
                                 <div class="col-md-12">
-                                    <h6 class="pb-5 text-danger">*** Registro não encontrado.</h6>
                                     <p>Prezado(a) Tutor(a) Médico(a),</p>
+                                    <p class="text-justify text-dark font-weight-bolder">
+                                        Não foi identificado registros de produção no período consultado.
+                                    </p>
                                     <p class="text-justify">
-                                    Gostaria de enfatizar a importância de um dos requisitos para a participação no PAD: a vinculação do(a) médico(a) tutor(a) a
-                                    uma Equipe de Saúde da Família. É fundamental que os profissionais médicos estejam devidamente registrados no CNES e INE, 
+                                    Gostaria de enfatizar a importância de um dos requisitos para a participação no Programa de Avaliação de Desempenho é a vinculação do(a) 
+                                    médico(a) tutor(a) a
+                                    uma Equipe de Saúde da Família. É fundamental que os profissionais médicos estejam devidamente registrados no CNES e vinculados a um INE, 
                                     assegurando a precisa identificação de suas atividades nas equipes. Isso não apenas garante a correta avaliação dos indicadores, 
-                                    mas também assegura sua participação integral no programa de avaliação.
+                                    mas também assegura sua participação integral no programa.
                                     </p>
                                 </div>
                             </div>
@@ -1255,7 +1258,7 @@ if ($nrrs > 0) {
             var myBarPrenatal = new Chart(ctx, {
               type: 'bar',
               data: {
-                labels: ["1º Quadrimestre", "2º Quadrimestre", "3º Quadrimestre"],
+                labels: ["1º Quadrim.", "2º Quadrim.", "3º Quadrim."],
                 datasets: [{
                   label: "Proporção",
                   backgroundColor: [
@@ -1344,7 +1347,7 @@ if ($nrrs > 0) {
             var myBarChartSifilis = new Chart(ctx, {
               type: 'bar',
               data: {
-                labels: ["1º Quadrimestre", "2º Quadrimestre", "3º Quadrimestre"],
+                labels: ["1º Quadrim.", "2º Quadrim.", "3º Quadrim."],
                 datasets: [{
                   label: "Proporção",
                   backgroundColor: [
@@ -1433,7 +1436,7 @@ if ($nrrs > 0) {
             var myBarChartCitopatologico = new Chart(ctx, {
               type: 'bar',
               data: {
-                labels: ["1º Quadrimestre", "2º Quadrimestre", "3º Quadrimestre"],
+                labels: ["1º Quadrim.", "2º Quadrim.", "3º Quadrim."],
                 datasets: [{
                   label: "Proporção",
                   backgroundColor: [
@@ -1522,7 +1525,7 @@ if ($nrrs > 0) {
             var myBarChartHipertensao = new Chart(ctx, {
               type: 'bar',
               data: {
-                labels: ["1º Quadrimestre", "2º Quadrimestre", "3º Quadrimestre"],
+                labels: ["1º Quadrim.", "2º Quadrim.", "3º Quadrim."],
                 datasets: [{
                   label: "Proporção",
                   backgroundColor: [
@@ -1611,7 +1614,7 @@ if ($nrrs > 0) {
             var myBarChartDiabetes = new Chart(ctx, {
               type: 'bar',
               data: {
-                labels: ["1º Quadrimestre", "2º Quadrimestre", "3º Quadrimestre"],
+                labels: ["1º Quadrim.", "2º Quadrim.", "3º Quadrim."],
                 datasets: [{
                   label: "Proporção",
                   backgroundColor: [

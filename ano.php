@@ -4,14 +4,15 @@ include './conexao-agsus.php';
 if (!isset($_SESSION['cpf'])) {
    header("Location: derruba_session.php"); exit();
 }
-$cpf = $_SESSION['cpf'];
+$cpf = $_GET['c'];
+$ano = $_GET['a'];
 date_default_timezone_set('America/Sao_Paulo');
 $anoAtual = date('Y');
 $cpftratado = str_replace("-", "", $cpf);
 $cpftratado = str_replace(".", "", $cpftratado);
 $cpftratado = str_replace(".", "", $cpftratado);
 $sql = "select * from medico m inner join desempenho d on m.cpf = d.cpf and m.ibge = d.ibge"
-        . " inner join periodo p on p.idperiodo = d.idperiodo where m.cpf = '$cpftratado' and ano = '$anoAtual';";
+        . " inner join periodo p on p.idperiodo = d.idperiodo where m.cpf = '$cpftratado' and ano = '$ano';";
 $query = mysqli_query($conn, $sql);
 $nrrs = mysqli_num_rows($query);
 $rs = mysqli_fetch_array($query);

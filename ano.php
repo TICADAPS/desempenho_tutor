@@ -97,6 +97,13 @@ if ($nrrs > 0) {
                     </nav> 
                 </div>
             </div>
+<!--            <div class="row p-2 mt-3 mb-4">
+                <div class="col-md-12">
+                    <form method="post" action="filtro1.php">
+                        <h6>j</h6>
+                    </form>
+                </div>
+            </div>-->
             <div class="row p-2">
             <?php
             if ($rscpf === true) {
@@ -877,6 +884,20 @@ if ($nrrs > 0) {
                                                                     </div>
                                                                 </div>
                                                                 <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <label class="small text-justify font-weight-bold text-primary">
+                                                                            META: 45%
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <label class="small text-justify font-weight-bold text-primary">
+                                                                            * Sinalização semafórica do alcance (metas) dos indicadores
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
                                                                     <div class="col-xl-12">
                                                                         <div class="row">
                                                                             <div class="col-1 mt-1">
@@ -943,6 +964,20 @@ if ($nrrs > 0) {
                                                                     </div>
                                                                 </div>
                                                                 <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <label class="small text-justify font-weight-bold text-primary">
+                                                                            META: 60%
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <label class="small text-justify font-weight-bold text-primary">
+                                                                            * Sinalização semafórica do alcance (metas) dos indicadores
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
                                                                     <div class="col-xl-12">
                                                                         <div class="row">
                                                                             <div class="col-1 mt-1">
@@ -1005,6 +1040,20 @@ if ($nrrs > 0) {
                                                                     <div class="col-md-12">
                                                                         <label class="small text-justify">
                                                                             Proporção de mulheres com coleta de citopatológico na APS.
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <label class="small text-justify font-weight-bold text-primary">
+                                                                            META: 40%
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <label class="small text-justify font-weight-bold text-primary">
+                                                                            * Sinalização semafórica do alcance (metas) dos indicadores
                                                                         </label>
                                                                     </div>
                                                                 </div>
@@ -1077,6 +1126,20 @@ if ($nrrs > 0) {
                                                                     </div>
                                                                 </div>
                                                                 <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <label class="small text-justify font-weight-bold text-primary">
+                                                                            META: 50%
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <label class="small text-justify font-weight-bold text-primary">
+                                                                            * Sinalização semafórica do alcance (metas) dos indicadores
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
                                                                     <div class="col-xl-12">
                                                                         <div class="row">
                                                                             <div class="col-1 mt-1">
@@ -1139,6 +1202,20 @@ if ($nrrs > 0) {
                                                                     <div class="col-md-12">
                                                                         <label class="small text-justify">
                                                                             Proporção de pessoas com diabetes, com consulta e hemoglobina glicada solicitada no semestre.
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <label class="small text-justify font-weight-bold text-primary">
+                                                                            META: 50%
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <label class="small text-justify font-weight-bold text-primary">
+                                                                            * Sinalização semafórica do alcance (metas) dos indicadores
                                                                         </label>
                                                                     </div>
                                                                 </div>
@@ -1353,8 +1430,8 @@ if ($nrrs > 0) {
                     '<?php if($pn2 < 18) { echo "#ba0a0a"; }elseif($pn2 < 31){ echo "#d2a208"; }elseif($pn2 < 45){ echo "#15b436"; }else{ echo "#325cd4"; } ?>',
                     '<?php if($pn3 < 18) { echo "#ba0a0a"; }elseif($pn3 < 31){ echo "#d2a208"; }elseif($pn3 < 45){ echo "#15b436"; }else{ echo "#325cd4"; } ?>'],
                   borderColor: "#5c5f68",
-                  data: [<?php echo $pn1; ?>,<?php echo $pn2; ?>,<?php echo $pn3; ?>],
-                }],
+                  data: [<?php echo $pn1; ?>,<?php echo $pn2; ?>,<?php echo $pn3; ?>]
+                }]
               },
               options: {
                 maintainAspectRatio: false,
@@ -1378,7 +1455,7 @@ if ($nrrs > 0) {
                     ticks: {
                       maxTicksLimit: 6
                     },
-                    maxBarThickness: 40,
+                    maxBarThickness: 40
                   }],
                   yAxes: [{
                     ticks: {
@@ -1398,7 +1475,7 @@ if ($nrrs > 0) {
                       borderDash: [2],
                       zeroLineBorderDash: [2]
                     }
-                  }],
+                  }]
                 },
                 legend: {
                   display: false
@@ -1418,10 +1495,10 @@ if ($nrrs > 0) {
                   callbacks: {
                     label: function(tooltipItem, chart) {
                       var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-                      return datasetLabel + ': ' + number_format(tooltipItem.yLabel) + "%";
+                      return datasetLabel + ': ' + number_format(tooltipItem.yLabel,2,',','.') + "%";
                     }
                   }
-                },
+                }
               }
             });
             
@@ -1442,8 +1519,8 @@ if ($nrrs > 0) {
                     '<?php if($psh2 < 24) { echo "#ba0a0a"; }elseif($psh2 < 42){ echo "#d2a208"; }elseif($psh2 < 60){ echo "#15b436"; }else{ echo "#325cd4"; } ?>',
                     '<?php if($psh3 < 24) { echo "#ba0a0a"; }elseif($psh3 < 42){ echo "#d2a208"; }elseif($psh3 < 60){ echo "#15b436"; }else{ echo "#325cd4"; } ?>'],
                   borderColor: "#5c5f68",
-                  data: [<?php echo $psh1; ?>,<?php echo $psh2; ?>,<?php echo $psh3; ?>],
-                }],
+                  data: [<?php echo $psh1; ?>,<?php echo $psh2; ?>,<?php echo $psh3; ?>]
+                }]
               },
               options: {
                 maintainAspectRatio: false,
@@ -1467,7 +1544,7 @@ if ($nrrs > 0) {
                     ticks: {
                       maxTicksLimit: 6
                     },
-                    maxBarThickness: 40,
+                    maxBarThickness: 40
                   }],
                   yAxes: [{
                     ticks: {
@@ -1487,7 +1564,7 @@ if ($nrrs > 0) {
                       borderDash: [2],
                       zeroLineBorderDash: [2]
                     }
-                  }],
+                  }]
                 },
                 legend: {
                   display: false
@@ -1507,10 +1584,10 @@ if ($nrrs > 0) {
                   callbacks: {
                     label: function(tooltipItem, chart) {
                       var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-                      return datasetLabel + ': ' + number_format(tooltipItem.yLabel) + "%";
+                      return datasetLabel + ': ' + number_format(tooltipItem.yLabel,2,',','.') + "%";
                     }
                   }
-                },
+                }
               }
             });
             
@@ -1531,8 +1608,8 @@ if ($nrrs > 0) {
                     '<?php if($cc2 < 16) { echo "#ba0a0a"; }elseif($cc2 < 28){ echo "#d2a208"; }elseif($cc2 < 40){ echo "#15b436"; }else{ echo "#325cd4"; } ?>',
                     '<?php if($cc3 < 16) { echo "#ba0a0a"; }elseif($cc3 < 28){ echo "#d2a208"; }elseif($cc3 < 40){ echo "#15b436"; }else{ echo "#325cd4"; } ?>'],
                   borderColor: "#5c5f68",
-                  data: [<?php echo $cc1; ?>,<?php echo $cc2; ?>,<?php echo $cc3; ?>],
-                }],
+                  data: [<?php echo $cc1; ?>,<?php echo $cc2; ?>,<?php echo $cc3; ?>]
+                }]
               },
               options: {
                 maintainAspectRatio: false,
@@ -1556,7 +1633,7 @@ if ($nrrs > 0) {
                     ticks: {
                       maxTicksLimit: 6
                     },
-                    maxBarThickness: 40,
+                    maxBarThickness: 40
                   }],
                   yAxes: [{
                     ticks: {
@@ -1576,7 +1653,7 @@ if ($nrrs > 0) {
                       borderDash: [2],
                       zeroLineBorderDash: [2]
                     }
-                  }],
+                  }]
                 },
                 legend: {
                   display: false
@@ -1596,10 +1673,10 @@ if ($nrrs > 0) {
                   callbacks: {
                     label: function(tooltipItem, chart) {
                       var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-                      return datasetLabel + ': ' + number_format(tooltipItem.yLabel) + "%";
+                      return datasetLabel + ': ' + number_format(tooltipItem.yLabel,2,',','.') + "%";
                     }
                   }
-                },
+                }
               }
             });
             
@@ -1620,8 +1697,8 @@ if ($nrrs > 0) {
                     '<?php if($hi2 < 20) { echo "#ba0a0a"; }elseif($hi2 < 35){ echo "#d2a208"; }elseif($hi2 < 50){ echo "#15b436"; }else{ echo "#325cd4"; } ?>',
                     '<?php if($hi3 < 20) { echo "#ba0a0a"; }elseif($hi3 < 35){ echo "#d2a208"; }elseif($hi3 < 50){ echo "#15b436"; }else{ echo "#325cd4"; } ?>'],
                   borderColor: "#5c5f68",
-                  data: [<?php echo $hi1; ?>,<?php echo $hi2; ?>,<?php echo $hi3; ?>],
-                }],
+                  data: [<?php echo $hi1; ?>,<?php echo $hi2; ?>,<?php echo $hi3; ?>]
+                }]
               },
               options: {
                 maintainAspectRatio: false,
@@ -1645,7 +1722,7 @@ if ($nrrs > 0) {
                     ticks: {
                       maxTicksLimit: 6
                     },
-                    maxBarThickness: 40,
+                    maxBarThickness: 40
                   }],
                   yAxes: [{
                     ticks: {
@@ -1665,7 +1742,7 @@ if ($nrrs > 0) {
                       borderDash: [2],
                       zeroLineBorderDash: [2]
                     }
-                  }],
+                  }]
                 },
                 legend: {
                   display: false
@@ -1685,10 +1762,10 @@ if ($nrrs > 0) {
                   callbacks: {
                     label: function(tooltipItem, chart) {
                       var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-                      return datasetLabel + ': ' + number_format(tooltipItem.yLabel) + "%";
+                      return datasetLabel + ': ' + number_format(tooltipItem.yLabel,2,',','.') + "%";
                     }
                   }
-                },
+                }
               }
             });
             
@@ -1709,8 +1786,8 @@ if ($nrrs > 0) {
                     '<?php if($diab2 < 20) { echo "#ba0a0a"; }elseif($diab2 < 35){ echo "#d2a208"; }elseif($diab2 < 50){ echo "#15b436"; }else{ echo "#325cd4"; } ?>',
                     '<?php if($diab3 < 20) { echo "#ba0a0a"; }elseif($diab3 < 35){ echo "#d2a208"; }elseif($diab3 < 50){ echo "#15b436"; }else{ echo "#325cd4"; } ?>'],
                   borderColor: "#5c5f68",
-                  data: [<?php echo $diab1; ?>,<?php echo $diab2; ?>,<?php echo $diab3; ?>],
-                }],
+                  data: [<?php echo $diab1; ?>,<?php echo $diab2; ?>,<?php echo $diab3; ?>]
+                }]
               },
               options: {
                 maintainAspectRatio: false,
@@ -1734,7 +1811,7 @@ if ($nrrs > 0) {
                     ticks: {
                       maxTicksLimit: 6
                     },
-                    maxBarThickness: 40,
+                    maxBarThickness: 40
                   }],
                   yAxes: [{
                     ticks: {
@@ -1754,7 +1831,7 @@ if ($nrrs > 0) {
                       borderDash: [2],
                       zeroLineBorderDash: [2]
                     }
-                  }],
+                  }]
                 },
                 legend: {
                   display: false
@@ -1774,10 +1851,10 @@ if ($nrrs > 0) {
                   callbacks: {
                     label: function(tooltipItem, chart) {
                       var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-                      return datasetLabel + ': ' + number_format(tooltipItem.yLabel) + "%";
+                      return datasetLabel + ': ' + number_format(tooltipItem.yLabel,2,',','.') + "%";
                     }
                   }
-                },
+                }
               }
             });
         </script>
@@ -1785,7 +1862,7 @@ if ($nrrs > 0) {
             $(".btn_sub").click(function () {
                 //console.log("clicou");
                 document.getElementById("loading").style.display = "block";
-            })
+            });
             var i = setInterval(function () {
                 clearInterval(i);
                 // O código desejado é apenas isto:

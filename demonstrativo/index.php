@@ -215,12 +215,12 @@ if ($nrrs > 0) {
                                                             <div class="col-md-12 mt-3 mb-4">
                                                                 <div class="row">
                                                                     <div class="col-md-12">
-                                                                        <h6 class="text-center text-dark bg-light rounded form-control" style="height: 50px;line-height: 50px;">Programa de Avaliação de Desempenho</h6>   
+                                                                        <h6 class="font-weight-bold text-center text-dark bg-light form-control" style="height: 60px;line-height: 50px;">Programa de Avaliação de Desempenho</h6>   
                                                                     </div>
                                                                 </div>
                                                                 <div class="row">
                                                                     <div class="col-md-2" >
-                                                                        <h6 class="text-center text-dark bg-light rounded form-control" style="height: 100px;line-height: 100px;">Eixo</h6> 
+                                                                        <h6 class="font-weight-bold text-center text-dark bg-light form-control" style="height: 100px;line-height: 90px;">Eixo</h6> 
                                                                     </div>
                                                                     <div class="col-md-8">
                                                                         <button class="text-center btn btn-info border-light shadow-sm rounded form-control" data-toggle="modal" data-target=".modalar" id="modalar" style="height: 100px;">Avaliação de Resultados</button> 
@@ -231,7 +231,7 @@ if ($nrrs > 0) {
                                                                 </div>
                                                                 <div class="row">
                                                                     <div class="col-md-2">
-                                                                        <h6 class="text-center text-dark bg-light rounded form-control" style="height: 100px;line-height: 100px;">Domínio</h6> 
+                                                                        <h6 class="font-weight-bold text-center text-dark bg-light form-control" style="height: 100px;line-height: 90px;">Domínio</h6> 
                                                                     </div>
                                                                     <div class="col-md-3">
                                                                         <button class="text-center btn btn-warning text-dark border-light shadow-sm rounded form-control" data-toggle="modal" data-target=".modalaqa" id="modalaqa" style="height: 100px;">Qualidade assistencial</button> 

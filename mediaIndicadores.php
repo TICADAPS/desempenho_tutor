@@ -52,7 +52,7 @@ $anoAtual = date('Y');
                 </div>
                 <div class="col-12 col-md-10 mt-5">
                     <h4 class="mb-4 text-center">Programa de Avaliação de Desempenho Tutor Médico</h4>
-                    <h4 class="mb-4 text-center">Média dos Indicadores - Ano <?= $anoAtual ?>.</h4>
+                    <h4 class="mb-4 text-center">Média de Todos os Indicadores - ano <?= $anoAtual ?>.</h4>
                 </div>
             </div>
             <div class="row">
@@ -264,7 +264,7 @@ $anoAtual = date('Y');
                     <div class="col-md-12 mt-3 mb-3">
                         <div class="row mt-3">
                             <div class="col-md-12">
-                                <h6 class="font-weight-bold mb-3">Média dos Indicadores no ano <?= $anoAtual ?></h6>
+                                <h6 class="font-weight-bold mb-3">Média de todos os indicadores por quadrimestre no ano <?= $anoAtual ?></h6>
                                 <p class="small text-danger"> * Clique nos indicadores para saber mais detalhes sobre a sinalização semafórica.</p>
                             </div>
                         </div>

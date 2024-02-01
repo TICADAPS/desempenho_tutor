@@ -51,7 +51,7 @@ $ibge = $_GET['ibge'];
         $qtdMetaPreCons1q = $qtdMetaPreSif1q = $qtdMetaCitop1q = $qtdMetaHiper1q = $qtdMetaDiab1q = $metaPreCons1q = $metaPreSif1q = $metaCitop1q = $metaHiper1q = $metaDiab1q = 0;
         $ctPreCons1q = $ctPreSif1q = $ctCitop1q = $ctHiper1q = $ctDiab1q = 0;
         //média dos indicadores do 1o quadrimestre
-        $sql1q = "SELECT * FROM medico m inner join desempenho d on d.cpf = m.cpf and d.ibge = m.ibge and m.cnes = m.cnes and d.ine = m.ine where ano = '$anoAtual' and d.idperiodo = 23 and d.ibge = '$ibge'";
+        $sql1q = "SELECT * FROM medico m inner join desempenho d on d.cpf = m.cpf and d.ibge = m.ibge and m.cnes = m.cnes and d.ine = m.ine where ano = '$anoAtual' and d.idperiodo = 23 and substr(d.ibge,1,6) = '$ibge'";
         $q1q = mysqli_query($conn, $sql1q);
         $rows1q = mysqli_num_rows($q1q);
 
@@ -104,7 +104,7 @@ $ibge = $_GET['ibge'];
         $qtdMetaPreCons2q = $qtdMetaPreSif2q = $qtdMetaCitop2q = $qtdMetaHiper2q = $qtdMetaDiab2q = $metaPreCons2q = $metaPreSif2q = $metaCitop2q = $metaHiper2q = $metaDiab2q = 0;
         $ctPreCons2q = $ctPreSif2q = $ctCitop2q = $ctHiper2q = $ctDiab2q = 0;
         //média dos indicadores do 1o quadrimestre
-        $sql2q = "SELECT * FROM medico m inner join desempenho d on d.cpf = m.cpf and d.ibge = m.ibge and m.cnes = m.cnes and d.ine = m.ine where ano = '$anoAtual' and d.idperiodo = 24 and d.ibge = '$ibge'";
+        $sql2q = "SELECT * FROM medico m inner join desempenho d on d.cpf = m.cpf and d.ibge = m.ibge and m.cnes = m.cnes and d.ine = m.ine where ano = '$anoAtual' and d.idperiodo = 24 and substr(d.ibge,1,6) = '$ibge'";
         $q2q = mysqli_query($conn, $sql2q);
         $rows2q = mysqli_num_rows($q2q);
 
@@ -157,7 +157,7 @@ $ibge = $_GET['ibge'];
         $qtdMetaPreCons3q = $qtdMetaPreSif3q = $qtdMetaCitop3q = $qtdMetaHiper3q = $qtdMetaDiab3q = $metaPreCons3q = $metaPreSif3q = $metaCitop3q = $metaHiper3q = $metaDiab3q = 0;
         $ctPreCons3q = $ctPreSif3q = $ctCitop3q = $ctHiper3q = $ctDiab3q = 0;
         //média dos indicadores do 1o quadrimestre
-        $sql3q = "SELECT * FROM medico m inner join desempenho d on d.cpf = m.cpf and d.ibge = m.ibge and m.cnes = m.cnes and d.ine = m.ine where ano = '$anoAtual' and d.idperiodo = 25 and d.ibge = '$ibge'";
+        $sql3q = "SELECT * FROM medico m inner join desempenho d on d.cpf = m.cpf and d.ibge = m.ibge and m.cnes = m.cnes and d.ine = m.ine where ano = '$anoAtual' and d.idperiodo = 25 and substr(d.ibge,1,6) = '$ibge'";
         $q3q = mysqli_query($conn, $sql3q);
         $rows3q = mysqli_num_rows($q3q);
 

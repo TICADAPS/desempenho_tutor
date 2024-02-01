@@ -5,9 +5,10 @@ include './conexao-agsus.php';
 //   header("Location: derruba_session.php"); exit();
 //}
 //$cpf = $_SESSION['cpf'];
-$cpf = '886.094.304-30 ';
+$cpf = '001.018.311-61';
 date_default_timezone_set('America/Sao_Paulo');
-$anoAtual = date('Y');
+//$anoAtual = date('Y');
+$anoAtual = 2023;
 $cpftratado = str_replace("-", "", $cpf);
 $cpftratado = str_replace(".", "", $cpftratado);
 $cpftratado = str_replace(".", "", $cpftratado);

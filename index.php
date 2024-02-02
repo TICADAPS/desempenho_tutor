@@ -71,6 +71,7 @@ if ($nrrs > 0) {
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">Ano </a>
                                     <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="./ano.php?c=<?= $cpftratado ?>&a=2024">2024</a>
                                         <a class="dropdown-item" href="./ano.php?c=<?= $cpftratado ?>&a=2023">2023</a>
                                     </div>
                                 </li>

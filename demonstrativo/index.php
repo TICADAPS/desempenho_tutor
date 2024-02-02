@@ -40,6 +40,7 @@ if ($nrrs > 0) {
         <meta name="author" content="">
 
         <title>AGSUS - Demonstrativo</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         
@@ -48,12 +49,32 @@ if ($nrrs > 0) {
         <link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
-        
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <link rel="shortcut icon" href="img/iconAdaps.png"/>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <!-- Custom styles for this template-->
         <link href="../css/sb-admin-2.min.css" rel="stylesheet">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
         <style>
             ul {margin-left: -18px;}
+            .tooltip-inner {
+                background-color: #0f547cad;
+            }
+            .tooltip.bs-tooltip-right .arrow:before {
+                border-right-color: #0f547cad !important;
+            }
+            .tooltip.bs-tooltip-left .arrow:before {
+                border-left-color: #0f547cad !important;
+            }
+            .tooltip.bs-tooltip-bottom .arrow:before {
+                border-bottom-color: #0f547cad !important;
+            }
+            .tooltip.bs-tooltip-top .arrow:before {
+                border-top-color: #0f547cad !important;
+            }
         </style>
     </head>
 
@@ -64,7 +85,7 @@ if ($nrrs > 0) {
                     <img src="../img_agsus/Logo_400x200.png" class="img-fluid" alt="logoAdaps" width="250" title="Logo Adaps">
                 </div>
                 <div class="col-12 col-md-8 mt-5 ">
-                    <h4 class="mb-4">Indicador Global da Avaliação de Desempenho</h4>
+                    <h4 class="mb-4">Indicador Global da Avaliação de Desempenho - IGAD</h4>
                 </div>
             </div>
             <div class="row">
@@ -84,6 +105,7 @@ if ($nrrs > 0) {
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">Ano </a>
                                     <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="../ano.php?c=<?= $cpftratado ?>&a=2024">2024</a>
                                         <a class="dropdown-item" href="../ano.php?c=<?= $cpftratado ?>&a=2023">2023</a>
                                     </div>
                                 </li>
@@ -131,17 +153,27 @@ if ($nrrs > 0) {
                         $periodo = $rs['descricaoperiodo'];
                         $idperiodo = $rs['idperiodo'];
                         $prenatal_consultas = $rs['prenatal_consultas'];
+//                        var_dump("prenatal_consultas",$prenatal_consultas);
                         $prenatal_consultas = $prenatal_consultas/45;
+//                        var_dump("prenatal_consultas-Fator",$prenatal_consultas);
                         $prenatal_sifilis_hiv = $rs['prenatal_sifilis_hiv'];
+//                        var_dump("prenatal_sifilis_hiv",$prenatal_sifilis_hiv);
                         $prenatal_sifilis_hiv = $prenatal_sifilis_hiv/60;
+//                        var_dump("prenatal_sifilis_hiv-Fator",$prenatal_sifilis_hiv);
                         $cobertura_citopatologico = $rs['cobertura_citopatologico'];
+//                        var_dump("cobertura_citopatologico",$cobertura_citopatologico);
                         $cobertura_citopatologico = $cobertura_citopatologico/40;
+//                        var_dump("cobertura_citopatologico-Fator",$cobertura_citopatologico);
                         $hipertensao = $rs['hipertensao'];
+//                        var_dump("hipertensao",$hipertensao);
                         $hipertensao = $hipertensao/50;
+//                        var_dump("hipertensao-Fator",$hipertensao);
                         $hipertensaotext = str_replace(",", "", $hipertensao);
                         $hipertensaotext = str_replace(".", ",", $hipertensaotext);
                         $diabetes = $rs['diabetes'];
+//                        var_dump("diabetes",$diabetes);
                         $diabetes = $diabetes/50;
+//                        var_dump("diabetes-Fator",$diabetes);
                         $diabetestext = str_replace(",", "", $diabetes);
                         $diabetestext = str_replace(".", ",", $diabetestext);
                         $qa = round((($prenatal_consultas + $prenatal_sifilis_hiv + $cobertura_citopatologico + $hipertensao + $diabetes)*10),2);
@@ -223,7 +255,7 @@ if ($nrrs > 0) {
                                                                         <h6 class="font-weight-bold text-center text-dark bg-light form-control" style="height: 100px;line-height: 90px;">Eixo</h6> 
                                                                     </div>
                                                                     <div class="col-md-8">
-                                                                        <button class="text-center btn btn-info border-light shadow-sm rounded form-control" data-toggle="modal" data-target=".modalar" id="modalar" style="height: 100px;">Avaliação de Resultados</button> 
+                                                                        <button class="text-center btn btn-info border-light shadow-sm rounded form-control"  data-toggle="modal" title="Avaliação de Resultados" data-target=".modalar" id="modalar" style="height: 100px;">Avaliação de Resultados</button> 
                                                                     </div>
                                                                     <div class="col-md-2">
                                                                         <button class="text-center btn btn-info border-light shadow-sm rounded form-control" data-toggle="modal" data-target=".modalac" id="modalac" style="height: 100px;">Avaliação de<br>Competências</button> 
@@ -248,7 +280,7 @@ if ($nrrs > 0) {
                                                                 </div>
                                                                 <div class="row">
                                                                     <div class="col-md-12">
-                                                                        <h6 class="text-danger small">* Clique  nos botões para visualizar os resultados</h6> 
+                                                                        <label class="text-danger small">* Clique  nos botões para visualizar os resultados</label> 
                                                                     </div>
                                                                 </div>
                                                             </div>

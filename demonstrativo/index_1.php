@@ -69,60 +69,6 @@ if ($rscpf === true) {
         <!-- Custom styles for this template-->
         <link href="../css/sb-admin-2.min.css" rel="stylesheet">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
-        <script src="../js/highcharts.js"></script>
-        <script src="../js/highcharts-3d.js"></script>
-        <!--<script src="../js/exporting.js"></script>-->
-        <!--<script src="../js/export-data.js"></script>-->
-        <script src="../js/accessibility.js"></script>
-
-        <style>
-        #container {
-            height: 400px;
-        }
-
-        .highcharts-figure,
-        .highcharts-data-table table {
-            min-width: 310px;
-            max-width: 800px;
-            margin: 1em auto;
-        }
-
-        .highcharts-data-table table {
-            font-family: Verdana, sans-serif;
-            border-collapse: collapse;
-            border: 1px solid #ebebeb;
-            margin: 10px auto;
-            text-align: center;
-            width: 100%;
-            max-width: 500px;
-        }
-
-        .highcharts-data-table caption {
-            padding: 1em 0;
-            font-size: 1.2em;
-            color: #555;
-        }
-
-        .highcharts-data-table th {
-            font-weight: 600;
-            padding: 0.5em;
-        }
-
-        .highcharts-data-table td,
-        .highcharts-data-table th,
-        .highcharts-data-table caption {
-            padding: 0.5em;
-        }
-
-        .highcharts-data-table thead tr,
-        .highcharts-data-table tr:nth-child(even) {
-            background: #f8f8f8;
-        }
-
-        .highcharts-data-table tr:hover {
-            background: #f1f7ff;
-        }
-        </style>
         <style>
             ul {margin-left: -18px;}
             .tooltip-inner {
@@ -268,79 +214,51 @@ if ($rscpf === true) {
                         $artext = number_format($ar, 2, ',', '.');
                         $mf = round(($ar + $cpossui),2);
                         $mftext = number_format($mf, 2, ',', '.');
-                        $faltam = 100 - $mf;
-                        var_dump($qa,$qnota,$cpossui,$anota,$mf,$faltam);
                         ?>
                             <div class="col-md-12 shadow rounded pt-2 pr-3 pl-3 mb-2">
                                 <div class="row p-3">
-                                    <div class="col-md-12 mt-3 mb-3">
-                                        <div class="row" >
-                                            <div class="col-md-8 mb-1">
-                                                <label class="font-weight-bold text-info">Nome: </label><label class="font-weight-bold  text-info"> &nbsp;<?= $nome ?></label>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="font-weight-bold text-info">CPF: </label><label class="text-info"> &nbsp;&nbsp;<?= $cpf ?></label>
-                                            </div>
-                                            <div class="col-md-8">
-                                                <label class="font-weight-bold">Município-UF: </label><label>&nbsp;&nbsp;<?php echo "$municipio-$uf"; ?></label>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="font-weight-bold">Cargo: </label><label> &nbsp;&nbsp;<?= $cargo ?></label>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="font-weight-bold">Tipologia: </label><label> &nbsp;&nbsp;<?= $tipologia ?></label>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="font-weight-bold">CNES: </label><label>&nbsp;&nbsp;<?= $cnes ?></label>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="font-weight-bold">INE: </label><label>&nbsp;&nbsp;<?= $ine ?></label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row p-3">
-                                    <div class="col-md-12 mt-3 mb-3">
+                                    <div class="col-md-12 mt-3 mb-4">
                                         <div class="row mt-3 mb-2">
-                                            <div class="col-md-4 mb-3">
+                                            <div class="col-md-4 mb-4">
+                                                <div class="row" >
+                                                                <div class="col-md-12 mb-1">
+                                                                    <label class="font-weight-bold">Nome: </label><label class="font-weight-bold"> &nbsp;<?= $nome ?></label>
+                                                                </div>
+                                                                <div class="col-md-12">
+                                                                    <label class="font-weight-bold">CPF: </label><label> &nbsp;&nbsp;<?= $cpf ?></label>
+                                                                </div>
+                                                                <div class="col-md-12">
+                                                                    <label class="font-weight-bold">Município-UF: </label><label>&nbsp;&nbsp;<?php echo "$municipio-$uf"; ?></label>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <label class="font-weight-bold">Cargo: </label><label> &nbsp;&nbsp;<?= $cargo ?></label>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <label class="font-weight-bold">Tipologia: </label><label> &nbsp;&nbsp;<?= $tipologia ?></label>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <label class="font-weight-bold">CNES: </label><label>&nbsp;&nbsp;<?= $cnes ?></label>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <label class="font-weight-bold">INE: </label><label>&nbsp;&nbsp;<?= $ine ?></label>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <label class="font-weight-bold">Ano: </label><label>&nbsp;&nbsp;<?= $ano ?></label>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <label class="font-weight-bold">Ciclo: </label><label>&nbsp;&nbsp;<?= $ciclo ?>º</label>
+                                                                </div>
+                                                                <div class="col-md-6 offset-3 mt-5 mb-2">
+                                                                    <label class="font-weight-bold">IGAD: </label><label class="text-danger"> &nbsp;&nbsp;<?= $mftext ?>%</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                            <div class="col-md-8 mb-3">
                                                 <div class="row">
-                                                    <div class="col-md-4">
-                                                        <h6 class="font-weight-bold text-center">coluna 1</h6>
-                                                        <!--<label class="font-weight-bold">coluna 1</label>-->
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4 mb-3">
-                                                <div class="row">
-                                                    <div class="col-md-4">
-                                                        <h6 class="font-weight-bold text-center">coluna 2</h6>
-                                                        <!--<label class="font-weight-bold">coluna 2</label>-->
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4 mb-3">
-                                                <!--<div class="row">
-                                                    <div class="col-md-4">
-                                                        <label class="font-weight-bold">Ano: </label><label>&nbsp;&nbsp;<?= $ano ?></label>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <label class="font-weight-bold">Ciclo: </label><label>&nbsp;&nbsp;<?= $ciclo ?>º</label>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <label class="font-weight-bold">IGAD: </label><label class="text-danger"> &nbsp;&nbsp;<?= $mftext ?>%</label>
-                                                    </div>
-                                                </div>-->
-                                                <!--<div class="row">
                                                     <div class="col-md-12 shadow rounded pt-2 pr-3 pl-3 mb-2">
                                                         <div class="row p-3">
-                                                            <div class="col-md-12 mt-3 mb-4">-->
-                                                                <figure class="highcharts-figure">
-                                                                    <div id="container"></div>
-                                                                    <p class="highcharts-description">
-                                                                      <i>*Texto descritivo</i>
-                                                                    </p>
-                                                                </figure>
-<!--                                                                <div class="row">
+                                                            <div class="col-md-12 mt-3 mb-4">
+                                                                <div class="row">
                                                                     <div class="col-md-12">
                                                                         <h6 class="font-weight-bold text-center text-white bg-dark form-control" style="height: 60px;line-height: 50px;">Indicador Global da Avaliação de Desempenho - IGAD: <?= $mftext ?>%</h6>   
                                                                     </div>
@@ -377,11 +295,11 @@ if ($rscpf === true) {
                                                                     <div class="col-md-12">
                                                                         <label class="text-danger small">* Clique  nos botões para visualizar os resultados</label> 
                                                                     </div>
-                                                                </div>-->
-                                                            <!--</div>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>-->
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -607,6 +525,544 @@ if ($rscpf === true) {
         <script src="../js/demo/chart-bar-prenatal-sifilis.js"></script>
         <script src="../js/demo/chart-bar-citopatologico.js"></script>
         <script src="../js/demo/chart-bar-hipertensao.js"></script>
+        <script src="../js/demo/chart-bar-diabetes.js"></script>
+        <script>
+            $(".btn_sub").click(function () {
+                //console.log("clicou");
+                document.getElementById("loading2").style.display = "block";
+            });
+            var i = setInterval(function () {
+                clearInterval(i);
+                // O código desejado é apenas isto:
+                document.getElementById("loading2").style.display = "none";
+                document.getElementById("conteudo").style.display = "inline";
+            }, 1000);
+
+        </script>
+        <script>
+            //Apresentação dos 
+            $(document).ready(function () {
+                $('.divexp1').show();
+                $('.divexp2').hide();
+                $('.divexp3').hide();
+                $('.divexp4').hide();
+                $('.divexp5').hide();
+            });
+            
+            $(document).ready(function () {
+                $('.divexp1r').mouseover(function(){
+                    $('.divexp1').show();
+                    $('.divexp2').hide();
+                    $('.divexp3').hide();
+                    $('.divexp4').hide();
+                    $('.divexp5').hide();
+                });
+                $('.divexp2r').mouseover(function(){
+                    $('.divexp1').hide();
+                    $('.divexp2').show();
+                    $('.divexp3').hide();
+                    $('.divexp4').hide();
+                    $('.divexp5').hide();
+                });
+                $('.divexp3r').mouseover(function(){
+                    $('.divexp1').hide();
+                    $('.divexp2').hide();
+                    $('.divexp3').show();
+                    $('.divexp4').hide();
+                    $('.divexp5').hide();
+                });
+                $('.divexp4r').mouseover(function(){
+                    $('.divexp1').hide();
+                    $('.divexp2').hide();
+                    $('.divexp3').hide();
+                    $('.divexp4').show();
+                    $('.divexp5').hide();
+                });
+                $('.divexp5r').mouseover(function(){
+                    $('.divexp1').hide();
+                    $('.divexp2').hide();
+                    $('.divexp3').hide();
+                    $('.divexp4').hide();
+                    $('.divexp5').show();
+                });
+            });
+        </script>
+        <script>
+            //Gráficos + de 1 quadrimestre - formatação
+            // Set new default font family and font color to mimic Bootstrap's default styling
+            Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+            Chart.defaults.global.defaultFontColor = '#858796';
+
+            function number_format(number, decimals, dec_point, thousands_sep) {
+              // *     example: number_format(1234.56, 2, ',', ' ');
+              // *     return: '1 234,56'
+              number = (number + '').replace(',', '').replace(' ', '');
+              var n = !isFinite(+number) ? 0 : +number,
+                prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
+                sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep,
+                dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
+                s = '',
+                toFixedFix = function(n, prec) {
+                  var k = Math.pow(10, prec);
+                  return '' + Math.round(n * k) / k;
+                };
+              // Fix for IE parseFloat(0.55).toFixed(0) = 0;
+              s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
+              if (s[0].length > 3) {
+                s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
+              }
+              if ((s[1] || '').length < prec) {
+                s[1] = s[1] || '';
+                s[1] += new Array(prec - s[1].length + 1).join('0');
+              }
+              return s.join(dec);
+            }
+            
+            // myBarPrenatal
+            var ctx = document.getElementById("myBarPrenatal");
+            var myBarPrenatal = new Chart(ctx, {
+              type: 'bar',
+              data: {
+                labels: ["1º Quadrim.", "2º Quadrim.", "3º Quadrim."],
+                datasets: [{
+                  label: "Proporção",
+                  backgroundColor: [
+                    '<?php if($pn1 < 18) { echo "#d10e0e"; }elseif($pn1 < 31){ echo "#e6b20b"; }elseif($pn1 < 45){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>', 
+                    '<?php if($pn2 < 18) { echo "#d10e0e"; }elseif($pn2 < 31){ echo "#e6b20b"; }elseif($pn2 < 45){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>',
+                    '<?php if($pn3 < 18) { echo "#d10e0e"; }elseif($pn3 < 31){ echo "#e6b20b"; }elseif($pn3 < 45){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>'],
+                  hoverBackgroundColor: [
+                    '<?php if($pn1 < 18) { echo "#ba0a0a"; }elseif($pn1 < 31){ echo "#d2a208"; }elseif($pn1 < 45){ echo "#15b436"; }else{ echo "#325cd4"; } ?>', 
+                    '<?php if($pn2 < 18) { echo "#ba0a0a"; }elseif($pn2 < 31){ echo "#d2a208"; }elseif($pn2 < 45){ echo "#15b436"; }else{ echo "#325cd4"; } ?>',
+                    '<?php if($pn3 < 18) { echo "#ba0a0a"; }elseif($pn3 < 31){ echo "#d2a208"; }elseif($pn3 < 45){ echo "#15b436"; }else{ echo "#325cd4"; } ?>'],
+                  borderColor: "#5c5f68",
+                  data: [<?php echo $pn1; ?>,<?php echo $pn2; ?>,<?php echo $pn3; ?>]
+                }]
+              },
+              options: {
+                maintainAspectRatio: false,
+                layout: {
+                  padding: {
+                    left: 10,
+                    right: 25,
+                    top: 25,
+                    bottom: 0
+                  }
+                },
+                scales: {
+                  xAxes: [{
+                    time: {
+                      unit: 'month'
+                    },
+                    gridLines: {
+                      display: false,
+                      drawBorder: false
+                    },
+                    ticks: {
+                      maxTicksLimit: 6
+                    },
+                    maxBarThickness: 40
+                  }],
+                  yAxes: [{
+                    ticks: {
+                      min: 0,
+                      max: 100,
+                      maxTicksLimit: 10,
+                      padding: 10,
+                      // Include a dollar sign in the ticks
+                      callback: function(value, index, values) {
+                        return number_format(value) + "%";
+                      }
+                    },
+                    gridLines: {
+                      color: "rgb(234, 236, 244)",
+                      zeroLineColor: "rgb(234, 236, 244)",
+                      drawBorder: false,
+                      borderDash: [2],
+                      zeroLineBorderDash: [2]
+                    }
+                  }]
+                },
+                legend: {
+                  display: false
+                },
+                tooltips: {
+                  titleMarginBottom: 10,
+                  titleFontColor: '#6e707e',
+                  titleFontSize: 14,
+                  backgroundColor: "rgb(255,255,255)",
+                  bodyFontColor: "#858796",
+                  borderColor: '#dddfeb',
+                  borderWidth: 1,
+                  xPadding: 15,
+                  yPadding: 15,
+                  displayColors: false,
+                  caretPadding: 10,
+                  callbacks: {
+                    label: function(tooltipItem, chart) {
+                      var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                      return datasetLabel + ': ' + number_format(tooltipItem.yLabel,2,',','.') + "%";
+                    }
+                  }
+                }
+              }
+            });
+            
+            // myBarChartSifilis
+            var ctx = document.getElementById("myBarChartSifilis");
+            var myBarChartSifilis = new Chart(ctx, {
+              type: 'bar',
+              data: {
+                labels: ["1º Quadrim.", "2º Quadrim.", "3º Quadrim."],
+                datasets: [{
+                  label: "Proporção",
+                  backgroundColor: [
+                    '<?php if($psh1 < 24) { echo "#d10e0e"; }elseif($psh1 < 42){ echo "#e6b20b"; }elseif($psh1 < 60){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>', 
+                    '<?php if($psh2 < 24) { echo "#d10e0e"; }elseif($psh2 < 42){ echo "#e6b20b"; }elseif($psh2 < 60){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>',
+                    '<?php if($psh3 < 24) { echo "#d10e0e"; }elseif($psh3 < 42){ echo "#e6b20b"; }elseif($psh3 < 60){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>'],
+                  hoverBackgroundColor: [
+                    '<?php if($psh1 < 24) { echo "#ba0a0a"; }elseif($psh1 < 42){ echo "#d2a208"; }elseif($psh1 < 60){ echo "#15b436"; }else{ echo "#325cd4"; } ?>', 
+                    '<?php if($psh2 < 24) { echo "#ba0a0a"; }elseif($psh2 < 42){ echo "#d2a208"; }elseif($psh2 < 60){ echo "#15b436"; }else{ echo "#325cd4"; } ?>',
+                    '<?php if($psh3 < 24) { echo "#ba0a0a"; }elseif($psh3 < 42){ echo "#d2a208"; }elseif($psh3 < 60){ echo "#15b436"; }else{ echo "#325cd4"; } ?>'],
+                  borderColor: "#5c5f68",
+                  data: [<?php echo $psh1; ?>,<?php echo $psh2; ?>,<?php echo $psh3; ?>]
+                }]
+              },
+              options: {
+                maintainAspectRatio: false,
+                layout: {
+                  padding: {
+                    left: 10,
+                    right: 25,
+                    top: 25,
+                    bottom: 0
+                  }
+                },
+                scales: {
+                  xAxes: [{
+                    time: {
+                      unit: 'month'
+                    },
+                    gridLines: {
+                      display: false,
+                      drawBorder: false
+                    },
+                    ticks: {
+                      maxTicksLimit: 6
+                    },
+                    maxBarThickness: 40
+                  }],
+                  yAxes: [{
+                    ticks: {
+                      min: 0,
+                      max: 100,
+                      maxTicksLimit: 10,
+                      padding: 10,
+                      // Include a dollar sign in the ticks
+                      callback: function(value, index, values) {
+                        return number_format(value) + "%";
+                      }
+                    },
+                    gridLines: {
+                      color: "rgb(234, 236, 244)",
+                      zeroLineColor: "rgb(234, 236, 244)",
+                      drawBorder: false,
+                      borderDash: [2],
+                      zeroLineBorderDash: [2]
+                    }
+                  }]
+                },
+                legend: {
+                  display: false
+                },
+                tooltips: {
+                  titleMarginBottom: 10,
+                  titleFontColor: '#6e707e',
+                  titleFontSize: 14,
+                  backgroundColor: "rgb(255,255,255)",
+                  bodyFontColor: "#858796",
+                  borderColor: '#dddfeb',
+                  borderWidth: 1,
+                  xPadding: 15,
+                  yPadding: 15,
+                  displayColors: false,
+                  caretPadding: 10,
+                  callbacks: {
+                    label: function(tooltipItem, chart) {
+                      var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                      return datasetLabel + ': ' + number_format(tooltipItem.yLabel,2,',','.') + "%";
+                    }
+                  }
+                }
+              }
+            });
+            
+            // myBarChartCitopatologico
+            var ctx = document.getElementById("myBarChartCitopatologico");
+            var myBarChartCitopatologico = new Chart(ctx, {
+              type: 'bar',
+              data: {
+                labels: ["1º Quadrim.", "2º Quadrim.", "3º Quadrim."],
+                datasets: [{
+                  label: "Proporção",
+                  backgroundColor: [
+                    '<?php if($cc1 < 16) { echo "#d10e0e"; }elseif($cc1 < 28){ echo "#e6b20b"; }elseif($cc1 < 40){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>', 
+                    '<?php if($cc2 < 16) { echo "#d10e0e"; }elseif($cc2 < 28){ echo "#e6b20b"; }elseif($cc2 < 40){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>',
+                    '<?php if($cc3 < 16) { echo "#d10e0e"; }elseif($cc3 < 28){ echo "#e6b20b"; }elseif($cc3 < 40){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>'],
+                  hoverBackgroundColor: [
+                    '<?php if($cc1 < 16) { echo "#ba0a0a"; }elseif($cc1 < 28){ echo "#d2a208"; }elseif($cc1 < 40){ echo "#15b436"; }else{ echo "#325cd4"; } ?>', 
+                    '<?php if($cc2 < 16) { echo "#ba0a0a"; }elseif($cc2 < 28){ echo "#d2a208"; }elseif($cc2 < 40){ echo "#15b436"; }else{ echo "#325cd4"; } ?>',
+                    '<?php if($cc3 < 16) { echo "#ba0a0a"; }elseif($cc3 < 28){ echo "#d2a208"; }elseif($cc3 < 40){ echo "#15b436"; }else{ echo "#325cd4"; } ?>'],
+                  borderColor: "#5c5f68",
+                  data: [<?php echo $cc1; ?>,<?php echo $cc2; ?>,<?php echo $cc3; ?>]
+                }]
+              },
+              options: {
+                maintainAspectRatio: false,
+                layout: {
+                  padding: {
+                    left: 10,
+                    right: 25,
+                    top: 25,
+                    bottom: 0
+                  }
+                },
+                scales: {
+                  xAxes: [{
+                    time: {
+                      unit: 'month'
+                    },
+                    gridLines: {
+                      display: false,
+                      drawBorder: false
+                    },
+                    ticks: {
+                      maxTicksLimit: 6
+                    },
+                    maxBarThickness: 40
+                  }],
+                  yAxes: [{
+                    ticks: {
+                      min: 0,
+                      max: 100,
+                      maxTicksLimit: 10,
+                      padding: 10,
+                      // Include a dollar sign in the ticks
+                      callback: function(value, index, values) {
+                        return number_format(value) + "%";
+                      }
+                    },
+                    gridLines: {
+                      color: "rgb(234, 236, 244)",
+                      zeroLineColor: "rgb(234, 236, 244)",
+                      drawBorder: false,
+                      borderDash: [2],
+                      zeroLineBorderDash: [2]
+                    }
+                  }]
+                },
+                legend: {
+                  display: false
+                },
+                tooltips: {
+                  titleMarginBottom: 10,
+                  titleFontColor: '#6e707e',
+                  titleFontSize: 14,
+                  backgroundColor: "rgb(255,255,255)",
+                  bodyFontColor: "#858796",
+                  borderColor: '#dddfeb',
+                  borderWidth: 1,
+                  xPadding: 15,
+                  yPadding: 15,
+                  displayColors: false,
+                  caretPadding: 10,
+                  callbacks: {
+                    label: function(tooltipItem, chart) {
+                      var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                      return datasetLabel + ': ' + number_format(tooltipItem.yLabel,2,',','.') + "%";
+                    }
+                  }
+                }
+              }
+            });
+            
+            // myBarChartHipertensao
+            var ctx = document.getElementById("myBarChartHipertensao");
+            var myBarChartHipertensao = new Chart(ctx, {
+              type: 'bar',
+              data: {
+                labels: ["1º Quadrim.", "2º Quadrim.", "3º Quadrim."],
+                datasets: [{
+                  label: "Proporção",
+                  backgroundColor: [
+                    '<?php if($hi1 < 20) { echo "#d10e0e"; }elseif($hi1 < 35){ echo "#e6b20b"; }elseif($hi1 < 50){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>', 
+                    '<?php if($hi2 < 20) { echo "#d10e0e"; }elseif($hi2 < 35){ echo "#e6b20b"; }elseif($hi2 < 50){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>',
+                    '<?php if($hi3 < 20) { echo "#d10e0e"; }elseif($hi3 < 35){ echo "#e6b20b"; }elseif($hi3 < 50){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>'],
+                  hoverBackgroundColor: [
+                    '<?php if($hi1 < 20) { echo "#ba0a0a"; }elseif($hi1 < 35){ echo "#d2a208"; }elseif($hi1 < 50){ echo "#15b436"; }else{ echo "#325cd4"; } ?>', 
+                    '<?php if($hi2 < 20) { echo "#ba0a0a"; }elseif($hi2 < 35){ echo "#d2a208"; }elseif($hi2 < 50){ echo "#15b436"; }else{ echo "#325cd4"; } ?>',
+                    '<?php if($hi3 < 20) { echo "#ba0a0a"; }elseif($hi3 < 35){ echo "#d2a208"; }elseif($hi3 < 50){ echo "#15b436"; }else{ echo "#325cd4"; } ?>'],
+                  borderColor: "#5c5f68",
+                  data: [<?php echo $hi1; ?>,<?php echo $hi2; ?>,<?php echo $hi3; ?>]
+                }]
+              },
+              options: {
+                maintainAspectRatio: false,
+                layout: {
+                  padding: {
+                    left: 10,
+                    right: 25,
+                    top: 25,
+                    bottom: 0
+                  }
+                },
+                scales: {
+                  xAxes: [{
+                    time: {
+                      unit: 'month'
+                    },
+                    gridLines: {
+                      display: false,
+                      drawBorder: false
+                    },
+                    ticks: {
+                      maxTicksLimit: 6
+                    },
+                    maxBarThickness: 40
+                  }],
+                  yAxes: [{
+                    ticks: {
+                      min: 0,
+                      max: 100,
+                      maxTicksLimit: 10,
+                      padding: 10,
+                      // Include a dollar sign in the ticks
+                      callback: function(value, index, values) {
+                        return number_format(value) + "%";
+                      }
+                    },
+                    gridLines: {
+                      color: "rgb(234, 236, 244)",
+                      zeroLineColor: "rgb(234, 236, 244)",
+                      drawBorder: false,
+                      borderDash: [2],
+                      zeroLineBorderDash: [2]
+                    }
+                  }]
+                },
+                legend: {
+                  display: false
+                },
+                tooltips: {
+                  titleMarginBottom: 10,
+                  titleFontColor: '#6e707e',
+                  titleFontSize: 14,
+                  backgroundColor: "rgb(255,255,255)",
+                  bodyFontColor: "#858796",
+                  borderColor: '#dddfeb',
+                  borderWidth: 1,
+                  xPadding: 15,
+                  yPadding: 15,
+                  displayColors: false,
+                  caretPadding: 10,
+                  callbacks: {
+                    label: function(tooltipItem, chart) {
+                      var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                      return datasetLabel + ': ' + number_format(tooltipItem.yLabel,2,',','.') + "%";
+                    }
+                  }
+                }
+              }
+            });
+            
+            // myBarChartDiabetes
+            var ctx = document.getElementById("myBarChartDiabetes");
+            var myBarChartDiabetes = new Chart(ctx, {
+              type: 'bar',
+              data: {
+                labels: ["1º Quadrim.", "2º Quadrim.", "3º Quadrim."],
+                datasets: [{
+                  label: "Proporção",
+                  backgroundColor: [
+                    '<?php if($diab1 < 20) { echo "#d10e0e"; }elseif($diab1 < 35){ echo "#e6b20b"; }elseif($diab1 < 50){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>', 
+                    '<?php if($diab2 < 20) { echo "#d10e0e"; }elseif($diab2 < 35){ echo "#e6b20b"; }elseif($diab2 < 50){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>',
+                    '<?php if($diab3 < 20) { echo "#d10e0e"; }elseif($diab3 < 35){ echo "#e6b20b"; }elseif($diab3 < 50){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>'],
+                  hoverBackgroundColor: [
+                    '<?php if($diab1 < 20) { echo "#ba0a0a"; }elseif($diab1 < 35){ echo "#d2a208"; }elseif($diab1 < 50){ echo "#15b436"; }else{ echo "#325cd4"; } ?>', 
+                    '<?php if($diab2 < 20) { echo "#ba0a0a"; }elseif($diab2 < 35){ echo "#d2a208"; }elseif($diab2 < 50){ echo "#15b436"; }else{ echo "#325cd4"; } ?>',
+                    '<?php if($diab3 < 20) { echo "#ba0a0a"; }elseif($diab3 < 35){ echo "#d2a208"; }elseif($diab3 < 50){ echo "#15b436"; }else{ echo "#325cd4"; } ?>'],
+                  borderColor: "#5c5f68",
+                  data: [<?php echo $diab1; ?>,<?php echo $diab2; ?>,<?php echo $diab3; ?>]
+                }]
+              },
+              options: {
+                maintainAspectRatio: false,
+                layout: {
+                  padding: {
+                    left: 10,
+                    right: 25,
+                    top: 25,
+                    bottom: 0
+                  }
+                },
+                scales: {
+                  xAxes: [{
+                    time: {
+                      unit: 'month'
+                    },
+                    gridLines: {
+                      display: false,
+                      drawBorder: false
+                    },
+                    ticks: {
+                      maxTicksLimit: 6
+                    },
+                    maxBarThickness: 40
+                  }],
+                  yAxes: [{
+                    ticks: {
+                      min: 0,
+                      max: 100,
+                      maxTicksLimit: 10,
+                      padding: 10,
+                      // Include a dollar sign in the ticks
+                      callback: function(value, index, values) {
+                        return number_format(value) + "%";
+                      }
+                    },
+                    gridLines: {
+                      color: "rgb(234, 236, 244)",
+                      zeroLineColor: "rgb(234, 236, 244)",
+                      drawBorder: false,
+                      borderDash: [2],
+                      zeroLineBorderDash: [2]
+                    }
+                  }]
+                },
+                legend: {
+                  display: false
+                },
+                tooltips: {
+                  titleMarginBottom: 10,
+                  titleFontColor: '#6e707e',
+                  titleFontSize: 14,
+                  backgroundColor: "rgb(255,255,255)",
+                  bodyFontColor: "#858796",
+                  borderColor: '#dddfeb',
+                  borderWidth: 1,
+                  xPadding: 15,
+                  yPadding: 15,
+                  displayColors: false,
+                  caretPadding: 10,
+                  callbacks: {
+                    label: function(tooltipItem, chart) {
+                      var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                      return datasetLabel + ': ' + number_format(tooltipItem.yLabel,2,',','.') + "%";
+                    }
+                  }
+                }
+              }
+            });
+        </script>
         <script>
             $(".btn_sub").click(function () {
                 //console.log("clicou");
@@ -619,63 +1075,6 @@ if ($rscpf === true) {
                 document.getElementById("conteudo").style.display = "inline";
             }, 1000);
         </script>
-        <script>
-            Highcharts.chart('container', {
-                chart: {
-                    type: 'pie',
-                    options3d: {
-                        enabled: true,
-                        alpha: 45,
-                        beta: 0
-                    }
-                },
-                title: {
-                    text: 'Indicador Global da Avaliação de Desempenho - IGAD',
-                    align: 'left'
-                },
-                subtitle: {
-                    text: 'Avaliação de Resultados e Avaliação de Competências',
-                    align: 'left'
-                },
-                accessibility: {
-                    point: {
-                        valueSuffix: '%'
-                    }
-                },
-                tooltip: {
-                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-                },
-                plotOptions: {
-                    pie: {
-                        allowPointSelect: true,
-                        cursor: 'pointer',
-                        depth: 35,
-                        dataLabels: {
-                            enabled: true,
-                            format: '{point.name}'
-                        }
-                    }
-                },
-                series: [{
-                    type: 'pie',
-                    name: 'Resultado',
-                    data: [
-                        ['Competências profissionais', <?= $cpossui ?>],
-                        ['Qualidade assistencial', <?= $qa ?>],
-                        ['Qualidade da tutoria', <?= $qnota ?>],
-                        ['Aperfeiçoamento profissional', <?= $anota ?>],
-                        {
-                            name: 'Faltam',
-                            y: <?= $faltam ?>,
-                            sliced: true,
-                            selected: true
-                        }
-                        /*['Vivo', 8],
-                        ['Others', 30]*/
-                    ]
-                }]
-            });
-            </script>
     </body>
 
 </html>

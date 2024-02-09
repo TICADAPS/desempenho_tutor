@@ -61,7 +61,6 @@ if ($rscpf === true) {
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
         <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-        <link rel="shortcut icon" href="img/iconAdaps.png"/>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
         <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -189,7 +188,7 @@ if ($rscpf === true) {
                                     <a class="nav-link" href="https://appsadapsbrasil.com/sistema-adaps/painelMedico.php"><i class="fas fa-sign-out-alt pt-1"></i></a>
                                 </li>
                                 <li class="nav-item">
-                                    <div id="loading2">
+                                    <div id="loading">
                                         &nbsp;<img class="float-right" src="../img_agsus/carregando.gif" width="40" height="40" />
                                     </div>
                                 </li>
@@ -269,56 +268,197 @@ if ($rscpf === true) {
                         $mf = round(($ar + $cpossui),2);
                         $mftext = number_format($mf, 2, ',', '.');
                         $faltam = 100 - $mf;
-                        var_dump($qa,$qnota,$cpossui,$anota,$mf,$faltam);
+                        $faltamtext = number_format($faltam, 2, ',', '.');
+//                        var_dump($qa,$qnota,$cpossui,$anota,$mf,$faltam);
                         ?>
-                            <div class="col-md-12 shadow rounded pt-2 pr-3 pl-3 mb-2">
+                            <div class="col-md-12 shadow rounded pt-2 pr-3 pl-3">
                                 <div class="row p-3">
-                                    <div class="col-md-12 mt-3 mb-3">
-                                        <div class="row" >
-                                            <div class="col-md-8 mb-1">
-                                                <label class="font-weight-bold text-info">Nome: </label><label class="font-weight-bold  text-info"> &nbsp;<?= $nome ?></label>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="font-weight-bold text-info">CPF: </label><label class="text-info"> &nbsp;&nbsp;<?= $cpf ?></label>
-                                            </div>
-                                            <div class="col-md-8">
-                                                <label class="font-weight-bold">Município-UF: </label><label>&nbsp;&nbsp;<?php echo "$municipio-$uf"; ?></label>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="font-weight-bold">Cargo: </label><label> &nbsp;&nbsp;<?= $cargo ?></label>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="font-weight-bold">Tipologia: </label><label> &nbsp;&nbsp;<?= $tipologia ?></label>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="font-weight-bold">CNES: </label><label>&nbsp;&nbsp;<?= $cnes ?></label>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="font-weight-bold">INE: </label><label>&nbsp;&nbsp;<?= $ine ?></label>
+                                    <div class="col-md-12 mt-2 pl-3 pr-3">
+                                        <div class="row">
+                                            <div class="col-md-12 shadow rounded p-5">
+                                                <div class="row" >
+                                                    <div class="col-md-8 mb-1">
+                                                        <label class="font-weight-bold text-info">Nome: </label><label class="font-weight-bold  text-info"> &nbsp;<?= $nome ?></label>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="font-weight-bold text-info">CPF: </label><label class="text-info"> &nbsp;&nbsp;<?= $cpf ?></label>
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <label class="font-weight-bold">Município-UF: </label><label>&nbsp;&nbsp;<?php echo "$municipio-$uf"; ?></label>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="font-weight-bold">Cargo: </label><label> &nbsp;&nbsp;<?= $cargo ?></label>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="font-weight-bold">Tipologia: </label><label> &nbsp;&nbsp;<?= $tipologia ?></label>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="font-weight-bold">CNES: </label><label>&nbsp;&nbsp;<?= $cnes ?></label>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="font-weight-bold">INE: </label><label>&nbsp;&nbsp;<?= $ine ?></label>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row p-3">
-                                    <div class="col-md-12 mt-3 mb-3">
+                                    <div class="col-md-12 mb-3">
                                         <div class="row mt-3 mb-2">
-                                            <div class="col-md-4 mb-3">
+                                            <div class="col-md-3 mb-3">
                                                 <div class="row">
-                                                    <div class="col-md-4">
-                                                        <h6 class="font-weight-bold text-center">coluna 1</h6>
-                                                        <!--<label class="font-weight-bold">coluna 1</label>-->
+                                                    <div class="col-md-12 pl-3 pr-4 mb-2">
+                                                        <div class="row">
+                                                            <div class="col-md-12 shadow rounded p-1 mb-3">
+                                                                <div class="card bg-gradient-secondary" >
+                                                                    <div class="card-body">
+                                                                        <div class="row">
+                                                                            <div class="col-md-11">
+                                                                                <h6 class="card-title small text-white font-weight-bold">Indicador Global da Avaliação de Desempenho - IGAD: <?= $mftext ?>%</h6>
+                                                                                <p class="card-text small text-white">Detalhes...</p>
+                                                                            </div>
+                                                                            <div class="col-md-1">
+                                                                                <i class="fas fa-user-md text-white"></i>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12 pl-3 pr-4 mb-2">
+                                                        <div class="row">
+                                                            <div class="col-md-12 shadow rounded p-1 mb-3">
+                                                                <div class="card bg-gradient-primary" >
+                                                                    <div class="card-body">
+                                                                        <div class="row">
+                                                                            <div class="col-md-11">
+                                                                                <h6 class="card-title small text-white font-weight-bold">Qualidade Assistencial: <?= $qatext ?>%</h6>
+                                                                                <p class="card-text small text-white">Detalhes...</p>
+                                                                            </div>
+                                                                            <div class="col-md-1">
+                                                                                <i class="fas fa-user-md text-white"></i>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12 pl-3 pr-4 mb-2">
+                                                        <div class="row">
+                                                            <div class="col-md-12 shadow rounded p-1 mb-3">
+                                                                <div class="card bg-gradient-success" >
+                                                                    <div class="card-body">
+                                                                        <div class="row">
+                                                                            <div class="col-md-11">
+                                                                                <h6 class="card-title small text-white font-weight-bold">Qualidade Tutoria: <?= $qnotatext ?>%</h6>
+                                                                                <p class="card-text small text-white">Detalhes...</p>
+                                                                            </div>
+                                                                            <div class="col-md-1">
+                                                                                <i class="fas fa-user-md text-white"></i>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12 pl-3 pr-4 mb-2">
+                                                        <div class="row">
+                                                            <div class="col-md-12 shadow rounded p-1 mb-3">
+                                                                <div class="card bg-gradient-danger" >
+                                                                    <div class="card-body">
+                                                                        <div class="row">
+                                                                            <div class="col-md-11">
+                                                                                <h6 class="card-title small text-white font-weight-bold">Aperfeiçoamento Profissional: <?= $anotatext ?>%</h6>
+                                                                                <p class="card-text small text-white">Detalhes...</p>
+                                                                            </div>
+                                                                            <div class="col-md-1">
+                                                                                <i class="fas fa-user-md text-white"></i>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12 pl-3 pr-4 mb-2">
+                                                        <div class="row">
+                                                            <div class="col-md-12 shadow rounded p-1 mb-3">
+                                                                <div class="card bg-gradient-info" >
+                                                                    <div class="card-body">
+                                                                        <div class="row">
+                                                                            <div class="col-md-11">
+                                                                                <h6 class="card-title small text-white font-weight-bold">Competências Profissionais: <?= $cpossuitext ?>%</h6>
+                                                                                <p class="card-text small text-white">Detalhes...</p>
+                                                                            </div>
+                                                                            <div class="col-md-1">
+                                                                                <i class="fas fa-user-md text-white"></i>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-4 mb-3">
+                                            <div class="col-md-3 mb-3">
                                                 <div class="row">
-                                                    <div class="col-md-4">
-                                                        <h6 class="font-weight-bold text-center">coluna 2</h6>
-                                                        <!--<label class="font-weight-bold">coluna 2</label>-->
+                                                    <div class="col-md-12 pl-4 pr-2 mb-2">
+                                                        <div class="row">
+                                                            <div class="col-md-12 shadow rounded p-2 mb-3">
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <div class="card">
+                                                                            <div class="card-header">
+                                                                              Featured
+                                                                            </div>
+                                                                            <div class="card-body">
+                                                                                <h6 class="card-title font-weight-bold">Special title treatment</h6>
+                                                                                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                                                                            </div>
+                                                                          </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12 shadow rounded p-2 mb-3">
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <div class="card">
+                                                                            <div class="card-header">
+                                                                              Featured
+                                                                            </div>
+                                                                            <div class="card-body">
+                                                                                <h6 class="card-title font-weight-bold">Special title treatment</h6>
+                                                                                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                                                                            </div>
+                                                                          </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12 shadow rounded p-2 mb-3">
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <div class="card">
+                                                                            <div class="card-header">
+                                                                              Featured
+                                                                            </div>
+                                                                            <div class="card-body">
+                                                                                <h6 class="card-title font-weight-bold">Special title treatment</h6>
+                                                                                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                                                                            </div>
+                                                                          </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-4 mb-3">
+                                            <div class="col-md-6 mb-3">
                                                 <!--<div class="row">
                                                     <div class="col-md-4">
                                                         <label class="font-weight-bold">Ano: </label><label>&nbsp;&nbsp;<?= $ano ?></label>
@@ -330,16 +470,25 @@ if ($rscpf === true) {
                                                         <label class="font-weight-bold">IGAD: </label><label class="text-danger"> &nbsp;&nbsp;<?= $mftext ?>%</label>
                                                     </div>
                                                 </div>-->
-                                                <!--<div class="row">
-                                                    <div class="col-md-12 shadow rounded pt-2 pr-3 pl-3 mb-2">
-                                                        <div class="row p-3">
-                                                            <div class="col-md-12 mt-3 mb-4">-->
-                                                                <figure class="highcharts-figure">
-                                                                    <div id="container"></div>
-                                                                    <p class="highcharts-description">
-                                                                      <i>*Texto descritivo</i>
-                                                                    </p>
-                                                                </figure>
+                                                <div class="row">
+                                                    <div class="col-md-12 pl-5 pr-3">
+                                                        <div class="row">
+                                                            <div class="col-md-12 shadow rounded pt-2 pr-3 pl-3 mb-2">
+                                                                <div class="row p-3">
+                                                                    <div class="col-md-12 mt-3 mb-4">
+                                                                        <figure class="highcharts-figure">
+                                                                            <div id="container"></div>
+                                                                            <p class="highcharts-description">
+                                                                              <i>*Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries.</i>
+                                                                            </p>
+                                                                        </figure>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
 <!--                                                                <div class="row">
                                                                     <div class="col-md-12">
                                                                         <h6 class="font-weight-bold text-center text-white bg-dark form-control" style="height: 60px;line-height: 50px;">Indicador Global da Avaliação de Desempenho - IGAD: <?= $mftext ?>%</h6>   
@@ -382,7 +531,6 @@ if ($rscpf === true) {
                                                         </div>
                                                     </div>
                                                 </div>-->
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -608,7 +756,7 @@ if ($rscpf === true) {
         <script src="../js/demo/chart-bar-citopatologico.js"></script>
         <script src="../js/demo/chart-bar-hipertensao.js"></script>
         <script>
-            $(".btn_sub").click(function () {
+            $(document).ready(function () {
                 //console.log("clicou");
                 document.getElementById("loading").style.display = "block";
             });
@@ -630,11 +778,11 @@ if ($rscpf === true) {
                     }
                 },
                 title: {
-                    text: 'Indicador Global da Avaliação de Desempenho - IGAD',
+                    text: 'Avaliação de Resultados e Avaliação de Competências',
                     align: 'left'
                 },
                 subtitle: {
-                    text: 'Avaliação de Resultados e Avaliação de Competências',
+                    text: 'Indicador Global da Avaliação de Desempenho - IGAD: <?= $mftext ?>%',
                     align: 'left'
                 },
                 accessibility: {
@@ -643,7 +791,7 @@ if ($rscpf === true) {
                     }
                 },
                 tooltip: {
-                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                    pointFormat: '{series.name}: <b>{point.percentage:.2f}%</b>'
                 },
                 plotOptions: {
                     pie: {
@@ -660,15 +808,15 @@ if ($rscpf === true) {
                     type: 'pie',
                     name: 'Resultado',
                     data: [
-                        ['Competências profissionais', <?= $cpossui ?>],
-                        ['Qualidade assistencial', <?= $qa ?>],
-                        ['Qualidade da tutoria', <?= $qnota ?>],
-                        ['Aperfeiçoamento profissional', <?= $anota ?>],
+                        ['Competências profissionais: <?= $cpossuitext ?>% do IGAD', <?= $cpossui ?>],
+                        ['Qualidade assistencial: <?= $qatext ?>% do IGAD', <?= $qa ?>],
+                        ['Qualidade da tutoria: <?= $qnotatext ?>% do IGAD', <?= $qnota ?>],
+                        ['Aperfeiçoamento profissional: <?= $anotatext ?>% do IGAD', <?= $anota ?>],
                         {
-                            name: 'Faltam',
+                            name: 'Deixou de pontuar: <?= $faltamtext ?>%',
                             y: <?= $faltam ?>,
                             sliced: true,
-                            selected: true
+                            selected: false
                         }
                         /*['Vivo', 8],
                         ['Others', 30]*/

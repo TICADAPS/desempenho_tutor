@@ -77,6 +77,20 @@ if (!empty($_FILES["arquivo"]["tmp_name"])) {
             $nome = str_replace("Ü", "U", $nome);
             $nome = str_replace("/", "", $nome);
             $nome = str_replace("-", "", $nome);
+            
+            $cpf = str_replace("'", "", $cpf);
+            $admissao = str_replace("'", "", $admissao);
+            $cargo = str_replace("'", "", $cargo);
+            $tipologia = str_replace("'", "", $tipologia);
+            $municipio = str_replace("'", "", $municipio);
+            $cnes = str_replace("'", "", $cnes);
+            $ine = str_replace("'", "", $ine);
+            $ibge = str_replace("'", "", $ibge);
+            $prenatal_consultas = str_replace("'", "", $prenatal_consultas);
+            $prenatal_sifilis_hiv = str_replace("'", "", $prenatal_sifilis_hiv);
+            $cobertura_citopatologico = str_replace("'", "", $cobertura_citopatologico);
+            $hipertensao = str_replace("'", "", $hipertensao);
+            $diabetes = str_replace("'", "", $diabetes);
 
             //formata a máscara do cpf (caso venha ou não com a máscara)
             $cpftratado = str_replace("-", "", $cpf);
@@ -104,10 +118,10 @@ if (!empty($_FILES["arquivo"]["tmp_name"])) {
                 echo "<h6 class='mt-2'>Na linha $a, coluna 1: o conteúdo <label class='text-primary'>$cpftratado</label> inválido.</h6>";
                 return;
             }
-//            var_dump($a,$cpftratado,$nome,$admissao,$cargo,$tipologia,$uf,$municipio,$cnes,$ine,$ibge,
+//            echo "$a,$cpftratado,$nome,$admissao,$cargo,$tipologia,$uf,$municipio,$cnes,$ine,$ibge,
 //                    $prenatal_consultas,$prenatal_sifilis_hiv,$cobertura_citopatologico,
-//                    $hipertensao,$diabetes,$ano,$periodo,$datahoje);
-            
+//                    $hipertensao,$diabetes,$ano,$periodo,$datahoje<br>";
+           
             $sql = "select * from medico where cpf = '$cpftratado' and ibge = '$ibge' and cnes = '$cnes' and ine = '$ine' limit 1";
             $query = mysqli_query($conn, $sql) or die(mysqli_error($conn));
             $nrrs = mysqli_num_rows($query);
@@ -120,7 +134,7 @@ if (!empty($_FILES["arquivo"]["tmp_name"])) {
             $nrrs3 = mysqli_num_rows($query3); 
             if($nrrs3 == 0){
                 $sql2 = "insert into desempenho values (null, '$ano','$periodo','$prenatal_consultas','$prenatal_sifilis_hiv','$cobertura_citopatologico',"
-                    . "'$hipertensao','$diabetes','$cpftratado','$ibge','$cnes','$ine')";
+                    . "'$hipertensao','$diabetes','$cpftratado','$ibge','$cnes','$ine','2023','1')";
                 mysqli_query($conn, $sql2) or die(mysqli_error($conn));
             }else{
                 echo "$cpftratado - $nome - $ibge - $cnes - $ine - Ano $ano e período $periodo cadastrado anteriormente<br>";

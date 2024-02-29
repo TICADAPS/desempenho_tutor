@@ -1,27 +1,34 @@
 <?php
 session_start();
 include '../conexao-agsus.php';
+include '../Controller_agsus/fdatas.php';
+if (!isset($_SESSION['msg'])) {
+    $_SESSION['msg'] = '';
+}
 //if (!isset($_SESSION['cpf'])) {
 //   header("Location: derruba_session.php"); exit();
 //}
 //$cpf = $_SESSION['cpf'];
-$cpf = '001.018.311-61';
+//$cpf = '001.018.311-61';
+//$cpf = '029.502.963-35';
+$cpf = '091.328.314-20';
+//$cpf = '106.423.006-74';
+
 date_default_timezone_set('America/Sao_Paulo');
 //$anoAtual = date('Y');
 $anoAtual = 2023;
+$ano = 2023;
+$ciclo = 1;
+$periodo = 25;
+$flagincent = 0;
 $cpftratado = str_replace("-", "", $cpf);
 $cpftratado = str_replace(".", "", $cpftratado);
 $cpftratado = str_replace(".", "", $cpftratado);
-$sql = "select m.nome, m.admissao, m.cargo, m.tipologia, m.uf, m.municipio, m.datacadastro, m.cpf, m.ibge, m.cnes, m.ine, p.descricaoperiodo, "
-        . "demo.ano, demo.ciclo, d.idperiodo, d.prenatal_consultas, d.prenatal_sifilis_hiv, d.cobertura_citopatologico, d.hipertensao, d.diabetes, "
-        . "q.nota as qnota, c.possui as cpossui, a.nota as anota "
-        . "from medico m inner join desempenho d on m.cpf = d.cpf "
-        . "inner join periodo p on p.idperiodo = d.idperiodo "
-        . "inner join demonstrativo demo on demo.ano = d.demonstrativo_ano and demo.ciclo = d.demonstrativo_ciclo "
-        . "left join qualidade q on q.FKcpf = m.cpf "
-        . "left join aperfeicoamento a on a.medico_cpf = m.cpf "
-        . "left join competencias c on c.medico_cpf = m.cpf "
-        . "where m.cpf = '$cpftratado' and d.ano = 2023 and p.idperiodo = 24 and d.demonstrativo_ano = 2023 and d.demonstrativo_ciclo = 2;";
+$sql = "select distinct m.nome, m.admissao, m.cargo, m.tipologia, m.uf, m.municipio, m.datacadastro, m.cpf, m.ibge, m.cnes, 
+    m.ine, d.iddemonstrativo, d.ano, d.ciclo, d.qualidade, d.competencias, d.aperfeicoamento, i.nivel, i.valor
+    from medico m inner join demonstrativo d on m.cpf = d.fkcpf and d.fkibge = m.ibge and d.fkcnes = m.cnes and d.fkine = m.ine 
+    inner join incentivo i on d.fkincentivo = i.idincentivo 
+    where m.cpf = '$cpftratado' and d.ano = '$ano' and d.ciclo = '$ciclo' and i.flaginativo = '$flagincent' and d.fkperiodo = '$periodo';";
 $query = mysqli_query($conn, $sql);
 $nrrs = mysqli_num_rows($query);
 $rs = mysqli_fetch_array($query);
@@ -36,6 +43,7 @@ if ($rscpf === true) {
             $nome1 = $rs['nome'];
             $ano1 = $rs['ano'];
             $ciclo1 = $rs['ciclo'];
+            $iddemonstrativo = $rs['iddemonstrativo'];
         } while ($rs1 = mysqli_fetch_array($query));
     }
 }
@@ -73,7 +81,8 @@ if ($rscpf === true) {
         <!--<script src="../js/exporting.js"></script>-->
         <!--<script src="../js/export-data.js"></script>-->
         <script src="../js/accessibility.js"></script>
-
+        <script src="../js/jquery.easypiechart.js"></script>
+        <script src="../js/jquery.easypiechart2.js"></script>
         <style>
         #container {
             height: 400px;
@@ -139,6 +148,21 @@ if ($rscpf === true) {
             .tooltip.bs-tooltip-top .arrow:before {
                 border-top-color: #0f547cad !important;
             }
+            
+            .box .chart{
+                position: relative;
+                width: 110px;
+                height: 110px;
+                margin: 0 auto;
+                text-align: center;
+                font-size: 18px;
+                line-height: 110px;
+            }
+            .box canvas{
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
         </style>
     </head>
 
@@ -149,7 +173,7 @@ if ($rscpf === true) {
                     <img src="../img_agsus/Logo_400x200.png" class="img-fluid" alt="logoAdaps" width="250" title="Logo Adaps">
                 </div>
                 <div class="col-12 col-md-8 mt-5 ">
-                    <h4 class="mb-4 font-weight-bold">Programa de Avaliação de Desempenho - Ano <?= $ano1 ?> - <?= $ciclo1 ?>º Ciclo</h4>
+                    <h4 class="mb-4 font-weight-bold">1º Ciclo do Programa de Avaliação de Desempenho do Tutor Médico - Ano <?= $ano1 ?></h4>
                 </div>
             </div>
             <div class="row">
@@ -160,7 +184,7 @@ if ($rscpf === true) {
                         </button>
 
 
-                        <div id="menuPrincipal" class="collapse navbar-collapse">
+                        <div id="menuPrincipal" class="collapse navbar-collapse pr-2 pl-2">
                             <ul class="navbar-nav">
                                 <li class="nav-item">
                                     <a href="../index.php" class="nav-link">Inicio </a>
@@ -198,6 +222,9 @@ if ($rscpf === true) {
                 </div>
             </div>
             <div class="row p-2">
+            <?php echo $_SESSION['msg'] ?>
+            </div>
+            <div class="row p-2">
             <?php
             if ($rscpf === true) {
                 if ($nrrs == 1) {
@@ -214,48 +241,69 @@ if ($rscpf === true) {
                         $datacadastro = $rs['datacadastro'];
                         $ano = $rs['ano'];
                         $ciclo = $rs['ciclo'];
-                        $periodo = $rs['descricaoperiodo'];
-                        $idperiodo = $rs['idperiodo'];
-                        $prenatal_consultas = $rs['prenatal_consultas'];
-//                        var_dump("prenatal_consultas",$prenatal_consultas);
-                        $prenatal_consultas = $prenatal_consultas/45;
-//                        var_dump("prenatal_consultas-Fator",$prenatal_consultas);
-                        $prenatal_sifilis_hiv = $rs['prenatal_sifilis_hiv'];
-//                        var_dump("prenatal_sifilis_hiv",$prenatal_sifilis_hiv);
-                        $prenatal_sifilis_hiv = $prenatal_sifilis_hiv/60;
-//                        var_dump("prenatal_sifilis_hiv-Fator",$prenatal_sifilis_hiv);
-                        $cobertura_citopatologico = $rs['cobertura_citopatologico'];
-//                        var_dump("cobertura_citopatologico",$cobertura_citopatologico);
-                        $cobertura_citopatologico = $cobertura_citopatologico/40;
-//                        var_dump("cobertura_citopatologico-Fator",$cobertura_citopatologico);
-                        $hipertensao = $rs['hipertensao'];
-//                        var_dump("hipertensao",$hipertensao);
-                        $hipertensao = $hipertensao/50;
-//                        var_dump("hipertensao-Fator",$hipertensao);
-                        $hipertensaotext = str_replace(",", "", $hipertensao);
-                        $hipertensaotext = str_replace(".", ",", $hipertensaotext);
-                        $diabetes = $rs['diabetes'];
-//                        var_dump("diabetes",$diabetes);
-                        $diabetes = $diabetes/50;
-//                        var_dump("diabetes-Fator",$diabetes);
-                        $diabetestext = str_replace(",", "", $diabetes);
-                        $diabetestext = str_replace(".", ",", $diabetestext);
-                        $qa = round((($prenatal_consultas + $prenatal_sifilis_hiv + $cobertura_citopatologico + $hipertensao + $diabetes)*10),2);
+                        $nivel = $rs['nivel'];
+                        $valor = $rs['valor'];
+                        $valortext = number_format($valor, 2, ',', ' ');
+                        $sql2 = "select distinct p.idperiodo, p.descricaoperiodo, d.prenatal_consultas, d.prenatal_sifilis_hiv, d.cobertura_citopatologico, 
+                            d.hipertensao, d.diabetes 
+                            from periodo p inner join desempenho d on p.idperiodo = d.idperiodo
+                            where d.cpf = '$cpftratado' and d.ano = '$ano' and d.idperiodo = '$periodo';";
+                        $query2 = mysqli_query($conn, $sql2);
+                        $rs2 = mysqli_fetch_array($query2);
+                        $prenatal_consultas = $prenatal_sifilis_hiv = $cobertura_citopatologico = $hipertensao = $diabetes = 0;
+                        if($rs2){
+                            $periodo = $rs2['descricaoperiodo'];
+                            $idperiodo = $rs2['idperiodo'];
+                            $prenatal_consultas = $rs2['prenatal_consultas'];
+    //                        var_dump("prenatal_consultas",$prenatal_consultas);
+                            $prenatal_consultas = $prenatal_consultas/45;
+    //                        var_dump("prenatal_consultas-Fator",$prenatal_consultas);
+                            $prenatal_sifilis_hiv = $rs2['prenatal_sifilis_hiv'];
+    //                        var_dump("prenatal_sifilis_hiv",$prenatal_sifilis_hiv);
+                            $prenatal_sifilis_hiv = $prenatal_sifilis_hiv/60;
+    //                        var_dump("prenatal_sifilis_hiv-Fator",$prenatal_sifilis_hiv);
+                            $cobertura_citopatologico = $rs2['cobertura_citopatologico'];
+    //                        var_dump("cobertura_citopatologico",$cobertura_citopatologico);
+                            $cobertura_citopatologico = $cobertura_citopatologico/40;
+    //                        var_dump("cobertura_citopatologico-Fator",$cobertura_citopatologico);
+                            $hipertensao = $rs2['hipertensao'];
+    //                        var_dump("hipertensao",$hipertensao);
+                            $hipertensao = $hipertensao/50;
+    //                        var_dump("hipertensao-Fator",$hipertensao);
+                            $hipertensaotext = str_replace(",", "", $hipertensao);
+                            $hipertensaotext = str_replace(".", ",", $hipertensaotext);
+                            $diabetes = $rs2['diabetes'];
+    //                        var_dump("diabetes",$diabetes);
+                            $diabetes = $diabetes/50;
+    //                        var_dump("diabetes-Fator",$diabetes);
+                            $diabetestext = str_replace(",", "", $diabetes);
+                            $diabetestext = str_replace(".", ",", $diabetestext);
+                        }
+                        
+                        
+                        //proporção da Qualidade assistencial
+                        $qa = ($prenatal_consultas + $prenatal_sifilis_hiv + $cobertura_citopatologico + $hipertensao + $diabetes)*10;
+                        $qa = round(($qa * 0.5),2);
                         $qatext = number_format($qa, 2, ',', ' ');
-                        $qnota = $rs['qnota']/2;
+                        
+                        //proporção da Qualidade da Tutoria
+                        $qnota = $rs['qualidade'];
 //                        var_dump($qnota);
-                        $qnota = (($qnota - 1)*10)/4;
+//                        $qnota = (($qnota - 1)*10)/4;
+
                         $qnota = round($qnota,2);
                         $qnotatext = number_format($qnota, 2, ',', '.');
-                        $cpossui = $rs['cpossui'];
-                        if($cpossui === 'Sim'){
+                        
+                        //proporção da Competência Profissional
+                        $cpossui = $rs['competencias'];
+                        if($cpossui === '1'){
                             $cpossui = 30.00;
                             $cpossuitext = number_format(30, 2, ',', '.');
                         }else{
                             $cpossui = 0.00;
                             $cpossuitext = number_format(0, 2, ',', '.');
                         }
-                        $anota = $rs['anota'];
+                        $anota = $rs['aperfeicoamento'];
                         if($anota >= 50){
                             $anota = 10.00;
                             $anotatext = number_format(10, 2, ',', '.');
@@ -266,10 +314,20 @@ if ($rscpf === true) {
                         $ar = $qa + $qnota + $anota;
                         $artext = number_format($ar, 2, ',', '.');
                         $mf = round(($ar + $cpossui),2);
+//                        $mf= 49.99;
                         $mftext = number_format($mf, 2, ',', '.');
                         $faltam = 100 - $mf;
                         $faltamtext = number_format($faltam, 2, ',', '.');
 //                        var_dump($qa,$qnota,$cpossui,$anota,$mf,$faltam);
+                        //parcelas proporcionais ao IGAD
+//                        $qap = round(($qa/$mf)*100,2);
+//                        var_dump($qap);
+//                        $qnotap = round(($qnota/$mf)*100,2);
+//                        var_dump($qnotap);
+//                        $cpossuip = round(($cpossui/$mf)*100,2);
+//                        var_dump($cpossuip);
+//                        $qnotap = round(($qnota/$mf)*100,2);
+//                        var_dump($qnotap);
                         ?>
                             <div class="col-md-12 shadow rounded pt-2 pr-3 pl-3">
                                 <div class="row p-3">
@@ -298,6 +356,14 @@ if ($rscpf === true) {
                                                     <div class="col-md-4">
                                                         <label class="font-weight-bold">INE: </label><label>&nbsp;&nbsp;<?= $ine ?></label>
                                                     </div>
+<!--                                                    <div class="col-md-4">
+                                                        <fieldset class="border rounded pr-3 pl-3"><legend>Incentivo de Desempenho</legend>
+                                                            <div class="row">
+                                                                <div class="col-md-12"><label class="font-weight-bold">Nível: </label><label>&nbsp;&nbsp;<?= $nivel ?></label></div>
+                                                                <div class="col-md-12"><label class="font-weight-bold">Valor: </label><label>&nbsp;&nbsp;R$ <?= $valortext ?></label></div>
+                                                            </div>
+                                                        </fieldset>
+                                                    </div>-->
                                                 </div>
                                             </div>
                                         </div>
@@ -306,9 +372,9 @@ if ($rscpf === true) {
                                 <div class="row p-3">
                                     <div class="col-md-12 mb-3">
                                         <div class="row mt-3 mb-2">
-                                            <div class="col-md-3 mb-3">
+                                            <div class="col-md-4 mb-3">
                                                 <div class="row">
-                                                    <div class="col-md-12 pl-3 pr-4 mb-2">
+<!--                                                    <div class="col-md-12 pl-3 pr-4 mb-2">
                                                         <div class="row">
                                                             <div class="col-md-12 shadow rounded p-1 mb-3">
                                                                 <div class="card bg-gradient-secondary" >
@@ -316,7 +382,9 @@ if ($rscpf === true) {
                                                                         <div class="row">
                                                                             <div class="col-md-11">
                                                                                 <h6 class="card-title small text-white font-weight-bold">Indicador Global da Avaliação de Desempenho - IGAD: <?= $mftext ?>%</h6>
-                                                                                <p class="card-text small text-white">Detalhes...</p>
+                                                                                <p class="card-text small text-white">
+                                                                                    Incentivo de Desempenho Adquirido: <label class="text-info">R$ <?php echo number_format(round((($valor * $mf)/100),2), 2, ',', '.'); ?></label>
+                                                                                </p>
                                                                             </div>
                                                                             <div class="col-md-1">
                                                                                 <i class="fas fa-user-md text-white"></i>
@@ -326,19 +394,19 @@ if ($rscpf === true) {
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div>-->
                                                     <div class="col-md-12 pl-3 pr-4 mb-2">
                                                         <div class="row">
                                                             <div class="col-md-12 shadow rounded p-1 mb-3">
-                                                                <div class="card bg-gradient-primary" >
+                                                                <div class="card" style="background-color: #1160AD;">
                                                                     <div class="card-body">
                                                                         <div class="row">
-                                                                            <div class="col-md-11">
+                                                                            <div class="col-md-10">
                                                                                 <h6 class="card-title small text-white font-weight-bold">Qualidade Assistencial: <?= $qatext ?>%</h6>
                                                                                 <p class="card-text small text-white">Detalhes...</p>
                                                                             </div>
-                                                                            <div class="col-md-1">
-                                                                                <i class="fas fa-user-md text-white"></i>
+                                                                            <div class="col-md-2">
+                                                                                <img src="../icones/qualidade_assistencial_branco.png" style="width: 130%; opacity: 0.8;" >
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -349,15 +417,15 @@ if ($rscpf === true) {
                                                     <div class="col-md-12 pl-3 pr-4 mb-2">
                                                         <div class="row">
                                                             <div class="col-md-12 shadow rounded p-1 mb-3">
-                                                                <div class="card bg-gradient-success" >
+                                                                <div class="card" style="background-color: #17A086;">
                                                                     <div class="card-body">
                                                                         <div class="row">
-                                                                            <div class="col-md-11">
+                                                                            <div class="col-md-10">
                                                                                 <h6 class="card-title small text-white font-weight-bold">Qualidade Tutoria: <?= $qnotatext ?>%</h6>
                                                                                 <p class="card-text small text-white">Detalhes...</p>
                                                                             </div>
-                                                                            <div class="col-md-1">
-                                                                                <i class="fas fa-user-md text-white"></i>
+                                                                            <div class="col-md-2">
+                                                                                <img src="../icones/qualidade_branco.png" style="width: 130%; opacity: 0.8;" >
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -368,15 +436,15 @@ if ($rscpf === true) {
                                                     <div class="col-md-12 pl-3 pr-4 mb-2">
                                                         <div class="row">
                                                             <div class="col-md-12 shadow rounded p-1 mb-3">
-                                                                <div class="card bg-gradient-danger" >
+                                                                <div class="card" style="background-color: #94B856;">
                                                                     <div class="card-body">
                                                                         <div class="row">
-                                                                            <div class="col-md-11">
+                                                                            <div class="col-md-10">
                                                                                 <h6 class="card-title small text-white font-weight-bold">Aperfeiçoamento Profissional: <?= $anotatext ?>%</h6>
                                                                                 <p class="card-text small text-white">Detalhes...</p>
                                                                             </div>
-                                                                            <div class="col-md-1">
-                                                                                <i class="fas fa-user-md text-white"></i>
+                                                                            <div class="col-md-2">
+                                                                                <img src="../icones/aperficoamento_branco.png" style="width: 130%; opacity: 0.8;" >
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -387,15 +455,34 @@ if ($rscpf === true) {
                                                     <div class="col-md-12 pl-3 pr-4 mb-2">
                                                         <div class="row">
                                                             <div class="col-md-12 shadow rounded p-1 mb-3">
-                                                                <div class="card bg-gradient-info" >
+                                                                <div class="card" style="background-color: #F49C07;">
                                                                     <div class="card-body">
                                                                         <div class="row">
-                                                                            <div class="col-md-11">
+                                                                            <div class="col-md-10">
                                                                                 <h6 class="card-title small text-white font-weight-bold">Competências Profissionais: <?= $cpossuitext ?>%</h6>
                                                                                 <p class="card-text small text-white">Detalhes...</p>
                                                                             </div>
-                                                                            <div class="col-md-1">
-                                                                                <i class="fas fa-user-md text-white"></i>
+                                                                            <div class="col-md-2">
+                                                                                <img src="../icones/competencias_branco.png" style="width: 130%; opacity: 0.8;" >
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12 pl-3 pr-4 mb-2">
+                                                        <div class="row">
+                                                            <div class="col-md-12 shadow rounded p-1 mb-3">
+                                                                <div class="card" style="background-color: #f1f4f8;">
+                                                                    <div class="card-body">
+                                                                        <div class="row">
+                                                                            <div class="col-md-10">
+                                                                                <h6 class="card-title small text-dark font-weight-bold">Deixou de pontuar: <?= $faltamtext ?>%</h6>
+                                                                                <p class="card-text small text-dark">Detalhes...</p>
+                                                                            </div>
+                                                                            <div class="col-md-2">
+                                                                                <img src="../icones/deixou_de_pontuar_branco.png" style="width: 130%; opacity: 0.8;" >
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -405,7 +492,7 @@ if ($rscpf === true) {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-3 mb-3">
+                                            <div class="col-md-4 mb-3">
                                                 <div class="row">
                                                     <div class="col-md-12 pl-4 pr-2 mb-2">
                                                         <div class="row">
@@ -413,18 +500,24 @@ if ($rscpf === true) {
                                                                 <div class="row">
                                                                     <div class="col-md-12">
                                                                         <div class="card">
-                                                                            <div class="card-header">
-                                                                              Featured
-                                                                            </div>
                                                                             <div class="card-body">
-                                                                                <h6 class="card-title font-weight-bold">Special title treatment</h6>
-                                                                                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                                                                                <h6 class="card-title font-weight-bold text-info">Indicador Global da Avaliação de Desempenho - IGAD</h6>
+                                                                                <div class="row">
+                                                                                    <div class="col-12">
+                                                                                        <div class="box">
+                                                                                            <div class="chart" data-percent="<?= $mf ?>" data-scale-color="#ffb400"><?= $mftext ?>%</div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <p class="card-text small mt-3">
+                                                                                    Incentivo de Desempenho Adquirido: <label class="text-info">R$ <?php echo number_format(round((($valor * $mf)/100),2), 2, ',', '.'); ?></label>
+                                                                                </p>
                                                                             </div>
                                                                           </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="col-md-12 shadow rounded p-2 mb-3">
+<!--                                                            <div class="col-md-12 shadow rounded p-2 mb-3">
                                                                 <div class="row">
                                                                     <div class="col-md-12">
                                                                         <div class="card">
@@ -438,17 +531,37 @@ if ($rscpf === true) {
                                                                           </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
+                                                            </div>-->
                                                             <div class="col-md-12 shadow rounded p-2 mb-3">
                                                                 <div class="row">
                                                                     <div class="col-md-12">
                                                                         <div class="card">
                                                                             <div class="card-header">
-                                                                              Featured
+                                                                                <h6>Constestação</h6>
                                                                             </div>
                                                                             <div class="card-body">
-                                                                                <h6 class="card-title font-weight-bold">Special title treatment</h6>
-                                                                                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                                                                                <?php
+                                                                                $sqlc = "select * from contestacao where fkdemonstrativo = '$iddemonstrativo'";
+                                                                                $queryc = mysqli_query($conn, $sqlc);
+                                                                                $nrrsc = mysqli_num_rows($queryc);
+                                                                                $rsc = mysqli_fetch_array($queryc);
+                                                                                if($nrrsc === 0){
+                                                                                ?> 
+                                                                                <p>Descrição...</p>
+                                                                                <button type="button" data-toggle="modal" data-target=".modalContestacao" class="btn btn-warning shadow-sm "><i class="fas fa-arrow-circle-right"></i> &nbsp;FAZER CONTESTAÇÃO</button>
+                                                                                <?php }else{ ?>
+                                                                                    <?php
+                                                                                    do{
+                                                                                        echo "Contestação do Médico Tutor: &nbsp;".$rsc['texto']."<br><br>";
+                                                                                        echo "Contestação enviada em: &nbsp;".vemdata($rsc['datahora'])."<br><br>";
+                                                                                        if($rsc['flagresposta'] === '0'){
+                                                                                            echo "<label class='text-danger'>* Em análise.</label>";
+                                                                                        }else{
+                                                                                            echo "Resposta da Contestação: &nbsp;".$rsc['resposta']."<br>";
+                                                                                        }
+                                                                                    }while ($rsc = mysqli_fetch_array($queryc));
+                                                                                    ?>
+                                                                                <?php } ?>
                                                                             </div>
                                                                           </div>
                                                                     </div>
@@ -458,22 +571,12 @@ if ($rscpf === true) {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6 mb-3">
-                                                <!--<div class="row">
-                                                    <div class="col-md-4">
-                                                        <label class="font-weight-bold">Ano: </label><label>&nbsp;&nbsp;<?= $ano ?></label>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <label class="font-weight-bold">Ciclo: </label><label>&nbsp;&nbsp;<?= $ciclo ?>º</label>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <label class="font-weight-bold">IGAD: </label><label class="text-danger"> &nbsp;&nbsp;<?= $mftext ?>%</label>
-                                                    </div>
-                                                </div>-->
+                                            <div class="col-md-4 mb-3">
                                                 <div class="row">
                                                     <div class="col-md-12 pl-5 pr-3">
                                                         <div class="row">
-                                                            <div class="col-md-12 shadow rounded pt-2 pr-3 pl-3 mb-2">
+                                                            <div class="col-md-12 shadow rounded p-2 mb-2">
+                                                                <div class="card">
                                                                 <div class="row p-3">
                                                                     <div class="col-md-12 mt-3 mb-4">
                                                                         <figure class="highcharts-figure">
@@ -484,56 +587,50 @@ if ($rscpf === true) {
                                                                         </figure>
                                                                     </div>
                                                                 </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-<!--                                                                <div class="row">
-                                                                    <div class="col-md-12">
-                                                                        <h6 class="font-weight-bold text-center text-white bg-dark form-control" style="height: 60px;line-height: 50px;">Indicador Global da Avaliação de Desempenho - IGAD: <?= $mftext ?>%</h6>   
-                                                                    </div>
-                                                                </div>
-                                                                <div class="row">
-                                                                    <div class="col-md-2" >
-                                                                        <h6 class="font-weight-bold text-center text-white bg-dark form-control" style="height: 100px;line-height: 90px;">Eixo</h6> 
-                                                                    </div>
-                                                                    <div class="col-md-8">
-                                                                        <button class="text-center btn btn-info border-light shadow-sm rounded form-control"  data-toggle="modal" title="Avaliação de Resultados" data-target=".modalar" id="modalar" style="height: 100px;">Avaliação de Resultados<br><?= $artext ?>%</button> 
-                                                                    </div>
-                                                                    <div class="col-md-2">
-                                                                        <button class="text-center btn btn-info border-light shadow-sm rounded form-control" data-toggle="modal" data-target=".modalac" id="modalac" style="height: 100px;">Avaliação de<br>Competências<br><?= $cpossuitext ?>%</button> 
-                                                                    </div>
-                                                                </div>
-                                                                <div class="row">
-                                                                    <div class="col-md-2">
-                                                                        <h6 class="font-weight-bold text-center text-white bg-dark form-control" style="height: 100px;line-height: 90px;">Domínio</h6> 
-                                                                    </div>
-                                                                    <div class="col-md-3">
-                                                                        <button class="text-center btn btn-warning text-dark border-light shadow-sm rounded form-control" data-toggle="modal" data-target=".modalaqa" id="modalaqa" style="height: 100px;">Qualidade assistencial<br><?= $qatext ?>%</button> 
-                                                                    </div>
-                                                                    <div class="col-md-2">
-                                                                        <button class="text-center btn btn-warning text-dark border-light shadow-sm rounded form-control" data-toggle="modal" data-target=".modalqt" id="modalqt" style="height: 100px;">Qualidade da<br>tutoria<br><?= $qnotatext ?>%</button> 
-                                                                    </div>
-                                                                    <div class="col-md-3">
-                                                                        <button class="text-center btn btn-warning text-dark border-light shadow-sm rounded form-control" data-toggle="modal" data-target=".modalap" id="modalap" style="height: 100px;">Aperfeiçoamento<br>profissional<br><?= $anotatext ?>%</button> 
-                                                                    </div>
-                                                                    <div class="col-md-2">
-                                                                        <button class="text-center btn btn-warning text-dark border-light shadow-sm rounded form-control" data-toggle="modal" data-target=".modalcp" id="modalcp" style="height: 100px;">Competências<br>profissionais<br><?= $cpossuitext ?>%</button> 
-                                                                    </div>
-                                                                </div>
-                                                                <div class="row">
-                                                                    <div class="col-md-12">
-                                                                        <label class="text-danger small">* Clique  nos botões para visualizar os resultados</label> 
-                                                                    </div>
-                                                                </div>-->
-                                                            <!--</div>
-                                                        </div>
-                                                    </div>
-                                                </div>-->
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <!-- modal modalContestacao -->
+                            <div class="modal fad modalContestacao mt-2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <form method="post" action="../Controller_agsus/contestacao.php">
+                                <div class="modal-dialog mw-100 w-75">
+                                    <div class="modal-content">
+                                        <input type="hidden" name="iddemonstrativo" value="<?= $iddemonstrativo ?>">
+                                        <input type="hidden" name="cpf" value="<?= $cpftratado ?>">
+                                        <input type="hidden" name="ibge" value="<?= $ibge ?>">
+                                        <input type="hidden" name="cnes" value="<?= $cnes ?>">
+                                        <input type="hidden" name="ine" value="<?= $ine ?>">
+                                        <div class="modal-header bg-light">
+                                            <div class="col-10 mt-1">
+                                                <h5 class="modal-title text-left text-primary" id="exampleModalLabel"><i class="fas fa-arrow-circle-right"></i> Formulário de Contestação</h5>
+                                            </div>
+                                            <div class="col-2">
+                                                <button type="button" class="bg-light close" data-dismiss="modal" aria-label="close">
+                                                    <span aria-hidden="true">&times;</span> </button>
+                                            </div>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row mt-1">
+                                                <div class="col-sm-12">
+                                                    <h6 class="text-dark">Registre a sua contestação</h6>
+                                                    <textarea name="contestacao" class="" rows="4" style="width: 100%; resize: none;"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" name="enviarContestacao" value="1" class="btn btn-success shadow-sm rounded ml-5 mr-5 p-2">&nbsp;&nbsp; ENVIAR &nbsp;&nbsp;</button>
+                                            <button type="reset" class="btn btn-light shadow-sm rounded ml-5 mr-5 p-2" data-dismiss="modal"> CANCELAR </button>    
+                                        </div>
+                                    </div>
+                                </div>
+                                </form>
                             </div>
                             <!-- modal modalar -->
                             <div class="modal fad modalar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -815,13 +912,25 @@ if ($rscpf === true) {
                         {
                             name: 'Deixou de pontuar: <?= $faltamtext ?>%',
                             y: <?= $faltam ?>,
-                            sliced: true,
+                            sliced: false,
                             selected: false
                         }
                         /*['Vivo', 8],
                         ['Others', 30]*/
                     ]
                 }]
+            });
+            
+            $(function() {
+                if(<?= $mf ?> < 70){
+                    $('.chart').easyPieChart({
+                        //your options goes here
+                    });
+                }else{
+                    $('.chart').easyPieChart2({
+                        //your options goes here
+                    });
+                }
             });
             </script>
     </body>

@@ -5,10 +5,17 @@ include '../conexao-agsus.php';
 //   header("Location: derruba_session.php"); exit();
 //}
 //$cpf = $_SESSION['cpf'];
-$cpf = '001.018.311-61';
+//$cpf = '001.018.311-61';
+//$cpf = '029.502.963-35';
+$cpf = '091.328.314-20';
+//$cpf = '106.423.006-74';
+
 date_default_timezone_set('America/Sao_Paulo');
 //$anoAtual = date('Y');
 $anoAtual = 2023;
+$ano = 2023;
+$ciclo = 1;
+$periodo = 25;
 $cpftratado = str_replace("-", "", $cpf);
 $cpftratado = str_replace(".", "", $cpftratado);
 $cpftratado = str_replace(".", "", $cpftratado);
@@ -21,7 +28,7 @@ $sql = "select m.nome, m.admissao, m.cargo, m.tipologia, m.uf, m.municipio, m.da
         . "left join qualidade q on q.FKcpf = m.cpf "
         . "left join aperfeicoamento a on a.medico_cpf = m.cpf "
         . "left join competencias c on c.medico_cpf = m.cpf "
-        . "where m.cpf = '$cpftratado' and d.ano = 2023 and p.idperiodo = 24 and d.demonstrativo_ano = 2023 and d.demonstrativo_ciclo = 2;";
+        . "where m.cpf = '$cpftratado' and d.ano = '$ano' and p.idperiodo = '$periodo' and d.demonstrativo_ano = '$ano' and d.demonstrativo_ciclo = '$ciclo';";
 $query = mysqli_query($conn, $sql);
 $nrrs = mysqli_num_rows($query);
 $rs = mysqli_fetch_array($query);
@@ -61,7 +68,6 @@ if ($rscpf === true) {
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
         <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-        <link rel="shortcut icon" href="img/iconAdaps.png"/>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
         <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -69,6 +75,61 @@ if ($rscpf === true) {
         <!-- Custom styles for this template-->
         <link href="../css/sb-admin-2.min.css" rel="stylesheet">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+        <script src="../js/highcharts.js"></script>
+        <script src="../js/highcharts-3d.js"></script>
+        <!--<script src="../js/exporting.js"></script>-->
+        <!--<script src="../js/export-data.js"></script>-->
+        <script src="../js/accessibility.js"></script>
+        <script src="../js/jquery.easypiechart.js"></script>
+        <script src="../js/jquery.easypiechart2.js"></script>
+        <style>
+        #container {
+            height: 400px;
+        }
+
+        .highcharts-figure,
+        .highcharts-data-table table {
+            min-width: 310px;
+            max-width: 800px;
+            margin: 1em auto;
+        }
+
+        .highcharts-data-table table {
+            font-family: Verdana, sans-serif;
+            border-collapse: collapse;
+            border: 1px solid #ebebeb;
+            margin: 10px auto;
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .highcharts-data-table caption {
+            padding: 1em 0;
+            font-size: 1.2em;
+            color: #555;
+        }
+
+        .highcharts-data-table th {
+            font-weight: 600;
+            padding: 0.5em;
+        }
+
+        .highcharts-data-table td,
+        .highcharts-data-table th,
+        .highcharts-data-table caption {
+            padding: 0.5em;
+        }
+
+        .highcharts-data-table thead tr,
+        .highcharts-data-table tr:nth-child(even) {
+            background: #f8f8f8;
+        }
+
+        .highcharts-data-table tr:hover {
+            background: #f1f7ff;
+        }
+        </style>
         <style>
             ul {margin-left: -18px;}
             .tooltip-inner {
@@ -86,6 +147,21 @@ if ($rscpf === true) {
             .tooltip.bs-tooltip-top .arrow:before {
                 border-top-color: #0f547cad !important;
             }
+            
+            .box .chart{
+                position: relative;
+                width: 110px;
+                height: 110px;
+                margin: 0 auto;
+                text-align: center;
+                font-size: 18px;
+                line-height: 110px;
+            }
+            .box canvas{
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
         </style>
     </head>
 
@@ -96,7 +172,7 @@ if ($rscpf === true) {
                     <img src="../img_agsus/Logo_400x200.png" class="img-fluid" alt="logoAdaps" width="250" title="Logo Adaps">
                 </div>
                 <div class="col-12 col-md-8 mt-5 ">
-                    <h4 class="mb-4 font-weight-bold">Programa de Avaliação de Desempenho - Ano <?= $ano1 ?> - <?= $ciclo1 ?>º Ciclo</h4>
+                    <h4 class="mb-4 font-weight-bold">1º Ciclo do Programa de Avaliação de Desempenho do Tutor Médico - Ano <?= $ano1 ?></h4>
                 </div>
             </div>
             <div class="row">
@@ -107,7 +183,7 @@ if ($rscpf === true) {
                         </button>
 
 
-                        <div id="menuPrincipal" class="collapse navbar-collapse">
+                        <div id="menuPrincipal" class="collapse navbar-collapse pr-2 pl-2">
                             <ul class="navbar-nav">
                                 <li class="nav-item">
                                     <a href="../index.php" class="nav-link">Inicio </a>
@@ -135,7 +211,7 @@ if ($rscpf === true) {
                                     <a class="nav-link" href="https://appsadapsbrasil.com/sistema-adaps/painelMedico.php"><i class="fas fa-sign-out-alt pt-1"></i></a>
                                 </li>
                                 <li class="nav-item">
-                                    <div id="loading2">
+                                    <div id="loading">
                                         &nbsp;<img class="float-right" src="../img_agsus/carregando.gif" width="40" height="40" />
                                     </div>
                                 </li>
@@ -187,15 +263,23 @@ if ($rscpf === true) {
 //                        var_dump("diabetes-Fator",$diabetes);
                         $diabetestext = str_replace(",", "", $diabetes);
                         $diabetestext = str_replace(".", ",", $diabetestext);
-                        $qa = round((($prenatal_consultas + $prenatal_sifilis_hiv + $cobertura_citopatologico + $hipertensao + $diabetes)*10),2);
+                        
+                        //proporção da Qualidade assistencial
+                        $qa = ($prenatal_consultas + $prenatal_sifilis_hiv + $cobertura_citopatologico + $hipertensao + $diabetes)*10;
+                        $qa = round(($qa * 0.5),2);
                         $qatext = number_format($qa, 2, ',', ' ');
-                        $qnota = $rs['qnota']/2;
+                        
+                        //proporção da Qualidade da Tutoria
+                        $qnota = $rs['qnota'];
 //                        var_dump($qnota);
-                        $qnota = (($qnota - 1)*10)/4;
+//                        $qnota = (($qnota - 1)*10)/4;
+
                         $qnota = round($qnota,2);
                         $qnotatext = number_format($qnota, 2, ',', '.');
+                        
+                        //proporção da Competência Profissional
                         $cpossui = $rs['cpossui'];
-                        if($cpossui === 'Sim'){
+                        if($cpossui === '1'){
                             $cpossui = 30.00;
                             $cpossuitext = number_format(30, 2, ',', '.');
                         }else{
@@ -213,52 +297,265 @@ if ($rscpf === true) {
                         $ar = $qa + $qnota + $anota;
                         $artext = number_format($ar, 2, ',', '.');
                         $mf = round(($ar + $cpossui),2);
+//                        $mf= 49.99;
                         $mftext = number_format($mf, 2, ',', '.');
+                        $faltam = 100 - $mf;
+                        $faltamtext = number_format($faltam, 2, ',', '.');
+//                        var_dump($qa,$qnota,$cpossui,$anota,$mf,$faltam);
+                        //parcelas proporcionais ao IGAD
+//                        $qap = round(($qa/$mf)*100,2);
+//                        var_dump($qap);
+//                        $qnotap = round(($qnota/$mf)*100,2);
+//                        var_dump($qnotap);
+//                        $cpossuip = round(($cpossui/$mf)*100,2);
+//                        var_dump($cpossuip);
+//                        $qnotap = round(($qnota/$mf)*100,2);
+//                        var_dump($qnotap);
                         ?>
-                            <div class="col-md-12 shadow rounded pt-2 pr-3 pl-3 mb-2">
+                            <div class="col-md-12 shadow rounded pt-2 pr-3 pl-3">
                                 <div class="row p-3">
-                                    <div class="col-md-12 mt-3 mb-4">
-                                        <div class="row mt-3 mb-2">
-                                            <div class="col-md-4 mb-4">
+                                    <div class="col-md-12 mt-2 pl-3 pr-3">
+                                        <div class="row">
+                                            <div class="col-md-12 shadow rounded p-5">
                                                 <div class="row" >
-                                                                <div class="col-md-12 mb-1">
-                                                                    <label class="font-weight-bold">Nome: </label><label class="font-weight-bold"> &nbsp;<?= $nome ?></label>
-                                                                </div>
-                                                                <div class="col-md-12">
-                                                                    <label class="font-weight-bold">CPF: </label><label> &nbsp;&nbsp;<?= $cpf ?></label>
-                                                                </div>
-                                                                <div class="col-md-12">
-                                                                    <label class="font-weight-bold">Município-UF: </label><label>&nbsp;&nbsp;<?php echo "$municipio-$uf"; ?></label>
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <label class="font-weight-bold">Cargo: </label><label> &nbsp;&nbsp;<?= $cargo ?></label>
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <label class="font-weight-bold">Tipologia: </label><label> &nbsp;&nbsp;<?= $tipologia ?></label>
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <label class="font-weight-bold">CNES: </label><label>&nbsp;&nbsp;<?= $cnes ?></label>
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <label class="font-weight-bold">INE: </label><label>&nbsp;&nbsp;<?= $ine ?></label>
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <label class="font-weight-bold">Ano: </label><label>&nbsp;&nbsp;<?= $ano ?></label>
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <label class="font-weight-bold">Ciclo: </label><label>&nbsp;&nbsp;<?= $ciclo ?>º</label>
-                                                                </div>
-                                                                <div class="col-md-6 offset-3 mt-5 mb-2">
-                                                                    <label class="font-weight-bold">IGAD: </label><label class="text-danger"> &nbsp;&nbsp;<?= $mftext ?>%</label>
+                                                    <div class="col-md-8 mb-1">
+                                                        <label class="font-weight-bold text-info">Nome: </label><label class="font-weight-bold  text-info"> &nbsp;<?= $nome ?></label>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="font-weight-bold text-info">CPF: </label><label class="text-info"> &nbsp;&nbsp;<?= $cpf ?></label>
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <label class="font-weight-bold">Município-UF: </label><label>&nbsp;&nbsp;<?php echo "$municipio-$uf"; ?></label>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="font-weight-bold">Cargo: </label><label> &nbsp;&nbsp;<?= $cargo ?></label>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="font-weight-bold">Tipologia: </label><label> &nbsp;&nbsp;<?= $tipologia ?></label>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="font-weight-bold">CNES: </label><label>&nbsp;&nbsp;<?= $cnes ?></label>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="font-weight-bold">INE: </label><label>&nbsp;&nbsp;<?= $ine ?></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row p-3">
+                                    <div class="col-md-12 mb-3">
+                                        <div class="row mt-3 mb-2">
+                                            <div class="col-md-3 mb-3">
+                                                <div class="row">
+                                                    <div class="col-md-12 pl-3 pr-4 mb-2">
+                                                        <div class="row">
+                                                            <div class="col-md-12 shadow rounded p-1 mb-3">
+                                                                <div class="card bg-gradient-secondary" >
+                                                                    <div class="card-body">
+                                                                        <div class="row">
+                                                                            <div class="col-md-11">
+                                                                                <h6 class="card-title small text-white font-weight-bold">Indicador Global da Avaliação de Desempenho - IGAD: <?= $mftext ?>%</h6>
+                                                                                <p class="card-text small text-white">Detalhes...</p>
+                                                                            </div>
+                                                                            <div class="col-md-1">
+                                                                                <i class="fas fa-user-md text-white"></i>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                            <div class="col-md-8 mb-3">
+                                                    </div>
+                                                    <div class="col-md-12 pl-3 pr-4 mb-2">
+                                                        <div class="row">
+                                                            <div class="col-md-12 shadow rounded p-1 mb-3">
+                                                                <div class="card" style="background-color: #6D68DE;">
+                                                                    <div class="card-body">
+                                                                        <div class="row">
+                                                                            <div class="col-md-11">
+                                                                                <h6 class="card-title small text-white font-weight-bold">Qualidade Assistencial: <?= $qatext ?>%</h6>
+                                                                                <p class="card-text small text-white">Detalhes...</p>
+                                                                            </div>
+                                                                            <div class="col-md-1">
+                                                                                <i class="fas fa-user-md text-white"></i>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12 pl-3 pr-4 mb-2">
+                                                        <div class="row">
+                                                            <div class="col-md-12 shadow rounded p-1 mb-3">
+                                                                <div class="card" style="background-color: #00E272;">
+                                                                    <div class="card-body">
+                                                                        <div class="row">
+                                                                            <div class="col-md-11">
+                                                                                <h6 class="card-title small text-white font-weight-bold">Qualidade Tutoria: <?= $qnotatext ?>%</h6>
+                                                                                <p class="card-text small text-white">Detalhes...</p>
+                                                                            </div>
+                                                                            <div class="col-md-1">
+                                                                                <i class="fas fa-user-md text-white"></i>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12 pl-3 pr-4 mb-2">
+                                                        <div class="row">
+                                                            <div class="col-md-12 shadow rounded p-1 mb-3">
+                                                                <div class="card" style="background-color: #FE6A35;">
+                                                                    <div class="card-body">
+                                                                        <div class="row">
+                                                                            <div class="col-md-11">
+                                                                                <h6 class="card-title small text-white font-weight-bold">Aperfeiçoamento Profissional: <?= $anotatext ?>%</h6>
+                                                                                <p class="card-text small text-white">Detalhes...</p>
+                                                                            </div>
+                                                                            <div class="col-md-1">
+                                                                                <i class="fas fa-user-md text-white"></i>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12 pl-3 pr-4 mb-2">
+                                                        <div class="row">
+                                                            <div class="col-md-12 shadow rounded p-1 mb-3">
+                                                                <div class="card" style="background-color: #61C3FE;">
+                                                                    <div class="card-body">
+                                                                        <div class="row">
+                                                                            <div class="col-md-11">
+                                                                                <h6 class="card-title small text-white font-weight-bold">Competências Profissionais: <?= $cpossuitext ?>%</h6>
+                                                                                <p class="card-text small text-white">Detalhes...</p>
+                                                                            </div>
+                                                                            <div class="col-md-1">
+                                                                                <i class="fas fa-user-md text-white"></i>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12 pl-3 pr-4 mb-2">
+                                                        <div class="row">
+                                                            <div class="col-md-12 shadow rounded p-1 mb-3">
+                                                                <div class="card" style="background-color: #f1f4f8;">
+                                                                    <div class="card-body">
+                                                                        <div class="row">
+                                                                            <div class="col-md-11">
+                                                                                <h6 class="card-title small text-dark font-weight-bold">Deixou de pontuar: <?= $faltamtext ?>%</h6>
+                                                                                <p class="card-text small text-dark">Detalhes...</p>
+                                                                            </div>
+                                                                            <div class="col-md-1">
+                                                                                <i class="fas fa-user-md text-dark"></i>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 mb-3">
                                                 <div class="row">
-                                                    <div class="col-md-12 shadow rounded pt-2 pr-3 pl-3 mb-2">
-                                                        <div class="row p-3">
-                                                            <div class="col-md-12 mt-3 mb-4">
+                                                    <div class="col-md-12 pl-4 pr-2 mb-2">
+                                                        <div class="row">
+                                                            <div class="col-md-12 shadow rounded p-2 mb-3">
                                                                 <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <div class="card">
+                                                                            <div class="card-body">
+                                                                                <h6 class="card-title font-weight-bold text-info">Indicador Global da Avaliação de Desempenho - IGAD</h6>
+                                                                                <div class="row">
+                                                                                    <div class="col-12">
+                                                                                        <div class="box">
+                                                                                            <div class="chart" data-percent="<?= $mf ?>" data-scale-color="#ffb400"><?= $mftext ?>%</div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <p class="card-text">Detalhes...</p>
+                                                                            </div>
+                                                                          </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12 shadow rounded p-2 mb-3">
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <div class="card">
+                                                                            <div class="card-header">
+                                                                              Featured
+                                                                            </div>
+                                                                            <div class="card-body">
+                                                                                <h6 class="card-title font-weight-bold">Special title treatment</h6>
+                                                                                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                                                                            </div>
+                                                                          </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12 shadow rounded p-2 mb-3">
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <div class="card">
+                                                                            <div class="card-header">
+                                                                              Featured
+                                                                            </div>
+                                                                            <div class="card-body">
+                                                                                <h6 class="card-title font-weight-bold">Special title treatment</h6>
+                                                                                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                                                                            </div>
+                                                                          </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <!--<div class="row">
+                                                    <div class="col-md-4">
+                                                        <label class="font-weight-bold">Ano: </label><label>&nbsp;&nbsp;<?= $ano ?></label>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="font-weight-bold">Ciclo: </label><label>&nbsp;&nbsp;<?= $ciclo ?>º</label>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="font-weight-bold">IGAD: </label><label class="text-danger"> &nbsp;&nbsp;<?= $mftext ?>%</label>
+                                                    </div>
+                                                </div>-->
+                                                <div class="row">
+                                                    <div class="col-md-12 pl-5 pr-3">
+                                                        <div class="row">
+                                                            <div class="col-md-12 shadow rounded p-2 mb-2">
+                                                                <div class="card">
+                                                                <div class="row p-3">
+                                                                    <div class="col-md-12 mt-3 mb-4">
+                                                                        <figure class="highcharts-figure">
+                                                                            <div id="container"></div>
+                                                                            <p class="highcharts-description">
+                                                                              <i>*Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries.</i>
+                                                                            </p>
+                                                                        </figure>
+                                                                    </div>
+                                                                </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+<!--                                                                <div class="row">
                                                                     <div class="col-md-12">
                                                                         <h6 class="font-weight-bold text-center text-white bg-dark form-control" style="height: 60px;line-height: 50px;">Indicador Global da Avaliação de Desempenho - IGAD: <?= $mftext ?>%</h6>   
                                                                     </div>
@@ -295,12 +592,11 @@ if ($rscpf === true) {
                                                                     <div class="col-md-12">
                                                                         <label class="text-danger small">* Clique  nos botões para visualizar os resultados</label> 
                                                                     </div>
-                                                                </div>
-                                                            </div>
+                                                                </div>-->
+                                                            <!--</div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </div>
+                                                </div>-->
                                         </div>
                                     </div>
                                 </div>
@@ -525,546 +821,8 @@ if ($rscpf === true) {
         <script src="../js/demo/chart-bar-prenatal-sifilis.js"></script>
         <script src="../js/demo/chart-bar-citopatologico.js"></script>
         <script src="../js/demo/chart-bar-hipertensao.js"></script>
-        <script src="../js/demo/chart-bar-diabetes.js"></script>
         <script>
-            $(".btn_sub").click(function () {
-                //console.log("clicou");
-                document.getElementById("loading2").style.display = "block";
-            });
-            var i = setInterval(function () {
-                clearInterval(i);
-                // O código desejado é apenas isto:
-                document.getElementById("loading2").style.display = "none";
-                document.getElementById("conteudo").style.display = "inline";
-            }, 1000);
-
-        </script>
-        <script>
-            //Apresentação dos 
             $(document).ready(function () {
-                $('.divexp1').show();
-                $('.divexp2').hide();
-                $('.divexp3').hide();
-                $('.divexp4').hide();
-                $('.divexp5').hide();
-            });
-            
-            $(document).ready(function () {
-                $('.divexp1r').mouseover(function(){
-                    $('.divexp1').show();
-                    $('.divexp2').hide();
-                    $('.divexp3').hide();
-                    $('.divexp4').hide();
-                    $('.divexp5').hide();
-                });
-                $('.divexp2r').mouseover(function(){
-                    $('.divexp1').hide();
-                    $('.divexp2').show();
-                    $('.divexp3').hide();
-                    $('.divexp4').hide();
-                    $('.divexp5').hide();
-                });
-                $('.divexp3r').mouseover(function(){
-                    $('.divexp1').hide();
-                    $('.divexp2').hide();
-                    $('.divexp3').show();
-                    $('.divexp4').hide();
-                    $('.divexp5').hide();
-                });
-                $('.divexp4r').mouseover(function(){
-                    $('.divexp1').hide();
-                    $('.divexp2').hide();
-                    $('.divexp3').hide();
-                    $('.divexp4').show();
-                    $('.divexp5').hide();
-                });
-                $('.divexp5r').mouseover(function(){
-                    $('.divexp1').hide();
-                    $('.divexp2').hide();
-                    $('.divexp3').hide();
-                    $('.divexp4').hide();
-                    $('.divexp5').show();
-                });
-            });
-        </script>
-        <script>
-            //Gráficos + de 1 quadrimestre - formatação
-            // Set new default font family and font color to mimic Bootstrap's default styling
-            Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
-            Chart.defaults.global.defaultFontColor = '#858796';
-
-            function number_format(number, decimals, dec_point, thousands_sep) {
-              // *     example: number_format(1234.56, 2, ',', ' ');
-              // *     return: '1 234,56'
-              number = (number + '').replace(',', '').replace(' ', '');
-              var n = !isFinite(+number) ? 0 : +number,
-                prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
-                sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep,
-                dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
-                s = '',
-                toFixedFix = function(n, prec) {
-                  var k = Math.pow(10, prec);
-                  return '' + Math.round(n * k) / k;
-                };
-              // Fix for IE parseFloat(0.55).toFixed(0) = 0;
-              s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
-              if (s[0].length > 3) {
-                s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
-              }
-              if ((s[1] || '').length < prec) {
-                s[1] = s[1] || '';
-                s[1] += new Array(prec - s[1].length + 1).join('0');
-              }
-              return s.join(dec);
-            }
-            
-            // myBarPrenatal
-            var ctx = document.getElementById("myBarPrenatal");
-            var myBarPrenatal = new Chart(ctx, {
-              type: 'bar',
-              data: {
-                labels: ["1º Quadrim.", "2º Quadrim.", "3º Quadrim."],
-                datasets: [{
-                  label: "Proporção",
-                  backgroundColor: [
-                    '<?php if($pn1 < 18) { echo "#d10e0e"; }elseif($pn1 < 31){ echo "#e6b20b"; }elseif($pn1 < 45){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>', 
-                    '<?php if($pn2 < 18) { echo "#d10e0e"; }elseif($pn2 < 31){ echo "#e6b20b"; }elseif($pn2 < 45){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>',
-                    '<?php if($pn3 < 18) { echo "#d10e0e"; }elseif($pn3 < 31){ echo "#e6b20b"; }elseif($pn3 < 45){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>'],
-                  hoverBackgroundColor: [
-                    '<?php if($pn1 < 18) { echo "#ba0a0a"; }elseif($pn1 < 31){ echo "#d2a208"; }elseif($pn1 < 45){ echo "#15b436"; }else{ echo "#325cd4"; } ?>', 
-                    '<?php if($pn2 < 18) { echo "#ba0a0a"; }elseif($pn2 < 31){ echo "#d2a208"; }elseif($pn2 < 45){ echo "#15b436"; }else{ echo "#325cd4"; } ?>',
-                    '<?php if($pn3 < 18) { echo "#ba0a0a"; }elseif($pn3 < 31){ echo "#d2a208"; }elseif($pn3 < 45){ echo "#15b436"; }else{ echo "#325cd4"; } ?>'],
-                  borderColor: "#5c5f68",
-                  data: [<?php echo $pn1; ?>,<?php echo $pn2; ?>,<?php echo $pn3; ?>]
-                }]
-              },
-              options: {
-                maintainAspectRatio: false,
-                layout: {
-                  padding: {
-                    left: 10,
-                    right: 25,
-                    top: 25,
-                    bottom: 0
-                  }
-                },
-                scales: {
-                  xAxes: [{
-                    time: {
-                      unit: 'month'
-                    },
-                    gridLines: {
-                      display: false,
-                      drawBorder: false
-                    },
-                    ticks: {
-                      maxTicksLimit: 6
-                    },
-                    maxBarThickness: 40
-                  }],
-                  yAxes: [{
-                    ticks: {
-                      min: 0,
-                      max: 100,
-                      maxTicksLimit: 10,
-                      padding: 10,
-                      // Include a dollar sign in the ticks
-                      callback: function(value, index, values) {
-                        return number_format(value) + "%";
-                      }
-                    },
-                    gridLines: {
-                      color: "rgb(234, 236, 244)",
-                      zeroLineColor: "rgb(234, 236, 244)",
-                      drawBorder: false,
-                      borderDash: [2],
-                      zeroLineBorderDash: [2]
-                    }
-                  }]
-                },
-                legend: {
-                  display: false
-                },
-                tooltips: {
-                  titleMarginBottom: 10,
-                  titleFontColor: '#6e707e',
-                  titleFontSize: 14,
-                  backgroundColor: "rgb(255,255,255)",
-                  bodyFontColor: "#858796",
-                  borderColor: '#dddfeb',
-                  borderWidth: 1,
-                  xPadding: 15,
-                  yPadding: 15,
-                  displayColors: false,
-                  caretPadding: 10,
-                  callbacks: {
-                    label: function(tooltipItem, chart) {
-                      var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-                      return datasetLabel + ': ' + number_format(tooltipItem.yLabel,2,',','.') + "%";
-                    }
-                  }
-                }
-              }
-            });
-            
-            // myBarChartSifilis
-            var ctx = document.getElementById("myBarChartSifilis");
-            var myBarChartSifilis = new Chart(ctx, {
-              type: 'bar',
-              data: {
-                labels: ["1º Quadrim.", "2º Quadrim.", "3º Quadrim."],
-                datasets: [{
-                  label: "Proporção",
-                  backgroundColor: [
-                    '<?php if($psh1 < 24) { echo "#d10e0e"; }elseif($psh1 < 42){ echo "#e6b20b"; }elseif($psh1 < 60){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>', 
-                    '<?php if($psh2 < 24) { echo "#d10e0e"; }elseif($psh2 < 42){ echo "#e6b20b"; }elseif($psh2 < 60){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>',
-                    '<?php if($psh3 < 24) { echo "#d10e0e"; }elseif($psh3 < 42){ echo "#e6b20b"; }elseif($psh3 < 60){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>'],
-                  hoverBackgroundColor: [
-                    '<?php if($psh1 < 24) { echo "#ba0a0a"; }elseif($psh1 < 42){ echo "#d2a208"; }elseif($psh1 < 60){ echo "#15b436"; }else{ echo "#325cd4"; } ?>', 
-                    '<?php if($psh2 < 24) { echo "#ba0a0a"; }elseif($psh2 < 42){ echo "#d2a208"; }elseif($psh2 < 60){ echo "#15b436"; }else{ echo "#325cd4"; } ?>',
-                    '<?php if($psh3 < 24) { echo "#ba0a0a"; }elseif($psh3 < 42){ echo "#d2a208"; }elseif($psh3 < 60){ echo "#15b436"; }else{ echo "#325cd4"; } ?>'],
-                  borderColor: "#5c5f68",
-                  data: [<?php echo $psh1; ?>,<?php echo $psh2; ?>,<?php echo $psh3; ?>]
-                }]
-              },
-              options: {
-                maintainAspectRatio: false,
-                layout: {
-                  padding: {
-                    left: 10,
-                    right: 25,
-                    top: 25,
-                    bottom: 0
-                  }
-                },
-                scales: {
-                  xAxes: [{
-                    time: {
-                      unit: 'month'
-                    },
-                    gridLines: {
-                      display: false,
-                      drawBorder: false
-                    },
-                    ticks: {
-                      maxTicksLimit: 6
-                    },
-                    maxBarThickness: 40
-                  }],
-                  yAxes: [{
-                    ticks: {
-                      min: 0,
-                      max: 100,
-                      maxTicksLimit: 10,
-                      padding: 10,
-                      // Include a dollar sign in the ticks
-                      callback: function(value, index, values) {
-                        return number_format(value) + "%";
-                      }
-                    },
-                    gridLines: {
-                      color: "rgb(234, 236, 244)",
-                      zeroLineColor: "rgb(234, 236, 244)",
-                      drawBorder: false,
-                      borderDash: [2],
-                      zeroLineBorderDash: [2]
-                    }
-                  }]
-                },
-                legend: {
-                  display: false
-                },
-                tooltips: {
-                  titleMarginBottom: 10,
-                  titleFontColor: '#6e707e',
-                  titleFontSize: 14,
-                  backgroundColor: "rgb(255,255,255)",
-                  bodyFontColor: "#858796",
-                  borderColor: '#dddfeb',
-                  borderWidth: 1,
-                  xPadding: 15,
-                  yPadding: 15,
-                  displayColors: false,
-                  caretPadding: 10,
-                  callbacks: {
-                    label: function(tooltipItem, chart) {
-                      var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-                      return datasetLabel + ': ' + number_format(tooltipItem.yLabel,2,',','.') + "%";
-                    }
-                  }
-                }
-              }
-            });
-            
-            // myBarChartCitopatologico
-            var ctx = document.getElementById("myBarChartCitopatologico");
-            var myBarChartCitopatologico = new Chart(ctx, {
-              type: 'bar',
-              data: {
-                labels: ["1º Quadrim.", "2º Quadrim.", "3º Quadrim."],
-                datasets: [{
-                  label: "Proporção",
-                  backgroundColor: [
-                    '<?php if($cc1 < 16) { echo "#d10e0e"; }elseif($cc1 < 28){ echo "#e6b20b"; }elseif($cc1 < 40){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>', 
-                    '<?php if($cc2 < 16) { echo "#d10e0e"; }elseif($cc2 < 28){ echo "#e6b20b"; }elseif($cc2 < 40){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>',
-                    '<?php if($cc3 < 16) { echo "#d10e0e"; }elseif($cc3 < 28){ echo "#e6b20b"; }elseif($cc3 < 40){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>'],
-                  hoverBackgroundColor: [
-                    '<?php if($cc1 < 16) { echo "#ba0a0a"; }elseif($cc1 < 28){ echo "#d2a208"; }elseif($cc1 < 40){ echo "#15b436"; }else{ echo "#325cd4"; } ?>', 
-                    '<?php if($cc2 < 16) { echo "#ba0a0a"; }elseif($cc2 < 28){ echo "#d2a208"; }elseif($cc2 < 40){ echo "#15b436"; }else{ echo "#325cd4"; } ?>',
-                    '<?php if($cc3 < 16) { echo "#ba0a0a"; }elseif($cc3 < 28){ echo "#d2a208"; }elseif($cc3 < 40){ echo "#15b436"; }else{ echo "#325cd4"; } ?>'],
-                  borderColor: "#5c5f68",
-                  data: [<?php echo $cc1; ?>,<?php echo $cc2; ?>,<?php echo $cc3; ?>]
-                }]
-              },
-              options: {
-                maintainAspectRatio: false,
-                layout: {
-                  padding: {
-                    left: 10,
-                    right: 25,
-                    top: 25,
-                    bottom: 0
-                  }
-                },
-                scales: {
-                  xAxes: [{
-                    time: {
-                      unit: 'month'
-                    },
-                    gridLines: {
-                      display: false,
-                      drawBorder: false
-                    },
-                    ticks: {
-                      maxTicksLimit: 6
-                    },
-                    maxBarThickness: 40
-                  }],
-                  yAxes: [{
-                    ticks: {
-                      min: 0,
-                      max: 100,
-                      maxTicksLimit: 10,
-                      padding: 10,
-                      // Include a dollar sign in the ticks
-                      callback: function(value, index, values) {
-                        return number_format(value) + "%";
-                      }
-                    },
-                    gridLines: {
-                      color: "rgb(234, 236, 244)",
-                      zeroLineColor: "rgb(234, 236, 244)",
-                      drawBorder: false,
-                      borderDash: [2],
-                      zeroLineBorderDash: [2]
-                    }
-                  }]
-                },
-                legend: {
-                  display: false
-                },
-                tooltips: {
-                  titleMarginBottom: 10,
-                  titleFontColor: '#6e707e',
-                  titleFontSize: 14,
-                  backgroundColor: "rgb(255,255,255)",
-                  bodyFontColor: "#858796",
-                  borderColor: '#dddfeb',
-                  borderWidth: 1,
-                  xPadding: 15,
-                  yPadding: 15,
-                  displayColors: false,
-                  caretPadding: 10,
-                  callbacks: {
-                    label: function(tooltipItem, chart) {
-                      var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-                      return datasetLabel + ': ' + number_format(tooltipItem.yLabel,2,',','.') + "%";
-                    }
-                  }
-                }
-              }
-            });
-            
-            // myBarChartHipertensao
-            var ctx = document.getElementById("myBarChartHipertensao");
-            var myBarChartHipertensao = new Chart(ctx, {
-              type: 'bar',
-              data: {
-                labels: ["1º Quadrim.", "2º Quadrim.", "3º Quadrim."],
-                datasets: [{
-                  label: "Proporção",
-                  backgroundColor: [
-                    '<?php if($hi1 < 20) { echo "#d10e0e"; }elseif($hi1 < 35){ echo "#e6b20b"; }elseif($hi1 < 50){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>', 
-                    '<?php if($hi2 < 20) { echo "#d10e0e"; }elseif($hi2 < 35){ echo "#e6b20b"; }elseif($hi2 < 50){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>',
-                    '<?php if($hi3 < 20) { echo "#d10e0e"; }elseif($hi3 < 35){ echo "#e6b20b"; }elseif($hi3 < 50){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>'],
-                  hoverBackgroundColor: [
-                    '<?php if($hi1 < 20) { echo "#ba0a0a"; }elseif($hi1 < 35){ echo "#d2a208"; }elseif($hi1 < 50){ echo "#15b436"; }else{ echo "#325cd4"; } ?>', 
-                    '<?php if($hi2 < 20) { echo "#ba0a0a"; }elseif($hi2 < 35){ echo "#d2a208"; }elseif($hi2 < 50){ echo "#15b436"; }else{ echo "#325cd4"; } ?>',
-                    '<?php if($hi3 < 20) { echo "#ba0a0a"; }elseif($hi3 < 35){ echo "#d2a208"; }elseif($hi3 < 50){ echo "#15b436"; }else{ echo "#325cd4"; } ?>'],
-                  borderColor: "#5c5f68",
-                  data: [<?php echo $hi1; ?>,<?php echo $hi2; ?>,<?php echo $hi3; ?>]
-                }]
-              },
-              options: {
-                maintainAspectRatio: false,
-                layout: {
-                  padding: {
-                    left: 10,
-                    right: 25,
-                    top: 25,
-                    bottom: 0
-                  }
-                },
-                scales: {
-                  xAxes: [{
-                    time: {
-                      unit: 'month'
-                    },
-                    gridLines: {
-                      display: false,
-                      drawBorder: false
-                    },
-                    ticks: {
-                      maxTicksLimit: 6
-                    },
-                    maxBarThickness: 40
-                  }],
-                  yAxes: [{
-                    ticks: {
-                      min: 0,
-                      max: 100,
-                      maxTicksLimit: 10,
-                      padding: 10,
-                      // Include a dollar sign in the ticks
-                      callback: function(value, index, values) {
-                        return number_format(value) + "%";
-                      }
-                    },
-                    gridLines: {
-                      color: "rgb(234, 236, 244)",
-                      zeroLineColor: "rgb(234, 236, 244)",
-                      drawBorder: false,
-                      borderDash: [2],
-                      zeroLineBorderDash: [2]
-                    }
-                  }]
-                },
-                legend: {
-                  display: false
-                },
-                tooltips: {
-                  titleMarginBottom: 10,
-                  titleFontColor: '#6e707e',
-                  titleFontSize: 14,
-                  backgroundColor: "rgb(255,255,255)",
-                  bodyFontColor: "#858796",
-                  borderColor: '#dddfeb',
-                  borderWidth: 1,
-                  xPadding: 15,
-                  yPadding: 15,
-                  displayColors: false,
-                  caretPadding: 10,
-                  callbacks: {
-                    label: function(tooltipItem, chart) {
-                      var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-                      return datasetLabel + ': ' + number_format(tooltipItem.yLabel,2,',','.') + "%";
-                    }
-                  }
-                }
-              }
-            });
-            
-            // myBarChartDiabetes
-            var ctx = document.getElementById("myBarChartDiabetes");
-            var myBarChartDiabetes = new Chart(ctx, {
-              type: 'bar',
-              data: {
-                labels: ["1º Quadrim.", "2º Quadrim.", "3º Quadrim."],
-                datasets: [{
-                  label: "Proporção",
-                  backgroundColor: [
-                    '<?php if($diab1 < 20) { echo "#d10e0e"; }elseif($diab1 < 35){ echo "#e6b20b"; }elseif($diab1 < 50){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>', 
-                    '<?php if($diab2 < 20) { echo "#d10e0e"; }elseif($diab2 < 35){ echo "#e6b20b"; }elseif($diab2 < 50){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>',
-                    '<?php if($diab3 < 20) { echo "#d10e0e"; }elseif($diab3 < 35){ echo "#e6b20b"; }elseif($diab3 < 50){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>'],
-                  hoverBackgroundColor: [
-                    '<?php if($diab1 < 20) { echo "#ba0a0a"; }elseif($diab1 < 35){ echo "#d2a208"; }elseif($diab1 < 50){ echo "#15b436"; }else{ echo "#325cd4"; } ?>', 
-                    '<?php if($diab2 < 20) { echo "#ba0a0a"; }elseif($diab2 < 35){ echo "#d2a208"; }elseif($diab2 < 50){ echo "#15b436"; }else{ echo "#325cd4"; } ?>',
-                    '<?php if($diab3 < 20) { echo "#ba0a0a"; }elseif($diab3 < 35){ echo "#d2a208"; }elseif($diab3 < 50){ echo "#15b436"; }else{ echo "#325cd4"; } ?>'],
-                  borderColor: "#5c5f68",
-                  data: [<?php echo $diab1; ?>,<?php echo $diab2; ?>,<?php echo $diab3; ?>]
-                }]
-              },
-              options: {
-                maintainAspectRatio: false,
-                layout: {
-                  padding: {
-                    left: 10,
-                    right: 25,
-                    top: 25,
-                    bottom: 0
-                  }
-                },
-                scales: {
-                  xAxes: [{
-                    time: {
-                      unit: 'month'
-                    },
-                    gridLines: {
-                      display: false,
-                      drawBorder: false
-                    },
-                    ticks: {
-                      maxTicksLimit: 6
-                    },
-                    maxBarThickness: 40
-                  }],
-                  yAxes: [{
-                    ticks: {
-                      min: 0,
-                      max: 100,
-                      maxTicksLimit: 10,
-                      padding: 10,
-                      // Include a dollar sign in the ticks
-                      callback: function(value, index, values) {
-                        return number_format(value) + "%";
-                      }
-                    },
-                    gridLines: {
-                      color: "rgb(234, 236, 244)",
-                      zeroLineColor: "rgb(234, 236, 244)",
-                      drawBorder: false,
-                      borderDash: [2],
-                      zeroLineBorderDash: [2]
-                    }
-                  }]
-                },
-                legend: {
-                  display: false
-                },
-                tooltips: {
-                  titleMarginBottom: 10,
-                  titleFontColor: '#6e707e',
-                  titleFontSize: 14,
-                  backgroundColor: "rgb(255,255,255)",
-                  bodyFontColor: "#858796",
-                  borderColor: '#dddfeb',
-                  borderWidth: 1,
-                  xPadding: 15,
-                  yPadding: 15,
-                  displayColors: false,
-                  caretPadding: 10,
-                  callbacks: {
-                    label: function(tooltipItem, chart) {
-                      var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-                      return datasetLabel + ': ' + number_format(tooltipItem.yLabel,2,',','.') + "%";
-                    }
-                  }
-                }
-              }
-            });
-        </script>
-        <script>
-            $(".btn_sub").click(function () {
                 //console.log("clicou");
                 document.getElementById("loading").style.display = "block";
             });
@@ -1075,6 +833,75 @@ if ($rscpf === true) {
                 document.getElementById("conteudo").style.display = "inline";
             }, 1000);
         </script>
+        <script>
+            Highcharts.chart('container', {
+                chart: {
+                    type: 'pie',
+                    options3d: {
+                        enabled: true,
+                        alpha: 45,
+                        beta: 0
+                    }
+                },
+                title: {
+                    text: 'Avaliação de Resultados e Avaliação de Competências',
+                    align: 'left'
+                },
+                subtitle: {
+                    text: 'Indicador Global da Avaliação de Desempenho - IGAD: <?= $mftext ?>%',
+                    align: 'left'
+                },
+                accessibility: {
+                    point: {
+                        valueSuffix: '%'
+                    }
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.2f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        depth: 35,
+                        dataLabels: {
+                            enabled: true,
+                            format: '{point.name}'
+                        }
+                    }
+                },
+                series: [{
+                    type: 'pie',
+                    name: 'Resultado',
+                    data: [
+                        ['Competências profissionais: <?= $cpossuitext ?>% do IGAD', <?= $cpossui ?>],
+                        ['Qualidade assistencial: <?= $qatext ?>% do IGAD', <?= $qa ?>],
+                        ['Qualidade da tutoria: <?= $qnotatext ?>% do IGAD', <?= $qnota ?>],
+                        ['Aperfeiçoamento profissional: <?= $anotatext ?>% do IGAD', <?= $anota ?>],
+                        {
+                            name: 'Deixou de pontuar: <?= $faltamtext ?>%',
+                            y: <?= $faltam ?>,
+                            sliced: false,
+                            selected: false
+                        }
+                        /*['Vivo', 8],
+                        ['Others', 30]*/
+                    ]
+                }]
+            });
+            
+            $(function() {
+                if(<?= $mf ?> < 70){
+                    $('.chart').easyPieChart({
+                        //your options goes here
+                    });
+                }else{
+                    $('.chart').easyPieChart2({
+                        //your options goes here
+                    });
+                }
+            });
+            </script>
     </body>
 
 </html>

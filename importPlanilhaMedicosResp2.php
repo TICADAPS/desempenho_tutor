@@ -110,33 +110,44 @@ if (!empty($_FILES["arquivo"]["tmp_name"])) {
             $query = mysqli_query($conn, $sql) or die(mysql0i_error($conn));
             $nrrs = mysqli_num_rows($query);
             if($nrrs > 0){
-                echo "$a - passou aqui <br>";
+                $ano = 2023;
+                $ciclo = 1;
+                $fkincentivo = 1;
+                $periodo = 25;
+//                echo "$a - passou aqui <br>";
                 $linha = mysqli_fetch_array($query);
                 do{
                     $cnes=$linha['cnes'];
                     $ibge=$linha['ibge'];
                     $ine=$linha['ine'];
-                    $sqlq = "select * from qualidade where FKcpf = '$cpftratado' and FKibge = '$ibge' and FKcnes = '$cnes' and FKine = '$ine' limit 1";
+                    $sqlq = "select * from demonstrativo where fkcpf = '$cpftratado' and fkibge = '$ibge' and fkcnes = '$cnes' and fkine = '$ine' and "
+                            . "fkincentivo = '$fkincentivo' and ano = '$ano' and ciclo = '$ciclo'  limit 1";
                     $queryq = mysqli_query($conn, $sqlq) or die(mysqli_error($conn));
                     $nrrsq = mysqli_num_rows($queryq);
                     if($nrrsq === 0){
-                        $sqliq = "insert into qualidade values (null, '$notasispmb', '$cpftratado','$ibge','$cnes','$ine','2024','1')";
+                        $sqliq = "insert into demonstrativo values (null, '$ano', '$ciclo', '$autosimnao','$notasenior', '$notasispmb', "
+                                . "null, '$cpftratado','$ibge','$cnes','$ine','$fkincentivo','$periodo')";
                         mysqli_query($conn, $sqliq) or die(mysqli_error($conn));
                     }
-                    $sqla = "select * from aperfeicoamento where medico_cpf = '$cpftratado' and medico_ibge = '$ibge' and medico_cnes = '$cnes' and medico_ine = '$ine' limit 1";
-                    $querya = mysqli_query($conn, $sqla) or die(mysqli_error($conn));
-                    $nrrsa = mysqli_num_rows($querya);
-                    if($nrrsa === 0){
-                        $sqlia = "insert into aperfeicoamento values (null, '$notasenior', '$cpftratado','$ibge','$cnes','$ine','2024','1')";
-                        mysqli_query($conn, $sqlia) or die(mysqli_error($conn));
-                    }
-                    $sqlc = "select * from competencias where medico_cpf = '$cpftratado' and medico_ibge = '$ibge' and medico_cnes = '$cnes' and medico_ine = '$ine' limit 1";
-                    $queryc = mysqli_query($conn, $sqlc) or die(mysqli_error($conn));
-                    $nrrsc = mysqli_num_rows($queryc);
-                    if($nrrsc === 0){
-                        $sqlci = "insert into competencias values (null, '$autosimnao', '$cpftratado','$ibge','$cnes','$ine','2024','1')";
-                        mysqli_query($conn, $sqlci) or die(mysqli_error($conn));
-                    }
+                    
+//                    if($nrrsq === 0){
+//                        $sqliq = "insert into qualidade values (null, '$notasispmb', '$cpftratado','$ibge','$cnes','$ine','2024','1')";
+//                        mysqli_query($conn, $sqliq) or die(mysqli_error($conn));
+//                    }
+//                    $sqla = "select * from aperfeicoamento where medico_cpf = '$cpftratado' and medico_ibge = '$ibge' and medico_cnes = '$cnes' and medico_ine = '$ine' limit 1";
+//                    $querya = mysqli_query($conn, $sqla) or die(mysqli_error($conn));
+//                    $nrrsa = mysqli_num_rows($querya);
+//                    if($nrrsa === 0){
+//                        $sqlia = "insert into aperfeicoamento values (null, '$notasenior', '$cpftratado','$ibge','$cnes','$ine','2024','1')";
+//                        mysqli_query($conn, $sqlia) or die(mysqli_error($conn));
+//                    }
+//                    $sqlc = "select * from competencias where medico_cpf = '$cpftratado' and medico_ibge = '$ibge' and medico_cnes = '$cnes' and medico_ine = '$ine' limit 1";
+//                    $queryc = mysqli_query($conn, $sqlc) or die(mysqli_error($conn));
+//                    $nrrsc = mysqli_num_rows($queryc);
+//                    if($nrrsc === 0){
+//                        $sqlci = "insert into competencias values (null, '$autosimnao', '$cpftratado','$ibge','$cnes','$ine','2024','1')";
+//                        mysqli_query($conn, $sqlci) or die(mysqli_error($conn));
+//                    }
                 }while($linha = mysqli_fetch_array($query));
             }
         }

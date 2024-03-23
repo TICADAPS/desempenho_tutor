@@ -6,6 +6,9 @@ include '../Controller_agsus/fdatas.php';
 if (!isset($_SESSION['msg'])) {
     $_SESSION['msg'] = '';
 }
+if (!isset($_SESSION['pgmsg'])) {
+    $_SESSION['pgmsg'] = "1";
+}
 //if (!isset($_SESSION['cpf'])) {
 //   header("Location: derruba_session.php"); exit();
 //}
@@ -20,12 +23,12 @@ date_default_timezone_set('America/Sao_Paulo');
 $anoAtual = 2023;
 $ano = 2023;
 $ciclo = 1;
-$periodo = 25;
+$idperiodo = 25;
 $sql = "select distinct m.nome, m.admissao, m.cargo, m.tipologia, m.uf, m.municipio, m.datacadastro, m.cpf, m.ibge, m.cnes,
  m.ine, p.descricaoperiodo, de.iddemonstrativo, de.ano, de.ciclo, de.competencias, de.aperfeicoamento, de.qualidade 
  from medico m inner join demonstrativo de on de.fkcpf = m.cpf and de.fkibge = m.ibge and de.fkcnes = m.cnes and de.fkine = m.ine 
  inner join periodo p on p.idperiodo = de.fkperiodo 
- where de.ano = '$ano' and de.ciclo = '$ciclo'";
+ where de.ano = '$ano' and de.ciclo = '$ciclo' and (de.flaginativo is null or de.flaginativo <> 1)";
 $query = mysqli_query($conn, $sql);
 $nrrs = mysqli_num_rows($query);
 $rs = mysqli_fetch_array($query);
@@ -33,6 +36,7 @@ $rscpf = false;
 if ($nrrs > 0) {
     $rscpf = true;
 }
+$contt = $conta = $contb = 0;
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -171,7 +175,7 @@ if ($nrrs > 0) {
                     <img src="../img_agsus/Logo_400x200.png" class="img-fluid" alt="logoAdaps" width="250" title="Logo Adaps">
                 </div>
                 <div class="col-12 col-md-9 mt-5 ">
-                    <h4 class="mb-4 font-weight-bold">Unidade da Força - Painel do Programa de Avaliação de Desempenho do Tutor Médico</h4>
+                    <h4 class="mb-4 font-weight-bold">Unidade da Força - Programa de Avaliação de Desempenho do Tutor Médico</h4>
                 </div>
             </div>
             <div class="row">
@@ -191,8 +195,8 @@ if ($nrrs > 0) {
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">Ano </a>
                                     <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="../ano.php?c=<?= $cpftratado ?>&a=2024">2024</a>
-                                        <a class="dropdown-item" href="../ano.php?c=<?= $cpftratado ?>&a=2023">2023</a>
+                                        <a class="dropdown-item" href="#">2024</a>
+                                        <a class="dropdown-item" href="#">2023</a>
                                     </div>
                                 </li>
                                 <li class="nav-item">
@@ -220,7 +224,18 @@ if ($nrrs > 0) {
                 </div>
             </div>
             <div class="row p-2">
-            <?php echo $_SESSION['msg'] ?>
+                <div class="col-12">
+                    <?php 
+                        if ($_SESSION['pgmsg'] === '2') {
+                            if ($_SESSION['msg'] !== null && $_SESSION['msg'] !== '') {
+                                echo $_SESSION['msg'];
+                            }
+                            $_SESSION['pgmsg'] = '1';
+                        } else {
+                            $_SESSION['msg'] = '';
+                        }
+                    ?>
+                </div>
             </div>
             <div class="row p-2">
                 <div class="col-md-12 shadow rounded pr-3 pl-3 mb-2">
@@ -230,23 +245,24 @@ if ($nrrs > 0) {
                                     <legend class="w-auto pr-2 pl-2"><h5>Listagem dos tutores</h5></legend>
                                 <div class="mb-3 table-responsive text-nowrap table-overflow2">
                                     <table id="dtBasicExample" class="table table-hover table-bordered table-striped rounded">
-                                        <thead>
-                                            <tr class="bg-dark text-light font-weight-bold">
-                                                <td class="bg-dark text-light align-middle text-center" style="width: 5%;position: sticky; top: 0px;"><i class="fas fa-user-edit"></i></td>
-                                                <td class="bg-dark text-light align-middle" style="width: 40%; height: 70px;position: sticky; top: 0px;">TUTOR</td>
-                                                <td class="bg-dark text-light align-middle" style="width: 5%;position: sticky; top: 0px;">CPF</td>
-                                                <td class="bg-dark text-light align-middle" style="width: 5%;position: sticky; top: 0px;">TIPOLOGIA</td>
-                                                <td class="bg-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">MUNICÍPIO</td>
-                                                <td class="bg-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">UF</td>
-                                                <td class="bg-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">IBGE</td>
-                                                <td class="bg-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">CNES</td>
-                                                <td class="bg-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">INE</td>
-                                                <td class="bg-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">IGAD</td>
-                                                <td class="bg-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">QA</td>
-                                                <td class="bg-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">QT</td>
-                                                <td class="bg-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">CP</td>
-                                                <td class="bg-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">AP</td>
-                                                <td class="bg-dark text-light align-middle text-center" style="width: 10%;position: sticky; top: 0px;"><i class="fas fa-calendar-alt"></i></td>
+                                        <thead class="bg-gradient-dark text-white">
+                                            <tr class="bg-gradient-dark text-light font-weight-bold">
+                                                <td class="bg-gradient-dark text-light align-middle text-center" style="width: 5%;position: sticky; top: 0px;"><i class="fas fa-user-edit"></i></td>
+                                                <td class="bg-gradient-dark text-light align-middle" style="width: 40%; height: 70px;position: sticky; top: 0px;">TUTOR</td>
+                                                <td class="bg-gradient-dark text-light align-middle" style="width: 5%;position: sticky; top: 0px;">CPF</td>
+                                                <td class="bg-gradient-dark text-light align-middle" style="width: 5%;position: sticky; top: 0px;">TIPOLOGIA</td>
+                                                <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">MUNICÍPIO</td>
+                                                <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">UF</td>
+                                                <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">IBGE</td>
+                                                <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">CNES</td>
+                                                <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">INE</td>
+                                                <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">IGAD</td>
+                                                <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">INCENTIVO</td>
+                                                <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">QA</td>
+                                                <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">QT</td>
+                                                <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">CP</td>
+                                                <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">AP</td>
+                                                <td class="bg-gradient-dark text-light align-middle text-center" style="width: 10%;position: sticky; top: 0px;"><i class="fas fa-calendar-alt"></i></td>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -254,6 +270,7 @@ if ($nrrs > 0) {
                                             if ($rscpf === true) {
                                                 if ($nrrs > 0) {
                                                     do {
+                                                        $contt++;
                                                         $iddemonstrativo = $rs['iddemonstrativo'];
                                                         $nome = $rs['nome'];
                                                         $cpftratado = $rs['cpf'];
@@ -273,45 +290,61 @@ if ($nrrs > 0) {
                                                         $datacadastro = vemdata($rs['datacadastro']);
                                                         $ano = $rs['ano'];
                                                         $ciclo = $rs['ciclo'];
-                                                        $sql2 = "select distinct p.idperiodo, p.descricaoperiodo, d.prenatal_consultas, d.prenatal_sifilis_hiv, d.cobertura_citopatologico, 
+                                                        $sql2 = "select p.idperiodo, p.descricaoperiodo, d.prenatal_consultas, d.prenatal_sifilis_hiv, d.cobertura_citopatologico, 
                                                             d.hipertensao, d.diabetes 
                                                             from periodo p inner join desempenho d on p.idperiodo = d.idperiodo
-                                                            where d.cpf = '$cpftratado' and d.ano = '$ano' and d.idperiodo = '$periodo';";
+                                                            where d.cpf = '$cpftratado' and d.ano = '$ano' and d.idperiodo = '$idperiodo' limit 1;";
                                                         $query2 = mysqli_query($conn, $sql2);
                                                         $rs2 = mysqli_fetch_array($query2);
                                                         $prenatal_consultas = $prenatal_sifilis_hiv = $cobertura_citopatologico = $hipertensao = $diabetes = 0;
                                                         if($rs2){
-                                                            $periodo = $rs2['descricaoperiodo'];
-                                                            $idperiodo = $rs2['idperiodo'];
-                                                            $prenatal_consultas = $rs2['prenatal_consultas'];
-                                    //                        var_dump("prenatal_consultas",$prenatal_consultas);
-                                                            $prenatal_consultas = $prenatal_consultas/45;
-                                    //                        var_dump("prenatal_consultas-Fator",$prenatal_consultas);
-                                                            $prenatal_sifilis_hiv = $rs2['prenatal_sifilis_hiv'];
-                                    //                        var_dump("prenatal_sifilis_hiv",$prenatal_sifilis_hiv);
-                                                            $prenatal_sifilis_hiv = $prenatal_sifilis_hiv/60;
-                                    //                        var_dump("prenatal_sifilis_hiv-Fator",$prenatal_sifilis_hiv);
-                                                            $cobertura_citopatologico = $rs2['cobertura_citopatologico'];
-                                    //                        var_dump("cobertura_citopatologico",$cobertura_citopatologico);
-                                                            $cobertura_citopatologico = $cobertura_citopatologico/40;
-                                    //                        var_dump("cobertura_citopatologico-Fator",$cobertura_citopatologico);
-                                                            $hipertensao = $rs2['hipertensao'];
-                                    //                        var_dump("hipertensao",$hipertensao);
-                                                            $hipertensao = $hipertensao/50;
-                                    //                        var_dump("hipertensao-Fator",$hipertensao);
-                                                            $hipertensaotext = str_replace(",", "", $hipertensao);
-                                                            $hipertensaotext = str_replace(".", ",", $hipertensaotext);
-                                                            $diabetes = $rs2['diabetes'];
-                                    //                        var_dump("diabetes",$diabetes);
-                                                            $diabetes = $diabetes/50;
-                                    //                        var_dump("diabetes-Fator",$diabetes);
-                                                            $diabetestext = str_replace(",", "", $diabetes);
-                                                            $diabetestext = str_replace(".", ",", $diabetestext);
+                                                            do{
+                                                                $periodo = $rs2['descricaoperiodo'];
+                                                                $idperiodo = $rs2['idperiodo'];
+                                                                $prenatal_consultas = $rs2['prenatal_consultas'];
+                                        //                        var_dump("prenatal_consultas",$prenatal_consultas);
+                                                                $prenatal_consultas = ($prenatal_consultas/45)*10;
+                                                                if($prenatal_consultas > 10){
+                                                                    $prenatal_consultas = 10;
+                                                                }
+                                        //                        var_dump("prenatal_consultas-Fator",$prenatal_consultas);
+                                                                $prenatal_sifilis_hiv = $rs2['prenatal_sifilis_hiv'];
+                                        //                        var_dump("prenatal_sifilis_hiv",$prenatal_sifilis_hiv);
+                                                                $prenatal_sifilis_hiv = ($prenatal_sifilis_hiv/60)*10;
+                                                                if($prenatal_sifilis_hiv > 10){
+                                                                    $prenatal_sifilis_hiv = 10;
+                                                                }
+                                        //                        var_dump("prenatal_sifilis_hiv-Fator",$prenatal_sifilis_hiv);
+                                                                $cobertura_citopatologico = $rs2['cobertura_citopatologico'];
+                                        //                        var_dump("cobertura_citopatologico",$cobertura_citopatologico);
+                                                                $cobertura_citopatologico = ($cobertura_citopatologico/40)*10;
+                                                                if($cobertura_citopatologico > 10){
+                                                                    $cobertura_citopatologico = 10;
+                                                                }
+                                        //                        var_dump("cobertura_citopatologico-Fator",$cobertura_citopatologico);
+                                                                $hipertensao = $rs2['hipertensao'];
+                                        //                        var_dump("hipertensao",$hipertensao);
+                                                                $hipertensao = ($hipertensao/50)*10;
+                                                                if($hipertensao > 10){
+                                                                    $hipertensao = 10;
+                                                                }
+                                        //                        var_dump("hipertensao-Fator",$hipertensao);
+                                                                $hipertensaotext = str_replace(",", "", $hipertensao);
+                                                                $hipertensaotext = str_replace(".", ",", $hipertensaotext);
+                                                                $diabetes = $rs2['diabetes'];
+                                        //                        var_dump("diabetes",$diabetes);
+                                                                $diabetes = ($diabetes/50)*10;
+                                                                if($diabetes > 10){
+                                                                    $diabetes = 10;
+                                                                }
+                                        //                        var_dump("diabetes-Fator",$diabetes);
+                                                                $diabetestext = str_replace(",", "", $diabetes);
+                                                                $diabetestext = str_replace(".", ",", $diabetestext);
+                                                            }while($rs2 = mysqli_fetch_array($query2));
                                                         }
-
+                                                        
                                                         //proporção da Qualidade assistencial
-                                                        $qa = ($prenatal_consultas + $prenatal_sifilis_hiv + $cobertura_citopatologico + $hipertensao + $diabetes)*10;
-                                                        $qa = round(($qa * 0.5),2);
+                                                        $qa = $prenatal_consultas + $prenatal_sifilis_hiv + $cobertura_citopatologico + $hipertensao + $diabetes;
                                                         $qatext = number_format($qa, 2, ',', ' ');
 
                                                         //proporção da Qualidade da Tutoria
@@ -342,22 +375,48 @@ if ($nrrs > 0) {
                                                         $ar = $qa + $qnota + $anota;
                                                         $artext = number_format($ar, 2, ',', '.');
                                                         $mf = round(($ar + $cpossui),2);
+                                                        $valor = 1400;
+                                                        if($mf > 70){
+                                                            $conta++;
+                                                        }else{
+                                                            $contb++;
+                                                        }
                                 //                        $mf= 49.99;
                                                         $mftext = number_format($mf, 2, ',', '.');
                                                         $faltam = 100 - $mf;
                                                         $faltamtext = number_format($faltam, 2, ',', '.');
-                                                        $sqlc = "select * from contestacao where fkdemonstrativo = '$iddemonstrativo'";
-                                                        $queryc = mysqli_query($conn, $sqlc);
-                                                        $nrrsc = mysqli_num_rows($queryc);
-                                                        $rsc = mysqli_fetch_array($queryc);
-                                                        
                                             ?>
                                             <tr>
                                                 <td>
                                                     <?php
+                                                    $sqlc = "select * from contestacao inner join contestacao_assunto on idcontestacao = fkcontestacao "
+                                                            . "inner join assunto on fkassunto = idassunto where fkdemonstrativo = '$iddemonstrativo' order by idassunto desc";
+                                                    $queryc = mysqli_query($conn, $sqlc);
+                                                    $nrrsc = mysqli_num_rows($queryc);
+                                                    $rsc = mysqli_fetch_array($queryc);
                                                     if($nrrsc > 0){ 
-                                                        do{ 
-                                                          if($rsc['flagresposta']==='0'){
+                                                        $assuntohtml = "";
+                                                        $assuntohtml .= "<h6 class='text-dark font-weight-bold'>Assunto(s):</h6>";
+                                                        $assuntohtml .= "<ul>";
+                                                        do{
+                                                            if ($rsc['fkassunto'] === '1') {
+                                                                $assuntohtml .=  "<li>" . $rsc['assuntonovo'] . "</li>";
+                                                            } else {
+                                                                $assuntohtml .=  "<li>" . $rsc['titulo'] . "</li>";
+                                                            }
+                                                            $idcontestacao = trim($rsc['idcontestacao']);
+                                                            $contestacaotutor = trim($rsc['texto']);
+                                                            $contestacaotutor = str_replace("'", "", $contestacaotutor);
+                                                            $contestacaotutor = str_replace("\"", "", $contestacaotutor);
+                                                            $datahora = $rsc['datahora'];
+                                                            $dataresposta = $rsc['dataresposta'];
+                                                            $flagresposta = $rsc['flagresposta'];
+                                                            $resposta = trim($rsc['resposta']);
+                                                            $resposta = str_replace("'", "", $resposta);
+                                                            $resposta = str_replace("\"", "", $resposta);
+                                                        }while ($rsc = mysqli_fetch_array($queryc));
+                                                        $assuntohtml .=  "</ul>";
+                                                          if($flagresposta==='0'){
                                                     ?>
                                                         <button type="button" data-toggle="modal" data-target=".modalContestacao<?= $iddemonstrativo ?>" class="btn btn-light shadow-sm "><i class="fas fa-user-edit text-info"></i></button>
                                                         <!-- modal modalContestacao -->
@@ -372,7 +431,7 @@ if ($nrrs > 0) {
                                                                     <input type="hidden" name="ine" value="<?= $ine ?>">
                                                                     <div class="modal-header bg-light">
                                                                         <div class="col-10 mt-1">
-                                                                            <h5 class="modal-title text-left text-primary" id="exampleModalLabel"><i class="fas fa-arrow-circle-right"></i> Contestação</h5>
+                                                                            <h5 class="modal-title text-left text-primary" id="exampleModalLabel"><i class="fas fa-arrow-circle-right"></i> Contestação registrada</h5>
                                                                         </div>
                                                                         <div class="col-2">
                                                                             <button type="button" class="bg-light close" data-dismiss="modal" aria-label="close">
@@ -382,11 +441,10 @@ if ($nrrs > 0) {
                                                                     <div class="modal-body">
                                                                         <div class="row mt-1 pr-2 pl-2">
                                                                             <div class="col-sm-12">
-                                                                                <h6 class="text-info font-weight-bold">Contestação registrada: </h6>
-                                                                                <input type="hidden" name="idcontestacao" value="<?= $rsc['idcontestacao'] ?>">
+                                                                                <input type="hidden" name="idcontestacao" value="<?= $idcontestacao ?>">
                                                                                 <?php
-                                                                                    echo "Data do registro: &nbsp;".vemdata($rsc['datahora'])."<br>";
-                                                                                    echo "Texto: &nbsp;". $rsc['texto']."<br><br>";
+                                                                                    echo $assuntohtml;
+                                                                                    echo "<label class='text-dark font-weight-bold'>Contestação do Médico Tutor: </label><label>&nbsp; $contestacaotutor</label><br><br>";
                                                                                 ?>
                                                                             </div>
                                                                         </div>
@@ -424,10 +482,10 @@ if ($nrrs > 0) {
                                                                         <div class="row mt-1 pr-2 pl-2">
                                                                             <div class="col-sm-12">
                                                                                 <h6 class="text-info font-weight-bold">Contestação registrada: </h6>
-                                                                                <input type="hidden" name="idcontestacao" value="<?= $rsc['idcontestacao'] ?>">
+                                                                                <input type="hidden" name="idcontestacao" value="<?= $idcontestacao ?>">
                                                                                 <?php
-                                                                                    echo "Data do registro: &nbsp;".vemdata($rsc['datahora'])."<br>";
-                                                                                    echo "Texto: &nbsp;". $rsc['texto']."<br><br>";
+                                                                                    echo $assuntohtml;
+                                                                                    echo "<label class='text-dark font-weight-bold'>Contestação do Médico Tutor: </label><label>&nbsp; $contestacaotutor</label><br><br>";
                                                                                 ?>
                                                                             </div>
                                                                         </div>
@@ -435,8 +493,8 @@ if ($nrrs > 0) {
                                                                             <div class="col-sm-12">
                                                                                 <h6 class="text-info font-weight-bold">Resposta da contestação</h6>
                                                                                 <?php
-                                                                                    echo "Resposta: &nbsp;". $rsc['resposta']."<br>";
-                                                                                    echo "Data da resposta: &nbsp;".vemdata($rsc['dataresposta']);
+                                                                                    echo "Resposta: &nbsp; $resposta<br>";
+                                                                                    echo "Data da resposta: &nbsp;".vemdata($dataresposta);
                                                                                 ?>
                                                                             </div>
                                                                         </div>
@@ -448,9 +506,9 @@ if ($nrrs > 0) {
                                                             </div>
                                                             </form>
                                                         </div>
-                                                        <?php }}while ($rsc = mysqli_fetch_array($queryc)); ?>
+                                                        <?php } ?>
                                                    <?php }?>
-                                                </td>    
+                                                </td>
                                                 <td><?= $nome ?></td>
                                                 <td><?= $cpf ?></td>
                                                 <td><?= $tipologia ?></td>
@@ -459,11 +517,20 @@ if ($nrrs > 0) {
                                                 <td><?= $ibge ?></td>
                                                 <td><?= $cnes ?></td>
                                                 <td><?= $ine ?></td>
-                                                <td><?= $mftext ?>%</td>
-                                                <td><?= $qatext ?>%</td>
-                                                <td><?= $qnotatext ?>%</td>
-                                                <td><?= $cpossuitext ?>%</td>
-                                                <td><?= $anotatext ?>%</td>
+                                                <?php if($mf >= 70){ ?>
+                                                <td><?= $mftext ?></td>
+                                                <?php }else{ ?>
+                                                <td class="text-danger"><?= $mftext ?></td>
+                                                <?php } ?>
+                                                <?php if($mf >= 70){ ?>
+                                                <td>R$ <?php echo number_format($valor, 2, ',', '.'); ?></td>
+                                                <?php }else{ ?>
+                                                <td class="text-danger">R$ <?php echo number_format(round((($valor * $mf)/100),2), 2, ',', '.'); ?></td>
+                                                <?php } ?>
+                                                <td><?= $qatext ?></td>
+                                                <td><?= $qnotatext ?></td>
+                                                <td><?= $cpossuitext ?></td>
+                                                <td><?= $anotatext ?></td>
                                                 <td><?= $datacadastro ?></td>
                                             </tr>
                                             <?php }while($rs = mysqli_fetch_array($query));
@@ -472,6 +539,26 @@ if ($nrrs > 0) {
                                     </table>
                                 </div>
                             </fieldset>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <label class="">Total de Tutores: </label>
+                                    <label class="text-info"><?= $contt ?></label>
+                                </div>
+                                <div class="col-sm-12">
+                                    <label class="">IGAD <i class="fas fa-level-up-alt text-primary"></i> 70,00: </label>
+                                    <label class="text-primary"><?= $conta ?></label>
+                                    <label>&nbsp; <i class="fas fa-arrow-right"></i> </label>
+                                    <label class="text-primary"><?= (round((($conta/$contt) * 100),2)) ?>% </label>
+                                    <label>dos tutores</label>
+                                </div>
+                                <div class="col-sm-12">
+                                    <label class="">IGAD <i class="fas fa-level-down-alt text-danger"></i> 70,00: </label>
+                                    <label class="text-danger"><?= $contb ?></label>
+                                    <label>&nbsp; <i class="fas fa-arrow-right"></i> </label>
+                                    <label class="text-danger"><?= (round((($contb/$contt) * 100),2)) ?>% </label>
+                                    <label>dos tutores</label>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -720,7 +807,7 @@ if ($nrrs > 0) {
                     align: 'left'
                 },
                 subtitle: {
-                    text: 'Indicador Global da Avaliação de Desempenho - IGAD: <?= $mftext ?>%',
+                    text: 'ÍNDICE GLOBAL DE AVALIAÇÃO DE DESEMPENHO - IGAD: <?= $mftext ?>%',
                     align: 'left'
                 },
                 accessibility: {

@@ -1,6 +1,7 @@
 <?php
 include '../conexao-agsus.php';
 include '../Controller_agsus/fdatas.php';
+include '../Controller_agsus/maskCpf.php';
 
 ini_set('memory_limit', '4096M');
 set_time_limit(1000);
@@ -12,17 +13,12 @@ set_time_limit(1000);
 $anoAtual = 2023;
 $ano = 2023;
 $ciclo = 1;
-$periodo = 25;
-$sql = "select distinct m.nome, m.admissao, m.cargo, m.tipologia, m.uf, m.municipio, m.datacadastro, m.cpf, m.ibge, m.cnes, m.ine, p.descricaoperiodo, "
-        . "demo.ano, demo.ciclo, d.idperiodo, d.prenatal_consultas, d.prenatal_sifilis_hiv, d.cobertura_citopatologico, d.hipertensao, d.diabetes, "
-        . "q.nota as qnota, c.possui as cpossui, a.nota as anota "
-        . "from medico m inner join desempenho d on m.cpf = d.cpf "
-        . "inner join periodo p on p.idperiodo = d.idperiodo "
-        . "inner join demonstrativo demo on demo.ano = d.demonstrativo_ano and demo.ciclo = d.demonstrativo_ciclo "
-        . "left join qualidade q on q.FKcpf = m.cpf "
-        . "left join aperfeicoamento a on a.medico_cpf = m.cpf "
-        . "left join competencias c on c.medico_cpf = m.cpf "
-        . "where d.ano = '$ano' and p.idperiodo = '$periodo' and d.demonstrativo_ano = '$ano' and d.demonstrativo_ciclo = '$ciclo'";
+$idperiodo = 25;
+$sql = "select distinct m.nome, m.admissao, m.cargo, m.tipologia, m.uf, m.municipio, m.datacadastro, m.cpf, m.ibge, m.cnes,
+ m.ine, p.descricaoperiodo, de.iddemonstrativo, de.ano, de.ciclo, de.competencias, de.aperfeicoamento, de.qualidade 
+ from medico m inner join demonstrativo de on de.fkcpf = m.cpf and de.fkibge = m.ibge and de.fkcnes = m.cnes and de.fkine = m.ine 
+ inner join periodo p on p.idperiodo = de.fkperiodo 
+ where de.ano = '$ano' and de.ciclo = '$ciclo' and (de.flaginativo is null or de.flaginativo <> 1)";
 $query = mysqli_query($conn, $sql);
 $nrrs = mysqli_num_rows($query);
 $rs = mysqli_fetch_array($query);
@@ -75,8 +71,13 @@ if ($nrrs > 0) {
         if ($rscpf === true) {
             if ($nrrs > 0) {
                 do {
+                    $iddemonstrativo = $rs['iddemonstrativo'];
                     $nome = $rs['nome'];
-                    $cpf = $rs['cpf'];
+                    $cpftratado = $rs['cpf'];
+                    $cpftratado = str_replace("-", "", $cpftratado);
+                    $cpftratado = str_replace(".", "", $cpftratado);
+                    $cpftratado = str_replace(".", "", $cpftratado);
+                    $cpf = mask($cpftratado, "###.###.###-##");
                     $ibge = $rs['ibge'];
                     $admissao = $rs['admissao'];
                     $cargo = $rs['cargo'];
@@ -89,70 +90,93 @@ if ($nrrs > 0) {
                     $datacadastro = vemdata($rs['datacadastro']);
                     $ano = $rs['ano'];
                     $ciclo = $rs['ciclo'];
-                    $periodo = $rs['descricaoperiodo'];
-                    $idperiodo = $rs['idperiodo'];
-                    $prenatal_consultas = $rs['prenatal_consultas'];
-                    //                        var_dump("prenatal_consultas",$prenatal_consultas);
-                    $prenatal_consultas = $prenatal_consultas/45;
-                    //                        var_dump("prenatal_consultas-Fator",$prenatal_consultas);
-                    $prenatal_sifilis_hiv = $rs['prenatal_sifilis_hiv'];
-                    //                        var_dump("prenatal_sifilis_hiv",$prenatal_sifilis_hiv);
-                    $prenatal_sifilis_hiv = $prenatal_sifilis_hiv/60;
-                    //                        var_dump("prenatal_sifilis_hiv-Fator",$prenatal_sifilis_hiv);
-                    $cobertura_citopatologico = $rs['cobertura_citopatologico'];
-                    //                        var_dump("cobertura_citopatologico",$cobertura_citopatologico);
-                    $cobertura_citopatologico = $cobertura_citopatologico/40;
-                    //                        var_dump("cobertura_citopatologico-Fator",$cobertura_citopatologico);
-                    $hipertensao = $rs['hipertensao'];
-                    //                        var_dump("hipertensao",$hipertensao);
-                    $hipertensao = $hipertensao/50;
-                    //                        var_dump("hipertensao-Fator",$hipertensao);
-                    $hipertensaotext = str_replace(",", "", $hipertensao);
-                    $hipertensaotext = str_replace(".", ",", $hipertensaotext);
-                    $diabetes = $rs['diabetes'];
-                    //                        var_dump("diabetes",$diabetes);
-                    $diabetes = $diabetes/50;
-                    //                        var_dump("diabetes-Fator",$diabetes);
-                    $diabetestext = str_replace(",", "", $diabetes);
-                    $diabetestext = str_replace(".", ",", $diabetestext);
-
-                    //proporção da Qualidade assistencial
-                    $qa = ($prenatal_consultas + $prenatal_sifilis_hiv + $cobertura_citopatologico + $hipertensao + $diabetes)*10;
-                    $qa = round(($qa * 0.5), 2);
-                    $qatext = number_format($qa, 2, ',', ' ');
-
-                    //proporção da Qualidade da Tutoria
-                    $qnota = $rs['qnota'];
-                    //                        var_dump($qnota);
-                    //                        $qnota = (($qnota - 1)*10)/4;
-
-                    $qnota = round($qnota, 2);
-                    $qnotatext = number_format($qnota, 2, ',', '.');
-
-                    //proporção da Competência Profissional
-                    $cpossui = $rs['cpossui'];
-                    if($cpossui === '1'){
-                    $cpossui = 30.00;
-                    $cpossuitext = number_format(30, 2, ',', '.');
-                    }else{
-                    $cpossui = 0.00;
-                    $cpossuitext = number_format(0, 2, ',', '.');
+                    $sql2 = "select distinct p.idperiodo, p.descricaoperiodo, d.prenatal_consultas, d.prenatal_sifilis_hiv, d.cobertura_citopatologico, 
+                        d.hipertensao, d.diabetes 
+                        from periodo p inner join desempenho d on p.idperiodo = d.idperiodo
+                        where d.cpf = '$cpftratado' and d.ano = '$ano' and d.idperiodo = '$idperiodo';";
+                    $query2 = mysqli_query($conn, $sql2);
+                    $rs2 = mysqli_fetch_array($query2);
+                    $prenatal_consultas = $prenatal_sifilis_hiv = $cobertura_citopatologico = $hipertensao = $diabetes = 0;
+                    if ($rs2) {
+                        $periodo = $rs2['descricaoperiodo'];
+                        $idperiodo = $rs2['idperiodo'];
+                        $prenatal_consultas = $rs2['prenatal_consultas'];
+                        //                        var_dump("prenatal_consultas",$prenatal_consultas);
+                        $prenatal_consultas = ($prenatal_consultas / 45)*10;
+                        if($prenatal_consultas > 10){
+                            $prenatal_consultas = 10;
+                        }
+                        //                        var_dump("prenatal_consultas-Fator",$prenatal_consultas);
+                        $prenatal_sifilis_hiv = $rs2['prenatal_sifilis_hiv'];
+                        //                        var_dump("prenatal_sifilis_hiv",$prenatal_sifilis_hiv);
+                        $prenatal_sifilis_hiv = ($prenatal_sifilis_hiv / 60)*10;
+                        if($prenatal_sifilis_hiv > 10){
+                            $prenatal_sifilis_hiv = 10;
+                        }
+                        //                        var_dump("prenatal_sifilis_hiv-Fator",$prenatal_sifilis_hiv);
+                        $cobertura_citopatologico = $rs2['cobertura_citopatologico'];
+                        //                        var_dump("cobertura_citopatologico",$cobertura_citopatologico);
+                        $cobertura_citopatologico = ($cobertura_citopatologico / 40)*10;
+                        if($cobertura_citopatologico > 10){
+                            $cobertura_citopatologico = 10;
+                        }
+                        //                        var_dump("cobertura_citopatologico-Fator",$cobertura_citopatologico);
+                        $hipertensao = $rs2['hipertensao'];
+                        //                        var_dump("hipertensao",$hipertensao);
+                        $hipertensao = ($hipertensao / 50)*10;
+                        if($hipertensao > 10){
+                            $hipertensao = 10;
+                        }
+                        //                        var_dump("hipertensao-Fator",$hipertensao);
+                        $hipertensaotext = str_replace(",", "", $hipertensao);
+                        $hipertensaotext = str_replace(".", ",", $hipertensaotext);
+                        $diabetes = $rs2['diabetes'];
+                        //                        var_dump("diabetes",$diabetes);
+                        $diabetes = ($diabetes / 50)*10;
+                        if($diabetes > 10){
+                            $diabetes = 10;
+                        }
+                        //                        var_dump("diabetes-Fator",$diabetes);
+                        $diabetestext = str_replace(",", "", $diabetes);
+                        $diabetestext = str_replace(".", ",", $diabetestext);
                     }
-                    $anota = $rs['anota'];
-                    if($anota >= 50){
-                    $anota = 10.00;
-                    $anotatext = number_format(10, 2, ',', '.');
-                    }else{
-                    $anota = 0.00;
-                    $anotatext = number_format(0, 2, ',', '.');
-                    }
-                    $ar = $qa + $qnota + $anota;
-                    $artext = number_format($ar, 2, ',', '.');
-                    $mf = round(($ar + $cpossui), 2);
-                    //                        $mf= 49.99;
-                    $mftext = number_format($mf, 2, ',', '.');
-                    $faltam = 100 - $mf;
-                    $faltamtext = number_format($faltam, 2, ',', '.');
+
+                     //proporção da Qualidade assistencial
+                        $qa = $prenatal_consultas + $prenatal_sifilis_hiv + $cobertura_citopatologico + $hipertensao + $diabetes;
+                        $qatext = number_format($qa, 2, ',', ' ');
+                        
+                        //proporção da Qualidade da Tutoria
+                        $qnota = $rs['qualidade'];
+//                        var_dump($qnota);
+//                        $qnota = (($qnota - 1)*10)/4;
+
+                        $qnota = round($qnota,2);
+                        $qnotatext = number_format($qnota, 2, ',', '.');
+                        
+                        //proporção da Competência Profissional
+                        $cpossui = $rs['competencias'];
+                        if($cpossui === '1'){
+                            $cpossui = 30.00;
+                            $cpossuitext = number_format(30, 2, ',', '.');
+                        }else{
+                            $cpossui = 0.00;
+                            $cpossuitext = number_format(0, 2, ',', '.');
+                        }
+                        $anota = $rs['aperfeicoamento'];
+                        if($anota >= 50){
+                            $anota = 10.00;
+                            $anotatext = number_format(10, 2, ',', '.');
+                        }else{
+                            $anota = 0.00;
+                            $anotatext = number_format(0, 2, ',', '.');
+                        }
+                        $ar = $qa + $qnota + $anota;
+                        $artext = number_format($ar, 2, ',', '.');
+                        $mf = round(($ar + $cpossui),2);
+//                        $mf= 49.99;
+                        $mftext = number_format($mf, 2, ',', '.');
+                        $faltam = 100 - $mf;
+                        $faltamtext = number_format($faltam, 2, ',', '.');
 
         $html .= ' <tr>';
         $html .= "  <td>$nome</td>";

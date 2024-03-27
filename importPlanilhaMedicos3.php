@@ -39,25 +39,10 @@ if(!isset($_SESSION['msg'])){
                 </div>
                 <div class="row">
                     <div class="col-12 col-md-8 col-sm-6 mx-auto">
-                        <form method="post" enctype="multipart/form-data" action="importPlanilhaMedicosResp.php">
+                        <form method="post" enctype="multipart/form-data" action="importPlanilhaMedicosResp3.php">
                             <h5 class="mt-2">Arquivo CSV com colunas na seguinte ordem:</h5>
                             <h6 class="mt-2">1º CPF</h6>
-                            <h6 class="mt-2">2º Nome completo</h6>
-                            <h6 class="mt-2">3º Data de admissão (ex.: jun de 2022)</h6>
-                            <h6 class="mt-2">4º Cargo (ex.: Medico Tutor)</h6>
-                            <h6 class="mt-2">5º Tipologia (ex.: URBANO)</h6>
-                            <h6 class="mt-2">6º UF</h6>
-                            <h6 class="mt-2">7º Municipio</h6>
-                            <h6 class="mt-2">8º CNES</h6>
-                            <h6 class="mt-2">9º INE</h6>
-                            <h6 class="mt-2">10º IBGE</h6>
-                            <h6 class="mt-2">11º prenatal_consultas</h6>
-                            <h6 class="mt-2">12º prenatal_sifilis_hiv</h6>
-                            <h6 class="mt-2">13º cobertura_citopatologico</h6>
-                            <h6 class="mt-2">14º hipertensao</h6>
-                            <h6 class="mt-2">15º diabetes</h6>
-                            <h6 class="mt-2">16º Ano</h6>
-                            <h6 class="mt-2">17º Período (quadrimestre)</h6>
+                            <h6 class="mt-2">2º Categoria IVS - Índice de Vulnerabilidade Social</h6>
                             <input type="file" class="form-control form-control-lg mb-2" name="arquivo">
                             <input type="submit" class="form-control form-control-lg mb-2 bnt btn-success" name="enviar" value="Enviar">
                         </form>
@@ -67,7 +52,7 @@ if(!isset($_SESSION['msg'])){
                         if($_SESSION['msg']!=""){
                             echo $_SESSION['msg'];
                             echo "<META HTTP-EQUIV='REFRESH' CONTENT=\"2;
-                                URL='importPlanilhaMedicos.php'\">";
+                                URL='importPlanilhaMedicos3.php'\">";
                             $_SESSION['msg']="";
                         }
                         ?>

@@ -17,7 +17,30 @@ if (!isset($_SESSION['pgmsg'])) {
 //$cpf = '029.502.963-35';
 //$cpf = '091.328.314-20';
 //$cpf = '106.423.006-74';
-
+//if (!isset($_SESSION['idUser'])) {
+//    header("Location: ../logout.php");
+//    exit();
+//}
+//if (!isset($_SESSION['perfil'])) {
+//    header("Location: ../logout.php");
+//    exit();
+//}
+//if (!isset($_SESSION['nivel'])) {
+//    header("Location: ../logout.php");
+//    exit();
+//}
+//if($_SESSION['perfil'] !== '1'){
+//    header("Location: ../logout.php");
+//    exit();
+//}else{
+//    if($_SESSION['nivel'] !== '3'){
+//        header("Location: ../logout.php");
+//        exit();
+//    }
+//}
+$_SESSION['perfil'] = '6';
+$_SESSION['nivel'] = '1';
+$nivel = $_SESSION['nivel'];
 date_default_timezone_set('America/Sao_Paulo');
 //$anoAtual = date('Y');
 $anoAtual = 2023;
@@ -25,9 +48,10 @@ $ano = 2023;
 $ciclo = 1;
 $idperiodo = 25;
 $sql = "select distinct m.nome, m.admissao, m.cargo, m.tipologia, m.uf, m.municipio, m.datacadastro, m.cpf, m.ibge, m.cnes,
- m.ine, p.descricaoperiodo, de.iddemonstrativo, de.ano, de.ciclo, de.competencias, de.aperfeicoamento, de.qualidade 
+ m.ine, ivs.descricao as ivs, p.descricaoperiodo, de.iddemonstrativo, de.ano, de.ciclo, de.competencias, de.aperfeicoamento, de.qualidade 
  from medico m inner join demonstrativo de on de.fkcpf = m.cpf and de.fkibge = m.ibge and de.fkcnes = m.cnes and de.fkine = m.ine 
  inner join periodo p on p.idperiodo = de.fkperiodo 
+ left join ivs on m.fkivs = ivs.idivs 
  where de.ano = '$ano' and de.ciclo = '$ciclo' and (de.flaginativo is null or de.flaginativo <> 1)";
 $query = mysqli_query($conn, $sql);
 $nrrs = mysqli_num_rows($query);
@@ -186,29 +210,34 @@ $contt = $conta = $contb = 0;
                         </button>
 
 
-                        <div id="menuPrincipal" class="collapse navbar-collapse pr-2 pl-2">
+                        <div id="menuPrincipal" class="collapse navbar-collapse pr-2 pl-3">
                             <ul class="navbar-nav">
-                                <li class="nav-item">
+<!--                                <li class="nav-item">
                                     <a href="../index.php" class="nav-link">Inicio </a>
                                 </li>
-                                <!-- Navbar dropdown -->
+                                 Navbar dropdown 
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">Ano </a>
                                     <div class="dropdown-menu">
                                         <a class="dropdown-item" href="#">2024</a>
                                         <a class="dropdown-item" href="#">2023</a>
                                     </div>
-                                </li>
-                                <li class="nav-item">
+                                </li>-->
+<!--                                <li class="nav-item">
                                         <a class="nav-link" href="">|</a>
-                                    </li>
+                                    </li>-->
                                     <!-- Navbar dropdown -->
                                     <li class="nav-item dropdown">
-                                        <a class="nav-link dropdown-toggle" href="../relatorios/relatorio_geral_igad.php">Relatório Geral IGAD - 1º ciclo de 2023</a>
-                                        <!--<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">Relatórios</a>-->
+                                        <!--<a class="nav-link dropdown-toggle" href="../relatorios/relatorio_geral_igad.php">Relatório Geral IGAD - 1º ciclo de 2023</a>-->
+                                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">Relatórios</a>
                                         <div class="dropdown-menu">
+                                            <?php if($nivel === '1'){ ?>
                                             <a class="dropdown-item" href="relatorios/relatorio_geral_igad.php">Relatório Geral IGAD - 1º ciclo de 2023</a>
+                                            <?php } ?>
                                         </div>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="">|</a>
                                     </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="https://appsadapsbrasil.com/sistema-adaps/painelMedico.php"><i class="fas fa-sign-out-alt pt-1"></i></a>
@@ -247,10 +276,13 @@ $contt = $conta = $contb = 0;
                                     <table id="dtBasicExample" class="table table-hover table-bordered table-striped rounded">
                                         <thead class="bg-gradient-dark text-white">
                                             <tr class="bg-gradient-dark text-light font-weight-bold">
+                                                <?php if($nivel === '1'){ ?>
                                                 <td class="bg-gradient-dark text-light align-middle text-center" style="width: 5%;position: sticky; top: 0px;"><i class="fas fa-user-edit"></i></td>
+                                                <?php } ?>
                                                 <td class="bg-gradient-dark text-light align-middle" style="width: 40%; height: 70px;position: sticky; top: 0px;">TUTOR</td>
                                                 <td class="bg-gradient-dark text-light align-middle" style="width: 5%;position: sticky; top: 0px;">CPF</td>
                                                 <td class="bg-gradient-dark text-light align-middle" style="width: 5%;position: sticky; top: 0px;">TIPOLOGIA</td>
+                                                <td class="bg-gradient-dark text-light align-middle" style="width: 5%;position: sticky; top: 0px;">IVS</td>
                                                 <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">MUNICÍPIO</td>
                                                 <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">UF</td>
                                                 <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">IBGE</td>
@@ -287,6 +319,7 @@ $contt = $conta = $contb = 0;
                                                         $ibge = $rs['ibge'];
                                                         $cnes = $rs['cnes'];
                                                         $ine = $rs['ine'];
+                                                        $ivs = strtoupper($rs['ivs']);
                                                         $datacadastro = vemdata($rs['datacadastro']);
                                                         $ano = $rs['ano'];
                                                         $ciclo = $rs['ciclo'];
@@ -387,6 +420,7 @@ $contt = $conta = $contb = 0;
                                                         $faltamtext = number_format($faltam, 2, ',', '.');
                                             ?>
                                             <tr>
+                                                <?php if($nivel === '1'){ ?>
                                                 <td>
                                                     <?php
                                                     $sqlc = "select * from contestacao inner join contestacao_assunto on idcontestacao = fkcontestacao "
@@ -394,28 +428,35 @@ $contt = $conta = $contb = 0;
                                                     $queryc = mysqli_query($conn, $sqlc);
                                                     $nrrsc = mysqli_num_rows($queryc);
                                                     $rsc = mysqli_fetch_array($queryc);
+                                                    $contestacao = array();
+                                                    $assunto = array();
+                                                    $a=0;
                                                     if($nrrsc > 0){ 
-                                                        $assuntohtml = "";
-                                                        $assuntohtml .= "<h6 class='text-dark font-weight-bold'>Assunto(s):</h6>";
-                                                        $assuntohtml .= "<ul>";
                                                         do{
                                                             if ($rsc['fkassunto'] === '1') {
-                                                                $assuntohtml .=  "<li>" . $rsc['assuntonovo'] . "</li>";
+                                                                $assun = trim($rsc['assuntonovo']);
+                                                                $assun = str_replace("'", "", $assun);
+                                                                $assun = str_replace("\"", "", $assun);
+                                                                $assunto[$a] = $assun;
                                                             } else {
-                                                                $assuntohtml .=  "<li>" . $rsc['titulo'] . "</li>";
+                                                                $assun = trim($rsc['titulo']);
+                                                                $assun = str_replace("'", "", $assun);
+                                                                $assun = str_replace("\"", "", $assun);
+                                                                $assunto[$a] = $assun;
                                                             }
                                                             $idcontestacao = trim($rsc['idcontestacao']);
-                                                            $contestacaotutor = trim($rsc['texto']);
-                                                            $contestacaotutor = str_replace("'", "", $contestacaotutor);
-                                                            $contestacaotutor = str_replace("\"", "", $contestacaotutor);
+                                                            $contes = trim($rsc['contestacao']);
+                                                            $contes = str_replace("'", "", $contes);
+                                                            $contes = str_replace("\"", "", $contes);
+                                                            $contestacao[$a] = $contes;
                                                             $datahora = $rsc['datahora'];
                                                             $dataresposta = $rsc['dataresposta'];
                                                             $flagresposta = $rsc['flagresposta'];
                                                             $resposta = trim($rsc['resposta']);
                                                             $resposta = str_replace("'", "", $resposta);
                                                             $resposta = str_replace("\"", "", $resposta);
+                                                            $a++;
                                                         }while ($rsc = mysqli_fetch_array($queryc));
-                                                        $assuntohtml .=  "</ul>";
                                                           if($flagresposta==='0'){
                                                     ?>
                                                         <button type="button" data-toggle="modal" data-target=".modalContestacao<?= $iddemonstrativo ?>" class="btn btn-light shadow-sm "><i class="fas fa-user-edit text-info"></i></button>
@@ -438,17 +479,22 @@ $contt = $conta = $contb = 0;
                                                                                 <span aria-hidden="true">&times;</span> </button>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="modal-body">
-                                                                        <div class="row mt-1 pr-2 pl-2">
-                                                                            <div class="col-sm-12">
-                                                                                <input type="hidden" name="idcontestacao" value="<?= $idcontestacao ?>">
-                                                                                <?php
-                                                                                    echo $assuntohtml;
-                                                                                    echo "<label class='text-dark font-weight-bold'>Contestação do Médico Tutor: </label><label>&nbsp; $contestacaotutor</label><br><br>";
+                                                                    <div class="modal-body pr-3 pl-3">
+                                                                        <input type="hidden" name="idcontestacao" value="<?= $idcontestacao ?>">
+                                                                        <div class="row mt-1">
+                                                                            <?php
+                                                                                if($nrrsc > 0){
+                                                                                    for($i=0; $i < count($assunto); $i++){
+                                                                                        $assu = $assunto[$i];
+                                                                                        $conte = $contestacao[$i];
                                                                                 ?>
+                                                                            <div class="col-sm-12">
+                                                                                <label class='text-dark font-weight-bold'><?= $assu ?></label><br>
+                                                                                <textarea class="form-control text-justify bg-white" rows="4" disabled="true" style="resize: none;"><?= $conte ?></textarea><br>
                                                                             </div>
+                                                                            <?php } ?>
                                                                         </div>
-                                                                        <div class="row mt-1 pr-2 pl-2">
+                                                                        <div class="row mt-1">
                                                                             <div class="col-sm-12">
                                                                                 <h6 class="text-dark font-weight-bold">Resposta da contestação</h6>
                                                                                 <textarea name="respcontestacao" class="" rows="4" style="width: 100%; resize: none;"></textarea>
@@ -463,7 +509,7 @@ $contt = $conta = $contb = 0;
                                                             </div>
                                                             </form>
                                                         </div>
-                                                        <?php }else{ ?>
+                                                              <?php }}else{ ?>
                                                         <button type="button" data-toggle="modal" data-target=".modalResposta<?= $iddemonstrativo ?>" class="btn btn-light shadow-sm "><i class="fas fa-check text-success"></i></button>
                                                         <!-- modal modalResposta -->
                                                         <div class="modal fad modalResposta<?= $iddemonstrativo ?> mt-2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -478,18 +524,27 @@ $contt = $conta = $contb = 0;
                                                                                 <span aria-hidden="true">&times;</span> </button>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="modal-body">
-                                                                        <div class="row mt-1 pr-2 pl-2">
+                                                                    <div class="modal-body pr-3 pl-3">
+                                                                        <div class="row mt-1">
                                                                             <div class="col-sm-12">
                                                                                 <h6 class="text-info font-weight-bold">Contestação registrada: </h6>
                                                                                 <input type="hidden" name="idcontestacao" value="<?= $idcontestacao ?>">
-                                                                                <?php
-                                                                                    echo $assuntohtml;
-                                                                                    echo "<label class='text-dark font-weight-bold'>Contestação do Médico Tutor: </label><label>&nbsp; $contestacaotutor</label><br><br>";
-                                                                                ?>
+                                                                                <div class='row'>
+                                                                                    <?php
+                                                                                        if($nrrsc > 0){
+                                                                                            for($i=0; $i < count($assunto); $i++){
+                                                                                                $assu = $assunto[$i];
+                                                                                                $conte = $contestacao[$i];
+                                                                                        ?>
+                                                                                    <div class="col-sm-12">
+                                                                                        <label class='text-dark font-weight-bold'><?= $assu ?></label><br>
+                                                                                        <textarea class="form-control text-justify bg-white" rows="4" disabled="true" style="resize: none;"><?= $conte ?></textarea><br>
+                                                                                    </div>
+                                                                                    <?php }} ?>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
-                                                                        <div class="row mt-1 pr-2 pl-2">
+                                                                        <div class="row mt-1">
                                                                             <div class="col-sm-12">
                                                                                 <h6 class="text-info font-weight-bold">Resposta da contestação</h6>
                                                                                 <?php
@@ -509,9 +564,11 @@ $contt = $conta = $contb = 0;
                                                         <?php } ?>
                                                    <?php }?>
                                                 </td>
+                                                <?php } ?>
                                                 <td><?= $nome ?></td>
                                                 <td><?= $cpf ?></td>
                                                 <td><?= $tipologia ?></td>
+                                                <td><?= $ivs ?></td>
                                                 <td><?= $municipio ?></td>
                                                 <td><?= $uf ?></td>
                                                 <td><?= $ibge ?></td>
@@ -544,18 +601,25 @@ $contt = $conta = $contb = 0;
                                     <label class="">Total de Tutores: </label>
                                     <label class="text-info"><?= $contt ?></label>
                                 </div>
+                                <?php
+                                //conversão decimal com vírgula - porcentagens acima e abaixo de 70
+                                $mfat = round((($conta/$contt) * 100),2);
+                                $mfat = str_replace(".", ",", $mfat);
+                                $mfbt = round((($contb/$contt) * 100),2);
+                                $mfbt = str_replace(".", ",", $mfbt);
+                                ?>
                                 <div class="col-sm-12">
                                     <label class="">IGAD <i class="fas fa-level-up-alt text-primary"></i> 70,00: </label>
                                     <label class="text-primary"><?= $conta ?></label>
                                     <label>&nbsp; <i class="fas fa-arrow-right"></i> </label>
-                                    <label class="text-primary"><?= (round((($conta/$contt) * 100),2)) ?>% </label>
+                                    <label class="text-primary"><?= $mfat ?>% </label>
                                     <label>dos tutores</label>
                                 </div>
                                 <div class="col-sm-12">
                                     <label class="">IGAD <i class="fas fa-level-down-alt text-danger"></i> 70,00: </label>
                                     <label class="text-danger"><?= $contb ?></label>
                                     <label>&nbsp; <i class="fas fa-arrow-right"></i> </label>
-                                    <label class="text-danger"><?= (round((($contb/$contt) * 100),2)) ?>% </label>
+                                    <label class="text-danger"><?= $mfbt ?>% </label>
                                     <label>dos tutores</label>
                                 </div>
                             </div>
@@ -781,6 +845,13 @@ $contt = $conta = $contb = 0;
         <script src="../js/demo/chart-bar-citopatologico.js"></script>
         <script src="../js/demo/chart-bar-hipertensao.js"></script>
         <script>
+            $(function () {
+              $('.dropdown-toggle').dropdown();
+            }); 
+            $(document).on('click', '.dropdown-toggle ', function (e) {
+                e.stopPropagation();
+              });
+              
             $(document).ready(function () {
                 //console.log("clicou");
                 document.getElementById("loading").style.display = "block";

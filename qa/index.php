@@ -70,10 +70,7 @@ if ($nrrs > 0) {
                         <div id="menuPrincipal" class="collapse navbar-collapse">
                             <ul class="navbar-nav">
                                 <li class="nav-item">
-                                    <a href="./index.php" class="nav-link">Inicio </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="">|</a>
+                                    <a href="./index.php" class="nav-link">Qualidade Assistencial</a>
                                 </li>
                                 <!-- Navbar dropdown -->
                                 <li class="nav-item dropdown">
@@ -82,9 +79,6 @@ if ($nrrs > 0) {
                                         <a class="dropdown-item" href="./ano.php?c=<?= $cpftratado ?>&a=2024">2024</a>
                                         <a class="dropdown-item" href="./ano.php?c=<?= $cpftratado ?>&a=2023">2023</a>
                                     </div>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="">|</a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="../demonstrativo/" class="nav-link">Painel de Resultados</a>
@@ -1331,6 +1325,13 @@ if ($nrrs > 0) {
         <script src="js/demo/chart-bar-hipertensao.js"></script>
         <script src="js/demo/chart-bar-diabetes.js"></script>-->
         <script>
+            $(function () {
+               $('.dropdown-toggle').dropdown();
+            }); 
+            $(document).on('click', '.dropdown-toggle ', function (e) {
+               e.stopPropagation();
+            });
+            
             $(".btn_sub").click(function () {
                 //console.log("clicou");
                 document.getElementById("loading").style.display = "block";

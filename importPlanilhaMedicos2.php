@@ -58,7 +58,7 @@ if(!isset($_SESSION['msg'])){
                         if($_SESSION['msg']!=""){
                             echo $_SESSION['msg'];
                             echo "<META HTTP-EQUIV='REFRESH' CONTENT=\"2;
-                                URL='importPlanilhaMedicosRH.php'\">";
+                                URL='importPlanilhaMedicos2.php'\">";
                             $_SESSION['msg']="";
                         }
                         ?>

@@ -30,9 +30,10 @@ $cpftratado = str_replace("-", "", $cpf);
 $cpftratado = str_replace(".", "", $cpftratado);
 $cpftratado = str_replace(".", "", $cpftratado);
 $sql = "select distinct m.nome, m.admissao, m.cargo, m.tipologia, m.uf, m.municipio, m.datacadastro, m.cpf, m.ibge, m.cnes, 
-    m.ine, d.iddemonstrativo, d.ano, d.ciclo, d.qualidade, d.competencias, d.aperfeicoamento, i.nivel, i.valor
+    m.ine, ivs.descricao as ivs, d.iddemonstrativo, d.ano, d.ciclo, d.qualidade, d.competencias, d.aperfeicoamento, i.nivel, i.valor
     from medico m inner join demonstrativo d on m.cpf = d.fkcpf and d.fkibge = m.ibge and d.fkcnes = m.cnes and d.fkine = m.ine 
     inner join incentivo i on d.fkincentivo = i.idincentivo 
+    left join ivs on m.fkivs = ivs.idivs 
     where m.cpf = '$cpftratado' and d.ano = '$ano' and d.ciclo = '$ciclo' and i.flaginativo = '$flagincent' and d.fkperiodo = '$idperiodo'"
         . "and (d.flaginativo is null or d.flaginativo <> 1);";
 $query = mysqli_query($conn, $sql);
@@ -243,22 +244,22 @@ if ($nrrsqa > 0) {
                         </button>
                         <div id="menuPrincipal" class="collapse navbar-collapse pr-3 pl-3">
                             <ul class="navbar-nav">
-                                <li class="nav-item">
+<!--                                <li class="nav-item">
                                     <a href="../index.php" class="nav-link">Inicio </a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="">|</a>
                                 </li>
-                                <!-- Navbar dropdown -->
+                                 Navbar dropdown 
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">Ano </a>
                                     <div class="dropdown-menu">
                                         <a class="dropdown-item" href="../ano.php?c=<?= $cpftratado ?>&a=2024">2024</a>
                                         <a class="dropdown-item" href="../ano.php?c=<?= $cpftratado ?>&a=2023">2023</a>
                                     </div>
-                                </li>
+                                </li>-->
                                 <li class="nav-item">
-                                    <a class="nav-link" href="">|</a>
+                                    <a href="" class="nav-link">Painel de Resultados</a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="../qa/" class="nav-link">Qualidade Assistencial</a>
@@ -315,6 +316,7 @@ if ($nrrsqa > 0) {
                         $municipio = $rs['municipio'];
                         $cnes = $rs['cnes'];
                         $ine = $rs['ine'];
+                        $ivs = strtoupper($rs['ivs']);
                         $datacadastro = $rs['datacadastro'];
                         $ano = $rs['ano'];
                         $ciclo = $rs['ciclo'];
@@ -467,48 +469,169 @@ if ($nrrsqa > 0) {
                                             <div class="col-md-12 shadow rounded p-2">
                                                 <div class="card">
                                                     <div class="card-body p-3">
-                                                <table>
-                                                    <tr>
-                                                        <td style="width: 80%;">
-                                                            <div class="row" >
-                                                                <div class="col-md-6">
-                                                                    <label class="font-weight-bold text-primary">Nome: &nbsp;<?= $nome ?></label>
+                                                        <div class="row">
+                                                            <div class="col-md-9 p-3">
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <label class="font-weight-bold text-primary">Nome: &nbsp;<?= $nome ?></label>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <label class="font-weight-bold text-primary">CPF: &nbsp;<?= $cpf ?></label>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <label class="font-weight-bold">Cargo: </label><label> &nbsp;&nbsp;<?= $cargo ?></label>
+                                                                    </div>
                                                                 </div>
-                                                                <div class="col-md-3">
-                                                                    <label class="font-weight-bold text-primary">CPF: &nbsp;<?= $cpf ?></label>
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <label class="font-weight-bold">Município-UF: </label><label>&nbsp;&nbsp;<?php echo "$municipio-$uf"; ?></label>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <label class="font-weight-bold">CNES: </label><label>&nbsp;&nbsp;<?= $cnes ?></label>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <label class="font-weight-bold">INE: </label><label>&nbsp;&nbsp;<?= $ine ?></label>
+                                                                    </div>
                                                                 </div>
-                                                                <div class="col-md-3">
-                                                                    <label class="font-weight-bold text-primary"></label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-md-6">
-                                                                    <label class="font-weight-bold">Município-UF: </label><label>&nbsp;&nbsp;<?php echo "$municipio-$uf"; ?></label>
-                                                                </div>
-                                                                <div class="col-md-3">
-                                                                    <label class="font-weight-bold">Cargo: </label><label> &nbsp;&nbsp;<?= $cargo ?></label>
-                                                                </div>
-                                                                <div class="col-md-3">
-                                                                    <label class="font-weight-bold text-info"></label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-md-3">
-                                                                    <label class="font-weight-bold">Tipologia: </label><label> &nbsp;&nbsp;<?= $tipologia ?></label>
-                                                                </div>
-                                                                <div class="col-md-3">
-                                                                    <label class="font-weight-bold">CNES: </label><label>&nbsp;&nbsp;<?= $cnes ?></label>
-                                                                </div>
-                                                                <div class="col-md-3">
-                                                                    <label class="font-weight-bold">INE: </label><label>&nbsp;&nbsp;<?= $ine ?></label>
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <label class="font-weight-bold">Tipologia: </label><label> &nbsp;&nbsp;<?= $tipologia ?></label>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <label class="font-weight-bold">IVS: </label><label> &nbsp;&nbsp;<?= $ivs ?></label>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </td>
-                                                        <th style="width: 20%;">
-                                                            <img src="../icones/avaliacao_desempenho.png" style="width: 50%;" class="img-fluid rounded" alt="Responsive image">
-                                                        </th>
-                                                    </tr>
-                                                </table>
+                                                            <div class="col-md-3 text-center mt-3">
+                                                                <!--<img src="../icones/avaliacao_desempenho.png" style="width: 40%;" class="img-fluid rounded" alt="Responsive image">-->
+                                                                <?php
+                                                                $sqlt = "select distinct m.nome, m.admissao, m.cargo, m.tipologia, m.uf, m.municipio, m.datacadastro, m.cpf, m.ibge, m.cnes,
+                                                                m.ine, ivs.descricao as ivs, p.descricaoperiodo, de.iddemonstrativo, de.ano, de.ciclo, de.competencias, de.aperfeicoamento, de.qualidade 
+                                                                from medico m inner join demonstrativo de on de.fkcpf = m.cpf and de.fkibge = m.ibge and de.fkcnes = m.cnes and de.fkine = m.ine 
+                                                                inner join periodo p on p.idperiodo = de.fkperiodo 
+                                                                left join ivs on m.fkivs = ivs.idivs 
+                                                                where de.ano = '$ano' and de.ciclo = '$ciclo' and (de.flaginativo is null or de.flaginativo <> 1)";
+                                                               $queryt = mysqli_query($conn, $sqlt);
+                                                               $nrrst = mysqli_num_rows($queryt);
+                                                               $rst = mysqli_fetch_array($queryt);
+                                                               $contt = $contat = $contbt = 0;
+                                                               $rscpft = false;
+                                                               if ($nrrst > 0) {
+                                                                   $rscpft = true;
+                                                               }
+                                                               if ($rscpft === true) {
+                                                                if ($nrrst > 0) {
+                                                                     do {
+                                                                         $contt++;
+                                                                         $cpftratadot = $rst['cpf'];
+                                                                         $cpftratadot = str_replace("-", "", $cpftratadot);
+                                                                         $cpftratadot = str_replace(".", "", $cpftratadot);
+                                                                         $cpftratado = str_replace(".", "", $cpftratadot);
+                                                                         $anot = $rst['ano'];
+                                                                         $ciclot = $rst['ciclo'];
+                                                                         $sqlt2 = "select p.idperiodo, p.descricaoperiodo, d.prenatal_consultas, d.prenatal_sifilis_hiv, d.cobertura_citopatologico, 
+                                                                             d.hipertensao, d.diabetes 
+                                                                             from periodo p inner join desempenho d on p.idperiodo = d.idperiodo
+                                                                             where d.cpf = '$cpftratadot' and d.ano = '$anot' and d.idperiodo = '$idperiodo' limit 1;";
+                                                                         $queryt2 = mysqli_query($conn, $sqlt2);
+                                                                         $rst2 = mysqli_fetch_array($queryt2);
+                                                                         $prenatal_consultast = $prenatal_sifilis_hivt = $cobertura_citopatologicot = $hipertensaot = $diabetest = 0;
+                                                                         if($rst2){
+                                                                             do{
+                                                                                 $periodot = $rst2['descricaoperiodo'];
+                                                                                 $idperiodot = $rst2['idperiodo'];
+                                                                                 $prenatal_consultast = $rst2['prenatal_consultas'];
+                                                         //                        var_dump("prenatal_consultas",$prenatal_consultas);
+                                                                                 $prenatal_consultast = ($prenatal_consultast/45)*10;
+                                                                                 if($prenatal_consultast > 10){
+                                                                                     $prenatal_consultast = 10;
+                                                                                 }
+                                                         //                        var_dump("prenatal_consultas-Fator",$prenatal_consultas);
+                                                                                 $prenatal_sifilis_hivt = $rst2['prenatal_sifilis_hiv'];
+                                                         //                        var_dump("prenatal_sifilis_hiv",$prenatal_sifilis_hiv);
+                                                                                 $prenatal_sifilis_hivt = ($prenatal_sifilis_hivt/60)*10;
+                                                                                 if($prenatal_sifilis_hivt> 10){
+                                                                                     $prenatal_sifilis_hivt = 10;
+                                                                                 }
+                                                         //                        var_dump("prenatal_sifilis_hiv-Fator",$prenatal_sifilis_hiv);
+                                                                                 $cobertura_citopatologicot = $rst2['cobertura_citopatologico'];
+                                                         //                        var_dump("cobertura_citopatologico",$cobertura_citopatologico);
+                                                                                 $cobertura_citopatologicot = ($cobertura_citopatologicot/40)*10;
+                                                                                 if($cobertura_citopatologicot > 10){
+                                                                                     $cobertura_citopatologicot = 10;
+                                                                                 }
+                                                         //                        var_dump("cobertura_citopatologico-Fator",$cobertura_citopatologico);
+                                                                                 $hipertensaot = $rst2['hipertensao'];
+                                                         //                        var_dump("hipertensao",$hipertensao);
+                                                                                 $hipertensaot = ($hipertensaot/50)*10;
+                                                                                 if($hipertensaot > 10){
+                                                                                     $hipertensaot = 10;
+                                                                                 }
+                                                         //                        var_dump("hipertensao-Fator",$hipertensao);
+                                                                                 $hipertensaotextt = str_replace(",", "", $hipertensaot);
+                                                                                 $hipertensaotextt = str_replace(".", ",", $hipertensaotextt);
+                                                                                 $diabetest = $rst2['diabetes'];
+                                                         //                        var_dump("diabetes",$diabetes);
+                                                                                 $diabetest = ($diabetest/50)*10;
+                                                                                 if($diabetest > 10){
+                                                                                     $diabetest = 10;
+                                                                                 }
+                                                         //                        var_dump("diabetes-Fator",$diabetes);
+                                                                                 $diabetestextt = str_replace(",", "", $diabetest);
+                                                                                 $diabetestextt = str_replace(".", ",", $diabetestextt);
+                                                                             }while($rst2 = mysqli_fetch_array($queryt2));
+                                                                         }
+                                                                         //proporção da Qualidade assistencial
+                                                                         $qat = $prenatal_consultast + $prenatal_sifilis_hivt + $cobertura_citopatologicot + $hipertensaot + $diabetest;
+                                                                         $qatextt = number_format($qat, 2, ',', ' ');
+
+                                                                         //proporção da Qualidade da Tutoria
+                                                                         $qnotat = $rst['qualidade'];
+                                                 //                        var_dump($qnota);
+                                                 //                        $qnota = (($qnota - 1)*10)/4;
+
+                                                                         $qnotat = round($qnotat,2);
+                                                                         $qnotatextt = number_format($qnotat, 2, ',', '.');
+
+                                                                         //proporção da Competência Profissional
+                                                                         $cpossuit = $rst['competencias'];
+                                                                         if($cpossuit === '1'){
+                                                                             $cpossuit = 30.00;
+                                                                             $cpossuitextt = number_format(30, 2, ',', '.');
+                                                                         }else{
+                                                                             $cpossuit = 0.00;
+                                                                             $cpossuitextt = number_format(0, 2, ',', '.');
+                                                                         }
+                                                                         $anotat = $rst['aperfeicoamento'];
+                                                                         if($anotat >= 50){
+                                                                             $anotat = 10.00;
+                                                                             $anotatextt = number_format(10, 2, ',', '.');
+                                                                         }else{
+                                                                             $anotat = 0.00;
+                                                                             $anotatextt = number_format(0, 2, ',', '.');
+                                                                         }
+                                                                         $art = $qat + $qnotat + $anotat;
+                                                                         $artextt = number_format($art, 2, ',', '.');
+                                                                         $mft = round(($art + $cpossuit),2);
+                                                                         $valort = 1400;
+                                                                         if($mft > 70){
+                                                                             $contat++;
+                                                                         }else{
+                                                                             $contbt++;
+                                                                         }
+                                                 //                        $mf= 49.99;
+                                                                         $mftextt = number_format($mft, 2, ',', '.');
+                                                                         $faltamt = 100 - $mft;
+                                                                         $faltamtextt = number_format($faltamt, 2, ',', '.');
+                                                                     } while ($rst = mysqli_fetch_array($queryt));
+                                                                 }
+                                                                 $mfat = round((($contat/$contt) * 100),2);
+                                                                 $mfat = str_replace(".", ",", $mfat);
+                                                                }
+                                                                ?>
+                                                                <p class="text-center align-content-center p-4 border border-info rounded"><?= $mfat ?>% dos tutores avaliados alcançou a pontuação de 70 pontos ou mais.</p>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -521,7 +644,7 @@ if ($nrrsqa > 0) {
                                             <div class="col-md-4 mb-3">
                                                 <div class="row">
                                                     <div class="col-md-12 pl-3 pr-4 mb-2">
-                                                        <p class="text-justify small">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A avaliação de Desempenho abrange as especificidades técnicas, profissionais, relacionadas às atividades do cargo,
+                                                        <p class="text-justify ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A avaliação de Desempenho abrange as especificidades técnicas, profissionais, relacionadas às atividades do cargo,
                                                             e características comportamentais, relacionadas à interação do empregado com a equipe, com a gestão municipal, 
                                                             com o ambiente de trabalho e com a instituição.</p>
                                                     </div>
@@ -535,9 +658,9 @@ if ($nrrsqa > 0) {
                                                                                 <img src="../icones/qualidade_assistencial_branco.png" style="width: 20%; opacity: 0.8; margin-right: -10px;" class="img-fluid float-right" alt="Responsive image">
                                                                             </div>
                                                                             <div class="col-10" style="margin-top: -80px;">
-                                                                                <!--<h6 class="card-title small text-white font-weight-bold">Qualidade Assistencial: <?= $qatext ?>%</h6>-->
+                                                                                <!--<h6 class="card-title  text-white font-weight-bold">Qualidade Assistencial: <?= $qatext ?>%</h6>-->
                                                                                 <h6 class="card-title text-white font-weight-bold">Qualidade Assistencial:</h6>
-                                                                                <p class="card-text small text-white text-justify">Domínio mensurado por meio de indicadores de saúde- SISAB/Previne Brasil, que 
+                                                                                <p class="card-text  text-white text-justify">Domínio mensurado por meio de indicadores de saúde- SISAB/Previne Brasil, que 
                                                                                     tem a participação direta do profissional médico e da equipe de médicos bolsista de   cada tutor no cuidado - 
                                                                                     Compõem 50% do valor total da nota. </p>
                                                                                 <button type="button" data-toggle="modal" data-target=".modalaqa" class="btn btn-info shadow-sm text-white">Mais detalhes...</button>
@@ -558,9 +681,9 @@ if ($nrrsqa > 0) {
                                                                                 <img src="../icones/qualidade_branco.png" style="width: 20%; opacity: 0.8; margin-right: -10px;" class="img-fluid float-right" alt="Responsive image">
                                                                             </div>
                                                                             <div class="col-10" style="margin-top: -80px;">
-                                                                                <!--<h6 class="card-title small text-white font-weight-bold">Qualidade da Tutoria: <?= $qnotatext ?>%</h6>-->
+                                                                                <!--<h6 class="card-title  text-white font-weight-bold">Qualidade da Tutoria: <?= $qnotatext ?>%</h6>-->
                                                                                 <h6 class="card-title text-white font-weight-bold">Qualidade da Tutoria:</h6>
-                                                                                <p class="card-text small text-white text-justify">Domínio mensurado por meio da Avaliação dos bolsistas em relação às vivências 
+                                                                                <p class="card-text  text-white text-justify">Domínio mensurado por meio da Avaliação dos bolsistas em relação às vivências 
                                                                                     de tutorias clínicas: sistema da UNASUS, essa aferição da qualidade da tutoria é realizada pelos médicos 
                                                                                     bolsistas em relação a seus tutores tem se dado de forma contínua desde o início do programa a cada tutoria no 
                                                                                     SISPMB (Sistema do Programa Médicos pelo Brasil). Compõem 10% do valor total da nota.</p>
@@ -581,9 +704,9 @@ if ($nrrsqa > 0) {
                                                                                 <img src="../icones/aperficoamento_branco.png" style="width: 20%; opacity: 0.8; margin-right: -10px;" class="img-fluid float-right" alt="Responsive image">
                                                                             </div>
                                                                             <div class="col-10" style="margin-top: -80px;">
-                                                                                <!--<h6 class="card-title small text-white font-weight-bold">Aperfeiçoamento Profissional: <?= $anotatext ?>%</h6>-->
+                                                                                <!--<h6 class="card-title  text-white font-weight-bold">Aperfeiçoamento Profissional: <?= $anotatext ?>%</h6>-->
                                                                                 <h6 class="card-title text-white font-weight-bold">Aperfeiçoamento Profissional:</h6>
-                                                                                <p class="card-text small text-white text-justify">Domínio mensurado por meio da quantidade de créditos alcançados em atividades 
+                                                                                <p class="card-text  text-white text-justify">Domínio mensurado por meio da quantidade de créditos alcançados em atividades 
                                                                                     desenvolvidas no semestre conforme os comprovantes registrados dos cursos realizados e inseridos no sistema na 
                                                                                     plataforma sênior. Compõem 10% do valor total da nota.</p>
                                                                             </div>
@@ -603,9 +726,9 @@ if ($nrrsqa > 0) {
                                                                                 <img src="../icones/competencias_branco.png" style="width: 20%; opacity: 0.8; margin-right: -10px;" class="img-fluid float-right" alt="Responsive image">
                                                                             </div>
                                                                             <div class="col-10" style="margin-top: -80px;">
-                                                                                <!--<h6 class="card-title small text-white font-weight-bold">Competências Profissionais: <?= $cpossuitext ?>%</h6>-->
+                                                                                <!--<h6 class="card-title  text-white font-weight-bold">Competências Profissionais: <?= $cpossuitext ?>%</h6>-->
                                                                                 <h6 class="card-title text-white font-weight-bold">Competências Profissionais:</h6>
-                                                                                <p class="card-text small text-white text-justify">Domínio mensurado por meio da Autoavaliação do médico tutor, que envolve capacidades 
+                                                                                <p class="card-text  text-white text-justify">Domínio mensurado por meio da Autoavaliação do médico tutor, que envolve capacidades 
                                                                                     técnicas e comportamentos desejáveis para o exercício do cargo, alinhados na direção da missão, valores, propósitos da 
                                                                                     agência-AgSUS.</p>
                                                                             </div>
@@ -625,9 +748,9 @@ if ($nrrsqa > 0) {
                                                                                 <img src="../icones/deixou_de_pontuar_branco.png" style="width: 20%; opacity: 0.8; margin-right: -10px;" class="img-fluid float-right" alt="Responsive image">
                                                                             </div>
                                                                             <div class="col-10" style="margin-top: -80px;">
-                                                                                <h6 class="card-title text-dark font-weight-bold">Deixou de alcançar: <?= $faltamtext ?>%</h6>
+                                                                                <h6 class="card-title text-dark font-weight-bold">Vamos melhorar? Você precisa atingir mais <?= $faltamtext ?>% para alcançar a excelência.</h6>
                                                                                 <?php if($faltam > 0){ ?>
-                                                                                    <p class="text-justify small">Atenção!  Você Deixou de Pontuar, não esqueça de verificar o detalhamento do seu desempenho.</p>
+                                                                                    <p class="text-justify ">Saiba em que competências há oportunidades de melhoria.</p>
                                                                                     <button type="button" data-toggle="modal" data-target=".modaldp" class="btn btn-info shadow-sm text-white">Mais detalhes...</button>
                                                                                 <?php } ?>
                                                                             </div>
@@ -656,18 +779,10 @@ if ($nrrsqa > 0) {
                                                                                         <div class="box">
                                                                                             <div class="chart" data-percent="<?= $mf ?>" data-scale-color="#ffb400"><?= $mftext ?>%</div>
                                                                                         </div>
-                                                                                        <p class="text-center small text-primary mt-1 font-weight-bold">IGAD</p>
+                                                                                        <p class="text-center  text-primary mt-1 font-weight-bold">IGAD  (percentual alcançado)</p>
                                                                                     </div>
-                                                                                    <div class="col-sm-12 mt-2 small">
-                                                                                        <p>O valor pago a título de incentivo de desempenho é dimensionado da seguinte forma:</p>
-                                                                                    </div>
-                                                                                    <div class="col-sm-12 small">
-                                                                                        <table class="small" style="border: none;">
-                                                                                            <tr>
-                                                                                                <td class=" text-center"><img src="./../img_agsus/incentivo70.jpg" width="90%" class="img-fluid border rounded"></td>
-                                                                                            </tr>
-                                                                                        </table>
-                                                                                        <p class="card-text mt-3 font-weight-bold" id="incentivo">
+                                                                                    <div class="col-sm-12 ">
+                                                                                        <p class="card-text mt-3 font-weight-bold">
                                                                                             <?php if($mf >= 70){ ?>
                                                                                                 <label class="text-danger">*</label> Incentivo de Desempenho Alcançado: <label class="text-info">R$ <?php echo number_format($valor, 2, ',', '.'); ?></label>
                                                                                             <?php }else{ ?>
@@ -686,21 +801,34 @@ if ($nrrsqa > 0) {
                                                                     </div>
                                                                 </div>
                                                             </div>
-<!--                                                            <div class="col-md-12 shadow rounded p-2 mb-3">
-                                                                <div class="row">
-                                                                    <div class="col-md-12">
-                                                                        <div class="card">
-                                                                            <div class="card-header">
-                                                                              Featured
-                                                                            </div>
-                                                                            <div class="card-body">
-                                                                                <h6 class="card-title font-weight-bold">Special title treatment</h6>
-                                                                                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                                                                            </div>
-                                                                          </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12 pl-4 pr-2">
+                                                        <div class="row">
+                                                            <div class="col-md-12 shadow rounded p-2 mb-2">
+                                                                <div class="card">
+                                                                    <div class="row p-3">
+                                                                        <div class="col-md-12 mt-3 mb-4">
+                                                                            <figure class="highcharts-figure">
+                                                                                <div id="container"></div>
+                                                                                    <p class="highcharts-description small">
+                                                                                      <i>* Representação gráfica dos domínios.</i>
+                                                                                    </p>
+                                                                            </figure>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>-->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 mb-3 pl-4 pr-2">
+                                                <div class="row">
+                                                    <div class="col-md-12 pl-4 pr-2 mb-2">
+                                                        <div class="row">
                                                             <div class="col-md-12 shadow rounded p-2 mb-3">
                                                                 <div class="row">
                                                                     <div class="col-md-12">
@@ -711,17 +839,23 @@ if ($nrrsqa > 0) {
                                                                             <div class="card-body">
                                                                                 <div class="row">
                                                                                     <div class="col-md-12">
-                                                                                        <p class="text-justify small">Apresentamos o resultado individual da sua Avaliação de Desempenho Individual, referente ao 1º Ciclo  de 2023, que compreendeu o período 
+                                                                                        <p class="text-justify ">Apresentamos o resultado individual da sua Avaliação de Desempenho Individual, referente ao 1º Ciclo  de 2023, que compreendeu o período 
                                                                                             de julho a dezembro de 2023. Essa avaliação se constituiu como uma importante ferramenta para avaliar o desempenho dos empregados desta 
                                                                                             Agência, reconhecendo pontos fortes e identificando oportunidades de aprimoramento. Clique no botão abaixo para ler todo o feedback.</p>
                                                                                         <button type="button" data-toggle="modal" data-target=".modalFeedback" class="btn btn-light shadow-sm text-info">Feedback &nbsp;<i class="far fa-file-pdf text-danger"></i></button>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
-                                                                          </div>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12 pl-4 pr-2 mb-2">
+                                                        <div class="row">
                                                             <div class="col-md-12 shadow rounded p-2 mb-3">
                                                                 <div class="row">
                                                                     <div class="col-md-12">
@@ -729,79 +863,52 @@ if ($nrrsqa > 0) {
                                                                             <div class="card-header text-info font-weight-bold">
                                                                                 <h6>CONTESTAÇÃO</h6>
                                                                             </div>
-                                                                            <div class="card-body small">
-                                                                                <?php
+                                                                            <div class="card-body ">
+                                                                            <?php
                                                                                 $sqlc = "select * from contestacao inner join contestacao_assunto on fkcontestacao = idcontestacao inner join "
-                                                                                        . "assunto on fkassunto = idassunto where fkdemonstrativo = '$iddemonstrativo' order by idassunto desc";
+                                                                                    . "assunto on fkassunto = idassunto where fkdemonstrativo = '$iddemonstrativo' order by idassunto desc";
                                                                                 $queryc = mysqli_query($conn, $sqlc);
                                                                                 $nrrsc = mysqli_num_rows($queryc);
                                                                                 $rsc = mysqli_fetch_array($queryc);
                                                                                 if($nrrsc === 0){
-                                                                                ?> 
-                                                                                <p>Prezado(a) Colaborador(a),</p>
-                                                                                <p class="text-justify">Caso tenha objeção em relação ao resultado do Índice Global de Avaliação de Desempenho (IGAD) atribuído à sua NOTA FINAL no Programa de Avaliação de Desempenho, gostaríamos de orientá-lo(a) sobre como proceder com o recurso administrativo:</p>
-                                                                                <p class="text-justify">Primeiramente, acesse o detalhamento do seu desempenho na Plataforma-Painel de Resultados.</p>
-                                                                                <p class="text-justify">Utilize o modelo de recurso disponibilizado. Nele, exponha seus argumentos marcando os pontos (domínios) nos quais discorda da avaliação e da nota atribuída.</p>
-                                                                                <p class="text-justify">Após a elaboração do recurso, mantenha-se atento(a) aos avisos dentro do painel de resultados.</p>
-                                                                                <p class="text-justify">Por favor, observe o prazo estabelecido para a contestação do recurso, que se encerra 15 (quinze) dias após a publicação do resultado.</p>
-                                                                                <p class="text-justify">Estamos à disposição para fornecer esclarecimentos adicionais e agradecemos sua participação no Programa de Avaliação e Desempenho do Tutor Médico 2023.<br></p>
-                                                                                <button type="button" data-toggle="modal" data-target=".modalContestacao" class="btn btn-warning shadow-sm "><i class="fas fa-arrow-circle-right"></i> &nbsp;FAZER CONTESTAÇÃO</button>
-                                                                                <?php }else{ ?>
-                                                                                    <?php
-                                                                                        echo "<h6 class='text-dark font-weight-bold'>Assunto(s):</h6>";
-                                                                                        echo "<ul>";
-                                                                                        do{
-                                                                                            if($rsc['fkassunto'] === '1'){
-                                                                                                echo "<li>".$rsc['assuntonovo']."</li>";
-                                                                                            }else{
-                                                                                                echo "<li>".$rsc['titulo']."</li>";
-                                                                                            }
-                                                                                            $idcontestacao = trim($rsc['idcontestacao']);
-                                                                                            $contestacaotutor = trim($rsc['texto']);
-                                                                                            $contestacaotutor = str_replace("'", "", $contestacaotutor);
-                                                                                            $contestacaotutor = str_replace("\"", "", $contestacaotutor);
-                                                                                            $datahora = $rsc['datahora'];
-                                                                                            $dataresposta = $rsc['dataresposta'];
-                                                                                            $flagresposta = $rsc['flagresposta'];
-                                                                                            $resposta = trim($rsc['resposta']);
-                                                                                            $resposta = str_replace("'", "", $resposta);
-                                                                                            $resposta = str_replace("\"", "", $resposta);
-                                                                                        }while ($rsc = mysqli_fetch_array($queryc));
-                                                                                        echo "</ul>";
-                                                                                        echo "<label class='text-dark font-weight-bold'>Contestação do Médico Tutor: </label><label>&nbsp; $contestacaotutor</label><br>";
-                                                                                        echo "<label class='text-dark'>Contestação enviada em: </label><label class='text-info'>&nbsp;".vemdata($datahora)."</label><br>";
-                                                                                        if($flagresposta === '0'){
-                                                                                            echo "<label class='text-danger'>* Em análise.</label>";
+                                                                            ?> 
+                                                                            <p>Prezado(a) Colaborador(a),</p>
+                                                                            <p class="text-justify">Caso tenha objeção em relação ao resultado do Índice Global de Avaliação de Desempenho (IGAD) atribuído à sua NOTA FINAL no Programa de Avaliação de Desempenho, gostaríamos de orientá-lo(a) sobre como proceder com o recurso administrativo:</p>
+                                                                            <p class="text-justify">Primeiramente, acesse o detalhamento do seu desempenho na Plataforma-Painel de Resultados.</p>
+                                                                            <p class="text-justify">Utilize o modelo de recurso disponibilizado. Nele, exponha seus argumentos marcando os pontos (domínios) nos quais discorda da avaliação e da nota atribuída.</p>
+                                                                            <p class="text-justify">Após a elaboração do recurso, mantenha-se atento(a) aos avisos dentro do painel de resultados.</p>
+                                                                            <p class="text-justify">Por favor, observe o prazo estabelecido para a contestação do recurso, que se encerra 15 (quinze) dias após a publicação do resultado.</p>
+                                                                            <p class="text-justify">Estamos à disposição para fornecer esclarecimentos adicionais e agradecemos sua participação no Programa de Avaliação e Desempenho do Tutor Médico 2023.<br></p>
+                                                                            <button type="button" data-toggle="modal" data-target=".modalContestacao" class="btn btn-warning shadow-sm "><i class="fas fa-arrow-circle-right"></i> &nbsp;FAZER CONTESTAÇÃO</button>
+                                                                            <?php }else{ 
+                                                                                    do{
+                                                                                        if($rsc['fkassunto'] === '1'){
+                                                                                            echo "<label class='text-dark font-weight-bold'>".$rsc['assuntonovo']."</label><br>";
                                                                                         }else{
-                                                                                            echo "<label class='text-danger mt-3'>Resposta da Contestação: </label>&nbsp; <label>$resposta</label><br>";
+                                                                                            echo "<label class='text-dark font-weight-bold'>".$rsc['titulo']."</label><br>";
                                                                                         }
-                                                                                    ?>
-                                                                                <?php } ?>
-                                                                            </div>
-                                                                          </div>
+                                                                                        $idcontestacao = trim($rsc['idcontestacao']);
+                                                                                        $contestacaotutor = trim($rsc['contestacao']);
+                                                                                        $contestacaotutor = str_replace("'", "", $contestacaotutor);
+                                                                                        $contestacaotutor = str_replace("\"", "", $contestacaotutor);
+                                                                                        $datahora = $rsc['datahora'];
+                                                                                        $dataresposta = $rsc['dataresposta'];
+                                                                                        $flagresposta = $rsc['flagresposta'];
+                                                                                        $resposta = trim($rsc['resposta']);
+                                                                                        $resposta = str_replace("'", "", $resposta);
+                                                                                        $resposta = str_replace("\"", "", $resposta);
+                                                                                        echo "<label class='text-dark font-weight-bold'>Contestação do Tutor Médico: </label><label>&nbsp; $contestacaotutor</label><br>";
+                                                                                    }while ($rsc = mysqli_fetch_array($queryc));
+                                                                                    echo "<br><label class='text-danger'>* </label>&nbsp;<label class='text-dark'>Contestação enviada em: </label><label class='text-info'>&nbsp;".vemdata($datahora)."</label><br><br>";
+                                                                                    if($flagresposta === '0'){
+                                                                                        echo "<label class='text-danger'>* Em análise.</label>";
+                                                                                    }else{
+                                                                                        echo "<label class='text-danger mt-3'>Resposta da Contestação: </label>&nbsp; <label>$resposta</label><br>";
+                                                                                    }
+                                                                                } ?>
+                                                                                        </div>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4 mb-3">
-                                                <div class="row">
-                                                    <div class="col-md-12 pl-5 pr-3">
-                                                        <div class="row">
-                                                            <div class="col-md-12 shadow rounded p-2 mb-2">
-                                                                <div class="card">
-                                                                <div class="row p-3">
-                                                                    <div class="col-md-12 mt-3 mb-4">
-                                                                        <figure class="highcharts-figure">
-                                                                            <div id="container"></div>
-                                                                            <p class="highcharts-description small">
-                                                                              <i>* Representação gráfica dos domínios.</i>
-                                                                            </p>
-                                                                        </figure>
-                                                                    </div>
-                                                                </div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -991,7 +1098,7 @@ if ($nrrsqa > 0) {
                                                                 <div class="col-sm-12">
                                                                     <h6 class="text-dark mt-3" id="hassuntonovo">Outro Assunto:</h6>
                                                                     <input type="text" name="assuntonovo" id="assuntonovo" class="form-control mb-0">
-                                                                    <label class="text-danger mt-1 mb-2 small" id="lassuntonovo">* Digite o assunto da contestação</label>
+                                                                    <label class="text-danger mt-1 mb-2 " id="lassuntonovo">* Digite o assunto da contestação</label>
                                                                 </div>
                                                             </div>
                                                             <div class="row pr-1 pl-1 divassunto5">
@@ -1096,36 +1203,57 @@ if ($nrrsqa > 0) {
                                                                 <li>Aperfeiçoamento Profissional (%): <?= $anotatext ?></li>
                                                                 <li>Competências Profissionais (%): <?= $cpossuitext ?></li>
                                                             </ul>
+                                                            <div class="col-sm-12">
+                                                                <p>O valor pago a título de incentivo de desempenho será dimensionado da seguinte forma: </p>
+                                                                <ul>
+                                                                    <li><strong>IGAD igual ou maior que 70 pontos:</strong> o incentivo de desempenho será igual ao teto estabelecido em ato normativo da Agência.</li>
+                                                                    <li><strong>IGAD menor que 70 pontos:</strong> o incentivo de desempenho será proporcional aos pontos alcançados.</li>
+                                                                </ul>
+                                                            </div>
+                                                            <div class="col-sm-12">
+<!--                                                                <table class="small" style="border: none;">
+                                                                    <tr>
+                                                                        <td class=" text-center"><img src="./../img_agsus/incentivo70.jpg" width="70%" class="img-fluid border rounded"></td>
+                                                                    </tr>
+                                                                </table>-->
+                                                                <p class="card-text mt-3 font-weight-bold">
+                                                                <?php if ($mf >= 70) { ?>
+                                                                            <label class="text-danger">*</label> Incentivo de Desempenho Alcançado: <label class="text-info">R$ <?php echo number_format($valor, 2, ',', '.'); ?></label>
+                                                                        <?php } else { ?>
+                                                                            <label class="text-danger">*</label> Incentivo de Desempenho Alcançado: <label class="text-info">R$ <?php echo number_format(round((($valor * $mf) / 100), 2), 2, ',', '.'); ?></label>
+                                                                        <?php } ?>
+                                                                </p>
+                                                            </div>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <fieldset class="border pr-3 pl-3 rounded"><legend class="border pt-2 pb-2 pr-3 pl-3 rounded font-weight-bold bg-gradient-info text-white mb-2 small">Tabela de resultados da avaliação de desempenho</legend>
-                                                            <table class="table mt-2 border table-responsive">
+                                                            <fieldset class="border pr-3 pl-3 rounded"><legend class="border pt-2 pb-2 pr-3 pl-3 small rounded font-weight-bold bg-gradient-info text-white mb-2 ">Tabela de resultados da avaliação de desempenho</legend>
+                                                            <table class="table mt-2 border">
                                                                 <thead class="bg-gradient-dark text-white">
                                                                   <tr>
-                                                                    <th class="small">Domínio</th>
-                                                                    <th class="small">Nota</th>
+                                                                    <th class="">Domínio</th>
+                                                                    <th class="">Nota</th>
                                                                   </tr>
                                                                 </thead>
                                                                 <tbody>
                                                                   <tr>
-                                                                    <td <?php if($mf < 30){ echo "class='text-danger font-weight-bold'";} else{ echo "class='small'";} ?>>Muito insatisfatório</td>
-                                                                    <td <?php if($mf < 30){ echo "class='text-danger font-weight-bold'";} else{ echo "class='small'";} ?>>0 - 29,99 pontos</td>
+                                                                    <td <?php if($mf < 30){ echo "class='text-danger font-weight-bold'";} else{ echo "class=''";} ?>>Muito insatisfatório</td>
+                                                                    <td <?php if($mf < 30){ echo "class='text-danger font-weight-bold'";} else{ echo "class=''";} ?>>0 - 29,99 pontos</td>
                                                                   </tr>
                                                                   <tr>
-                                                                    <td <?php if($mf < 50 && $mf >= 30){ echo "class='text-danger font-weight-bold'";} else{ echo "class='small'";} ?>>Insatisfatório</td>
-                                                                    <td <?php if($mf < 50 && $mf >= 30){ echo "class='text-danger font-weight-bold'";} else{ echo "class='small'";} ?>>30 - 49,99 pontos</td>
+                                                                    <td <?php if($mf < 50 && $mf >= 30){ echo "class='text-danger font-weight-bold'";} else{ echo "class=''";} ?>>Insatisfatório</td>
+                                                                    <td <?php if($mf < 50 && $mf >= 30){ echo "class='text-danger font-weight-bold'";} else{ echo "class=''";} ?>>30 - 49,99 pontos</td>
                                                                   </tr>
                                                                   <tr>
-                                                                    <td <?php if($mf < 70 && $mf >= 60){ echo "class='text-info font-weight-bold'";} else{ echo "class='small'";} ?>>Regular</td>
-                                                                    <td <?php if($mf < 70 && $mf >= 50){ echo "class='text-info font-weight-bold'";} else{ echo "class='small'";} ?>>50 a 69,99 pontos</td>
+                                                                    <td <?php if($mf < 70 && $mf >= 60){ echo "class='text-info font-weight-bold'";} else{ echo "class=''";} ?>>Regular</td>
+                                                                    <td <?php if($mf < 70 && $mf >= 50){ echo "class='text-info font-weight-bold'";} else{ echo "class=''";} ?>>50 a 69,99 pontos</td>
                                                                   </tr>
                                                                   <tr>
-                                                                    <td <?php if($mf < 90 && $mf >= 70){ echo "class='text-primary font-weight-bold'";} else{ echo "class='small'";} ?>>Satisfatório</td>
-                                                                    <td <?php if($mf < 90 && $mf >= 70){ echo "class='text-primary font-weight-bold'";} else{ echo "class='small'";} ?>>70 a  89,99 pontos</td>
+                                                                    <td <?php if($mf < 90 && $mf >= 70){ echo "class='text-primary font-weight-bold'";} else{ echo "class=''";} ?>>Satisfatório</td>
+                                                                    <td <?php if($mf < 90 && $mf >= 70){ echo "class='text-primary font-weight-bold'";} else{ echo "class=''";} ?>>70 a  89,99 pontos</td>
                                                                   </tr>
                                                                   <tr>
-                                                                    <td <?php if($mf > 90){ echo "class='text-primary font-weight-bold'";} else{ echo "class='small'";} ?>>Muito satisfatório</td>
-                                                                    <td <?php if($mf > 90){ echo "class='text-primary font-weight-bold'";} else{ echo "class='small'";} ?>>Maior que 90 pontos</td>
+                                                                    <td <?php if($mf > 90){ echo "class='text-primary font-weight-bold'";} else{ echo "class=''";} ?>>Muito satisfatório</td>
+                                                                    <td <?php if($mf > 90){ echo "class='text-primary font-weight-bold'";} else{ echo "class=''";} ?>>Maior que 90 pontos</td>
                                                                   </tr>
                                                                 </tbody>
                                                               </table>
@@ -1134,42 +1262,42 @@ if ($nrrsqa > 0) {
                                                     </div>
                                                     <div class="row mt-3">
                                                         <div class="col-sm-12">
-                                                            <fieldset class="border pr-3 pl-3 rounded"><legend class="border pt-2 pb-2 pr-3 pl-3 rounded font-weight-bold bg-gradient-info text-white mb-2 small">Cálculo do Indicador Geral da Avaliação de Desempenho</legend>
+                                                            <fieldset class="border pr-3 pl-3 rounded"><legend class="border pt-2 pb-2 pr-3 pl-3 small rounded font-weight-bold bg-gradient-info text-white mb-2 ">Cálculo do Indicador Geral da Avaliação de Desempenho</legend>
                                                             <table class="table mt-2 border table-responsive">
                                                                 <thead class="bg-gradient-dark text-white">
                                                                     <tr>
-                                                                        <th class="small">DOMÍNIO</th>
-                                                                        <th class="small">MEDIDA SÍNTESE</th>
-                                                                        <th class="small">DETALHAMENTO</th>
-                                                                        <th class="small">PONTUAÇÃO</th>
-                                                                        <th class="small">CÁLCULO DO IGAD</th>
+                                                                        <th class="">DOMÍNIO</th>
+                                                                        <th class="">MEDIDA SÍNTESE</th>
+                                                                        <th class="">DETALHAMENTO</th>
+                                                                        <th class="">PONTUAÇÃO</th>
+                                                                        <th class="">CÁLCULO DO IGAD</th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
                                                                     <tr>
-                                                                        <td class="small font-weight-bold">Qualidade assistencial</td>
-                                                                        <td class="small">Total de pontos em indicadores de saúde</td>
-                                                                        <td class="small">Soma de pontos por alcance de resultados em indicadores assistenciais</td>
-                                                                        <td class="small text-center">0-50</td>
-                                                                        <th class="small align-middle text-center font-weight-bold text-primary" rowspan="4">IGAD = Soma dos pontos obtidos nos domínios</th>
+                                                                        <td class=" font-weight-bold">Qualidade assistencial</td>
+                                                                        <td class="">Total de pontos em indicadores de saúde</td>
+                                                                        <td class="">Soma de pontos por alcance de resultados em indicadores assistenciais</td>
+                                                                        <td class=" text-center">0-50</td>
+                                                                        <th class=" align-middle text-center font-weight-bold text-primary" rowspan="4">IGAD = Soma dos pontos obtidos nos domínios</th>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td class="small font-weight-bold">Qualidade da tutoria</td>
-                                                                        <td class="small">Média da avaliação da tutoria no semestre</td>
-                                                                        <td class="small">Média das avaliações realizadas no semestre, convertida para escala decimal</td>
-                                                                        <td class="small text-center">0-10</td>
+                                                                        <td class=" font-weight-bold">Qualidade da tutoria</td>
+                                                                        <td class="">Média da avaliação da tutoria no semestre</td>
+                                                                        <td class="">Média das avaliações realizadas no semestre, convertida para escala decimal</td>
+                                                                        <td class=" text-center">0-10</td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td class="small font-weight-bold">Aperfeiçoamento profissional</td>
-                                                                        <td class="small">Alcance do mínimo de créditos no PEC</td>
-                                                                        <td class="small">Sim - 10 pontos<br>Não - 0 pontos</td>
-                                                                        <td class="small text-center">10</td>
+                                                                        <td class=" font-weight-bold">Aperfeiçoamento profissional</td>
+                                                                        <td class="">Alcance do mínimo de créditos no PEC</td>
+                                                                        <td class="">Sim - 10 pontos<br>Não - 0 pontos</td>
+                                                                        <td class=" text-center">10</td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td class="small font-weight-bold">Competências profissionais</td>
-                                                                        <td class="small">Realização da autoavaliação</td>
-                                                                        <td class="small">Sim - 30 pontos<br>Não - 0 pontos</td>
-                                                                        <td class="small text-center">0-50</td>
+                                                                        <td class=" font-weight-bold">Competências profissionais</td>
+                                                                        <td class="">Realização da autoavaliação</td>
+                                                                        <td class="">Sim - 30 pontos<br>Não - 0 pontos</td>
+                                                                        <td class=" text-center">0-50</td>
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
@@ -1178,7 +1306,7 @@ if ($nrrsqa > 0) {
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-12">
-                                                    <p class="mt-3 small text-secondary mb-0"><label class="font-weight-bold">* Fonte: </label> <a href="./../pdf/manual_2023.pdf" target="_blank">Manual Programa de Avaliação de Desempenho Tutor Médico 2023</a></p>
+                                                    <p class="mt-3  text-secondary mb-0"><label class="font-weight-bold">* Fonte: </label> <a href="./../pdf/manual_2023.pdf" target="_blank">Manual Programa de Avaliação de Desempenho Tutor Médico 2023</a></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -1218,80 +1346,80 @@ if ($nrrsqa > 0) {
                                                                     pontos</label>.
                                                             </p>
                                                             
-                                                            <fieldset class="border pr-3 pl-3 rounded"><legend class="border pt-2 pb-2 pr-3 pl-3 rounded small font-weight-bold bg-gradient-info text-white mb-2">Cálculo da Nota do Domínio &nbsp; <i class="fas fa-arrow-right text-white"></i> &nbsp; <?= $qatext ?></legend>
+                                                            <fieldset class="border pr-3 pl-3 rounded"><legend class="border pt-2 pb-2 pr-3 pl-3 rounded  font-weight-bold bg-gradient-info text-white mb-2">Cálculo da Nota do Domínio &nbsp; <i class="fas fa-arrow-right text-white"></i> &nbsp; <?= $qatext ?></legend>
                                                             <table class="table mt-2 border">
                                                                 <thead class="bg-gradient-dark text-white">
                                                                     <tr>
-                                                                        <th class="small">Indicador</th>
-                                                                        <th class="small">Fórmula para cálculo <br>(Não pode exceder a 10 pontos)</th>
-                                                                        <th class="small">Fórmula em execução</th>
-                                                                        <th class="small">Resultado</th>
+                                                                        <th class="">Indicador</th>
+                                                                        <th class="">Fórmula para cálculo <br>(Não pode exceder a 10 pontos)</th>
+                                                                        <th class="">Fórmula em execução</th>
+                                                                        <th class="">Resultado</th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
                                                                     <tr>
-                                                                        <td class="small">Pré-Natal  (consultas) - <label class="font-weight-bold">R1</label></td>
-                                                                        <th class="small">n1 = (R1/45)*10</th>
-                                                                        <th class="small">n1 = (<label class="text-primary"><?= $rpctxt2 ?></label>/45)*10</th>
-                                                                        <td class="small">n1 = <?= $rpctxt ?>
+                                                                        <td class="">Pré-Natal  (consultas) - <label class="font-weight-bold">R1</label></td>
+                                                                        <th class="">n1 = (R1/45)*10</th>
+                                                                        <th class="">n1 = (<label class="text-primary"><?= $rpctxt2 ?></label>/45)*10</th>
+                                                                        <td class="">n1 = <?= $rpctxt ?>
                                                                         <?php 
                                                                         if($rpc > 10){
-                                                                            echo '<br>Excedeu a 10 pontos &nbsp; <i class="fas fa-arrow-right text-danger small"></i> &nbsp; n1 = 10,00';
+                                                                            echo '<br>Excedeu a 10 pontos &nbsp; <i class="fas fa-arrow-right text-danger "></i> &nbsp; n1 = 10,00';
                                                                         }
                                                                         ?>
                                                                         </td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td class="small">Pré-Natal  (exames) - <label class="font-weight-bold">R2</label></td>
-                                                                        <th class="small">n2 = (R2/60)*10</th>
-                                                                        <th class="small">n2 = (<label class="text-primary"><?= $rphtxt2 ?></label>/60)*10</th>
-                                                                        <td class="small">n2 = <?= $rphtxt ?>
+                                                                        <td class="">Pré-Natal  (exames) - <label class="font-weight-bold">R2</label></td>
+                                                                        <th class="">n2 = (R2/60)*10</th>
+                                                                        <th class="">n2 = (<label class="text-primary"><?= $rphtxt2 ?></label>/60)*10</th>
+                                                                        <td class="">n2 = <?= $rphtxt ?>
                                                                         <?php 
                                                                         if($rph > 10){
-                                                                            echo '<br>Excedeu a 10 pontos &nbsp; <i class="fas fa-arrow-right text-danger small"></i> &nbsp; n2 = 10,00';
+                                                                            echo '<br>Excedeu a 10 pontos &nbsp; <i class="fas fa-arrow-right text-danger "></i> &nbsp; n2 = 10,00';
                                                                         }
                                                                         ?>
                                                                         </td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td class="small">Exames Citopatológicos - <label class="font-weight-bold">R3</label></td>
-                                                                        <th class="small">n3 = (R3/40)*10</th>
-                                                                        <th class="small">n3 = (<label class="text-primary"><?= $rcctxt2 ?></label>/40)*10</th>
-                                                                        <td class="small">n3 = <?= $rcctxt ?>
+                                                                        <td class="">Exames Citopatológicos - <label class="font-weight-bold">R3</label></td>
+                                                                        <th class="">n3 = (R3/40)*10</th>
+                                                                        <th class="">n3 = (<label class="text-primary"><?= $rcctxt2 ?></label>/40)*10</th>
+                                                                        <td class="">n3 = <?= $rcctxt ?>
                                                                         <?php 
                                                                         if($rcc > 10){
-                                                                            echo '<br>Excedeu a 10 pontos &nbsp; <i class="fas fa-arrow-right text-danger small"></i> &nbsp; n3 = 10,00';
+                                                                            echo '<br>Excedeu a 10 pontos &nbsp; <i class="fas fa-arrow-right text-danger "></i> &nbsp; n3 = 10,00';
                                                                         }
                                                                         ?>
                                                                         </td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td class="small">Hipertensão - <label class="font-weight-bold">R4</label></td>
-                                                                        <th class="small">n4 = (R4/50)*10</th>
-                                                                        <th class="small">n4 = (<label class="text-primary"><?= $rhtxt2 ?></label>/50)*10</th>
-                                                                        <td class="small">n4 = <?= $rhtxt ?>
+                                                                        <td class="">Hipertensão - <label class="font-weight-bold">R4</label></td>
+                                                                        <th class="">n4 = (R4/50)*10</th>
+                                                                        <th class="">n4 = (<label class="text-primary"><?= $rhtxt2 ?></label>/50)*10</th>
+                                                                        <td class="">n4 = <?= $rhtxt ?>
                                                                         <?php 
                                                                         if($rh > 10){
-                                                                            echo '<br>Excedeu a 10 pontos &nbsp; <i class="fas fa-arrow-right text-danger small"></i> &nbsp; n4 = 10,00';
+                                                                            echo '<br>Excedeu a 10 pontos &nbsp; <i class="fas fa-arrow-right text-danger "></i> &nbsp; n4 = 10,00';
                                                                         }
                                                                         ?>
                                                                         </td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td class="small">Diabetes Mellitus - <label class="font-weight-bold">R5</label></td>
-                                                                        <th class="small">n5 = (R5/50)*10</th>
-                                                                        <th class="small">n5 = (<label class="text-primary"><?= $rdtxt2 ?></label>/50)*10</th>
-                                                                        <td class="small">n5 = <?= $rdtxt ?>
+                                                                        <td class="">Diabetes Mellitus - <label class="font-weight-bold">R5</label></td>
+                                                                        <th class="">n5 = (R5/50)*10</th>
+                                                                        <th class="">n5 = (<label class="text-primary"><?= $rdtxt2 ?></label>/50)*10</th>
+                                                                        <td class="">n5 = <?= $rdtxt ?>
                                                                         <?php 
                                                                         if($rd > 10){
-                                                                            echo '<br>Excedeu a 10 pontos &nbsp; <i class="fas fa-arrow-right text-danger small"></i> &nbsp; n5 = 10,00';
+                                                                            echo '<br>Excedeu a 10 pontos &nbsp; <i class="fas fa-arrow-right text-danger "></i> &nbsp; n5 = 10,00';
                                                                         }
                                                                         ?>
                                                                         </td>
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
-                                                                <p class="mb-2 small"><label class="text-danger">*</label>&nbsp; Nota domínio qualidade assistencial <label class="font-weight-bold">(nd = n1 + n2 + n3 + n4 + n5)</label> &nbsp; <i class="fas fa-arrow-right text-danger"></i> &nbsp; 
+                                                                <p class="mb-2 "><label class="text-danger">*</label>&nbsp; Nota domínio qualidade assistencial <label class="font-weight-bold">(nd = n1 + n2 + n3 + n4 + n5)</label> &nbsp; <i class="fas fa-arrow-right text-danger"></i> &nbsp; 
                                                                     <label class="text-danger">nd = <?= $qatext ?></label></p>
                                                             </fieldset>
                                                             </p>
@@ -1303,10 +1431,10 @@ if ($nrrsqa > 0) {
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-12 mb-2">
-                                                    <p class="mt-2 small text-secondary mb-0"><a href="./../qa/" class="btn btn-primary shadow-sm" target="_blank"><i class="fas fa-arrow-alt-circle-right"></i>&nbsp; Visite o painel da Evolução da Qualidade Assistencial</a></p>
+                                                    <p class="mt-2  text-secondary mb-0"><a href="./../qa/" class="btn btn-primary shadow-sm" target="_blank"><i class="fas fa-arrow-alt-circle-right"></i>&nbsp; Visite o painel da Evolução da Qualidade Assistencial</a></p>
                                                 </div>
                                                 <div class="col-sm-12">
-                                                    <p class="small text-secondary mb-0"><label class="font-weight-bold">* Fonte: </label> <a href="./../pdf/manual_2023.pdf" target="_blank">Manual Programa de Avaliação de Desempenho Tutor Médico 2023</a></p>
+                                                    <p class=" text-secondary mb-0"><label class="font-weight-bold">* Fonte: </label> <a href="./../pdf/manual_2023.pdf" target="_blank">Manual Programa de Avaliação de Desempenho Tutor Médico 2023</a></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -1482,7 +1610,7 @@ if ($nrrsqa > 0) {
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-12">
-                                                    <p class="mt-3 small text-secondary mb-0"><label class="font-weight-bold">* Fonte: </label> <a href="./../pdf/manual_2023.pdf" target="_blank">Manual Programa de Avaliação de Desempenho Tutor Médico 2023</a></p>
+                                                    <p class="mt-3  text-secondary mb-0"><label class="font-weight-bold">* Fonte: </label> <a href="./../pdf/manual_2023.pdf" target="_blank">Manual Programa de Avaliação de Desempenho Tutor Médico 2023</a></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -1558,6 +1686,13 @@ if ($nrrsqa > 0) {
             }, 1000);
         </script>
         <script>
+            $(function () {
+               $('.dropdown-toggle').dropdown();
+            }); 
+            $(document).on('click', '.dropdown-toggle ', function (e) {
+               e.stopPropagation();
+            });
+              
             $(document).ready(function (){
                $('#hassuntonovo').hide(); 
                $('#assuntonovo').hide(); 
@@ -1646,11 +1781,11 @@ if ($nrrsqa > 0) {
                     }
                 },
                 title: {
-                    text: 'Avaliação de Resultados e Avaliação de Competências',
+                    text: 'Distribuição por domínio',
                     align: 'left'
                 },
                 subtitle: {
-                    text: 'IGAD - ÍNDICE GLOBAL DE AVALIAÇÃO DE DESEMPENHO: <?= $mftext ?>%',
+                    text: 'IGAD (percentual alcançado): <?= $mftext ?>%',
                     align: 'left'
                 },
                 accessibility: {

@@ -8,16 +8,16 @@ if (!isset($_SESSION['msg'])) {
 if (!isset($_SESSION['pgmsg'])) {
     $_SESSION['pgmsg'] = "1";
 }
-//if (!isset($_SESSION['cpf'])) {
-//   header("Location: derruba_session.php"); exit();
-//}
-//$cpf = $_SESSION['cpf'];
+if (!isset($_SESSION['cpf'])) {
+   header("Location: derruba_session.php"); exit();
+}
+$cpf = $_SESSION['cpf'];
 //$cpf = '082.996.516-54';
 //$cpf = '001.018.311-61';
 //$cpf = '091.328.314-20';
 //$cpf = '054.040.031-97';
 //$cpf = '322.058.418-74';
-$cpf = '027.156.523-30';
+//$cpf = '027.156.523-30';
 
 date_default_timezone_set('America/Sao_Paulo');
 $anoAtual = date('Y');
@@ -228,12 +228,13 @@ if ($nrrsqa > 0) {
     <body>
         <div class="container-fluid p-3">
             <div class="row">
-                <div class="col-12 col-md-4 mt-4 pl-5">
+                <div class="col-12 col-md-3 mt-4 pl-5">
                     <img src="../img_agsus/Logo_400x200.png" class="img-fluid" alt="logoAdaps" width="250" title="Logo Adaps">
                 </div>
-                <div class="col-12 col-md-8 mt-4 ">
-                    <h4 class="mb-4 font-weight-bold text-center">Painel de Resultados</h4> 
-                    <h4 class="mb-4 font-weight-bold text-center">1º Ciclo do Programa de Avaliação de Desempenho do Médico Tutor - Ano <?= $ano1 ?></h4>
+                <div class="col-12 col-md-9 mt-2 text-center">
+                    <img src="../img_agsus/TESTEIRA001.png" class="img-fluid">
+<!--                    <h4 class="mb-4 font-weight-bold text-center">Painel de Resultados</h4> 
+                    <h4 class="mb-4 font-weight-bold text-center">1º Ciclo do Programa de Avaliação de Desempenho do Médico Tutor - Ano <?= $ano1 ?></h4>-->
                 </div>
             </div>
             <div class="row">
@@ -470,8 +471,11 @@ if ($nrrsqa > 0) {
                                                 <div class="card">
                                                     <div class="card-body p-3">
                                                         <div class="row">
-                                                            <div class="col-md-9 p-3">
-                                                                <div class="row">
+                                                            <div class="col-md-2 text-center">
+                                                                <img src="../img_agsus/pad.png" class="img-fluid" width="90%">
+                                                            </div>
+                                                            <div class="col-md-10 p-3 mt-2">
+                                                                <div class="row mt-3">
                                                                     <div class="col-md-6">
                                                                         <label class="font-weight-bold text-primary">Nome: &nbsp;<?= $nome ?></label>
                                                                     </div>
@@ -501,135 +505,6 @@ if ($nrrsqa > 0) {
                                                                         <label class="font-weight-bold">IVS: </label><label> &nbsp;&nbsp;<?= $ivs ?></label>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="col-md-3 text-center mt-3">
-                                                                <!--<img src="../icones/avaliacao_desempenho.png" style="width: 40%;" class="img-fluid rounded" alt="Responsive image">-->
-                                                                <?php
-                                                                $sqlt = "select distinct m.nome, m.admissao, m.cargo, m.tipologia, m.uf, m.municipio, m.datacadastro, m.cpf, m.ibge, m.cnes,
-                                                                m.ine, ivs.descricao as ivs, p.descricaoperiodo, de.iddemonstrativo, de.ano, de.ciclo, de.competencias, de.aperfeicoamento, de.qualidade 
-                                                                from medico m inner join demonstrativo de on de.fkcpf = m.cpf and de.fkibge = m.ibge and de.fkcnes = m.cnes and de.fkine = m.ine 
-                                                                inner join periodo p on p.idperiodo = de.fkperiodo 
-                                                                left join ivs on m.fkivs = ivs.idivs 
-                                                                where de.ano = '$ano' and de.ciclo = '$ciclo' and (de.flaginativo is null or de.flaginativo <> 1)";
-                                                               $queryt = mysqli_query($conn, $sqlt);
-                                                               $nrrst = mysqli_num_rows($queryt);
-                                                               $rst = mysqli_fetch_array($queryt);
-                                                               $contt = $contat = $contbt = 0;
-                                                               $rscpft = false;
-                                                               if ($nrrst > 0) {
-                                                                   $rscpft = true;
-                                                               }
-                                                               if ($rscpft === true) {
-                                                                if ($nrrst > 0) {
-                                                                     do {
-                                                                         $contt++;
-                                                                         $cpftratadot = $rst['cpf'];
-                                                                         $cpftratadot = str_replace("-", "", $cpftratadot);
-                                                                         $cpftratadot = str_replace(".", "", $cpftratadot);
-                                                                         $cpftratado = str_replace(".", "", $cpftratadot);
-                                                                         $anot = $rst['ano'];
-                                                                         $ciclot = $rst['ciclo'];
-                                                                         $sqlt2 = "select p.idperiodo, p.descricaoperiodo, d.prenatal_consultas, d.prenatal_sifilis_hiv, d.cobertura_citopatologico, 
-                                                                             d.hipertensao, d.diabetes 
-                                                                             from periodo p inner join desempenho d on p.idperiodo = d.idperiodo
-                                                                             where d.cpf = '$cpftratadot' and d.ano = '$anot' and d.idperiodo = '$idperiodo' limit 1;";
-                                                                         $queryt2 = mysqli_query($conn, $sqlt2);
-                                                                         $rst2 = mysqli_fetch_array($queryt2);
-                                                                         $prenatal_consultast = $prenatal_sifilis_hivt = $cobertura_citopatologicot = $hipertensaot = $diabetest = 0;
-                                                                         if($rst2){
-                                                                             do{
-                                                                                 $periodot = $rst2['descricaoperiodo'];
-                                                                                 $idperiodot = $rst2['idperiodo'];
-                                                                                 $prenatal_consultast = $rst2['prenatal_consultas'];
-                                                         //                        var_dump("prenatal_consultas",$prenatal_consultas);
-                                                                                 $prenatal_consultast = ($prenatal_consultast/45)*10;
-                                                                                 if($prenatal_consultast > 10){
-                                                                                     $prenatal_consultast = 10;
-                                                                                 }
-                                                         //                        var_dump("prenatal_consultas-Fator",$prenatal_consultas);
-                                                                                 $prenatal_sifilis_hivt = $rst2['prenatal_sifilis_hiv'];
-                                                         //                        var_dump("prenatal_sifilis_hiv",$prenatal_sifilis_hiv);
-                                                                                 $prenatal_sifilis_hivt = ($prenatal_sifilis_hivt/60)*10;
-                                                                                 if($prenatal_sifilis_hivt> 10){
-                                                                                     $prenatal_sifilis_hivt = 10;
-                                                                                 }
-                                                         //                        var_dump("prenatal_sifilis_hiv-Fator",$prenatal_sifilis_hiv);
-                                                                                 $cobertura_citopatologicot = $rst2['cobertura_citopatologico'];
-                                                         //                        var_dump("cobertura_citopatologico",$cobertura_citopatologico);
-                                                                                 $cobertura_citopatologicot = ($cobertura_citopatologicot/40)*10;
-                                                                                 if($cobertura_citopatologicot > 10){
-                                                                                     $cobertura_citopatologicot = 10;
-                                                                                 }
-                                                         //                        var_dump("cobertura_citopatologico-Fator",$cobertura_citopatologico);
-                                                                                 $hipertensaot = $rst2['hipertensao'];
-                                                         //                        var_dump("hipertensao",$hipertensao);
-                                                                                 $hipertensaot = ($hipertensaot/50)*10;
-                                                                                 if($hipertensaot > 10){
-                                                                                     $hipertensaot = 10;
-                                                                                 }
-                                                         //                        var_dump("hipertensao-Fator",$hipertensao);
-                                                                                 $hipertensaotextt = str_replace(",", "", $hipertensaot);
-                                                                                 $hipertensaotextt = str_replace(".", ",", $hipertensaotextt);
-                                                                                 $diabetest = $rst2['diabetes'];
-                                                         //                        var_dump("diabetes",$diabetes);
-                                                                                 $diabetest = ($diabetest/50)*10;
-                                                                                 if($diabetest > 10){
-                                                                                     $diabetest = 10;
-                                                                                 }
-                                                         //                        var_dump("diabetes-Fator",$diabetes);
-                                                                                 $diabetestextt = str_replace(",", "", $diabetest);
-                                                                                 $diabetestextt = str_replace(".", ",", $diabetestextt);
-                                                                             }while($rst2 = mysqli_fetch_array($queryt2));
-                                                                         }
-                                                                         //proporção da Qualidade assistencial
-                                                                         $qat = $prenatal_consultast + $prenatal_sifilis_hivt + $cobertura_citopatologicot + $hipertensaot + $diabetest;
-                                                                         $qatextt = number_format($qat, 2, ',', ' ');
-
-                                                                         //proporção da Qualidade da Tutoria
-                                                                         $qnotat = $rst['qualidade'];
-                                                 //                        var_dump($qnota);
-                                                 //                        $qnota = (($qnota - 1)*10)/4;
-
-                                                                         $qnotat = round($qnotat,2);
-                                                                         $qnotatextt = number_format($qnotat, 2, ',', '.');
-
-                                                                         //proporção da Competência Profissional
-                                                                         $cpossuit = $rst['competencias'];
-                                                                         if($cpossuit === '1'){
-                                                                             $cpossuit = 30.00;
-                                                                             $cpossuitextt = number_format(30, 2, ',', '.');
-                                                                         }else{
-                                                                             $cpossuit = 0.00;
-                                                                             $cpossuitextt = number_format(0, 2, ',', '.');
-                                                                         }
-                                                                         $anotat = $rst['aperfeicoamento'];
-                                                                         if($anotat >= 50){
-                                                                             $anotat = 10.00;
-                                                                             $anotatextt = number_format(10, 2, ',', '.');
-                                                                         }else{
-                                                                             $anotat = 0.00;
-                                                                             $anotatextt = number_format(0, 2, ',', '.');
-                                                                         }
-                                                                         $art = $qat + $qnotat + $anotat;
-                                                                         $artextt = number_format($art, 2, ',', '.');
-                                                                         $mft = round(($art + $cpossuit),2);
-                                                                         $valort = 1400;
-                                                                         if($mft > 70){
-                                                                             $contat++;
-                                                                         }else{
-                                                                             $contbt++;
-                                                                         }
-                                                 //                        $mf= 49.99;
-                                                                         $mftextt = number_format($mft, 2, ',', '.');
-                                                                         $faltamt = 100 - $mft;
-                                                                         $faltamtextt = number_format($faltamt, 2, ',', '.');
-                                                                     } while ($rst = mysqli_fetch_array($queryt));
-                                                                 }
-                                                                 $mfat = round((($contat/$contt) * 100),2);
-                                                                 $mfat = str_replace(".", ",", $mfat);
-                                                                }
-                                                                ?>
-                                                                <p class="text-center align-content-center p-4 border border-info rounded"><?= $mfat ?>% dos tutores avaliados alcançou a pontuação de 70 pontos ou mais.</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -771,7 +646,7 @@ if ($nrrsqa > 0) {
                                                                     <div class="col-md-12">
                                                                         <div class="card">
                                                                             <div class="card-header text-info font-weight-bold">
-                                                                                <h6 class="card-title text-info">IGAD - ÍNDICE GLOBAL DE AVALIAÇÃO DE DESEMPENHO</h6>
+                                                                                <h6 class="card-title text-primary">IGAD - ÍNDICE GLOBAL DE AVALIAÇÃO DE DESEMPENHO</h6>
                                                                             </div>
                                                                             <div class="card-body">
                                                                                 <div class="row">
@@ -824,6 +699,149 @@ if ($nrrsqa > 0) {
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div class="row">
+                                                    <div class="col-md-12 pl-4 pr-2">
+                                                        <div class="row">
+                                                            <div class="col-md-12 shadow rounded p-2 mb-2">
+                                                                <div class="card">
+                                                                    <div class="row p-3">
+                                                                        <div class="col-md-6">
+                                                                            <img src="../img_agsus/pad.png" class="img-fluid" width="90%">
+                                                                        </div>
+                                                                        <?php
+                                                                            $sqlt = "select distinct m.nome, m.admissao, m.cargo, m.tipologia, m.uf, m.municipio, m.datacadastro, m.cpf, m.ibge, m.cnes,
+                                                                            m.ine, ivs.descricao as ivs, p.descricaoperiodo, de.iddemonstrativo, de.ano, de.ciclo, de.competencias, de.aperfeicoamento, de.qualidade 
+                                                                            from medico m inner join demonstrativo de on de.fkcpf = m.cpf and de.fkibge = m.ibge and de.fkcnes = m.cnes and de.fkine = m.ine 
+                                                                            inner join periodo p on p.idperiodo = de.fkperiodo 
+                                                                            left join ivs on m.fkivs = ivs.idivs 
+                                                                            where de.ano = '$ano' and de.ciclo = '$ciclo' and (de.flaginativo is null or de.flaginativo <> 1)";
+                                                                           $queryt = mysqli_query($conn, $sqlt);
+                                                                           $nrrst = mysqli_num_rows($queryt);
+                                                                           $rst = mysqli_fetch_array($queryt);
+                                                                           $contt = $contat = $contbt = 0;
+                                                                           $rscpft = false;
+                                                                           if ($nrrst > 0) {
+                                                                               $rscpft = true;
+                                                                           }
+                                                                           if ($rscpft === true) {
+                                                                            if ($nrrst > 0) {
+                                                                                 do {
+                                                                                     $contt++;
+                                                                                     $cpftratadot = $rst['cpf'];
+                                                                                     $cpftratadot = str_replace("-", "", $cpftratadot);
+                                                                                     $cpftratadot = str_replace(".", "", $cpftratadot);
+                                                                                     $cpftratado = str_replace(".", "", $cpftratadot);
+                                                                                     $anot = $rst['ano'];
+                                                                                     $ciclot = $rst['ciclo'];
+                                                                                     $sqlt2 = "select p.idperiodo, p.descricaoperiodo, d.prenatal_consultas, d.prenatal_sifilis_hiv, d.cobertura_citopatologico, 
+                                                                                         d.hipertensao, d.diabetes 
+                                                                                         from periodo p inner join desempenho d on p.idperiodo = d.idperiodo
+                                                                                         where d.cpf = '$cpftratadot' and d.ano = '$anot' and d.idperiodo = '$idperiodo' limit 1;";
+                                                                                     $queryt2 = mysqli_query($conn, $sqlt2);
+                                                                                     $rst2 = mysqli_fetch_array($queryt2);
+                                                                                     $prenatal_consultast = $prenatal_sifilis_hivt = $cobertura_citopatologicot = $hipertensaot = $diabetest = 0;
+                                                                                     if($rst2){
+                                                                                         do{
+                                                                                             $periodot = $rst2['descricaoperiodo'];
+                                                                                             $idperiodot = $rst2['idperiodo'];
+                                                                                             $prenatal_consultast = $rst2['prenatal_consultas'];
+                                                                     //                        var_dump("prenatal_consultas",$prenatal_consultas);
+                                                                                             $prenatal_consultast = ($prenatal_consultast/45)*10;
+                                                                                             if($prenatal_consultast > 10){
+                                                                                                 $prenatal_consultast = 10;
+                                                                                             }
+                                                                     //                        var_dump("prenatal_consultas-Fator",$prenatal_consultas);
+                                                                                             $prenatal_sifilis_hivt = $rst2['prenatal_sifilis_hiv'];
+                                                                     //                        var_dump("prenatal_sifilis_hiv",$prenatal_sifilis_hiv);
+                                                                                             $prenatal_sifilis_hivt = ($prenatal_sifilis_hivt/60)*10;
+                                                                                             if($prenatal_sifilis_hivt> 10){
+                                                                                                 $prenatal_sifilis_hivt = 10;
+                                                                                             }
+                                                                     //                        var_dump("prenatal_sifilis_hiv-Fator",$prenatal_sifilis_hiv);
+                                                                                             $cobertura_citopatologicot = $rst2['cobertura_citopatologico'];
+                                                                     //                        var_dump("cobertura_citopatologico",$cobertura_citopatologico);
+                                                                                             $cobertura_citopatologicot = ($cobertura_citopatologicot/40)*10;
+                                                                                             if($cobertura_citopatologicot > 10){
+                                                                                                 $cobertura_citopatologicot = 10;
+                                                                                             }
+                                                                     //                        var_dump("cobertura_citopatologico-Fator",$cobertura_citopatologico);
+                                                                                             $hipertensaot = $rst2['hipertensao'];
+                                                                     //                        var_dump("hipertensao",$hipertensao);
+                                                                                             $hipertensaot = ($hipertensaot/50)*10;
+                                                                                             if($hipertensaot > 10){
+                                                                                                 $hipertensaot = 10;
+                                                                                             }
+                                                                     //                        var_dump("hipertensao-Fator",$hipertensao);
+                                                                                             $hipertensaotextt = str_replace(",", "", $hipertensaot);
+                                                                                             $hipertensaotextt = str_replace(".", ",", $hipertensaotextt);
+                                                                                             $diabetest = $rst2['diabetes'];
+                                                                     //                        var_dump("diabetes",$diabetes);
+                                                                                             $diabetest = ($diabetest/50)*10;
+                                                                                             if($diabetest > 10){
+                                                                                                 $diabetest = 10;
+                                                                                             }
+                                                                     //                        var_dump("diabetes-Fator",$diabetes);
+                                                                                             $diabetestextt = str_replace(",", "", $diabetest);
+                                                                                             $diabetestextt = str_replace(".", ",", $diabetestextt);
+                                                                                         }while($rst2 = mysqli_fetch_array($queryt2));
+                                                                                     }
+                                                                                     //proporção da Qualidade assistencial
+                                                                                     $qat = $prenatal_consultast + $prenatal_sifilis_hivt + $cobertura_citopatologicot + $hipertensaot + $diabetest;
+                                                                                     $qatextt = number_format($qat, 2, ',', ' ');
+
+                                                                                     //proporção da Qualidade da Tutoria
+                                                                                     $qnotat = $rst['qualidade'];
+                                                             //                        var_dump($qnota);
+                                                             //                        $qnota = (($qnota - 1)*10)/4;
+
+                                                                                     $qnotat = round($qnotat,2);
+                                                                                     $qnotatextt = number_format($qnotat, 2, ',', '.');
+
+                                                                                     //proporção da Competência Profissional
+                                                                                     $cpossuit = $rst['competencias'];
+                                                                                     if($cpossuit === '1'){
+                                                                                         $cpossuit = 30.00;
+                                                                                         $cpossuitextt = number_format(30, 2, ',', '.');
+                                                                                     }else{
+                                                                                         $cpossuit = 0.00;
+                                                                                         $cpossuitextt = number_format(0, 2, ',', '.');
+                                                                                     }
+                                                                                     $anotat = $rst['aperfeicoamento'];
+                                                                                     if($anotat >= 50){
+                                                                                         $anotat = 10.00;
+                                                                                         $anotatextt = number_format(10, 2, ',', '.');
+                                                                                     }else{
+                                                                                         $anotat = 0.00;
+                                                                                         $anotatextt = number_format(0, 2, ',', '.');
+                                                                                     }
+                                                                                     $art = $qat + $qnotat + $anotat;
+                                                                                     $artextt = number_format($art, 2, ',', '.');
+                                                                                     $mft = round(($art + $cpossuit),2);
+                                                                                     $valort = 1400;
+                                                                                     if($mft > 70){
+                                                                                         $contat++;
+                                                                                     }else{
+                                                                                         $contbt++;
+                                                                                     }
+                                                             //                        $mf= 49.99;
+                                                                                     $mftextt = number_format($mft, 2, ',', '.');
+                                                                                     $faltamt = 100 - $mft;
+                                                                                     $faltamtextt = number_format($faltamt, 2, ',', '.');
+                                                                                 } while ($rst = mysqli_fetch_array($queryt));
+                                                                             }
+                                                                             $mfat = round((($contat/$contt) * 100),2);
+                                                                             $mfat = str_replace(".", ",", $mfat);
+                                                                            }
+                                                                            ?>
+                                                                        <div class="col-md-6 mt-3">
+                                                                            <p class="text-center align-content-center p-4 "><?= $mfat ?>% dos tutores avaliados alcançou a pontuação de 70 pontos ou mais.</p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div class="col-md-4 mb-3 pl-4 pr-2">
                                                 <div class="row">
@@ -833,7 +851,7 @@ if ($nrrsqa > 0) {
                                                                 <div class="row">
                                                                     <div class="col-md-12">
                                                                         <div class="card">
-                                                                            <div class="card-header text-info font-weight-bold">
+                                                                            <div class="card-header text-primary font-weight-bold">
                                                                                 <h6>FEEDBACK DO <?= $ciclo ?>º CICLO AVALIATIVO</h6>
                                                                             </div>
                                                                             <div class="card-body">
@@ -860,7 +878,7 @@ if ($nrrsqa > 0) {
                                                                 <div class="row">
                                                                     <div class="col-md-12">
                                                                         <div class="card">
-                                                                            <div class="card-header text-info font-weight-bold">
+                                                                            <div class="card-header text-primary font-weight-bold">
                                                                                 <h6>CONTESTAÇÃO</h6>
                                                                             </div>
                                                                             <div class="card-body ">
@@ -935,43 +953,80 @@ if ($nrrsqa > 0) {
                                         <div class="modal-body">
                                             <div class="row mt-1 pr-2 pl-2">
                                                 <div class="col-sm-12 p-3 border rounded">
-                                                    <div class="row">
+                                                    <div class="row mb-2">
                                                         <div class="col-sm-12">
-                                                    <div class='text-center' style="margin-bottom: 40px;"><img src='./../img_agsus/Logo_400x200.png' class='img-fluid' width="300"></div>
-                                                    <h6 class="text-dark font-weight-bold text-center mb-5">PROGRAMA DE AVALIAÇÃO DE DESEMPENHO TUTOR MÉDICO <?= $ano ?></h6>
-                                                    <p>Prezado(a) Tutore(a) <?= $nome ?>,</p>
-                                                    <p class="text-justify">Parabéns pelo seu primeiro ano de dedicação ao Programa Médicos pelo Brasil! A partir de agora, sua atuação como tutor será avaliada continuamente.</p>
-                                                    <p class="text-justify">Apresentamos o resultado individual da sua Avaliação de Desempenho Individual, referente ao 1º Ciclo  de 2023, que compreendeu o período de julho a dezembro de 2023. Essa avaliação se constituiu como uma importante ferramenta para avaliar o desempenho dos empregados desta Agência, reconhecendo pontos fortes e identificando oportunidades de aprimoramento.</p>
-                                                    <p class="text-justify">A avaliação foi conduzida com base nos critérios previamente definidos na Portaria n.º 26, de 28 de fevereiro de 2023, que institui o Programa de Avaliação de Desempenho para o cargo de Tutor Médico.</p>
-                                                    <p class="text-justify">Importante ressaltar que a Avaliação de Desempenho é uma expressão do nosso compromisso em promover uma cultura de gestão focada no desempenho profissional, visando fortalecer a Atenção Primária à Saúde (APS) no Brasil. Este processo está vinculado a incentivos financeiros variáveis, reconhecendo seu desempenho individual e incentivando a contínua melhoria nos serviços de saúde prestados à população.</p>
-                                                    <p class="text-justify">Sendo assim, a Avaliação de Desempenho é estruturada em dois eixos principais: Avaliação de Resultados e Avaliação de Competências, subdivididos em domínios que abrangem tanto as especificidades técnicas profissionais relacionadas às atividades do cargo, quanto às características comportamentais relacionadas à interação com a equipe, gestão municipal, ambiente de trabalho e instituição, neste contexto você alcançou a Nota Geral <label class="text-danger"><?= $mftext ?></label>.</p>
-                                                    <p class="text-justify">Domínios avaliados e resultados:</p>
-                                                    <dl>1. Eixo I - Avaliação de Resultados
-                                                        <dt>1. Qualidade Assistencial: </dt>
-                                                            <dd>1. Foi mensurado por de indicadores de boa performance na assistência à população, incluem a realização de no mínimo:
-                                                                <br><ddd>1.1. Seis consultas pré-natal com gestantes, </ddd>
-                                                                <br><ddd>1.2. Pedidos proporcionais de exames para sífilis e HIV, </ddd>
-                                                                <br><ddd>1.3. Proporção de mulheres com coleta de Citopatológico, </ddd>
-                                                                <br><ddd>1.4. Proporção de consultas relacionadas a pessoas com diabetes e solicitação de hemoglobina glicada e </ddd>
-                                                                <br><ddd>1.5. Proporção de pessoas com hipertensão, com consulta e pressão arterial aferida no semestre. </ddd>
-                                                            <dd>Os indicadores têm como unidade de análise o indivíduo e avaliam aspectos do cuidado em saúde dispensado de forma individualizada. É sabido que a responsabilidade pela realização das ações de saúde pela equipe é compartilhada com a gestão municipal, pois a mesma atua na manutenção dos recursos necessários e suporte para o adequado funcionamento da estrutura assistencial na qual o empregado está inserido. No entanto, considera-se que a escolha desse conjunto de indicadores, por ser fruto de processo de pactuação tripartite, pressupõe a implicação e compromisso da gestão municipal na busca por resultados</dd>
-                                                            <dd>2. O seu resultado nesse domínio alcançou a Nota <label class="text-danger"><?= $qatext ?></label>, você poderá obter de forma detalhada a mensuração de cada indicador acessando o link https://agsusbrasil.org/sistema-integrado/login.php onde terá a evolução dos indicadores ao longo dos três quadrimestres de 2023.</dd>
-                                                        <dt>2. Qualidade da Tutoria:</dt>
-                                                            <dd>1. A tutoria será avaliada a partir da verificação de um conjunto de evidências relacionadas às atribuições do Tutor Médico no processo de realização do estágio experimental remunerado. Consiste, portanto, na opinião do bolsista em relação às vivências de tutoria clínica. Ter uma tutoria clínica efetiva e com a qualidade esperada é fundamental para o desenvolvimento das competências necessárias para o trabalho na APS. A aferição da qualidade da tutoria foi feita com base em dados fornecidos pelos bolsistas vinculados e assistidos por cada tutor.</dd>
-                                                            <dd>2. A mensuração deste domínio com base na avaliação dos bolsistas vinculados foi <label class="text-danger"><?= $qnotatext ?></label>.</dd>
-                                                        <dt>3. Aperfeiçoamento Profissional:</dt>
-                                                            <dd>1. O domínio aperfeiçoamento profissional está conectado com as atividades do Plano de Educação Continuada. O PEC organiza, por meio de um sistema de créditos, o estímulo ao desenvolvimento contínuo de competências técnicas e comportamentais desses empregados, a partir da realização de atividades de qualificação clínica e de gestão, ensino, pesquisa, extensão e inovação tecnológica. Para tanto adotou-se o sistema de créditos como base para a verificação e julgamento do desempenho esperado. Os critérios e pesos das atividades de curta duração estão divulgados na Instrução Normativa nº 002/2023 - Plano de Educação Continuada para os Médicos da Adaps.</dd>
-                                                            <dd>2. Com base na creditação atribuída aos documentos que você inseriu na plataforma sênior, você alcançou a pontuação de <label class="text-danger"><?= $anotatext ?></label>.</dd>
-                                                    </dl>    
-                                                    <dl>2. Eixo II - Avaliação de Competências:
-                                                        <dt>1. Competências Profissionais</dt>
-                                                            <dd>1. Trata de um conjunto de características e capacidades que podem ajudar o empregado a alcançar com maior facilidade as entregas esperadas pela instituição. O instrumento para avaliação de competências é composto de nove domínios que dão conta de aspectos técnicos, que permeiam a execução das atividades clínicas do médico na APS, mas também de aspectos transversais que correspondem aos comportamentos e atitudes ligadas ao contexto de trabalho.</dd>
-                                                    </dl>
-                                                    <p class="float-right mt-3">Agência Brasileira de Apoio à Gestão do Sistema Único de Saúde - AgSUS</p>
+                                                            <!--<h6 class="text-dark font-weight-bold text-center mb-5">PROGRAMA DE AVALIAÇÃO DE DESEMPENHO TUTOR MÉDICO <?= $ano ?></h6>-->
+                                                            <div class="row mb-3">
+                                                                <div class="col-sm-12  mt-2 mb-2">
+                                                                    <table class="border-0">
+                                                                        <tr>
+                                                                            <td style="width: 60%; vertical-align: bottom;" class="mb-3"><h4 class="mt-4 font-weight-bold" style="color: #1F3B9B;">Prezado(a) Tutor(a) <?= $nome ?>,</h4></td>
+                                                                            <td style="width: 40%; text-align: center;"><img src="../img_agsus/ciclo1_parabens.png" class="img-fluid rounded" width="70%"></td>
+                                                                        </tr>
+                                                                    </table>
+                                                                    
+                                                                </div>
+<!--                                                                <div class="col-sm-6 text-center">
+                                                                    <img src="../img_agsus/ciclo1_parabens.png" class="img-fluid rounded" width="80%">
+                                                                </div>-->
+                                                            </div>
+<!--                                                            <p class="text-justify">Parabéns pelo seu primeiro ano de dedicação ao Programa Médicos pelo Brasil! A partir de agora, sua atuação como tutor será avaliada continuamente.</p>-->
+                                                            <p class="text-justify">Neste feedback individual queremos apresentar um detalhamento do resultado do 1º ciclo da sua Avaliação de Desempenho, referente ao 
+                                                                período de julho a dezembro de 2023 e instituída pela Portaria n.º 26, de 28 de fevereiro de 2023.</p>
+                                                            <p class="text-justify">Esta é uma importante ferramenta da AgSUS e uma expressão do nosso compromisso em promover uma cultura de gestão com base em resultados
+                                                                que visa reconhecer avanços e identificar oportunidades de aprimoramento. É uma iniciativa inspirada em práticas, nacionais e internacionais, que visam 
+                                                                fortalecer a Atenção Primária à Saúde (APS).</p>
+                                                            <p class="text-justify">Neste primeiro ciclo, você alcançou a Nota Geral <label class="text-danger"><?= $mftext ?></label> como resultado da sua Avaliação 
+                                                                Individual, referente ao período de julho a dezembro de 2023.</p>
+                                                            <p class="text-justify">A Avaliação de Desempenho é estruturada em dois eixos principais: Avaliação de Resultados e Avaliação de Competências, subdivididos 
+                                                                em domínios que abrangem tanto especificidades técnicas profissionais relacionadas às atividades do cargo, quanto características comportamentais 
+                                                                relacionadas à interação nos ambientes de trabalho, que diz respeito ao tratamento interpessoal com usuários, bolsistas, equipe de saúde e gestores. 
+                                                                Neste sentido, seguem abaixo os domínios avaliados e seus resultados alcançados:</p>
+                                                            <dl>1. Eixo I - Avaliação de Resultados
+                                                                <dt>1. Qualidade Assistencial: </dt>
+                                                                    <dd>1. Foi mensurado por de indicadores de boa performance na assistência à população, incluem a realização de no mínimo:
+                                                                        <br><ddd>1.1. Seis consultas pré-natal com gestantes, </ddd>
+                                                                        <br><ddd>1.2. Pedidos proporcionais de exames para sífilis e HIV, </ddd>
+                                                                        <br><ddd>1.3. Proporção de mulheres com coleta de Citopatológico, </ddd>
+                                                                        <br><ddd>1.4. Proporção de consultas relacionadas a pessoas com diabetes e solicitação de hemoglobina glicada e </ddd>
+                                                                        <br><ddd>1.5. Proporção de pessoas com hipertensão, com consulta e pressão arterial aferida no semestre. </ddd>
+                                                                    <dd>Os indicadores têm como unidade de análise o indivíduo e avaliam aspectos do cuidado em saúde dispensado de forma individualizada. É sabido que
+                                                                        a responsabilidade pela realização das ações de saúde pela equipe é compartilhada com a gestão municipal, pois a mesma atua na manutenção dos
+                                                                        recursos necessários e suporte para o adequado funcionamento da estrutura assistencial na qual o empregado está inserido. No entanto, considera-se
+                                                                        que a escolha desse conjunto de indicadores, por ser fruto de processo de pactuação tripartite, pressupõe a implicação e compromisso da gestão
+                                                                        municipal na busca por resultados</dd>
+                                                                    <dd>2. O seu resultado nesse domínio alcançou a Nota <label class="text-danger"><?= $qatext ?></label>, você poderá obter de forma detalhada a 
+                                                                        mensuração de cada indicador acessando o link https://agsusbrasil.org/sistema-integrado/login.php onde terá a evolução dos indicadores ao longo
+                                                                        dos três quadrimestres de 2023.</dd>
+                                                                <dt>2. Qualidade da Tutoria:</dt>
+                                                                    <dd>1. A tutoria será avaliada a partir da verificação de um conjunto de evidências relacionadas às atribuições do Tutor Médico no processo de 
+                                                                        realização do estágio experimental remunerado. Consiste, portanto, na opinião do bolsista em relação às vivências de tutoria clínica. Ter uma
+                                                                        tutoria clínica efetiva e com a qualidade esperada é fundamental para o desenvolvimento das competências necessárias para o trabalho na APS. 
+                                                                        A aferição da qualidade da tutoria foi feita com base em dados fornecidos pelos bolsistas vinculados e assistidos por cada tutor.</dd>
+                                                                    <dd>2. A mensuração deste domínio com base na avaliação dos bolsistas vinculados foi <label class="text-danger"><?= $qnotatext ?></label>.</dd>
+                                                                <dt>3. Aperfeiçoamento Profissional:</dt>
+                                                                    <dd>1. O domínio aperfeiçoamento profissional está conectado com as atividades do Plano de Educação Continuada. O PEC organiza, por meio de um 
+                                                                        sistema de créditos, o estímulo ao desenvolvimento contínuo de competências técnicas e comportamentais desses empregados, a partir da realização
+                                                                        de atividades de qualificação clínica e de gestão, ensino, pesquisa, extensão e inovação tecnológica. Para tanto adotou-se o sistema de créditos
+                                                                        como base para a verificação e julgamento do desempenho esperado. Os critérios e pesos das atividades de curta duração estão divulgados na 
+                                                                        Instrução Normativa nº 002/2023 - Plano de Educação Continuada para os Médicos da Adaps.</dd>
+                                                                    <dd>2. Com base na creditação atribuída aos documentos que você inseriu na plataforma sênior, você alcançou a pontuação 
+                                                                        de <label class="text-danger"><?= $anotatext ?></label>.</dd>
+                                                            </dl>    
+                                                            <dl>2. Eixo II - Avaliação de Competências:
+                                                                <dt>1. Competências Profissionais</dt>
+                                                                    <dd>1. Trata de um conjunto de características e capacidades que podem ajudar o empregado a alcançar com maior facilidade as entregas esperadas 
+                                                                        pela instituição. O instrumento para avaliação de competências é composto de nove domínios que dão conta de aspectos técnicos, que permeiam 
+                                                                        a execução das atividades clínicas do médico na APS, mas também de aspectos transversais que correspondem aos comportamentos e atitudes ligadas 
+                                                                        ao contexto de trabalho.</dd>
+                                                            </dl>
                                                         </div>
                                                     </div>
                                                     <div class="row">
-                                                        <div class="col-sm-12">
+                                                        <div class="col-sm-10">
+                                                            <p class="float-right mt-5"><div class='text-center' style="margin-bottom: 40px;"><img src='./../img_agsus/Logo_400x200.png' class='img-fluid' width="200"></div></p>
+                                                        </div>
+                                                        <div class="col-sm-2  mt-5">
                                                             <a id="pdffeedback" href="./pdf/feedbackdemonstrativo.php?nome=<?= $nome ?>&ano=<?=$ano?>&qa=<?= $qatext ?>&qnota=<?= $qnotatext ?>&anota=<?= $anotatext ?>&mftext=<?= $mftext ?>" title="Impressão em PDF" target="_blank" class="btn btn-outline-danger shadow-sm rounded ml-5 mr-5 p-2 float-right">&nbsp;&nbsp;&nbsp; <i class="far fa-file-pdf"></i> &nbsp;&nbsp;&nbsp;</a>
                                                         </div>
                                                     </div>

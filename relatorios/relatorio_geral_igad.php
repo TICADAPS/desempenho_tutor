@@ -15,9 +15,10 @@ $ano = 2023;
 $ciclo = 1;
 $idperiodo = 25;
 $sql = "select distinct m.nome, m.admissao, m.cargo, m.tipologia, m.uf, m.municipio, m.datacadastro, m.cpf, m.ibge, m.cnes,
- m.ine, p.descricaoperiodo, de.iddemonstrativo, de.ano, de.ciclo, de.competencias, de.aperfeicoamento, de.qualidade 
+ m.ine, ivs.descricao as ivs, p.descricaoperiodo, de.iddemonstrativo, de.ano, de.ciclo, de.competencias, de.aperfeicoamento, de.qualidade 
  from medico m inner join demonstrativo de on de.fkcpf = m.cpf and de.fkibge = m.ibge and de.fkcnes = m.cnes and de.fkine = m.ine 
  inner join periodo p on p.idperiodo = de.fkperiodo 
+ left join ivs on m.fkivs = ivs.idivs 
  where de.ano = '$ano' and de.ciclo = '$ciclo' and (de.flaginativo is null or de.flaginativo <> 1)";
 $query = mysqli_query($conn, $sql);
 $nrrs = mysqli_num_rows($query);
@@ -54,6 +55,7 @@ if ($nrrs > 0) {
         $html .= '  <td class="bg-dark text-light align-middle" style="width: 40%;position: sticky; top: 0px;">TUTOR</td>';
         $html .= '  <td class="bg-dark text-light align-middle" style="width: 5%;position: sticky; top: 0px;">CPF</td>';
         $html .= '  <td class="bg-dark text-light align-middle" style="width: 5%;position: sticky; top: 0px;">TIPOLOGIA</td>';
+        $html .= '  <td class="bg-dark text-light align-middle" style="width: 5%;position: sticky; top: 0px;">IVS</td>';
         $html .= '  <td class="bg-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">MUNICÍPIO</td>';
         $html .= '  <td class="bg-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">UF</td>';
         $html .= '  <td class="bg-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">IBGE</td>';
@@ -82,6 +84,7 @@ if ($nrrs > 0) {
                     $admissao = $rs['admissao'];
                     $cargo = $rs['cargo'];
                     $tipologia = $rs['tipologia'];
+                    $ivs = strtoupper($rs['ivs']);
                     $uf = $rs['uf'];
                     $municipio = $rs['municipio'];
                     $ibge = $rs['ibge'];
@@ -182,6 +185,7 @@ if ($nrrs > 0) {
         $html .= "  <td>$nome</td>";
         $html .= "  <td>$cpf</td>";
         $html .= "  <td>$tipologia</td>";
+        $html .= "  <td>$ivs</td>";
         $html .= "  <td>$municipio</td>";
         $html .= "  <td>$uf</td>";
         $html .= "  <td>$ibge</td>";

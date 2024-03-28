@@ -1,11 +1,13 @@
 <?php
 session_start();
 include './conexao-agsus.php';
-//if (!isset($_SESSION['cpf'])) {
-//   header("Location: derruba_session.php"); exit();
-//}
-//$cpf = $_SESSION['cpf'];
-$cpf = '027.156.523-30';
+if (!isset($_SESSION['cpf'])) {
+   header("Location: derruba_session.php"); exit();
+}
+$cpf = $_SESSION['cpf'];
+//$cpf = '027.156.523-30';
+header("Location: demonstrativo/");
+/*
 $cpftratado = str_replace("-", "", $cpf);
 $cpftratado = str_replace(".", "", $cpftratado);
 $cpftratado = str_replace(".", "", $cpftratado);
@@ -788,3 +790,4 @@ if ($nrrs > 0) {
     </body>
 
 </html>
+*/

@@ -9,38 +9,29 @@ if (!isset($_SESSION['msg'])) {
 if (!isset($_SESSION['pgmsg'])) {
     $_SESSION['pgmsg'] = "1";
 }
-//if (!isset($_SESSION['cpf'])) {
-//   header("Location: derruba_session.php"); exit();
-//}
-//$cpf = $_SESSION['cpf'];
-//$cpf = '001.018.311-61';
-//$cpf = '029.502.963-35';
-//$cpf = '091.328.314-20';
-//$cpf = '106.423.006-74';
-//if (!isset($_SESSION['idUser'])) {
-//    header("Location: ../logout.php");
-//    exit();
-//}
-//if (!isset($_SESSION['perfil'])) {
-//    header("Location: ../logout.php");
-//    exit();
-//}
-//if (!isset($_SESSION['nivel'])) {
-//    header("Location: ../logout.php");
-//    exit();
-//}
-//if($_SESSION['perfil'] !== '1'){
-//    header("Location: ../logout.php");
-//    exit();
-//}else{
-//    if($_SESSION['nivel'] !== '3'){
-//        header("Location: ../logout.php");
-//        exit();
-//    }
-//}
-$_SESSION['perfil'] = '6';
-$_SESSION['nivel'] = '1';
+if (!isset($_SESSION['cpf'])) {
+   header("Location: ../derruba_session.php"); exit();
+}
+$cpf = $_SESSION['cpf'];
+if (!isset($_SESSION['idUser'])) {
+    header("Location: ../logout.php");
+    exit();
+}
+if (!isset($_SESSION['perfil'])) {
+    header("Location: ../derruba_session.php");
+    exit();
+}
+if (!isset($_SESSION['nivel'])) {
+    header("Location: ../derruba_session.php");
+    exit();
+}
+if($_SESSION['perfil'] !== '2' && $_SESSION['perfil'] !== '3' && $_SESSION['perfil'] !== '6' && $_SESSION['perfil'] !== '7' && $_SESSION['perfil'] !== '8'){
+    header("Location: ../derruba_session.php");
+    exit();
+}
+$perfil = $_SESSION['perfil'];
 $nivel = $_SESSION['nivel'];
+
 date_default_timezone_set('America/Sao_Paulo');
 //$anoAtual = date('Y');
 $anoAtual = 2023;
@@ -231,8 +222,8 @@ $contt = $conta = $contb = 0;
                                         <!--<a class="nav-link dropdown-toggle" href="../relatorios/relatorio_geral_igad.php">Relatório Geral IGAD - 1º ciclo de 2023</a>-->
                                         <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">Relatórios</a>
                                         <div class="dropdown-menu">
-                                            <?php if($nivel === '1'){ ?>
-                                            <a class="dropdown-item" href="relatorios/relatorio_geral_igad.php">Relatório Geral IGAD - 1º ciclo de 2023</a>
+                                            <?php if($perfil === '3' && $nivel === '1'){ ?>
+                                            <a class="dropdown-item" href="../relatorios/relatorio_geral_igad.php">Relatório Geral IGAD - 1º ciclo de 2023</a>
                                             <?php } ?>
                                         </div>
                                     </li>
@@ -240,7 +231,7 @@ $contt = $conta = $contb = 0;
                                         <a class="nav-link" href="">|</a>
                                     </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="https://appsadapsbrasil.com/sistema-adaps/painelMedico.php"><i class="fas fa-sign-out-alt pt-1"></i></a>
+                                    <a class="nav-link" href="../derruba_session.php"><i class="fas fa-sign-out-alt pt-1"></i></a>
                                 </li>
                                 <li class="nav-item">
                                     <div id="loading">
@@ -276,7 +267,7 @@ $contt = $conta = $contb = 0;
                                     <table id="dtBasicExample" class="table table-hover table-bordered table-striped rounded">
                                         <thead class="bg-gradient-dark text-white">
                                             <tr class="bg-gradient-dark text-light font-weight-bold">
-                                                <?php if($nivel === '1'){ ?>
+                                                <?php if($perfil === '3' && $nivel === '1'){ ?>
                                                 <td class="bg-gradient-dark text-light align-middle text-center" style="width: 5%;position: sticky; top: 0px;"><i class="fas fa-user-edit"></i></td>
                                                 <?php } ?>
                                                 <td class="bg-gradient-dark text-light align-middle" style="width: 40%; height: 70px;position: sticky; top: 0px;">TUTOR</td>
@@ -420,7 +411,7 @@ $contt = $conta = $contb = 0;
                                                         $faltamtext = number_format($faltam, 2, ',', '.');
                                             ?>
                                             <tr>
-                                                <?php if($nivel === '1'){ ?>
+                                                <?php if($perfil === '3' && $nivel === '1'){ ?>
                                                 <td>
                                                     <?php
                                                     $sqlc = "select * from contestacao inner join contestacao_assunto on idcontestacao = fkcontestacao "

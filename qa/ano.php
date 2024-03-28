@@ -12,7 +12,8 @@ $cpftratado = str_replace("-", "", $cpf);
 $cpftratado = str_replace(".", "", $cpftratado);
 $cpftratado = str_replace(".", "", $cpftratado);
 $sql = "select * from medico m inner join desempenho d on m.cpf = d.cpf and m.ibge = d.ibge"
-        . " inner join periodo p on p.idperiodo = d.idperiodo where m.cpf = '$cpftratado' and ano = '$ano';";
+        . " inner join periodo p on p.idperiodo = d.idperiodo "
+        . " left join ivs on idivs = fkivs where m.cpf = '$cpftratado' and ano = '$ano';";
 $query = mysqli_query($conn, $sql);
 $nrrs = mysqli_num_rows($query);
 $rs = mysqli_fetch_array($query);
@@ -63,6 +64,9 @@ if ($nrrs > 0) {
                         <div id="menuPrincipal" class="collapse navbar-collapse">
                             <ul class="navbar-nav">
                                 <li class="nav-item">
+                                    <a href="../demonstrativo/" class="nav-link">Painel de Resultados</a>
+                                </li>
+                                <li class="nav-item">
                                     <a href="./index.php" class="nav-link">Qualidade Assistencial</a>
                                 </li>
                                 <!-- Navbar dropdown -->
@@ -71,9 +75,6 @@ if ($nrrs > 0) {
                                     <div class="dropdown-menu">
                                         <a class="dropdown-item" href="./ano.php?c=<?= $cpftratado ?>&a=2023">2023</a>
                                     </div>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="../demonstrativo/" class="nav-link">Painel de Resultados</a>
                                 </li>
 <!--                                <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">Quadrimestres</a>
@@ -116,10 +117,16 @@ if ($nrrs > 0) {
                         $admissao = $rs['admissao'];
                         $cargo = $rs['cargo'];
                         $tipologia = $rs['tipologia'];
+                        if($rs['descricao'] !== null){
+                            $ivs = strtoupper($rs['descricao']);
+                        }else{
+                            $ivs = "";
+                        }
                         $uf = $rs['uf'];
                         $municipio = $rs['municipio'];
                         $cnes = $rs['cnes'];
                         $ine = $rs['ine'];
+                        $ivs = strtoupper($rs['ivs']);
                         $datacadastro = $rs['datacadastro'];
                         $ano = $rs['ano'];
                         $periodo = $rs['descricaoperiodo'];
@@ -147,45 +154,46 @@ if ($nrrs > 0) {
                                             <div class="col-md-6 mb-3">
                                                 <div class="row">
                                                     <div class="col-md-12">
-                                                        <h6 class="small text-info font-weight-bold"><?php echo "Município-UF: $municipio-$uf" ?></h6>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <h6 class="small text-info font-weight-bold"><?php echo "CNES: $cnes" ?></h6>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <h6 class="small text-info font-weight-bold"><?php echo "INE: $ine" ?></h6>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <h6 class="small text-info font-weight-bold"><?php echo "Ano: $ano" ?></h6>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <h6 class="small text-info font-weight-bold"><?php echo "Período: $periodo" ?></h6>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-md-12 small">
                                                         <label class="font-weight-bold">Nome: </label><label> &nbsp;<?= $nome ?></label>
                                                     </div>
                                                 </div>
                                                 <div class="row">
-                                                    <div class="col-md-12 small">
+                                                    <div class="col-md-12">
                                                         <label class="font-weight-bold">CPF: </label><label> &nbsp;&nbsp;<?= $cpf ?></label>
                                                     </div>
                                                 </div>
                                                 <div class="row">
-                                                    <div class="col-md-12 small">
+                                                    <div class="col-md-12">
                                                         <label class="font-weight-bold">Cargo: </label><label> &nbsp;&nbsp;<?= $cargo ?></label>
                                                     </div>
                                                 </div>
                                                 <div class="row">
-                                                    <div class="col-md-12 small">
+                                                    <div class="col-md-12">
+                                                        <h6 class="text-info font-weight-bold"><?php echo "Município-UF: $municipio-$uf" ?></h6>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <h6 class="text-info font-weight-bold"><?php echo "CNES: $cnes" ?></h6>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <h6 class="text-info font-weight-bold"><?php echo "INE: $ine" ?></h6>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
                                                         <label class="font-weight-bold">Tipologia: </label><label> &nbsp;&nbsp;<?= $tipologia ?></label>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="font-weight-bold">IVS: </label><label> &nbsp;&nbsp;<?= $ivs ?></label>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <h6 class="text-info font-weight-bold"><?php echo "Ano: $ano" ?></h6>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <h6 class="text-info font-weight-bold"><?php echo "Período: $periodo" ?></h6>
                                                     </div>
                                                 </div>
                                             </div>
@@ -759,6 +767,11 @@ if ($nrrs > 0) {
                         $admissao = $rs['admissao'];
                         $cargo = $rs['cargo'];
                         $tipologia = $rs['tipologia'];
+                        if($rs['descricao'] !== null){
+                            $ivs = strtoupper($rs['descricao']);
+                        }else{
+                            $ivs = "";
+                        }
                         $uf = $rs['uf'];
                         $municipio = $rs['municipio'];
                         $cnes = $rs['cnes'];
@@ -809,29 +822,42 @@ if ($nrrs > 0) {
                             <form >
                                 <div class="row p-3">
                                     <div class="col-md-12 mt-3 mb-3">
-                                        <div class="row mt-3 mb-2 pl-3">
+                                        <div class="row mt-3 mb-4 pl-3">
                                             <div class="col-md-12">
                                                 <div class="row">
-                                                    <div class="col-md-12">
-                                                        <h6 class="small text-info font-weight-bold"><?php echo "Município-UF: $municipio-$uf" ?></h6>
+                                                    <div class="col-md-6 ">
+                                                        <label class="text-info font-weight-bold">Nome: &nbsp;<?= $nome ?></label>
+                                                    </div>
+                                                    <div class="col-md-3 ">
+                                                        <label class="font-weight-bold">CPF: </label><label> &nbsp;&nbsp;<?= $cpf ?></label>
+                                                    </div>
+                                                    <div class="col-md-3 ">
+                                                        <label class="font-weight-bold">Cargo: </label><label> &nbsp;&nbsp;<?= $cargo ?></label>
                                                     </div>
                                                 </div>
                                                 <div class="row">
-                                                    <div class="col-md-12">
-                                                        <h6 class="small text-info font-weight-bold"><?php echo "CNES: $cnes" ?></h6>
+                                                    <div class="col-md-6">
+                                                        <h6 class=" font-weight-bold"><?php echo "Município-UF: $municipio-$uf" ?></h6>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <h6 class=" font-weight-bold"><?php echo "CNES: $cnes" ?></h6>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <h6 class="font-weight-bold"><?php echo "INE: $ine" ?></h6>
                                                     </div>
                                                 </div>
                                                 <div class="row">
-                                                    <div class="col-md-12">
-                                                        <h6 class="small text-info font-weight-bold"><?php echo "INE: $ine" ?></h6>
+                                                    <div class="col-md-3">
+                                                        <label class="font-weight-bold">Tipologia: </label><label> &nbsp;&nbsp;<?= $tipologia ?></label>
                                                     </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-md-2">
-                                                        <h6 class="small text-info font-weight-bold"><?php echo "Ano: $ano" ?></h6>
+                                                    <div class="col-md-3">
+                                                        <label class="font-weight-bold">IVS: </label><label class=""> &nbsp;&nbsp;<?= $ivs ?></label>
                                                     </div>
-                                                    <div class="col-md-10">
-                                                        <h6 class="small text-info font-weight-bold">
+                                                    <div class="col-md-3">
+                                                        <h6 class="text-info font-weight-bold"><?php echo "Ano: $ano" ?></h6>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <h6 class="text-info font-weight-bold">
                                                         <?php 
                                                             if($a === 2){
                                                                 echo "Períodos: 1º e 2º Quadrimestre";
@@ -840,26 +866,6 @@ if ($nrrs > 0) {
                                                             }
                                                         ?>
                                                         </h6>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-md-12 small">
-                                                        <label class="font-weight-bold">Nome: </label><label> &nbsp;<?= $nome ?></label>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-md-12 small">
-                                                        <label class="font-weight-bold">CPF: </label><label> &nbsp;&nbsp;<?= $cpf ?></label>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-md-12 small">
-                                                        <label class="font-weight-bold">Cargo: </label><label> &nbsp;&nbsp;<?= $cargo ?></label>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-md-12 small">
-                                                        <label class="font-weight-bold">Tipologia: </label><label> &nbsp;&nbsp;<?= $tipologia ?></label>
                                                     </div>
                                                 </div>
                                             </div>

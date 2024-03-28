@@ -21,18 +21,31 @@ $dompdf->setPaper('A4', 'landscape'); //Paisagem
 $path = './../../img_agsus/Logo_400x200.png';
 $type = pathinfo($path, PATHINFO_EXTENSION);
 $data = file_get_contents($path);
-$base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+$agsus = 'data:image/' . $type . ';base64,' . base64_encode($data);
+
+$dompdf->setPaper('A4', 'landscape'); //Paisagem
+$path2 = './../../img_agsus/ciclo1_parabens.png';
+$type2 = pathinfo($path2, PATHINFO_EXTENSION);
+$data2 = file_get_contents($path2);
+$titulo = 'data:image/' . $type2 . ';base64,' . base64_encode($data2);
 
 $html = "";
-$html .= "<div style='margin-bottom: 30px; text-align: center;'><img src='$base64' width='300' /></div>";
-$html .= "<h3 style='text-align: center; margin-top: 30px; margin-bottom:40px;'>PROGRAMA DE AVALIAÇÃO DE DESEMPENHO TUTOR MÉDICO $ano</h3>";
-$html .= "<p>Prezado(a) Tutor(a) $nome,</p>";
-$html .= "<p style='text-align: justify;'>Parabéns pelo seu primeiro ano de dedicação ao Programa Médicos pelo Brasil! A partir de agora, sua atuação como tutor será avaliada continuamente.</p>";
-$html .= "<p style='text-align: justify;'>Apresentamos o resultado individual da sua Avaliação de Desempenho Individual, referente ao 1º Ciclo  de 2023, que compreendeu o período de julho a dezembro de 2023. Essa avaliação se constituiu como uma importante ferramenta para avaliar o desempenho dos empregados desta Agência, reconhecendo pontos fortes e identificando oportunidades de aprimoramento.</p>";
-$html .= "<p style='text-align: justify;'>A avaliação foi conduzida com base nos critérios previamente definidos na Portaria n.º 26, de 28 de fevereiro de 2023, que institui o Programa de Avaliação de Desempenho para o cargo de Tutor Médico.</p>";
-$html .= "<p style='text-align: justify;'>Importante ressaltar que a Avaliação de Desempenho é uma expressão do nosso compromisso em promover uma cultura de gestão focada no desempenho profissional, visando fortalecer a Atenção Primária à Saúde (APS) no Brasil. Este processo está vinculado a incentivos financeiros variáveis, reconhecendo seu desempenho individual e incentivando a contínua melhoria nos serviços de saúde prestados à população.</p>";
-$html .= "<p style='text-align: justify;'>Sendo assim, a Avaliação de Desempenho é estruturada em dois eixos principais: Avaliação de Resultados e Avaliação de Competências, subdivididos em domínios que abrangem tanto as especificidades técnicas profissionais relacionadas às atividades do cargo, quanto às características comportamentais relacionadas à interação com a equipe, gestão municipal, ambiente de trabalho e instituição, neste contexto você alcançou a Nota Geral <label style='color: red;'>$mftext</label>.</p>";
-$html .= "<p>Domínios avaliados e resultados:</p>";
+$html .= '<table border=0 style="margin-top: 0px; margin-bottom: 30px;">';
+$html .= '  <tr>';
+$html .= '      <td style="width: 60%; vertical-align: bottom;" class="mb-2"><h3 class="mt-4 font-weight-bold" style="color: #1F3B9B;">Prezado(a) Tutor(a) '. $nome .',</h3></td>';
+$html .= '      <td style="width: 40%; text-align: center;"><img src="'.$titulo.'" style="border-radius:6px;" width="70%"></td>';
+$html .= '  </tr>';
+$html .= '</table>';
+$html .= "<p style='text-align: justify;'>Neste feedback individual queremos apresentar um detalhamento do resultado do 1º ciclo da sua Avaliação de Desempenho, referente ao 
+            período de julho a dezembro de 2023 e instituída pela Portaria n.º 26, de 28 de fevereiro de 2023.</p>";
+$html .= "<p style='text-align: justify;'>Esta é uma importante ferramenta da AgSUS e uma expressão do nosso compromisso em promover uma cultura de gestão com base em resultados
+           que visa reconhecer avanços e identificar oportunidades de aprimoramento. É uma iniciativa inspirada em práticas, nacionais e internacionais, que visam 
+            fortalecer a Atenção Primária à Saúde (APS).</p>";
+$html .= "<p style='text-align: justify;'>Neste primeiro ciclo, você alcançou a Nota Geral <label style='color: red;'>$mftext</label> como resultado da sua Avaliação Individual, referente ao período de julho a dezembro de 2023.</p>";
+$html .= "<p style='text-align: justify;'>A Avaliação de Desempenho é estruturada em dois eixos principais: Avaliação de Resultados e Avaliação de Competências, subdivididos 
+            em domínios que abrangem tanto especificidades técnicas profissionais relacionadas às atividades do cargo, quanto características comportamentais 
+            relacionadas à interação nos ambientes de trabalho, que diz respeito ao tratamento interpessoal com usuários, bolsistas, equipe de saúde e gestores. 
+            Neste sentido, seguem abaixo os domínios avaliados e seus resultados alcançados:</p>";
 $html .= "<dl>1. Eixo I - Avaliação de Resultados";
 $html .= "  <dt>1. Qualidade Assistencial: </dt>";
 $html .= "      <dd>1. Foi mensurado por de indicadores de boa performance na assistência à população, incluem a realização de no mínimo:";
@@ -54,7 +67,7 @@ $html .= "<dl>2. Eixo II - Avaliação de Competências:";
 $html .= "  <dt>1. Competências Profissionais</dt>";
 $html .= "      <dd style='text-align: justify;'>1. Trata de um conjunto de características e capacidades que podem ajudar o empregado a alcançar com maior facilidade as entregas esperadas pela instituição. O instrumento para avaliação de competências é composto de nove domínios que dão conta de aspectos técnicos, que permeiam a execução das atividades clínicas do médico na APS, mas também de aspectos transversais que correspondem aos comportamentos e atitudes ligadas ao contexto de trabalho.</dd>";
 $html .= "</dl>";
-$html .= "<p style='text-align: right; margin-top: 40px;'>Agência Brasileira de Apoio à Gestão do Sistema Único de Saúde - AgSUS</p>";
+$html .= "<div style='margin-bottom: 0px; margin-top: 50px; text-align: center;'><img src='$agsus' width='200' /></div>";
 
 
 // Carrega seu HTML

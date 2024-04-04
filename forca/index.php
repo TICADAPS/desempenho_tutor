@@ -14,7 +14,7 @@ if (!isset($_SESSION['cpf'])) {
 }
 $cpf = $_SESSION['cpf'];
 if (!isset($_SESSION['idUser'])) {
-    header("Location: ../logout.php");
+    header("Location: ../derruba_session.php");
     exit();
 }
 if (!isset($_SESSION['perfil'])) {
@@ -31,7 +31,8 @@ if($_SESSION['perfil'] !== '2' && $_SESSION['perfil'] !== '3' && $_SESSION['perf
 }
 $perfil = $_SESSION['perfil'];
 $nivel = $_SESSION['nivel'];
-
+//$perfil = '3';
+//$nivel = '1';
 date_default_timezone_set('America/Sao_Paulo');
 //$anoAtual = date('Y');
 $anoAtual = 2023;
@@ -281,11 +282,14 @@ $contt = $conta = $contb = 0;
                                                 <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">INE</td>
                                                 <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">IGAD</td>
                                                 <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">INCENTIVO</td>
-                                                <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">QA</td>
-                                                <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">QT</td>
-                                                <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">CP</td>
-                                                <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">AP</td>
+                                                <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;" title="Qualidade Assistencial">QA</td>
+                                                <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;" title="Qualidade Tutoria">QT</td>
+                                                <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;" title="Competências Profissionais">CP</td>
+                                                <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;" title="Aperfeiçoamento Profissional">AP</td>
                                                 <td class="bg-gradient-dark text-light align-middle text-center" style="width: 10%;position: sticky; top: 0px;"><i class="fas fa-calendar-alt"></i></td>
+                                                <?php if($perfil === '3' && $nivel === '1'){ ?>
+                                                <td class="bg-gradient-dark text-light align-middle text-center" style="width: 10%;position: sticky; top: 0px;"><i class="far fa-eye"></i></td>
+                                                <?php } ?>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -471,8 +475,44 @@ $contt = $conta = $contb = 0;
                                                                         </div>
                                                                     </div>
                                                                     <div class="modal-body pr-3 pl-3">
+                                                                        <div class="row mt-2">
+                                                                            <div class="col-sm-6">
+                                                                                <label class="font-weight-bold">Médico Tutor: </label>&nbsp; <label><?= $nome ?></label>
+                                                                            </div>
+                                                                            <div class="col-sm-3">
+                                                                                <label class="font-weight-bold">CPF: </label>&nbsp; <label><?= $cpf ?></label>
+                                                                            </div>
+                                                                            <div class="col-sm-3">
+                                                                                
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col-sm-6">
+                                                                                <label class="font-weight-bold">Município/UF: </label>&nbsp; <label><?= $municipio ?>-<?= $uf ?></label>
+                                                                            </div>
+                                                                            <div class="col-sm-3">
+                                                                                <label class="font-weight-bold">CNES: </label>&nbsp; <label><?= $cnes ?></label>
+                                                                            </div>
+                                                                            <div class="col-sm-3">
+                                                                                <label class="font-weight-bold">INE: </label>&nbsp; <label><?= $ine ?></label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col-sm-6">
+                                                                                <label class="font-weight-bold">IBGE: </label>&nbsp; <label><?= $ibge ?></label>
+                                                                            </div>
+                                                                            <div class="col-sm-3">
+                                                                                <label class="font-weight-bold">Tipologia: </label>&nbsp; <label><?= $cnes ?></label>
+                                                                            </div>
+                                                                            <div class="col-sm-3">
+                                                                                <label class="font-weight-bold">IVS: </label>&nbsp; <label><?= $ivs ?></label>
+                                                                            </div>
+                                                                        </div>
                                                                         <input type="hidden" name="idcontestacao" value="<?= $idcontestacao ?>">
                                                                         <div class="row mt-1">
+                                                                            <div class="col-sm-12">
+                                                                                <h5 class="text-dark font-weight-bold">Contestação registrada: </h5>
+                                                                            </div>
                                                                             <?php
                                                                                 if($nrrsc > 0){
                                                                                     for($i=0; $i < count($assunto); $i++){
@@ -516,6 +556,39 @@ $contt = $conta = $contb = 0;
                                                                         </div>
                                                                     </div>
                                                                     <div class="modal-body pr-3 pl-3">
+                                                                        <div class="row mt-2">
+                                                                            <div class="col-sm-6">
+                                                                                <label class="font-weight-bold">Médico Tutor: </label>&nbsp; <label><?= $nome ?></label>
+                                                                            </div>
+                                                                            <div class="col-sm-3">
+                                                                                <label class="font-weight-bold">CPF: </label>&nbsp; <label><?= $cpf ?></label>
+                                                                            </div>
+                                                                            <div class="col-sm-3">
+                                                                                
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col-sm-6">
+                                                                                <label class="font-weight-bold">Município/UF: </label>&nbsp; <label><?= $municipio ?>-<?= $uf ?></label>
+                                                                            </div>
+                                                                            <div class="col-sm-3">
+                                                                                <label class="font-weight-bold">CNES: </label>&nbsp; <label><?= $cnes ?></label>
+                                                                            </div>
+                                                                            <div class="col-sm-3">
+                                                                                <label class="font-weight-bold">INE: </label>&nbsp; <label><?= $ine ?></label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col-sm-6">
+                                                                                <label class="font-weight-bold">IBGE: </label>&nbsp; <label><?= $ibge ?></label>
+                                                                            </div>
+                                                                            <div class="col-sm-3">
+                                                                                <label class="font-weight-bold">Tipologia: </label>&nbsp; <label><?= $cnes ?></label>
+                                                                            </div>
+                                                                            <div class="col-sm-3">
+                                                                                <label class="font-weight-bold">IVS: </label>&nbsp; <label><?= $ivs ?></label>
+                                                                            </div>
+                                                                        </div>
                                                                         <div class="row mt-1">
                                                                             <div class="col-sm-12">
                                                                                 <h6 class="text-info font-weight-bold">Contestação registrada: </h6>
@@ -535,12 +608,12 @@ $contt = $conta = $contb = 0;
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                        <div class="row mt-1">
+                                                                        <div class="row mt-1 mb-2">
                                                                             <div class="col-sm-12">
                                                                                 <h6 class="text-info font-weight-bold">Resposta da contestação</h6>
+                                                                                <textarea class="form-control text-justify bg-white" rows="4" disabled="true" style="resize: none;"><?= $resposta ?></textarea>
                                                                                 <?php
-                                                                                    echo "Resposta: &nbsp; $resposta<br>";
-                                                                                    echo "Data da resposta: &nbsp;".vemdata($dataresposta);
+                                                                                    echo "<br>Data da resposta: &nbsp;".vemdata($dataresposta);
                                                                                 ?>
                                                                             </div>
                                                                         </div>
@@ -580,6 +653,9 @@ $contt = $conta = $contb = 0;
                                                 <td><?= $cpossuitext ?></td>
                                                 <td><?= $anotatext ?></td>
                                                 <td><?= $datacadastro ?></td>
+                                                <?php if($perfil === '3' && $nivel === '1'){ ?>
+                                                <td><a href="demonstrativo.php?c=<?= $cpftratado ?>&a=<?= $ano ?>&cl=<?= $ciclo ?>&p=<?= $idperiodo ?>" class="btn btn-light shadow-sm" title="Demonstrativo"><i class="far fa-eye"></i></a></td>
+                                                <?php } ?>
                                             </tr>
                                             <?php }while($rs = mysqli_fetch_array($query));
                                             }}?>

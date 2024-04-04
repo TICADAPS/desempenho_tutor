@@ -11,14 +11,18 @@ if (!isset($_SESSION['pgmsg'])) {
 if (!isset($_SESSION['cpf'])) {
    header("Location: ../derruba_session.php"); exit();
 }
-$cpf = $_SESSION['cpf'];
+if($_SESSION['perfil'] !== '3'){
+    header("Location: ../derruba_session.php");
+    exit();
+}
+$cpf = $_GET['c'];
 //$cpf = '04365468413';
 date_default_timezone_set('America/Sao_Paulo');
 $anoAtual = date('Y');
 //$anoAtual = 2023;
-$ano = 2023;
-$ciclo = 1;
-$idperiodo = 25;
+$ano = $_GET['a'];
+$ciclo = $_GET['cl'];
+$idperiodo = $_GET['p'];
 $flagincent = 0;
 $cpftratado = str_replace("-", "", $cpf);
 $cpftratado = str_replace(".", "", $cpftratado);
@@ -258,10 +262,13 @@ if ($nrrsqa > 0) {
                                     </div>
                                 </li>-->
                                 <li class="nav-item">
-                                    <a href="" class="nav-link">Painel de Resultados</a>
+                                    <a href="index.php" class="nav-link">Painel de Resultados Geral</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="../qa/" class="nav-link">Qualidade Assistencial</a>
+                                    <a href="demonstrativo.php?c=<?= $cpftratado ?>&a=<?= $ano ?>&cl=<?= $ciclo ?>&p=<?= $idperiodo ?>" class="nav-link">Painel de Resultados do Tutor</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="qa_tutor.php?c=<?= $cpftratado ?>&a=<?= $ano ?>&cl=<?= $ciclo ?>&p=<?= $idperiodo ?>" class="nav-link">Qualidade Assistencial do Tutor</a>
                                 </li>
 <!--                                <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">Quadrimestres</a>
@@ -895,7 +902,7 @@ if ($nrrsqa > 0) {
                                                                             <p class="text-justify">Após a elaboração do recurso, mantenha-se atento(a) aos avisos dentro do painel de resultados.</p>
                                                                             <p class="text-justify">Por favor, observe o prazo estabelecido para a contestação do recurso, que se encerra 15 (quinze) dias após a publicação do resultado.</p>
                                                                             <p class="text-justify">Estamos à disposição para fornecer esclarecimentos adicionais e agradecemos sua participação no Programa de Avaliação e Desempenho do Tutor Médico 2023.<br></p>
-                                                                            <button type="button" data-toggle="modal" data-target=".modalContestacao" class="btn btn-warning shadow-sm "><i class="fas fa-arrow-circle-right"></i> &nbsp;FAZER CONTESTAÇÃO</button>
+                                                                            <!--<button type="button" data-toggle="modal" data-target=".modalContestacao" class="btn btn-warning shadow-sm "><i class="fas fa-arrow-circle-right"></i> &nbsp;FAZER CONTESTAÇÃO</button>-->
                                                                             <?php }else{ 
                                                                                     do{
                                                                                         if($rsc['fkassunto'] === '1'){
@@ -1026,7 +1033,7 @@ if ($nrrsqa > 0) {
                                                             <p class="float-right mt-5"><div class='text-center' style="margin-bottom: 40px;"><img src='./../img_agsus/Logo_400x200.png' class='img-fluid' width="200"></div></p>
                                                         </div>
                                                         <div class="col-sm-2  mt-5">
-                                                            <a id="pdffeedback" href="./pdf/feedbackdemonstrativo.php?nome=<?= $nome ?>&ano=<?=$ano?>&qa=<?= $qatext ?>&qnota=<?= $qnotatext ?>&anota=<?= $anotatext ?>&mftext=<?= $mftext ?>" title="Impressão em PDF" target="_blank" class="btn btn-outline-danger shadow-sm rounded ml-5 mr-5 p-2 float-right">&nbsp;&nbsp;&nbsp; <i class="far fa-file-pdf"></i> &nbsp;&nbsp;&nbsp;</a>
+                                                            <a id="pdffeedback" href="../demonstrativo/pdf/feedbackdemonstrativo.php?nome=<?= $nome ?>&ano=<?=$ano?>&qa=<?= $qatext ?>&qnota=<?= $qnotatext ?>&anota=<?= $anotatext ?>&mftext=<?= $mftext ?>" title="Impressão em PDF" target="_blank" class="btn btn-outline-danger shadow-sm rounded ml-5 mr-5 p-2 float-right">&nbsp;&nbsp;&nbsp; <i class="far fa-file-pdf"></i> &nbsp;&nbsp;&nbsp;</a>
                                                         </div>
                                                     </div>
                                                 </div>

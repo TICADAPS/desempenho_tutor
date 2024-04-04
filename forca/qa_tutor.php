@@ -4,16 +4,24 @@ include './../conexao-agsus.php';
 if (!isset($_SESSION['cpf'])) {
    header("Location: ../derruba_session.php"); exit();
 }
+if($_SESSION['perfil'] !== '3'){
+    header("Location: ../derruba_session.php");
+    exit();
+}
 $cpf = $_GET['c'];
-$ano = $_GET['a'];
+//$cpf = '054.040.031-97';
 date_default_timezone_set('America/Sao_Paulo');
-$anoAtual = date('Y');
+//$ano = date('Y');
+$ano = $_GET['a'];
+$ciclo = $_GET['cl'];
+$idperiodo = $_GET['p'];
 $cpftratado = str_replace("-", "", $cpf);
 $cpftratado = str_replace(".", "", $cpftratado);
 $cpftratado = str_replace(".", "", $cpftratado);
 $sql = "select * from medico m inner join desempenho d on m.cpf = d.cpf and m.ibge = d.ibge"
         . " inner join periodo p on p.idperiodo = d.idperiodo "
-        . " left join ivs on idivs = fkivs where m.cpf = '$cpftratado' and ano = '$ano';";
+        . " left join ivs on idivs = fkivs "
+        . " where m.cpf = '$cpftratado' and ano = '$ano';";
 $query = mysqli_query($conn, $sql);
 $nrrs = mysqli_num_rows($query);
 $rs = mysqli_fetch_array($query);
@@ -64,18 +72,22 @@ if ($nrrs > 0) {
                         <div id="menuPrincipal" class="collapse navbar-collapse">
                             <ul class="navbar-nav">
                                 <li class="nav-item">
-                                    <a href="../demonstrativo/" class="nav-link">Painel de Resultados</a>
+                                    <a href="index.php" class="nav-link">Painel de Resultados Geral</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="./index.php" class="nav-link">Qualidade Assistencial</a>
+                                    <a href="demonstrativo.php?c=<?= $cpftratado ?>&a=<?= $ano ?>&cl=<?= $ciclo ?>&p=<?= $idperiodo ?>" class="nav-link">Painel de Resultados do Tutor</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="qa_tutor.php?c=<?= $cpftratado ?>&a=<?= $ano ?>&cl=<?= $ciclo ?>&p=<?= $idperiodo ?>" class="nav-link">Qualidade Assistencial do Tutor</a>
                                 </li>
                                 <!-- Navbar dropdown -->
-                                <li class="nav-item dropdown">
+<!--                                <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">Ano </a>
                                     <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="./ano.php?c=<?= $cpftratado ?>&a=2024">2024</a>
                                         <a class="dropdown-item" href="./ano.php?c=<?= $cpftratado ?>&a=2023">2023</a>
                                     </div>
-                                </li>
+                                </li>-->
 <!--                                <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">Quadrimestres</a>
                                     <div class="dropdown-menu">
@@ -92,7 +104,7 @@ if ($nrrs > 0) {
                                 </li>
                                 <li class="nav-item">
                                     <div id="loading">
-                                        &nbsp;<img class="float-right" src="./../img_agsus/carregando.gif" width="40" height="40" />
+                                        &nbsp;<img class="float-right" src="../img_agsus/carregando.gif" width="40" height="40" />
                                     </div>
                                 </li>
                             </ul>
@@ -100,13 +112,6 @@ if ($nrrs > 0) {
                     </nav> 
                 </div>
             </div>
-<!--            <div class="row p-2 mt-3 mb-4">
-                <div class="col-md-12">
-                    <form method="post" action="filtro1.php">
-                        <h6>j</h6>
-                    </form>
-                </div>
-            </div>-->
             <div class="row p-2">
             <?php
             if ($rscpf === true) {
@@ -117,16 +122,15 @@ if ($nrrs > 0) {
                         $admissao = $rs['admissao'];
                         $cargo = $rs['cargo'];
                         $tipologia = $rs['tipologia'];
+                        $uf = $rs['uf'];
+                        $municipio = $rs['municipio'];
+                        $cnes = $rs['cnes'];
+                        $ine = $rs['ine'];
                         if($rs['descricao'] !== null){
                             $ivs = strtoupper($rs['descricao']);
                         }else{
                             $ivs = "";
                         }
-                        $uf = $rs['uf'];
-                        $municipio = $rs['municipio'];
-                        $cnes = $rs['cnes'];
-                        $ine = $rs['ine'];
-                        $ivs = strtoupper($rs['ivs']);
                         $datacadastro = $rs['datacadastro'];
                         $ano = $rs['ano'];
                         $periodo = $rs['descricaoperiodo'];
@@ -1309,19 +1313,19 @@ if ($nrrs > 0) {
             ?>
             </div>
         </div>
-        <?php include './../includes/footer.php' ?>
+        <?php include '../includes/footer.php' ?>
         <!-- Bootstrap core JavaScript-->
-        <script src="./../vendor/jquery/jquery.min.js"></script>
-        <script src="./../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="../vendor/jquery/jquery.min.js"></script>
+        <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
         <!-- Core plugin JavaScript-->
-        <script src="./../vendor/jquery-easing/jquery.easing.min.js"></script>
+        <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
 
         <!-- Custom scripts for all pages-->
-        <script src="./../js/sb-admin-2.min.js"></script>
+        <script src="../js/sb-admin-2.min.js"></script>
 
         <!-- Page level plugins -->
-        <script src="./../vendor/chart.js/Chart.min.js"></script>
+        <script src="../vendor/chart.js/Chart.min.js"></script>
 
         <!-- Page level custom scripts -->
 <!--        <script src="js/demo/chart-bar-prenatal-1q.js"></script>
@@ -1330,6 +1334,13 @@ if ($nrrs > 0) {
         <script src="js/demo/chart-bar-hipertensao.js"></script>
         <script src="js/demo/chart-bar-diabetes.js"></script>-->
         <script>
+            $(function () {
+               $('.dropdown-toggle').dropdown();
+            }); 
+            $(document).on('click', '.dropdown-toggle ', function (e) {
+               e.stopPropagation();
+            });
+            
             $(".btn_sub").click(function () {
                 //console.log("clicou");
                 document.getElementById("loading").style.display = "block";
@@ -1343,13 +1354,6 @@ if ($nrrs > 0) {
 
         </script>
         <script>
-            $(function () {
-               $('.dropdown-toggle').dropdown();
-            }); 
-            $(document).on('click', '.dropdown-toggle ', function (e) {
-               e.stopPropagation();
-            });
-            
             //Apresentação dos 
             $(document).ready(function () {
                 $('.divexp1').show();

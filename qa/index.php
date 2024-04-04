@@ -2,7 +2,7 @@
 session_start();
 include './../conexao-agsus.php';
 if (!isset($_SESSION['cpf'])) {
-   header("Location: derruba_session.php"); exit();
+   header("Location: ../derruba_session.php"); exit();
 }
 $cpf = $_SESSION['cpf'];
 //$cpf = '054.040.031-97';

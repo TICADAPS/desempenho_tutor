@@ -7,6 +7,7 @@ if (!isset($_SESSION['msg'])) {
 //var_dump($_POST);
 
 if($_POST['enviarContestacao'] !== '1'){
+    $_SESSION['pgmsg'] = "2";
     $_SESSION['msg'] = "<h6 class='text-danger'>Preencha o formulário de contestação.</h6>";
     echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
             URL=\"../demonstrativo/index.php\"'>";
@@ -21,6 +22,7 @@ if (!isset($_SESSION['q1'])) {
     $_SESSION['q1'] = "";
 }
 if(!isset($_POST['ckassunto1']) && !isset($_POST['ckassunto2']) && !isset($_POST['ckassunto3']) && !isset($_POST['ckassunto4']) && !isset($_POST['ckassunto5'])){
+    $_SESSION['pgmsg'] = "2";
     $_SESSION['msg'] = "<h6 class='text-danger'>Selecione o título da contestação.</h6>";
     echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
             URL=\"../demonstrativo/index.php\"'>";
@@ -28,6 +30,7 @@ if(!isset($_POST['ckassunto1']) && !isset($_POST['ckassunto2']) && !isset($_POST
 }
 if(isset($_POST['ckassunto1'])){
     if(!isset($_POST['contestacao1']) || trim($_POST['contestacao1']) === ""){
+        $_SESSION['pgmsg'] = "2";
         $_SESSION['msg'] = "<h6 class='text-danger'>Preencha o campo referente à sua contestação.</h6>";
         echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
                 URL=\"../demonstrativo/index.php\"'>";
@@ -36,6 +39,7 @@ if(isset($_POST['ckassunto1'])){
 }
 if(isset($_POST['ckassunto2'])){
     if(!isset($_POST['contestacao2']) || trim($_POST['contestacao2']) === ""){
+        $_SESSION['pgmsg'] = "2";
         $_SESSION['msg'] = "<h6 class='text-danger'>Preencha o campo referente à sua contestação.</h6>";
         echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
                 URL=\"../demonstrativo/index.php\"'>";
@@ -44,6 +48,7 @@ if(isset($_POST['ckassunto2'])){
 }
 if(isset($_POST['ckassunto3'])){
     if(!isset($_POST['contestacao3']) || trim($_POST['contestacao3']) === ""){
+        $_SESSION['pgmsg'] = "2";
         $_SESSION['msg'] = "<h6 class='text-danger'>Preencha o campo referente à sua contestação.</h6>";
         echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
                 URL=\"../demonstrativo/index.php\"'>";
@@ -52,6 +57,7 @@ if(isset($_POST['ckassunto3'])){
 }
 if(isset($_POST['ckassunto4'])){
     if(!isset($_POST['contestacao4']) || trim($_POST['contestacao4']) === ""){
+        $_SESSION['pgmsg'] = "2";
         $_SESSION['msg'] = "<h6 class='text-danger'>Preencha o campo referente à sua contestação.</h6>";
         echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
                 URL=\"../demonstrativo/index.php\"'>";
@@ -60,12 +66,14 @@ if(isset($_POST['ckassunto4'])){
 }
 if(isset($_POST['ckassunto5'])){
     if(trim($_POST['assuntonovo']) === ''){
+        $_SESSION['pgmsg'] = "2";
         $_SESSION['msg'] = "<h6 class='text-danger'>Digite o novo assunto.</h6>";
         echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
                 URL=\"../demonstrativo/index.php\"'>";
         exit();
     }
     if(!isset($_POST['contestacao5']) || trim($_POST['contestacao5']) === ""){
+        $_SESSION['pgmsg'] = "2";
         $_SESSION['msg'] = "<h6 class='text-danger'>Preencha o campo referente à sua contestação.</h6>";
         echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
                 URL=\"../demonstrativo/index.php\"'>";
@@ -231,6 +239,7 @@ if($rsc){
             mysqli_query($conn, $sqlca) or die(mysqli_error($conn));
         }
     }
+    echo "<h6 class='text-success'><i class='fas fa-arrow-circle-right'></i> &nbsp;Contestação(ões) enviada(s) com sucesso.</h6>";
 }
 $_SESSION['pgmsg'] = "2";
 echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;

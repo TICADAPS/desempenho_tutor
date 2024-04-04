@@ -1,7 +1,21 @@
 <?php
+session_start();
 include '../conexao-agsus.php';
 include '../Controller_agsus/fdatas.php';
 include '../Controller_agsus/maskCpf.php';
+
+if (!isset($_SESSION['perfil'])) {
+    header("Location: ../derruba_session.php");
+    exit();
+}
+if (!isset($_SESSION['nivel'])) {
+    header("Location: ../derruba_session.php");
+    exit();
+}
+if($_SESSION['perfil'] !== '3'){
+    header("Location: ../derruba_session.php");
+    exit();
+}
 
 ini_set('memory_limit', '4096M');
 set_time_limit(1000);

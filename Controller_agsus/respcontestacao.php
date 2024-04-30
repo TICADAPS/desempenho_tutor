@@ -58,7 +58,7 @@ if($env === true){
     $sqldem = "select * from demonstrativo where iddemonstrativo = '$iddemonstrativo'";
     $querydem = mysqli_query($conn, $sqldem);
     $rsdem = mysqli_fetch_array($querydem);
-    $emailTutor = $nomeTutor = "";
+    $emailTutor = $nomeTutor = $flaginativo = "";
     if($rsdem){
         do{
             $fkcpf = $rsdem['fkcpf'];
@@ -68,44 +68,49 @@ if($env === true){
             $ano = $rsdem['ano'];
             $ciclo = $rsdem['ciclo'];
             $fkcpfmask = mask($fkcpf, "###.###.###-##");
-            $sqlmed = "select NomeMedico, email from medico where CpfMedico = '$fkcpfmask' order by idMedico desc limit 1";
+            $sqlmed = "select NomeMedico, email, flagInativo from medico where CpfMedico = '$fkcpfmask' and flaginativo <> 1 order by idMedico desc limit 1";
             $querymed = mysqli_query($conn2, $sqlmed);
             $rsmed = mysqli_fetch_array($querymed);
             if($rsmed){
                 do{
                     $nomeTutor = $rsmed['NomeMedico'];
                     $emailTutor = $rsmed['email'];
+                    $flaginativo = $rsmed['flagInativo'];
                 }while ($rsmed = mysqli_fetch_array($querymed));
             }
         }while ($rsdem = mysqli_fetch_array($querydem));
     }
-//    echo "$nomeTutor, $emailTutor, $ano, $ciclo";
-    $email = new Source\Support\Email();
-    date_default_timezone_set('America/Sao_Paulo');
-    $dthrhoje = date('Y-m-d H:i:s');
-    $assunto = "Resposta sobre a(s) contestação(ões) apresentada(s) pelo Médico Tutor $nomeTutor";
-    $mensagemEmail = "*** ATENÇÃO: o remetente deste e-mail é noreply, usado para disparos automáticos de mensagens. "
-            . "Para outras informações e esclarecimentos favor encaminhar sua manifestação para o e-mail soumedico@agenciasus.org.br.<br><br>";
-    $mensagemEmail .= "Prezado(a) Colaborador(a) $nomeTutor, <br><br>";
-    $mensagemEmail .= "Em resposta à(s) sua(s) contestação(ões), ".$respcontestacao."<br><br>";
-    $mensagemEmail .= "Estamos disponíveis para fornecer esclarecimentos adicionais, e queremos expressar nossa gratidão pela "
-            . "sua participação no ".$ciclo."º Ciclo do Programa de Avaliação e Desempenho Tutor Médico - ano $ano.<br><br>";
-    $mensagemEmail .= "Atenciosamente,<br><br>";
-    $mensagemEmail .= "Agência Brasileira de Apoio à Gestão do SUS – AgSUS";
-    $email = (new \Source\Support\Email())->bootstrap(
-            "$assunto",
-            "$mensagemEmail",
-            "$emailTutor",
-            "$nomeTutor",
-            "",
-            "");
-    $email->attach("../img_agsus/Logo_400x200.png", "AgSUS");
-    if ($email->send()) {
-        echo "<h6 class='text-success'><i class='fas fa-arrow-circle-right'></i> &nbsp;E-Mail enviado com sucesso.</h6>";
-        $_SESSION['msg'] = "<h6 class='text-success'><i class='fas fa-arrow-circle-right'></i> &nbsp;E-Mail enviado com sucesso.</h6>";
-    } else {
-        $_SESSION['msg'] = "<h6 class='text-danger'><i class='fas fa-arrow-circle-right'></i> &nbsp;Erro no envio do E-Mail.</h6>";
+    if($flaginativo !== ''){
+        $email = new Source\Support\Email();
+        date_default_timezone_set('America/Sao_Paulo');
+        $dthrhoje = date('Y-m-d H:i:s');
+        $assunto = "Resposta sobre a(s) contestação(ões) apresentada(s) pelo Médico Tutor $nomeTutor";
+        $mensagemEmail = "*** ATENÇÃO: o remetente deste e-mail é noreply, usado para disparos automáticos de mensagens. "
+                . "Para outras informações e esclarecimentos favor encaminhar sua manifestação para o e-mail soumedico@agenciasus.org.br.<br><br>";
+        $mensagemEmail .= "Prezado(a) Colaborador(a) $nomeTutor, <br><br>";
+        $mensagemEmail .= "Em resposta à(s) sua(s) contestação(ões), ".$respcontestacao."<br><br>";
+        $mensagemEmail .= "Estamos disponíveis para fornecer esclarecimentos adicionais, e queremos expressar nossa gratidão pela "
+                . "sua participação no ".$ciclo."º Ciclo do Programa de Avaliação e Desempenho Tutor Médico - ano $ano.<br><br>";
+        $mensagemEmail .= "Atenciosamente,<br><br>";
+        $mensagemEmail .= "Agência Brasileira de Apoio à Gestão do SUS – AgSUS";
+        $email = (new \Source\Support\Email())->bootstrap(
+                "$assunto",
+                "$mensagemEmail",
+                "$emailTutor",
+                "$nomeTutor",
+                "",
+                "");
+        $email->attach("../img_agsus/Logo_400x200.png", "AgSUS");
+        if ($email->send()) {
+            echo "<h6 class='text-success'><i class='fas fa-arrow-circle-right'></i> &nbsp;E-Mail enviado com sucesso.</h6>";
+            $_SESSION['msg'] = "<h6 class='text-success'><i class='fas fa-arrow-circle-right'></i> &nbsp;E-Mail enviado com sucesso.</h6>";
+        } else {
+            $_SESSION['msg'] = "<h6 class='text-danger'><i class='fas fa-arrow-circle-right'></i> &nbsp;Erro no envio do E-Mail.</h6>";
+        }
+    }else{
+        $_SESSION['msg'] = "<h6 class='text-danger'><i class='fas fa-arrow-circle-right'></i> &nbsp;O Tutor está inativo no sistema. O E-Mail NÃO foi enviado.</h6>";
     }
+    
 }else{
      $_SESSION['msg'] = "<h6 class='text-danger'><i class='fas fa-arrow-circle-right'></i> &nbsp;Falha na gravação da resposta da contestação.</h6>";
 }

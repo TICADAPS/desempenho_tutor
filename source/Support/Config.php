@@ -65,7 +65,7 @@ define("CONF_MAIL_PORT", "587");
 define("CONF_MAIL_USER", "noreply@agenciasus.org.br");
 //define("CONF_MAIL_PASS", "@AgsusRH@2023");
 define("CONF_MAIL_PASS", "qhme fsch vvxj kyby");
-define("CONF_MAIL_SENDER", ["name" => "ADAPS (no-reply)", "address" => "noreply@agenciasus.org.br"]);
+define("CONF_MAIL_SENDER", ["name" => "AgSUS (no-reply)", "address" => "noreply@agenciasus.org.br"]);
 define("CONF_MAIL_OPTION_LANG", "br");
 define("CONF_MAIL_OPTION_HTML", true);
 define("CONF_MAIL_OPTION_AUTH", true);

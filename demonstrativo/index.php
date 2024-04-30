@@ -15,6 +15,8 @@ $cpf = $_SESSION['cpf'];
 //$cpf = '04365468413';
 date_default_timezone_set('America/Sao_Paulo');
 $anoAtual = date('Y');
+$anomesdiaAtual = date('Ymd');
+$anomesdiaAtual = (int)$anomesdiaAtual;
 //$anoAtual = 2023;
 $ano = 2023;
 $ciclo = 1;
@@ -887,6 +889,7 @@ if ($nrrsqa > 0) {
                                                                                 $nrrsc = mysqli_num_rows($queryc);
                                                                                 $rsc = mysqli_fetch_array($queryc);
                                                                                 if($nrrsc === 0){
+                                                                                    if($anomesdiaAtual <= 20240409){
                                                                             ?> 
                                                                             <p>Prezado(a) Colaborador(a),</p>
                                                                             <p class="text-justify">Caso tenha objeção em relação ao resultado do Índice Global de Avaliação de Desempenho (IGAD) atribuído à sua NOTA FINAL no Programa de Avaliação de Desempenho, gostaríamos de orientá-lo(a) sobre como proceder com o recurso administrativo:</p>
@@ -896,7 +899,16 @@ if ($nrrsqa > 0) {
                                                                             <p class="text-justify">Por favor, observe o prazo estabelecido para a contestação do recurso, que se encerra 15 (quinze) dias após a publicação do resultado.</p>
                                                                             <p class="text-justify">Estamos à disposição para fornecer esclarecimentos adicionais e agradecemos sua participação no Programa de Avaliação e Desempenho do Tutor Médico 2023.<br></p>
                                                                             <button type="button" data-toggle="modal" data-target=".modalContestacao" class="btn btn-warning shadow-sm "><i class="fas fa-arrow-circle-right"></i> &nbsp;FAZER CONTESTAÇÃO</button>
-                                                                            <?php }else{ 
+                                                                                <?php }else{ ?>
+                                                                            <p>Prezados(as) Colaboradores(as),</p>
+                                                                            <p class="text-justify">Gostaríamos de informar a todos os interessados que o período de contestação referente a Nota da Avaliação de Desempenho foi oficialmente encerrado quinze dias após a publicação do resultado, conforme previsto.</p>      
+                                                                            <p class="text-justify">Durante o período designado, recebemos e revisamos atentamente todas as contestações e observações submetidas. Agradecemos por sua participação ativa neste processo.</p>      
+                                                                            <p class="text-justify">Ressaltamos que todas as contestações recebidas foram consideradas de forma justa e imparcial, contribuindo para uma avaliação abrangente e completa.</p>      
+                                                                            <p class="text-justify">Neste sentido o resultado publicado já é a Nota Final.</p>      
+                                                                            <p class="text-justify">A partir deste momento, não serão mais aceitas contestações referentes aos resultados do primeiro ciclo.</p>      
+                                                                            <p class="text-justify">Atenciosamente,</p>      
+                                                                            <p class="text-justify">Equipe AgSUS!</p>      
+                                                                                <?php }}else{ 
                                                                                     do{
                                                                                         if($rsc['fkassunto'] === '1'){
                                                                                             echo "<label class='text-dark font-weight-bold'>".$rsc['assuntonovo']."</label><br>";

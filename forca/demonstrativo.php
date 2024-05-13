@@ -1492,7 +1492,7 @@ if ($nrrsqa > 0) {
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-12 mb-2">
-                                                    <p class="mt-2  text-secondary mb-0"><a href="./../qa/" class="btn btn-primary shadow-sm" target="_blank"><i class="fas fa-arrow-alt-circle-right"></i>&nbsp; Visite o painel da Evolução da Qualidade Assistencial</a></p>
+                                                    <p class="mt-2  text-secondary mb-0"><a href="./qa_tutor.php?c=<?= $cpf ?>&a=<?= $ano ?>&cl=<?= $ciclo ?>&p=<?= $idperiodo ?>" class="btn btn-primary shadow-sm" target="_blank"><i class="fas fa-arrow-alt-circle-right"></i>&nbsp; Visite o painel da Evolução da Qualidade Assistencial</a></p>
                                                 </div>
                                                 <div class="col-sm-12">
                                                     <p class=" text-secondary mb-0"><label class="font-weight-bold">* Fonte: </label> <a href="./../pdf/manual_2023.pdf" target="_blank">Manual Programa de Avaliação de Desempenho Tutor Médico 2023</a></p>

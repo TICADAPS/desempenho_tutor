@@ -11,6 +11,6 @@ $mysql_options = [
 ];
 
 $db = new Database($mysql_options);
-$results = $db->execute_query("SELECT * FROM estado");
+$results = $db->execute_query("SELECT * FROM estado order by UF");
 
 echo json_encode($results, 128);

@@ -51,9 +51,9 @@ window.onload = () => {
                         municipio_posts.classList.add("d-none");
                         no_posts.classList.remove("d-none");
                     } else {
-                        let html = ' <h4 class="mt-5">Selecionar o Município</h4><hr>';
+                        let html = ' <h4 class="mt-5">Selecione o Município</h4><hr>';
                         html += `<select id="select_municipio" class="form-select w-75">`;
-                        html += ` <option value="0">Escolher um município</option>`;
+                        html += ` <option value="0">[--SELECIONE--]</option>`;
                         posts.forEach(post => {
                             html += `<option value="${post.cod_munc}">${post.Municipio}</option>`;
                         })
@@ -90,12 +90,12 @@ window.onload = () => {
                                             medico_posts.classList.add("d-none");
                                             no_posts_medico.classList.remove("d-none");
                                         } else {
-                                            let html = ' <h4 class="mt-5">Selecionar o médico</h4><hr>';
+                                            let html = ' <h4 class="mt-5">Selecione o INE do médico</h4><hr>';
                                             html += `<select id="select_medico" class="form-select w-75">`;
-                                            html += ` <option value="0">Escolher um médico</option>`;
+                                            html += ` <option value="0">[--SELECIONE--]</option>`;
                                             posts.forEach(post => {
                                                 //console.log(post)
-                                                html += `<option value="${post.cpf}">${post.nome}</option>`;
+                                                html += `<option value="${post.ine}">${post.ine}</option>`;
                                                 //html += ` `;
                                             })
 
@@ -106,14 +106,14 @@ window.onload = () => {
                                             medico_posts.classList.remove("d-none");
                                             no_posts_medico.classList.add("d-none");
 
-                                            var select = document.getElementById('select_medico')
+                                            var select = document.getElementById('select_medico');
 
                                             select.addEventListener('change', function () {
-                                                var cpfTutor = (select.value);
-                                                document.getElementById("btnAvaliacao").innerHTML = `<a class="btn btn-outline-primary mt-4" href="http://localhost/desempenho_tutor/gestor/qa.php?c=${cpfTutor}"  target="_blank">Desempenho do médico tutor</a>`;
-                                            })
+                                                var ineTutor = (select.value);
+                                                document.getElementById("btnAvaliacao").innerHTML = `<a class="btn btn-outline-primary mt-4" href="http://localhost/desempenho_tutor/gestor/qa.php?i=${ineTutor}"  target="_blank">Desempenho do médico tutor</a>`;
+                                            });
                                         }
-                                    })
+                                    });
                             }
 
                         })

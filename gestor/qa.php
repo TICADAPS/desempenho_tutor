@@ -1,25 +1,25 @@
 <?php
 session_start();
 include './../conexao-agsus.php';
-$cpf = $_GET['c'];
+$ine = $_GET['i'];
 
 date_default_timezone_set('America/Sao_Paulo');
 
 $anoAtual = 2023;
-$cpftratado = str_replace("-", "", $cpf);
-$cpftratado = str_replace(".", "", $cpftratado);
-$cpftratado = str_replace(".", "", $cpftratado);
-//var_dump($cpftratado);
-$sql = "select * from medico m inner join desempenho d on m.cpf = d.cpf and m.ibge = d.ibge"
+$inetratado = str_replace("-", "", $ine);
+$inetratado = str_replace(".", "", $inetratado);
+$inetratado = str_replace(".", "", $inetratado);
+//var_dump($inetratado);
+$sql = "select * from medico m inner join desempenho d on m.ine = d.ine and m.ibge = d.ibge"
         . " inner join periodo p on p.idperiodo = d.idperiodo "
         . " left join ivs on idivs = fkivs "
-        . " where m.cpf = '$cpftratado' and ano = '$anoAtual';";
+        . " where m.ine = '$inetratado' and ano = '$anoAtual';";
 $query = mysqli_query($conn, $sql);
 $nrrs = mysqli_num_rows($query);
 $rs = mysqli_fetch_array($query);
-$rscpf = false;
+$rsine = false;
 if ($nrrs > 0) {
-    $rscpf = true;
+    $rsine = true;
 }
 ?>
 <!DOCTYPE html>
@@ -72,7 +72,7 @@ if ($nrrs > 0) {
             </div>
             <div class="row p-2">
             <?php
-            if ($rscpf === true) {
+            if ($rsine === true) {
                 if ($nrrs == 1) {
                     do {
                         $nome = $rs['nome'];
@@ -116,7 +116,7 @@ if ($nrrs > 0) {
                                             <div class="col-md-6 mb-3">
                                                 <div class="row">
                                                     <div class="col-md-12">
-                                                        <label class="font-weight-bold">Nome: </label><label> &nbsp;<?= $nome ?></label>
+                                                        <!--<label class="font-weight-bold">Nome: </label><label> &nbsp;<?= $nome ?></label>-->
                                                     </div>
                                                 </div>
                                                

@@ -25,10 +25,10 @@
         
         <div class="row mt-5">
             <div class="col">
-                <h4>Selecionar o Estado</h4>
+                <h4>Selecione o Estado</h4>
                 <hr>
                 <select id="select_estado" class="form-select w-50">
-                    <option value="0">Escolher um estado</option>
+                    <option value="0">[--SELECIONE--]</option>
                 </select>
 
                 <div id="municipio_posts"></div>

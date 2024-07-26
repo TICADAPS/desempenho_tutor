@@ -1,11 +1,23 @@
 <?php
 session_start();
-include './../conexao-agsus.php';
-$ine = $_GET['i'];
-
+include './../../conexao-agsus.php';
+if(!isset($_SESSION['cpfgestor']) || trim($_SESSION['cpfgestor']) === '' || $_SESSION['cpfgestor'] === null){
+    $_SESSION['msg'] = '<span class="yellow-text">* Faça o login.</span>';
+    echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
+	URL=\"../derruba_session.php\"'>"; exit();
+}
+if(!isset($_SESSION['NomeGestor']) || trim($_SESSION['NomeGestor']) === '' || $_SESSION['NomeGestor'] === null){
+    $_SESSION['msg'] = '<span class="yellow-text">* Faça o login.</span>';
+    echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
+	URL=\"../derruba_session.php\"'>"; exit();
+}
+$NomeGestor = $_SESSION['NomeGestor'];
+$ibge = $_SESSION['ibge'];
+//$NomeGestor = 'Ricardo Lima Amaral';
 date_default_timezone_set('America/Sao_Paulo');
-
-$anoAtual = 2023;
+$datahoje = date('d/m/Y');
+$ine = $_GET['i'];
+$ano = $_GET['a'];
 $inetratado = str_replace("-", "", $ine);
 $inetratado = str_replace(".", "", $inetratado);
 $inetratado = str_replace(".", "", $inetratado);
@@ -13,7 +25,7 @@ $inetratado = str_replace(".", "", $inetratado);
 $sql = "select * from medico m inner join desempenho d on m.ine = d.ine and m.ibge = d.ibge"
         . " inner join periodo p on p.idperiodo = d.idperiodo "
         . " left join ivs on idivs = fkivs "
-        . " where m.ine = '$inetratado' and ano = '$anoAtual';";
+        . " where m.ine = '$inetratado' and ano = '$ano';";
 $query = mysqli_query($conn, $sql);
 $nrrs = mysqli_num_rows($query);
 $rs = mysqli_fetch_array($query);
@@ -25,7 +37,6 @@ if ($nrrs > 0) {
 <!DOCTYPE html>
 <html lang="pt-br">
     <head>
-
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <!--        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">-->
@@ -36,23 +47,22 @@ if ($nrrs > 0) {
         <title>AGSUS - Avaliação de Desempenho</title>
         
         <!-- Custom fonts for this template-->
-        <link rel="shortcut icon" href="./../img_agsus/iconAdaps.png"/>
-        <link href="./../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="./../../img_agsus/iconAdaps.png"/>
+        <link href="./../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
         <!-- Custom styles for this template-->
-        <link href="./../css/sb-admin-2.min.css" rel="stylesheet">
+        <link href="./../../css/sb-admin-2.min.css" rel="stylesheet">
     </head>
-
     <body>
         <div class="container-fluid p-3">
             <div class="row">
                 <div class="col-12 col-md-4 mt-4 pl-5">
-                    <img src="../img_agsus/Logo_400x200.png" class="img-fluid" alt="logoAdaps" width="250" title="Logo Adaps">
+                    <img src="../../img_agsus/Logo_400x200.png" class="img-fluid" alt="logoAdaps" width="250" title="Logo Adaps">
                 </div>
                 <div class="col-12 col-md-8 mt-4 ">
-                    <h4 class="mb-4 font-weight-bold text-center">Evolução da Qualidade Assistencial</h4>
                     <h4 class="mb-4 font-weight-bold text-center">Programa de Avaliação de Desempenho do Médico Tutor</h4> 
+                    <h4 class="mb-4 font-weight-bold text-center">Evolução da Qualidade Assistencial</h4>
                 </div>
             </div>
             <div class="row">
@@ -63,13 +73,21 @@ if ($nrrs > 0) {
                         </button>
                         <div id="menuPrincipal" class="collapse navbar-collapse">
                             <ul class="navbar-nav">
-
-
+                                <li class="nav-item">
+                                    <a class="nav-link" href="../../../sistema-adaps/gestor/menu/" target="_parent" title="Página de entrada">Início</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="../eqa/" target="_parent" title="Voltar"><i class="fas fa-arrow-left"></i></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="../derruba_session.php" target="_parent" title="Sair"><i class="fas fa-sign-out-alt pt-1"></i></a>
+                                </li>
                             </ul>
                         </div>
                     </nav> 
                 </div>
             </div>
+            <div class="text-right text-muted lead small"><b>Gestor: </b><?= $NomeGestor ?>, Brasília-DF, <?= $datahoje ?>.</div>
             <div class="row p-2">
             <?php
             if ($rsine === true) {
@@ -1265,19 +1283,92 @@ if ($nrrs > 0) {
             ?>
             </div>
         </div>
-        <?php include '../includes/footer.php' ?>
+        <div class="container-fluid mt-2" style="margin-bottom:0;background-color: #1A1A37">
+            <div class="row">
+                <div class="col-md-3 mb-5">
+                    <img class="img-fluid py-5" src="./../../img/logo-adaps-text-white.png" alt="logo adaps" />
+                    <h4 class="small text-white">Redes sociais</h4>
+                    <a target="_blank" href="https://www.facebook.com/agenciasus">
+                        <i class="fab fa-facebook text-white fa-2x mr-2 pl-2"></i>
+                    </a>
+                    <a target="_blank" href="https://www.instagram.com/agenciasus/">
+                        <i class="fab fa-instagram text-white fa-2x mr-2"></i>
+                    </a>
+                    <a target="_blank" href="https://www.linkedin.com/company/84489833/admin/feed/posts/">
+                        <i class="fab fa-linkedin text-white fa-2x mr-2"></i>
+                    </a>
+                    <a target="_blank" href="https://twitter.com/agenciasus">
+                        <i class="fab fa-twitter text-white fa-2x mr-2"></i>
+                    </a>
+                    <a target="_blank" href="https://www.youtube.com/channel/UCLSEqv-F8oUfcHdyIgRhC9Q">
+                        <i class="fab fa-youtube text-white fa-2x"></i>
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <p>
+                    <h5 class="pt-5"><a class="small text-white" target="_blank" href="https://www.agenciasus.org.br/quem-somos/">Quem Somos</a></h5>
+                    </p>
+                    <p>
+                    <h5><a class="small text-white" target="_blank" href="https://www.agenciasus.org.br/conselho/">Conselho</a></h5>
+                    </p>
+                    <p>
+                    <h5><a class="small text-white" target="_blank" href="https://www.agenciasus.org.br/diretoria-executiva/">Diretoria Executiva</a></h5>
+                    </p>
+                    <p>
+                    <h5><a class="small text-white" target="_blank" href="https://www.agenciasus.org.br/noticias/">Noticia</a></h5>
+                    </p>
+                </div>
+                <div class="col-md-3">
+                    <p>
+                    <h5 class="pt-5"><a class="small text-white" href="https://www.agenciasus.org.br/transparencia-e-prestacao-de-contas/">Transparência</a></h5>
+                    </p>
+                    <p>
+                    <h5><a class="small text-white" target="_blank" href="https://www.agenciasus.org.br/ouvidoria/">Ouvidoria</a></h5>
+                    </p>
+                    <p>
+                    <h5><a class="small text-white" target="_blank" href="https://www.agenciasus.org.br/prestacao-de-contas/">Prestação de Contas</a></h5>
+                    </p>
+                    <p>
+                    <h5><a class="small text-white" target="_blank" href="https://www.agenciasus.org.br/programa-medicos-pelo-brasil/">Programa Médicos pelo Brasil</a></h5>
+                    </p>
+                </div>
+                <div class="col-md-3">
+                    <p class="small text-white"><i class="fas fa-phone text-white fa-2x pt-5"></i> (61) 3686-4144</p>
+                    <p class="small text-white"><i class="fas fa-map-marker-alt text-white fa-2x"></i>
+                        SHN – Quadra 1, Bloco E, Conj A, 2º andar, Asa Sul, Brasília – DF -CEP: 70.701-050
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid" style="background-color: #FF0000">
+            <div class="row pt-2">
+                <div class="col-6 text-center">
+                    <p class="small text-white">&COPY;Todos os direitos reservados | AgSUS 2024</p>
+                </div>
+                <div class="col-6 text-center">
+                    <a class="small text-white" href="https://www.agenciasus.org.br/politica-de-privacidade-e-seguranca/">
+                        Política de Privacidade | Termos de Uso
+                    </a>
+                </div>
+            </div>
+        </div>
+        <script>
+            $(document).ready(function() {
+                $('[data-toggle="popover"]').popover();
+            });
+        </script>
         <!-- Bootstrap core JavaScript-->
-        <script src="../vendor/jquery/jquery.min.js"></script>
-        <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="../../vendor/jquery/jquery.min.js"></script>
+        <script src="../../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
         <!-- Core plugin JavaScript-->
-        <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
+        <script src="../../vendor/jquery-easing/jquery.easing.min.js"></script>
 
         <!-- Custom scripts for all pages-->
-        <script src="../js/sb-admin-2.min.js"></script>
+        <script src="../../js/sb-admin-2.min.js"></script>
 
         <!-- Page level plugins -->
-        <script src="../vendor/chart.js/Chart.min.js"></script>
+        <script src="../../vendor/chart.js/Chart.min.js"></script>
 
         <!-- Page level custom scripts -->
 <!--        <script src="js/demo/chart-bar-prenatal-1q.js"></script>

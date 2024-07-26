@@ -9,15 +9,15 @@ if (!isset($_SESSION['msg'])) {
 if (!isset($_SESSION['pgmsg'])) {
     $_SESSION['pgmsg'] = "1";
 }
-if (!isset($_SESSION['cpfgestor'])) {
-   header("Location: ../derruba_session.php"); exit();
-}
-if (!isset($_SESSION['ibge'])) {
-   header("Location: ../derruba_session.php"); exit();
-}
-if (!isset($_SESSION['NomeGestor'])) {
-   header("Location: ../derruba_session.php"); exit();
-}
+//if (!isset($_SESSION['cpfgestor'])) {
+//   header("Location: ../derruba_session.php"); exit();
+//}
+//if (!isset($_SESSION['ibge'])) {
+//   header("Location: ../derruba_session.php"); exit();
+//}
+//if (!isset($_SESSION['NomeGestor'])) {
+//   header("Location: ../derruba_session.php"); exit();
+//}
 $cpf = $_SESSION['cpfgestor'];
 $ibge = $_SESSION['ibge'];
 $NomeGestor = $_SESSION['NomeGestor'];

@@ -8,21 +8,25 @@ if (!isset($_SESSION['msg'])) {
 if (!isset($_SESSION['pgmsg'])) {
     $_SESSION['pgmsg'] = "1";
 }
-if (!isset($_SESSION['cpf'])) {
-   header("Location: ../derruba_session.php"); exit();
-}
-if($_SESSION['perfil'] !== '3'){
-    header("Location: ../derruba_session.php");
-    exit();
-}
-$cpf = $_GET['c'];
-//$cpf = '04365468413';
+//if (!isset($_SESSION['cpf'])) {
+//   header("Location: ../derruba_session.php"); exit();
+//}
+//if($_SESSION['perfil'] !== '3'){
+//    header("Location: ../derruba_session.php");
+//    exit();
+//}
+//$cpf = $_GET['c'];
+$cpf = '04365468413';
+$_SESSION['cpf'] = $cpf;
 date_default_timezone_set('America/Sao_Paulo');
 $anoAtual = date('Y');
 //$anoAtual = 2023;
-$ano = $_GET['a'];
-$ciclo = $_GET['cl'];
-$idperiodo = $_GET['p'];
+//$ano = $_GET['a'];
+$ano = 2023;
+//$ciclo = $_GET['cl'];
+$ciclo = 1;
+//$idperiodo = $_GET['p'];
+$idperiodo = 25;
 $flagincent = 0;
 $cpftratado = str_replace("-", "", $cpf);
 $cpftratado = str_replace(".", "", $cpftratado);

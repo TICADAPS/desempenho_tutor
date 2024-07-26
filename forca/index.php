@@ -9,30 +9,30 @@ if (!isset($_SESSION['msg'])) {
 if (!isset($_SESSION['pgmsg'])) {
     $_SESSION['pgmsg'] = "1";
 }
-if (!isset($_SESSION['cpf'])) {
-   header("Location: ../derruba_session.php"); exit();
-}
-$cpf = $_SESSION['cpf'];
-if (!isset($_SESSION['idUser'])) {
-    header("Location: ../derruba_session.php");
-    exit();
-}
-if (!isset($_SESSION['perfil'])) {
-    header("Location: ../derruba_session.php");
-    exit();
-}
-if (!isset($_SESSION['nivel'])) {
-    header("Location: ../derruba_session.php");
-    exit();
-}
-if($_SESSION['perfil'] !== '2' && $_SESSION['perfil'] !== '3' && $_SESSION['perfil'] !== '6' && $_SESSION['perfil'] !== '7' && $_SESSION['perfil'] !== '8'){
-    header("Location: ../derruba_session.php");
-    exit();
-}
-$perfil = $_SESSION['perfil'];
-$nivel = $_SESSION['nivel'];
-//$perfil = '3';
-//$nivel = '1';
+//if (!isset($_SESSION['cpf'])) {
+//   header("Location: ../derruba_session.php"); exit();
+//}
+//$cpf = $_SESSION['cpf'];
+//if (!isset($_SESSION['idUser'])) {
+//    header("Location: ../derruba_session.php");
+//    exit();
+//}
+//if (!isset($_SESSION['perfil'])) {
+//    header("Location: ../derruba_session.php");
+//    exit();
+//}
+//if (!isset($_SESSION['nivel'])) {
+//    header("Location: ../derruba_session.php");
+//    exit();
+//}
+//if($_SESSION['perfil'] !== '2' && $_SESSION['perfil'] !== '3' && $_SESSION['perfil'] !== '6' && $_SESSION['perfil'] !== '7' && $_SESSION['perfil'] !== '8'){
+//    header("Location: ../derruba_session.php");
+//    exit();
+//}
+//$perfil = $_SESSION['perfil'];
+//$nivel = $_SESSION['nivel'];
+$perfil = '3';
+$nivel = '1';
 date_default_timezone_set('America/Sao_Paulo');
 //$anoAtual = date('Y');
 $anoAtual = 2023;

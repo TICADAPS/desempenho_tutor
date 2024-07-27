@@ -1,5 +1,9 @@
 <?php
 session_start();
+include_once '../../recursos_online/api/v1/config.php';
+include_once '../../recursos_online/api/libs/Database.php';
+include_once '../../Controller_agsus/maskCpf.php';
+
 if(!isset($_SESSION['cpfgestor']) || trim($_SESSION['cpfgestor']) === '' || $_SESSION['cpfgestor'] === null){
     $_SESSION['msg'] = '<span class="yellow-text">* Faça o login.</span>';
     echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
@@ -20,17 +24,12 @@ $ide = substr($ibge, 0,2);
 $pide = [
     ':id' => $ide
 ];
-
-include_once '../../recursos_online/api/v1/config.php';
-include_once '../../recursos_online/api/libs/Database.php';
-include_once '../../Controller_agsus/maskCpf.php';
 $mysql_options = [
     'host' => MYSQL_HOST,
     'database' => MYSQL_DATABASE,
     'username' => MYSQL_USERNAME,
     'password' => MYSQL_PASSWORD,
 ];
-
 $db = new Database($mysql_options);
 $rse = $db->execute_query("SELECT * FROM estado where cod_uf = :id", $pide);
 //var_dump($rse);
@@ -94,7 +93,6 @@ $rsano = $db->execute_query("SELECT distinct ano FROM demonstrativo");
             </div>
             <div class="col-12 col-md-8 mt-4 ">
                 <h4 class="mb-4 font-weight-bold text-center">Programa de Avaliação de Desempenho do Médico Tutor</h4>
-                <h4 class="mb-4 font-weight-bold text-center">Evolução da Qualidade Assistencial</h4>
             </div>
         </div>
         <div class="row">
@@ -109,14 +107,17 @@ $rsano = $db->execute_query("SELECT distinct ano FROM demonstrativo");
                                 <a class="nav-link" href="../../../sistema-adaps/gestor/menu/" target="_parent" title="Página de entrada">Início</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="../derruba_session.php" target="_parent" title="Sair"><i class="fas fa-sign-out-alt pt-1"></i></a>
+                                <button type="button" data-toggle="modal" data-target="#infoDem" class="mt-1 btn btn-light btn-sm text-secondary" title="Painel de Resultados dos Tutores do Município">Painel de Resultados dos Tutores do Município</button>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="../../../sistema-adaps/gestor/controller/derruba_session.php" target="_parent" title="Sair"><i class="fas fa-sign-out-alt pt-1"></i></a>
                             </li>
                         </ul>
                     </div>
                 </nav> 
             </div>
         </div>
-        <div class="text-right text-muted lead small"><b>Gestor: </b><?= $NomeGestor ?>, Brasília-DF, <?= $datahoje ?>.</div>
+        <div class="text-right text-muted lead small"><b>Gestor(a): </b><?= $NomeGestor ?>&nbsp; - &nbsp;Brasília-DF, <?= $datahoje ?>.</div>
         <div class="row p-2">
             <div class="col-md-12 shadow rounded pr-1 pl-1">
                 <div class="row p-3">
@@ -132,7 +133,7 @@ $rsano = $db->execute_query("SELECT distinct ano FROM demonstrativo");
                                             <td class="bg-dark text-light align-middle" style="position: sticky; top: 0px;">NOME</td>
                                             <td class="bg-dark text-light align-middle" style="position: sticky; top: 0px;">CPF</td>
                                             <td class="bg-dark text-light align-middle" style="position: sticky; top: 0px;">Cargo</td>
-                                            <td class="bg-dark text-light align-middle text-center" style="position: sticky; top: 0px;" title="Detalhamento"><i class="fas fa-info-circle"></i></td>
+                                            <td class="bg-dark text-light align-middle text-center" style="position: sticky; top: 0px;" title="Evolução da Qualidade Assistencial" >Qualidade<br>Assistencial</td>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -154,9 +155,9 @@ $rsano = $db->execute_query("SELECT distinct ano FROM demonstrativo");
                                             <td><?= $nome ?></td>
                                             <td><?= $cpftratado ?></td>
                                             <td><?= $cargo ?></td>
-                                            <td><button type="button" data-toggle="modal" data-target="#infoModal<?= $x ?>" class="shadow-sm btn btn-light form-control" ><i class="fas fa-info-circle text-primary"></i></button></td>
+                                            <td><center><button type="button" data-toggle="modal" data-target="#infoQA<?= $x ?>" class="shadow btn btn-outline-secondary" title="Evolução da Qualidade Assistencial dos Tutores"><img src="../../img/desempenho2.png" width="28"></button></center></td>
                                             <!-- Modal -->
-                                            <div class="modal fade" id="infoModal<?= $x ?>" tabindex="-1" aria-labelledby="enviarModal" aria-hidden="true">
+                                            <div class="modal fade" id="infoQA<?= $x ?>" tabindex="-1" aria-labelledby="enviarModal" aria-hidden="true">
                                               <div class="modal-dialog">
                                                 <form method="get" action="../qa/index.php">
                                                     <input type="hidden" name="i" value="<?= $ine ?>">
@@ -185,6 +186,56 @@ $rsano = $db->execute_query("SELECT distinct ano FROM demonstrativo");
                                                                   ?>
                                                                   <option><?= $ano ?></option>
                                                                   <?php } ?>
+                                                              </select>
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                                  <div class="modal-footer border">
+                                                      <button type="button" class="btn btn-secondary " data-dismiss="modal">NÃO</button> &nbsp; 
+                                                      <button type="submit" name="enviaCadastro" class="btn btn-success">&nbsp; SIM &nbsp;</button>
+                                                  </div>
+                                                </div>
+                                                </form>
+                                              </div>
+                                            </div>
+                                            <div class="modal fade" id="infoDem" tabindex="-1" aria-labelledby="enviarModal" aria-hidden="true">
+                                              <div class="modal-dialog">
+                                                <form method="get" action="../demonstrativo/index.php">
+                                                    <input type="hidden" name="i" value="<?= $ine ?>">
+                                                <div class="modal-content p-1 bg-light">
+                                                  <div class="modal-header border-top border-left border-right"  style="background-color: #0055A1;">
+                                                    <h5 class="modal-title text-white" id="exampleModalLabel">Painel de Resultados dos Tutores</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                  </div>
+                                                  <div class="modal-body border-top border-left border-right">
+                                                      <div class="row">
+                                                          <div class="col-md-4 p-2 text-nowrap">
+                                                              <span class="d-inline-block text-truncate" style="max-width: 150px;">Selecione o ano para ter acesso às informações sobre a evolução da qualidade assistencial 
+                                                                  do médico <?= $nome ?></span>
+                                                          </div>
+                                                          <div class="col-md-12 p-2">
+                                                              <label><b>Ano</b></label>
+                                                              <select name="a" class="form-control">
+                                                                  <option value="" >[--SELECIONE--]</option>
+                                                                  <?php
+                                                                  if($rsano !== null){
+                                                                      foreach ($rsano->results as $ra){
+                                                                          $ano = $ra->ano;
+                                                                      }
+                                                                  ?>
+                                                                  <option><?= $ano ?></option>
+                                                                  <?php } ?>
+                                                              </select>
+                                                          </div>
+                                                          <div class="col-md-12 p-2">
+                                                              <label><b>Ciclo</b></label>
+                                                              <select name="c" class="form-control">
+                                                                  <option value="" >[--SELECIONE--]</option>
+                                                                  <option value="1" >1º Ciclo</option>
+                                                                  <option value="2" >2º Ciclo</option>
+                                                                  <option value="3" >3º Ciclo</option>
                                                               </select>
                                                           </div>
                                                       </div>

@@ -1,32 +1,59 @@
 <?php
 session_start();
-include '../conexao-agsus.php';
-include '../Controller_agsus/maskCpf.php';
-include '../Controller_agsus/fdatas.php';
+include '../../conexao-agsus.php';
+include '../../Controller_agsus/maskCpf.php';
+include '../../Controller_agsus/fdatas.php';
+include_once '../../recursos_online/api/v1/config.php';
+include_once '../../recursos_online/api/libs/Database.php';
+include_once '../../Controller_agsus/maskCpf.php';
 if (!isset($_SESSION['msg'])) {
     $_SESSION['msg'] = '';
 }
 if (!isset($_SESSION['pgmsg'])) {
     $_SESSION['pgmsg'] = "1";
 }
-//if (!isset($_SESSION['cpfgestor'])) {
-//   header("Location: ../derruba_session.php"); exit();
-//}
-//if (!isset($_SESSION['ibge'])) {
-//   header("Location: ../derruba_session.php"); exit();
-//}
-//if (!isset($_SESSION['NomeGestor'])) {
-//   header("Location: ../derruba_session.php"); exit();
-//}
-$cpf = $_SESSION['cpfgestor'];
-$ibge = $_SESSION['ibge'];
+if(!isset($_SESSION['cpfgestor']) || trim($_SESSION['cpfgestor']) === '' || $_SESSION['cpfgestor'] === null){
+    $_SESSION['msg'] = '<span class="yellow-text">* Faça o login.</span>';
+    echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
+	URL=\"../derruba_session.php\"'>"; exit();
+}
+if(!isset($_SESSION['NomeGestor']) || trim($_SESSION['NomeGestor']) === '' || $_SESSION['NomeGestor'] === null){
+    $_SESSION['msg'] = '<span class="yellow-text">* Faça o login.</span>';
+    echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
+	URL=\"../derruba_session.php\"'>"; exit();
+}
 $NomeGestor = $_SESSION['NomeGestor'];
-
+$ibge = $_SESSION['ibge'];
+$cpf = $_SESSION['cpfgestor'];
+$ide = substr($ibge, 0,2);
+$pide = [
+    ':id' => $ide
+];
+$mysql_options = [
+    'host' => MYSQL_HOST,
+    'database' => MYSQL_DATABASE,
+    'username' => MYSQL_USERNAME,
+    'password' => MYSQL_PASSWORD,
+];
+$db = new Database($mysql_options);
+$rse = $db->execute_query("SELECT * FROM estado where cod_uf = :id", $pide);
+//var_dump($rse);
+$uf = $mun = "";
+foreach ($rse->results as $r){
+    $uf = $r->UF;
+}
+$pidm = [
+    ':ibge' => $ibge
+];
+$rsmun = $db->execute_query("SELECT * FROM municipio WHERE cod_munc = :ibge", $pidm);
+//var_dump($rsmun);
+foreach ($rsmun->results as $r){
+    $mun = $r->Municipio;
+}
 date_default_timezone_set('America/Sao_Paulo');
-//$anoAtual = date('Y');
-$anoAtual = 2023;
-$ano = 2023;
-$ciclo = 1;
+$anoAtual = date('Y');
+$ano = $_GET['a'];
+$ciclo = $_GET['c'];
 $idperiodo = 25;
 $sql = "select distinct m.nome, m.admissao, m.cargo, m.tipologia, m.uf, m.municipio, m.datacadastro, m.cpf, m.ibge, m.cnes,
  m.ine, ivs.descricao as ivs, p.descricaoperiodo, de.iddemonstrativo, de.ano, de.ciclo, de.competencias, de.aperfeicoamento, de.qualidade 
@@ -64,7 +91,7 @@ $contt = $conta = $contb = 0;
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         
         <!-- Custom fonts for this template-->
-        <link rel="shortcut icon" href="../img_agsus/iconAdaps.png"/>
+        <link rel="shortcut icon" href="../../img_agsus/iconAdaps.png"/>
         <link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
@@ -74,15 +101,15 @@ $contt = $conta = $contb = 0;
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <!-- Custom styles for this template-->
-        <link href="../css/sb-admin-2.min.css" rel="stylesheet">
+        <link href="../../css/sb-admin-2.min.css" rel="stylesheet">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
-        <script src="../js/highcharts.js"></script>
-        <script src="../js/highcharts-3d.js"></script>
+        <script src="../../js/highcharts.js"></script>
+        <script src="../../js/highcharts-3d.js"></script>
         <!--<script src="../js/exporting.js"></script>-->
         <!--<script src="../js/export-data.js"></script>-->
-        <script src="../js/accessibility.js"></script>
-        <script src="../js/jquery.easypiechart.js"></script>
-        <script src="../js/jquery.easypiechart2.js"></script>
+        <script src="../../js/accessibility.js"></script>
+        <script src="../../js/jquery.easypiechart.js"></script>
+        <script src="../../js/jquery.easypiechart2.js"></script>
         <style>
         #container {
             height: 400px;
@@ -181,60 +208,31 @@ $contt = $conta = $contb = 0;
     <body>
         <div class="container-fluid p-3">
             <div class="row">
-                <div class="col-12 col-md-3">
-                    <img src="../img_agsus/Logo_400x200.png" class="img-fluid" alt="logoAdaps" width="250" title="Logo Adaps">
+                <div class="col-12 col-md-4 mt-4 pl-5">
+                    <img src="../../img_agsus/Logo_400x200.png" class="img-fluid" alt="logoAdaps" width="250" title="Logo Adaps">
                 </div>
-                <div class="col-12 col-md-9 mt-5 ">
-                    <h4 class="mb-4 font-weight-bold">Unidade da Força - Programa de Avaliação de Desempenho do Tutor Médico</h4>
+                <div class="col-12 col-md-8 mt-4 ">
+                    <h4 class="mb-4 font-weight-bold text-center">Programa de Avaliação de Desempenho do Médico Tutor</h4>
+                    <h4 class="mb-4 font-weight-bold text-center">Município <?= $mun ?>-<?= $uf ?></h4>
                 </div>
             </div>
             <div class="row">
                 <div class="col-12 mb-2">
                     <nav class="navbar navbar-expand-lg navbar-light bg-light rounded">
-                        <!--Container wrapper-->
-                        <div class="container-fluid">
-                            <!--Toggle button-->
-                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarLeftAlignExample" aria-controls="navbarLeftAlignExample" aria-expanded="false" aria-label="Toggle navigation">
-                                <i class="fas fa-bars"></i>
-                            </button>
-
-                            <!--Collapsible wrapper-->
-                            <div class="collapse navbar-collapse" id="navbarLeftAlignExample">
-                                <!--Left links-->
-                                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                                    <li class="nav-item">
-                                        <a class="nav-link active" aria-current="page" href="#"><small>Painel de Resultados dos Tutores do Município</small></a>
-                                    </li>
-<!--                                    <li class="nav-item">
-                                        <a class="nav-link" href="https://agsusbrasil.org/desempenho_tutor/forca/demonstrativo.php?c=94616922691&a=2023&cl=1&p=25" target="_blank"><small>Qualidade Assistencial do Tutor</small></a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="https://agsusbrasil.org/desempenho_tutor/gestor/" target="_blank"><small>Qualidade Assistencial do Tutor</small></a>
-                                    </li>-->
-                                    <!--Navbar dropdown-->
-<!--                                    <li class="nav-item dropdown">
-                                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false"><small>Página 3</small></a>
-                                        <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="#">...</a>
-                                            <a class="dropdown-item" href="#">...</a>
-                                            <a class="dropdown-item" href="#">...</a>
-                                        </div>
-                                    </li>-->
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="controller/derruba_session.php"><i class="fas fa-sign-out-alt pt-1"></i></a>
-                                    </li>
-                                    <!--                          <li class="nav-item">
-                            <div id="loading">
-                                &nbsp;<img class="float-right" src="img/carregando.gif" width="40" height="40" />
-                            </div>
-                          </li>-->
-                                </ul>
-                                <!--Left links-->
-                            </div>
-                            <!--Collapsible wrapper-->
+                        &nbsp;&nbsp;<button class="navbar-toggler ml-2" type="button" data-toggle="collapse" data-target="#menuPrincipal" aria-controls="menuPrincipal" aria-expanded="false" aria-label="Menu collapse">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div id="menuPrincipal" class="collapse navbar-collapse">
+                            <ul class="navbar-nav">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="../../../sistema-adaps/gestor/menu/" target="_parent" title="Página de entrada">Início</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="../../../sistema-adaps/gestor/controller/derruba_session.php" target="_parent" title="Sair"><i class="fas fa-sign-out-alt pt-1"></i></a>
+                                </li>
+                            </ul>
                         </div>
-                        <!--Container wrapper-->
-                    </nav>
+                    </nav> 
                 </div>
             </div>
             <div class="row p-2">
@@ -256,7 +254,7 @@ $contt = $conta = $contb = 0;
                     <div class="row p-3">
                         <div class="col-md-12 mt-2">
                             <fieldset class="form-group border pr-2 pl-2">
-                                    <legend class="w-auto pr-2 pl-2"><h5>Listagem dos tutores</h5></legend>
+                                <legend class="w-auto pr-2 pl-2"><label class="h5"><b>Listagem dos tutores de <?= $mun ?>-<?= $uf ?></b></label></legend>
                                 <div class="mb-3 table-responsive text-nowrap table-overflow2">
                                     <table id="dtBasicExample" class="table table-hover table-bordered table-striped rounded">
                                         <thead class="bg-gradient-dark text-white">
@@ -271,13 +269,10 @@ $contt = $conta = $contb = 0;
                                                 <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">CNES</td>
                                                 <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">INE</td>
                                                 <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">IGAD</td>
-                                                <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">INCENTIVO</td>
                                                 <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;" title="Qualidade Assistencial">QA</td>
                                                 <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;" title="Qualidade Tutoria">QT</td>
                                                 <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;" title="Competências Profissionais">CP</td>
                                                 <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;" title="Aperfeiçoamento Profissional">AP</td>
-                                                <td class="bg-gradient-dark text-light align-middle text-center" style="width: 10%;position: sticky; top: 0px;"><i class="fas fa-calendar-alt"></i></td>
-                                                <td class="bg-gradient-dark text-light align-middle text-center" style="width: 10%;position: sticky; top: 0px;"><i class="far fa-eye"></i></td>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -403,220 +398,6 @@ $contt = $conta = $contb = 0;
                                                         $faltamtext = number_format($faltam, 2, ',', '.');
                                             ?>
                                             <tr>
-                                                <?php if($perfil === '3' && $nivel === '1'){ ?>
-                                                <td>
-                                                    <?php
-                                                    $sqlc = "select * from contestacao inner join contestacao_assunto on idcontestacao = fkcontestacao "
-                                                            . "inner join assunto on fkassunto = idassunto where fkdemonstrativo = '$iddemonstrativo' order by idassunto desc";
-                                                    $queryc = mysqli_query($conn, $sqlc);
-                                                    $nrrsc = mysqli_num_rows($queryc);
-                                                    $rsc = mysqli_fetch_array($queryc);
-                                                    $contestacao = array();
-                                                    $assunto = array();
-                                                    $a=0;
-                                                    if($nrrsc > 0){ 
-                                                        do{
-                                                            if ($rsc['fkassunto'] === '1') {
-                                                                $assun = trim($rsc['assuntonovo']);
-                                                                $assun = str_replace("'", "", $assun);
-                                                                $assun = str_replace("\"", "", $assun);
-                                                                $assunto[$a] = $assun;
-                                                            } else {
-                                                                $assun = trim($rsc['titulo']);
-                                                                $assun = str_replace("'", "", $assun);
-                                                                $assun = str_replace("\"", "", $assun);
-                                                                $assunto[$a] = $assun;
-                                                            }
-                                                            $idcontestacao = trim($rsc['idcontestacao']);
-                                                            $contes = trim($rsc['contestacao']);
-                                                            $contes = str_replace("'", "", $contes);
-                                                            $contes = str_replace("\"", "", $contes);
-                                                            $contestacao[$a] = $contes;
-                                                            $datahora = $rsc['datahora'];
-                                                            $dataresposta = $rsc['dataresposta'];
-                                                            $flagresposta = $rsc['flagresposta'];
-                                                            $resposta = trim($rsc['resposta']);
-                                                            $resposta = str_replace("'", "", $resposta);
-                                                            $resposta = str_replace("\"", "", $resposta);
-                                                            $a++;
-                                                        }while ($rsc = mysqli_fetch_array($queryc));
-                                                          if($flagresposta==='0'){
-                                                    ?>
-                                                        <button type="button" data-toggle="modal" data-target=".modalContestacao<?= $iddemonstrativo ?>" class="btn btn-light shadow-sm "><i class="fas fa-user-edit text-info"></i></button>
-                                                        <!-- modal modalContestacao -->
-                                                        <div class="modal fad modalContestacao<?= $iddemonstrativo ?> mt-2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                            <form method="post" action="../Controller_agsus/respcontestacao.php">
-                                                            <div class="modal-dialog mw-100 w-75">
-                                                                <div class="modal-content">
-                                                                    <input type="hidden" name="iddemonstrativo" value="<?= $iddemonstrativo ?>">
-                                                                    <input type="hidden" name="cpf" value="<?= $cpftratado ?>">
-                                                                    <input type="hidden" name="ibge" value="<?= $ibge ?>">
-                                                                    <input type="hidden" name="cnes" value="<?= $cnes ?>">
-                                                                    <input type="hidden" name="ine" value="<?= $ine ?>">
-                                                                    <div class="modal-header bg-light">
-                                                                        <div class="col-10 mt-1">
-                                                                            <h5 class="modal-title text-left text-primary" id="exampleModalLabel"><i class="fas fa-arrow-circle-right"></i> Contestação registrada</h5>
-                                                                        </div>
-                                                                        <div class="col-2">
-                                                                            <button type="button" class="bg-light close" data-dismiss="modal" aria-label="close">
-                                                                                <span aria-hidden="true">&times;</span> </button>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="modal-body pr-3 pl-3">
-                                                                        <div class="row mt-2">
-                                                                            <div class="col-sm-6">
-                                                                                <label class="font-weight-bold">Médico Tutor: </label>&nbsp; <label><?= $nome ?></label>
-                                                                            </div>
-                                                                            <div class="col-sm-3">
-                                                                                <label class="font-weight-bold">CPF: </label>&nbsp; <label><?= $cpf ?></label>
-                                                                            </div>
-                                                                            <div class="col-sm-3">
-                                                                                
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="row">
-                                                                            <div class="col-sm-6">
-                                                                                <label class="font-weight-bold">Município/UF: </label>&nbsp; <label><?= $municipio ?>-<?= $uf ?></label>
-                                                                            </div>
-                                                                            <div class="col-sm-3">
-                                                                                <label class="font-weight-bold">CNES: </label>&nbsp; <label><?= $cnes ?></label>
-                                                                            </div>
-                                                                            <div class="col-sm-3">
-                                                                                <label class="font-weight-bold">INE: </label>&nbsp; <label><?= $ine ?></label>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="row">
-                                                                            <div class="col-sm-6">
-                                                                                <label class="font-weight-bold">IBGE: </label>&nbsp; <label><?= $ibge ?></label>
-                                                                            </div>
-                                                                            <div class="col-sm-3">
-                                                                                <label class="font-weight-bold">Tipologia: </label>&nbsp; <label><?= $cnes ?></label>
-                                                                            </div>
-                                                                            <div class="col-sm-3">
-                                                                                <label class="font-weight-bold">IVS: </label>&nbsp; <label><?= $ivs ?></label>
-                                                                            </div>
-                                                                        </div>
-                                                                        <input type="hidden" name="idcontestacao" value="<?= $idcontestacao ?>">
-                                                                        <div class="row mt-1">
-                                                                            <div class="col-sm-12">
-                                                                                <h5 class="text-dark font-weight-bold">Contestação registrada: </h5>
-                                                                            </div>
-                                                                            <?php
-                                                                                if($nrrsc > 0){
-                                                                                    for($i=0; $i < count($assunto); $i++){
-                                                                                        $assu = $assunto[$i];
-                                                                                        $conte = $contestacao[$i];
-                                                                                ?>
-                                                                            <div class="col-sm-12">
-                                                                                <label class='text-dark font-weight-bold'><?= $assu ?></label><br>
-                                                                                <textarea class="form-control text-justify bg-white" rows="4" disabled="true" style="resize: none;"><?= $conte ?></textarea><br>
-                                                                            </div>
-                                                                            <?php } ?>
-                                                                        </div>
-                                                                        <div class="row mt-1">
-                                                                            <div class="col-sm-12">
-                                                                                <h6 class="text-dark font-weight-bold">Resposta da contestação</h6>
-                                                                                <textarea name="respcontestacao" class="" rows="4" style="width: 100%; resize: none;"></textarea>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="modal-footer">
-                                                                        <button type="submit" name="enviarResposta" value="1" class="btn btn-success shadow-sm rounded ml-5 mr-5 p-2">&nbsp;&nbsp; ENVIAR &nbsp;&nbsp;</button>
-                                                                        <button type="reset" class="btn btn-light shadow-sm rounded ml-5 mr-5 p-2" data-dismiss="modal"> CANCELAR </button>    
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            </form>
-                                                        </div>
-                                                              <?php }}else{ ?>
-                                                        <button type="button" data-toggle="modal" data-target=".modalResposta<?= $iddemonstrativo ?>" class="btn btn-light shadow-sm "><i class="fas fa-check text-success"></i></button>
-                                                        <!-- modal modalResposta -->
-                                                        <div class="modal fad modalResposta<?= $iddemonstrativo ?> mt-2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                            <div class="modal-dialog mw-100 w-75">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header bg-light">
-                                                                        <div class="col-10 mt-1">
-                                                                            <h5 class="modal-title text-left text-primary" id="exampleModalLabel"><i class="fas fa-arrow-circle-right"></i> &nbsp;Contestação</h5>
-                                                                        </div>
-                                                                        <div class="col-2">
-                                                                            <button type="button" class="bg-light close" data-dismiss="modal" aria-label="close">
-                                                                                <span aria-hidden="true">&times;</span> </button>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="modal-body pr-3 pl-3">
-                                                                        <div class="row mt-2">
-                                                                            <div class="col-sm-6">
-                                                                                <label class="font-weight-bold">Médico Tutor: </label>&nbsp; <label><?= $nome ?></label>
-                                                                            </div>
-                                                                            <div class="col-sm-3">
-                                                                                <label class="font-weight-bold">CPF: </label>&nbsp; <label><?= $cpf ?></label>
-                                                                            </div>
-                                                                            <div class="col-sm-3">
-                                                                                
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="row">
-                                                                            <div class="col-sm-6">
-                                                                                <label class="font-weight-bold">Município/UF: </label>&nbsp; <label><?= $municipio ?>-<?= $uf ?></label>
-                                                                            </div>
-                                                                            <div class="col-sm-3">
-                                                                                <label class="font-weight-bold">CNES: </label>&nbsp; <label><?= $cnes ?></label>
-                                                                            </div>
-                                                                            <div class="col-sm-3">
-                                                                                <label class="font-weight-bold">INE: </label>&nbsp; <label><?= $ine ?></label>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="row">
-                                                                            <div class="col-sm-6">
-                                                                                <label class="font-weight-bold">IBGE: </label>&nbsp; <label><?= $ibge ?></label>
-                                                                            </div>
-                                                                            <div class="col-sm-3">
-                                                                                <label class="font-weight-bold">Tipologia: </label>&nbsp; <label><?= $cnes ?></label>
-                                                                            </div>
-                                                                            <div class="col-sm-3">
-                                                                                <label class="font-weight-bold">IVS: </label>&nbsp; <label><?= $ivs ?></label>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="row mt-1">
-                                                                            <div class="col-sm-12">
-                                                                                <h6 class="text-info font-weight-bold">Contestação registrada: </h6>
-                                                                                <input type="hidden" name="idcontestacao" value="<?= $idcontestacao ?>">
-                                                                                <div class='row'>
-                                                                                    <?php
-                                                                                        if($nrrsc > 0){
-                                                                                            for($i=0; $i < count($assunto); $i++){
-                                                                                                $assu = $assunto[$i];
-                                                                                                $conte = $contestacao[$i];
-                                                                                        ?>
-                                                                                    <div class="col-sm-12">
-                                                                                        <label class='text-dark font-weight-bold'><?= $assu ?></label><br>
-                                                                                        <textarea class="form-control text-justify bg-white" rows="4" disabled="true" style="resize: none;"><?= $conte ?></textarea><br>
-                                                                                    </div>
-                                                                                    <?php }} ?>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="row mt-1 mb-2">
-                                                                            <div class="col-sm-12">
-                                                                                <h6 class="text-info font-weight-bold">Resposta da contestação</h6>
-                                                                                <textarea class="form-control text-justify bg-white" rows="4" disabled="true" style="resize: none;"><?= $resposta ?></textarea>
-                                                                                <?php
-                                                                                    echo "<br>Data da resposta: &nbsp;".vemdata($dataresposta);
-                                                                                ?>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="modal-footer">
-                                                                        <button type="reset" class="btn btn-outline-danger shadow-sm rounded ml-5 mr-5 p-2" data-dismiss="modal"> &nbsp;FECHAR&nbsp; </button>    
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            </form>
-                                                        </div>
-                                                        <?php } ?>
-                                                   <?php }?>
-                                                </td>
-                                                <?php } ?>
                                                 <td><?= $nome ?></td>
                                                 <td><?= $cpf ?></td>
                                                 <td><?= $tipologia ?></td>
@@ -631,19 +412,10 @@ $contt = $conta = $contb = 0;
                                                 <?php }else{ ?>
                                                 <td class="text-danger"><?= $mftext ?></td>
                                                 <?php } ?>
-                                                <?php if($mf >= 70){ ?>
-                                                <td>R$ <?php echo number_format($valor, 2, ',', '.'); ?></td>
-                                                <?php }else{ ?>
-                                                <td class="text-danger">R$ <?php echo number_format(round((($valor * $mf)/100),2), 2, ',', '.'); ?></td>
-                                                <?php } ?>
                                                 <td><?= $qatext ?></td>
                                                 <td><?= $qnotatext ?></td>
                                                 <td><?= $cpossuitext ?></td>
                                                 <td><?= $anotatext ?></td>
-                                                <td><?= $datacadastro ?></td>
-                                                <?php if($perfil === '3' && $nivel === '1'){ ?>
-                                                <td><a href="demonstrativo.php?c=<?= $cpftratado ?>&a=<?= $ano ?>&cl=<?= $ciclo ?>&p=<?= $idperiodo ?>" class="btn btn-light shadow-sm" title="Demonstrativo"><i class="far fa-eye"></i></a></td>
-                                                <?php } ?>
                                             </tr>
                                             <?php }while($rs = mysqli_fetch_array($query));
                                             }}?>
@@ -652,17 +424,36 @@ $contt = $conta = $contb = 0;
                                 </div>
                             </fieldset>
                             <div class="row">
+                                <div class="col-sm-3">
+                                    QA - Qualidade Assistencial
+                                </div>
+                                <div class="col-sm-3">
+                                    QT - Qualidade Tutoria
+                                </div>
+                                <div class="col-sm-3">
+                                    CP - Competências Profissionais
+                                </div>
+                                <div class="col-sm-3">
+                                    AP - Aperfeiçoamento Profissional
+                                </div>
+                            </div>
+                            <div class="row mt-4">
                                 <div class="col-sm-12">
-                                    <label class="">Total de Tutores: </label>
-                                    <label class="text-info"><?= $contt ?></label>
+                                    <label class="font-weight-bold">Total de Tutores: </label>
+                                    <label class="text-info font-weight-bold"><?= $contt ?></label>
                                 </div>
                                 <?php
                                 //conversão decimal com vírgula - porcentagens acima e abaixo de 70
-                                $mfat = round((($conta/$contt) * 100),2);
-                                $mfat = str_replace(".", ",", $mfat);
-                                $mfbt = round((($contb/$contt) * 100),2);
-                                $mfbt = str_replace(".", ",", $mfbt);
+                                if($contt > 0){
+                                    $mfat = round((($conta/$contt) * 100),2);
+                                    $mfat = str_replace(".", ",", $mfat);
+                                    $mfbt = round((($contb/$contt) * 100),2);
+                                    $mfbt = str_replace(".", ",", $mfbt);
+                                
                                 ?>
+                                <div class="col-sm-12">
+                                    <label class="">IGAD - Indicador Geral da Avaliação de Desempenho</label>
+                                </div>
                                 <div class="col-sm-12">
                                     <label class="">IGAD <i class="fas fa-level-up-alt text-primary"></i> 70,00: </label>
                                     <label class="text-primary"><?= $conta ?></label>
@@ -677,208 +468,82 @@ $contt = $conta = $contb = 0;
                                     <label class="text-danger"><?= $mfbt ?>% </label>
                                     <label>dos tutores</label>
                                 </div>
+                                <?php } ?>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-                            <!-- modal modalar -->
-<!--                            <div class="modal fad modalar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <div class="modal-header bg-light">
-                                            <div class="col-10 mt-1">
-                                                <h5 class="modal-title text-left text-primary" id="exampleModalLabel"><i class="fas fa-poll"></i>&nbsp; Avaliação de Resultados</h5>
-                                            </div>
-                                            <div class="col-2">
-                                                <button type="button" class="bg-light close" data-dismiss="modal" aria-label="close">
-                                                    <span aria-hidden="true">&times;</span> </button>
-                                            </div>
-                                        </div>
-                                        <div class="modal-body p-4">
-                                            <div class="row mt-2">
-                                                <div class="col-sm-12">
-                                                    <h6 class="text-secondary">A avaliação de resultados correspondente até 70% dp resultado final.</h6>
-                                                    <h6 class="text-secondary">Resultado:  &nbsp;<label class="text-danger"><?= $artext ?>%</label>&nbsp; do resultado final.</h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer bg-light">
-                                            <button type="button" class="font-weight-bold btn btn-primary border-light shadow-sm rounded ml-5 mr-5 ppt-2 pb-2 pl-4 pr-4" data-dismiss="modal"> OK </button>    
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>-->
-                            <!-- fim do modal modalar -->
-                            <!-- modal modalac -->
-<!--                            <div class="modal fad modalac" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <div class="modal-header bg-light">
-                                            <div class="col-10 mt-1">
-                                                <h5 class="modal-title text-left text-primary" id="exampleModalLabel"><i class="fas fa-poll"></i>&nbsp; Avaliação de Competências</h5>
-                                            </div>
-                                            <div class="col-2">
-                                                <button type="button" class="bg-light close" data-dismiss="modal" aria-label="close">
-                                                    <span aria-hidden="true">&times;</span> </button>
-                                            </div>
-                                        </div>
-                                        <div class="modal-body p-4">
-                                            <div class="row mt-2">
-                                                <div class="col-sm-12">
-                                                    <h6 class="text-secondary">A avaliação de competências correspondente até 30% do resultado final.</h6>
-                                                    <h6 class="text-secondary">Resultado:  &nbsp;<label class="text-danger"><?= $cpossuitext ?>%</label>&nbsp; do resultado final.</h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer bg-light">
-                                            <button type="button" class="font-weight-bold btn btn-primary border-light shadow-sm rounded ml-5 mr-5 ppt-2 pb-2 pl-4 pr-4" data-dismiss="modal"> OK </button>    
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>-->
-                            <!-- fim do modal modalac -->
-                            <!-- modal modalaqa -->
-<!--                            <div class="modal fad modalaqa" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <div class="modal-header bg-light">
-                                            <div class="col-10 mt-1">
-                                                <h5 class="modal-title text-left text-primary" id="exampleModalLabel"><i class="fas fa-poll"></i>&nbsp; Qualidade Assistencial</h5>
-                                            </div>
-                                            <div class="col-2">
-                                                <button type="button" class="bg-light close" data-dismiss="modal" aria-label="close">
-                                                    <span aria-hidden="true">&times;</span> </button>
-                                            </div>
-                                        </div>
-                                        <div class="modal-body p-4">
-                                            <div class="row mt-2">
-                                                <div class="col-sm-12">
-                                                    <h6 class="text-secondary">A qualidade assistencial corresponde até 50% do resultado final.</h6>
-                                                    <h6 class="text-secondary">Resultado:  &nbsp;<label class="text-danger"><?= $qatext ?>%</label>&nbsp; do resultado final.</h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer bg-light">
-                                            <button type="button" class="font-weight-bold btn btn-primary border-light shadow-sm rounded ml-5 mr-5 ppt-2 pb-2 pl-4 pr-4" data-dismiss="modal"> OK </button>    
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>-->
-                            <!-- fim do modal modalaqa -->
-                            <!-- modal modalqt -->
-<!--                            <div class="modal fad modalqt" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <div class="modal-header bg-light">
-                                            <div class="col-10 mt-1">
-                                                <h5 class="modal-title text-left text-primary" id="exampleModalLabel"><i class="fas fa-poll"></i>&nbsp; Qualidade da Tutoria</h5>
-                                            </div>
-                                            <div class="col-2">
-                                                <button type="button" class="bg-light close" data-dismiss="modal" aria-label="close">
-                                                    <span aria-hidden="true">&times;</span> </button>
-                                            </div>
-                                        </div>
-                                        <div class="modal-body p-4">
-                                            <div class="row mt-2">
-                                                <div class="col-sm-12">
-                                                    <h6 class="text-secondary">A qualidade da tutoria corresponde até 10% do resultado final.</h6>
-                                                    <h6 class="text-secondary">Resultado:  &nbsp;<label class="text-danger"><?= $qnotatext ?>%</label>&nbsp; do resultado final.</h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer bg-light">
-                                            <button type="button" class="font-weight-bold btn btn-primary border-light shadow-sm rounded ml-5 mr-5 ppt-2 pb-2 pl-4 pr-4" data-dismiss="modal"> OK </button>    
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>-->
-                            <!-- fim do modal modalqt -->
-                            <!-- modal modalap -->
-<!--                            <div class="modal fad modalap" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <div class="modal-header bg-light">
-                                            <div class="col-10 mt-1">
-                                                <h5 class="modal-title text-left text-primary" id="exampleModalLabel"><i class="fas fa-poll"></i>&nbsp; Aperfeiçoamento Profissional</h5>
-                                            </div>
-                                            <div class="col-2">
-                                                <button type="button" class="bg-light close" data-dismiss="modal" aria-label="close">
-                                                    <span aria-hidden="true">&times;</span> </button>
-                                            </div>
-                                        </div>
-                                        <div class="modal-body p-4">
-                                            <div class="row mt-2">
-                                                <div class="col-sm-12">
-                                                    <h6 class="text-secondary">O aperfeiçoamento profissional corresponde até 10% do resultado final.</h6>
-                                                    <h6 class="text-secondary">Resultado:  &nbsp;<label class="text-danger"><?= $anotatext ?>%</label>&nbsp; do resultado final.</h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer bg-light">
-                                            <button type="button" class="font-weight-bold btn btn-primary border-light shadow-sm rounded ml-5 mr-5 ppt-2 pb-2 pl-4 pr-4" data-dismiss="modal"> OK </button>    
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>-->
-                            <!-- fim do modal modalap -->
-                            <!-- modal modalcp -->
-<!--                            <div class="modal fad modalcp" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <div class="modal-header bg-light">
-                                            <div class="col-10 mt-1">
-                                                <h5 class="modal-title text-left text-primary" id="exampleModalLabel"><i class="fas fa-poll"></i>&nbsp; Competências Profissionais</h5>
-                                            </div>
-                                            <div class="col-2">
-                                                <button type="button" class="bg-light close" data-dismiss="modal" aria-label="close">
-                                                    <span aria-hidden="true">&times;</span> </button>
-                                            </div>
-                                        </div>
-                                        <div class="modal-body p-4">
-                                            <div class="row mt-2">
-                                                <div class="col-sm-12">
-                                                    <h6 class="text-secondary">As competências Profissionais correspondem até 30% do resultado final.</h6>
-                                                    <h6 class="text-secondary">Resultado:  &nbsp;<label class="text-danger"><?= $cpossuitext ?>%</label>&nbsp; do resultado final.</h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer bg-light">
-                                            <button type="button" class="font-weight-bold btn btn-primary border-light shadow-sm rounded ml-5 mr-5 ppt-2 pb-2 pl-4 pr-4" data-dismiss="modal"> OK </button>    
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>-->
-                            <!-- fim do modal modalcp -->
-                    <?php
-//                    }while($rs = mysqli_fetch_array($query));
-//                }
-//            } else {
-                ?>
-<!--                <div class="col-12 shadow rounded pt-2 mb-2">
-                    <div class="p-3">
-                        <div class="mt-3 mb-3 pl-4 pr-4">
-                            <div class="row mt-5 mb-5 mr-2 ml-2 pt-5 pb-5 pl-2 pr-2">
-                                <div class="col-md-12">
-                                    <p>Prezado(a) Tutor(a) Médico(a),</p>
-                                    <p class="text-justify text-dark font-weight-bolder">
-                                        Não foi identificado registros de produção no período consultado.
-                                    </p>
-                                    <p class="text-justify">
-                                    Gostaria de enfatizar a importância de um dos requisitos para a participação no Programa de Avaliação de Desempenho é a vinculação do(a) 
-                                    médico(a) tutor(a) a
-                                    uma Equipe de Saúde da Família. É fundamental que os profissionais médicos estejam devidamente registrados no CNES e vinculados a um INE, 
-                                    assegurando a precisa identificação de suas atividades nas equipes. Isso não apenas garante a correta avaliação dos indicadores, 
-                                    mas também assegura sua participação integral no programa.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>-->
-                
-        <?php include '../includes/footer.php' ?>
+    <div class="container-fluid mt-2" style="margin-bottom:0;background-color: #1A1A37">
+            <div class="row">
+                <div class="col-md-3 mb-5">
+                    <img class="img-fluid py-5" src="./../../img/logo-adaps-text-white.png" alt="logo adaps" />
+                    <h4 class="small text-white">Redes sociais</h4>
+                    <a target="_blank" href="https://www.facebook.com/agenciasus">
+                        <i class="fab fa-facebook text-white fa-2x mr-2 pl-2"></i>
+                    </a>
+                    <a target="_blank" href="https://www.instagram.com/agenciasus/">
+                        <i class="fab fa-instagram text-white fa-2x mr-2"></i>
+                    </a>
+                    <a target="_blank" href="https://www.linkedin.com/company/84489833/admin/feed/posts/">
+                        <i class="fab fa-linkedin text-white fa-2x mr-2"></i>
+                    </a>
+                    <a target="_blank" href="https://twitter.com/agenciasus">
+                        <i class="fab fa-twitter text-white fa-2x mr-2"></i>
+                    </a>
+                    <a target="_blank" href="https://www.youtube.com/channel/UCLSEqv-F8oUfcHdyIgRhC9Q">
+                        <i class="fab fa-youtube text-white fa-2x"></i>
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <p>
+                    <h5 class="pt-5"><a class="small text-white" target="_blank" href="https://www.agenciasus.org.br/quem-somos/">Quem Somos</a></h5>
+                    </p>
+                    <p>
+                    <h5><a class="small text-white" target="_blank" href="https://www.agenciasus.org.br/conselho/">Conselho</a></h5>
+                    </p>
+                    <p>
+                    <h5><a class="small text-white" target="_blank" href="https://www.agenciasus.org.br/diretoria-executiva/">Diretoria Executiva</a></h5>
+                    </p>
+                    <p>
+                    <h5><a class="small text-white" target="_blank" href="https://www.agenciasus.org.br/noticias/">Noticia</a></h5>
+                    </p>
+                </div>
+                <div class="col-md-3">
+                    <p>
+                    <h5 class="pt-5"><a class="small text-white" href="https://www.agenciasus.org.br/transparencia-e-prestacao-de-contas/">Transparência</a></h5>
+                    </p>
+                    <p>
+                    <h5><a class="small text-white" target="_blank" href="https://www.agenciasus.org.br/ouvidoria/">Ouvidoria</a></h5>
+                    </p>
+                    <p>
+                    <h5><a class="small text-white" target="_blank" href="https://www.agenciasus.org.br/prestacao-de-contas/">Prestação de Contas</a></h5>
+                    </p>
+                    <p>
+                    <h5><a class="small text-white" target="_blank" href="https://www.agenciasus.org.br/programa-medicos-pelo-brasil/">Programa Médicos pelo Brasil</a></h5>
+                    </p>
+                </div>
+                <div class="col-md-3">
+                    <p class="small text-white"><i class="fas fa-phone text-white fa-2x pt-5"></i> (61) 3686-4144</p>
+                    <p class="small text-white"><i class="fas fa-map-marker-alt text-white fa-2x"></i>
+                        SHN – Quadra 1, Bloco E, Conj A, 2º andar, Asa Sul, Brasília – DF -CEP: 70.701-050
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid" style="background-color: #FF0000">
+            <div class="row pt-2">
+                <div class="col-6 text-center">
+                    <p class="small text-white">&COPY;Todos os direitos reservados | AgSUS 2024</p>
+                </div>
+                <div class="col-6 text-center">
+                    <a class="small text-white" href="https://www.agenciasus.org.br/politica-de-privacidade-e-seguranca/">
+                        Política de Privacidade | Termos de Uso
+                    </a>
+                </div>
+            </div>
+        </div>
         <!-- Bootstrap core JavaScript-->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
@@ -889,16 +554,16 @@ $contt = $conta = $contb = 0;
         <script src="../../vendor/jquery-easing/jquery.easing.min.js"></script>
 
         <!-- Custom scripts for all pages-->
-        <script src="../js/sb-admin-2.min.js"></script>
+        <script src="../../js/sb-admin-2.min.js"></script>
 
         <!-- Page level plugins -->
         <script src="../../vendor/chart.js/Chart.min.js"></script>
 
         <!-- Page level custom scripts -->
-        <script src="../js/demo/chart-bar-prenatal-1q.js"></script>
-        <script src="../js/demo/chart-bar-prenatal-sifilis.js"></script>
-        <script src="../js/demo/chart-bar-citopatologico.js"></script>
-        <script src="../js/demo/chart-bar-hipertensao.js"></script>
+        <script src="../../js/demo/chart-bar-prenatal-1q.js"></script>
+        <script src="../../js/demo/chart-bar-prenatal-sifilis.js"></script>
+        <script src="../../js/demo/chart-bar-citopatologico.js"></script>
+        <script src="../../js/demo/chart-bar-hipertensao.js"></script>
         <script>
             $(function () {
               $('.dropdown-toggle').dropdown();

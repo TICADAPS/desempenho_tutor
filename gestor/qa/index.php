@@ -80,14 +80,14 @@ if ($nrrs > 0) {
                                     <a class="nav-link" href="../eqa/" target="_parent" title="Voltar"><i class="fas fa-arrow-left"></i></a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="../derruba_session.php" target="_parent" title="Sair"><i class="fas fa-sign-out-alt pt-1"></i></a>
+                                    <a class="nav-link" href="../../../sistema-adaps/gestor/controller/derruba_session.php" target="_parent" title="Sair"><i class="fas fa-sign-out-alt pt-1"></i></a>
                                 </li>
                             </ul>
                         </div>
                     </nav> 
                 </div>
             </div>
-            <div class="text-right text-muted lead small"><b>Gestor: </b><?= $NomeGestor ?>, Brasília-DF, <?= $datahoje ?>.</div>
+            <div class="text-right text-muted lead small"><b>Gestor(a): </b><?= $NomeGestor ?>&nbsp; - &nbsp;Brasília-DF, <?= $datahoje ?>.</div>
             <div class="row p-2">
             <?php
             if ($rsine === true) {

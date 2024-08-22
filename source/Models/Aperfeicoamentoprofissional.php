@@ -103,7 +103,7 @@ class Aperfeicoamentoprofissional extends Model {
         if (!empty($this->id)) {
             $id = $this->id;
 
-            $this->update(self::$entity, $this->safe(), "id = :id", "id={id}");
+            $this->update(self::$entity, $this->safe(), "id = :id", "id={$id}");
             if ($this->fail()) {
                 $this->message->error("Erro ao atualizar, verifique os dados");
                 return null;
@@ -117,21 +117,21 @@ class Aperfeicoamentoprofissional extends Model {
     /**
      * @return null|User
      */
-    public function destroy(): ?Aperfeicoamentoprofissional {
-        if (!empty($this->id)) {
-            $id = $this->id;
-            $id = (int)$id;            
-            $this->delete(self::$entity, "id=:id", "id={$id}");
-        }
-
-        if ($this->fail()) {
-            $this->message = "Não foi possível remover o registro";
-            return null;
-        }
-
-        $this->message = "Aperfeicoamentoprofissional removido com sucesso";
-        $this->data = null;
-        return $this;
-    }
+//    public function destroy(): ?Aperfeicoamentoprofissional {
+//        if (!empty($this->id)) {
+//            $id = $this->id;
+//            $id = (int)$id;            
+//            $this->delete(self::$entity, "id=:id", "id={$id}");
+//        }
+//
+//        if ($this->fail()) {
+//            $this->message = "Não foi possível remover o registro";
+//            return null;
+//        }
+//
+//        $this->message = "Aperfeicoamentoprofissional removido com sucesso";
+//        $this->data = null;
+//        return $this;
+//    }
 
 }

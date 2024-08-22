@@ -1,7 +1,7 @@
         <div class="container-fluid mt-2" style="margin-bottom:0;background-color: #1A1A37">
             <div class="row">
                 <div class="col-md-3 mb-5">
-                    <img class="img-fluid py-5" src="../../img/logo-adaps-text-white.png" alt="logo adaps" />
+                    <img class="img-fluid py-5" src="https://agsusbrasil.org/desempenho_tutor/img/logo-adaps-text-white.png" alt="logo adaps" />
                     <h4 class="text-white">Redes sociais</h4>
                     <a target="_blank" href="https://www.facebook.com/adapsbrasil">
                         <i class="fab fa-facebook text-white fa-2x mr-2 pl-2"></i>

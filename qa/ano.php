@@ -67,7 +67,7 @@ if ($nrrs > 0) {
                                     <a href="../demonstrativo/" class="nav-link">Painel de Resultados</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="./index.php" class="nav-link">Qualidade Assistencial</a>
+                                    <button type="button" data-toggle="modal" data-target="#infoQA" class="btn btn-light" title="Evolução da Qualidade Assistencial">Evolução da Qualidade Assistencial</button>
                                 </li>
                                 <!-- Navbar dropdown -->
                                 <li class="nav-item dropdown">
@@ -107,6 +107,48 @@ if ($nrrs > 0) {
                     </form>
                 </div>
             </div>-->
+            <!-- Modal -->
+            <div class="modal fade" id="infoQA" tabindex="-1" aria-labelledby="enviarModal" aria-hidden="true">
+                <div class="modal-dialog">
+                    <form method="post" action="../qa/index.php">
+                        <input type="hidden" name="i" value="<?= $ine ?>">
+                        <div class="modal-content p-1 bg-light">
+                            <div class="modal-header border-top border-left border-right"  style="background-color: #0055A1;">
+                                <h5 class="modal-title text-white" id="exampleModalLabel">Evolução da Qualidade Assistencial</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body border-top border-left border-right">
+                                <div class="row">
+                                    <div class="col-md-4 p-2 text-nowrap">
+                                        <p class="d-inline-block " style="max-width: 150px;">Selecione o ano para ter acesso às informações sobre a evolução <br>da qualidade assistencial.</p>
+                                    </div>
+                                    <div class="col-md-12 p-2">
+                                        <label><b>Ano</b></label>
+                                        <select name="a" class="form-control">
+                                            <option value="" >[--SELECIONE--]</option>
+                                            <option>2023</option>
+                                            //<?php
+//                                            if ($rsano !== null) {
+//                                                foreach ($rsano->results as $ra) {
+//                                                    $ano = $ra->ano;
+//                                                }
+//                                                ?>
+                                                <!--<option><?= $ano ?></option>-->
+                                            <?php // } ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer border">
+                                <button type="button" class="btn btn-secondary " data-dismiss="modal">NÃO</button> &nbsp; 
+                                <button type="submit" name="enviaCadastro" class="btn btn-success">&nbsp; SIM &nbsp;</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
             <div class="row p-2">
             <?php
             if ($rscpf === true) {

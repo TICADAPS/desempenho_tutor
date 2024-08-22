@@ -8,7 +8,7 @@ $cpf = $_SESSION['cpf'];
 //$cpf = '054.040.031-97';
 date_default_timezone_set('America/Sao_Paulo');
 //$anoAtual = date('Y');
-$anoAtual = 2023;
+$anoAtual = $_POST['a'];
 $cpftratado = str_replace("-", "", $cpf);
 $cpftratado = str_replace(".", "", $cpftratado);
 $cpftratado = str_replace(".", "", $cpftratado);
@@ -68,9 +68,9 @@ if ($nrrs > 0) {
                                 <li class="nav-item">
                                     <a href="../demonstrativo/" class="nav-link">Painel de Resultados</a>
                                 </li>
-                                <li class="nav-item">
+<!--                                <li class="nav-item">
                                     <a href="./index.php" class="nav-link">Qualidade Assistencial</a>
-                                </li>
+                                </li>-->
                                 <!-- Navbar dropdown -->
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">Ano </a>

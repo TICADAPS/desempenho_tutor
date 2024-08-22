@@ -42,6 +42,7 @@ date_default_timezone_set('America/Sao_Paulo');
 $anoAtual = 2024;
 $ano = 2024;
 $ciclo = 1;
+$ctap = 0;
 $sql = "select distinct m.nome, m.admissao, m.cargo, m.tipologia, m.uf, m.municipio, m.datacadastro, m.cpf, m.ibge, m.cnes,
  m.ine, ivs.descricao as ivs from medico m left join ivs on m.fkivs = ivs.idivs order by m.nome";
 $query = mysqli_query($conn, $sql);
@@ -184,7 +185,7 @@ $contt = 0;
                     <img src="../../img_agsus/Logo_400x200.png" class="img-fluid" alt="logoAdaps" width="250" title="Logo Adaps">
                 </div>
                 <div class="col-12 col-md-9 mt-5 ">
-                    <h4 class="mb-4 font-weight-bold">Unidade da Força - Programa de Avaliação de Desempenho do Tutor Médico</h4>
+                    <h4 class="mb-4 font-weight-bold">Unidade de Serviços em Saúde - Aperfeiçoamento Profissional</h4>
                 </div>
             </div>
             <div class="row">
@@ -306,8 +307,10 @@ $contt = 0;
                                                     $nrALD = mysqli_num_rows($qALD);
 //                                                    var_dump($nrALD);
                                                     if($nrALD > 0){ ?>  
-                                                    <td><a href="#" class="btn btn-light btn-sm shadow-sm text-center"><i class="fas fa-info-circle text-primary"></i></a></td>
-                                                <?php }else{?>
+                                                    <td><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center"><i class="fas fa-info-circle text-primary"></i></a></td>
+                                                <?php 
+                                                    $ctap++;
+                                                    }else{?>
                                                 <td></td>
                                                 <?php }} ?>
                                                 <td><?= $nome ?></td>
@@ -331,8 +334,12 @@ $contt = 0;
                             </fieldset>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <label class="">Total de Tutores: </label>
+                                    <label class="">Tutores: </label>
                                     <label class="text-info"><?= $contt ?></label>
+                                </div>
+                                <div class="col-sm-12">
+                                    <label class="">Formulários enviados: </label>
+                                    <label class="text-info"><?= $ctap ?></label>
                                 </div>
                             </div>
                         </div>
@@ -340,7 +347,7 @@ $contt = 0;
                 </div>
             </div>
         </div>
-     <?php include '../../includes/footer.php'; ?>
+        <?php include '../../includes/footer.php'; ?>
         <!-- Bootstrap core JavaScript-->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
@@ -382,4 +389,3 @@ $contt = 0;
         </script>
     </body>
 </html>
-*/

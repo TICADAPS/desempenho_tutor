@@ -19,6 +19,7 @@ $cnes = '3797902';
 $ine = '1587021';
 $ano = '2024';
 $ciclo = '1';
+$pontuacaoap = $qcp = $gepep = $itp = 0;
 $_SESSION['cpf'] = $cpftratado;
 $_SESSION['nome'] = $medico;
 $sql = "select * from municipio m inner join estado e on m.Estado_cod_uf = e.cod_uf "
@@ -34,7 +35,7 @@ if($rs){
 }
 $sql2 = "select m.nome, m.admissao, m.cargo, mun.Municipio, e.UF, ivs.descricao, ap.id, 
     ap.dthrcadastro, ap.flagativlongduracao, ap.flagparecer as flagparecerap, ap.pontuacao,
-    ap.parecer as parecerap, ap.pareceruser as pareceruserap, ap.parecerdthr as parecerdthrap 
+    ap.parecer as parecerap, ap.pareceruser as pareceruserap, ap.parecerdthr as parecerdthrap, ap.flagup  
     from medico m inner join aperfeicoamentoprofissional ap on m.cpf = ap.cpf and 
     m.ibge = ap.ibge and m.cnes = ap.cnes and m.ine = ap.ine 
     inner join municipio mun on mun.cod_munc = m.ibge 
@@ -63,6 +64,7 @@ if($rs2){
             $flagld = true;
         }
         $parecerap = $rs2['parecerap'];
+        $flagupap = $rs2['flagup'];
         $pareceruserap = $rs2['pareceruserap'];
         $parecerdthrap = vemdata($rs2['parecerdthrap']);  
         $parecerdthrap .= ", às ".horaEmin($rs2['parecerdthrap']).".";
@@ -70,7 +72,7 @@ if($rs2){
 }
 //verifica se há parecer negativo para essa a atividade Qualificação Clínica
 $sqlqc = "select q.descricao as qcdesc, mq.id, mq.titulo, mq.cargahr, mq.anexo, mq.dthrcadastro, 
-    mq.flagparecer, mq.parecer, mq.pareceruser, mq.parecerdthr, mq.pontuacao 
+    mq.flagparecer, mq.parecer, mq.pareceruser, mq.parecerdthr, mq.pontuacao, mq.flagup 
     from aperfeicoamentoprofissional ap 
     inner join medico_qualifclinica mq on ap.id = mq.idaperfprof 
     inner join qualifclinica q on mq.idqualifclinica = q.idqualifclinica 
@@ -80,7 +82,7 @@ $nrqc = mysqli_num_rows($qqc);
 $rsqc = mysqli_fetch_array($qqc);
 //verifica se há parecer negativo para essa a atividade Gestão, Ensino, Pesquisa e Extensão
 $sqlgepe = "select g.descricao as gdesc, mg.id, mg.titulo, mg.cargahr, mg.anexo, mg.dthrcadastro, 
-    mg.flagparecer, mg.parecer, mg.pareceruser, mg.parecerdthr,mg.pontuacao 
+    mg.flagparecer, mg.parecer, mg.pareceruser, mg.parecerdthr,mg.pontuacao, mg.flagup 
     from aperfeicoamentoprofissional ap 
     inner join medico_gesenspesext mg on ap.id = mg.idaperfprof 
     inner join gesenspesext g on mg.idgesenspesext = g.idgesenspesext  
@@ -90,7 +92,7 @@ $nrgepe = mysqli_num_rows($qgepe);
 $rsgepe = mysqli_fetch_array($qgepe);
 //verifica se há parecer negativo para essa a atividade Inovação Tecnológica
 $sqlit = "select i.descricao as idesc, mi.id, mi.titulo, mi.cargahr, mi.anexo, mi.dthrcadastro, 
-    mi.flagparecer, mi.parecer, mi.pareceruser, mi.parecerdthr, mi.pontuacao 
+    mi.flagparecer, mi.parecer, mi.pareceruser, mi.parecerdthr, mi.pontuacao , mi.flagup 
     from aperfeicoamentoprofissional ap 
     inner join medico_inovtecnologica mi on ap.id = mi.idaperfprof 
     inner join inovtecnologica i on mi.idinovtecnologica = i.idinovtecnologica  
@@ -143,59 +145,81 @@ $rsit = mysqli_fetch_array($qit);
         <div class="row mb-4 mt-2">
             <div class="col-md-12">
                 <div class="card border-1 ">
-                    <div class="card-header text-white" style="background-color: #0055A1;">
+                    <div class="card-header text-white bg-dark">
                         <label><strong>Período avaliativo</strong></label>
                     </div>
                     <div class="card-body">
-                        <div class="row mb-2">
-                            <div class="col-md-3">
-                                <div class="col-md-12"><b>Ano</b></div>
-                                <div class="col-md-12"><input type="text" class="form-control" disabled="disabled" value="<?= $ano ?>" id="ano" name="ano" /></div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="col-md-12"><b>Ciclo</b></div>
-                                <div class="col-md-12"><input type="text" class="form-control" disabled="disabled" value="<?= $ciclo ?>" id="ciclo" name="ciclo" /></div>
+                        <div class="row mb-1">
+                            <div class="col-md-4 offset-md-4">
+                                <ul class="list-group">
+                                    <li class="list-group-item bg-light"><label class="float-left"><b>Ano: <?= $ano ?></b></label><label class="float-right"><b><?= $ciclo ?>º Ciclo</b></li>
+                                </ul>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row mb-4">
+        <div class="row mb-1">
             <div class="col-12">
                 <div class="card border-1 ">
-                    <div class="card-header text-white" style="background-color: #0055A1;">
+                    <div class="card-header text-white bg-dark">
                         <label><strong>Dados Pessoais</strong></label>
                     </div>
                     <div class="card-body">
                         <div class="row mb-2">
                             <div class="col-md-8">
-                                <div class="col-md-12"><b>Nome</b></div>
-                                <div class="col-md-12"><input type="text" class="form-control" disabled="disabled" value="<?= $medico ?>" id="medico" /></div>
+                                <ul class="list-group">
+                                    <li class="list-group-item bg-light"><b>Nome: </b><?= $medico ?></li>
+                                </ul>
                             </div>
                             <div class="col-md-4">
-                                <div class="col-md-12"><b>CPF</b></div>
-                                <div class="col-md-12"><input type="text" class="form-control" disabled="disabled" value="<?= $cpf ?>" id="cpf" /></div>
+                                <ul class="list-group">
+                                    <li class="list-group-item bg-light"><b>CPF: </b><?= $cpf ?></li>
+                                </ul>
                             </div>
                         </div>
                         <div class="row mb-2">
                             <div class="col-md-6">
-                                <div class="col-md-12"><b>Município de Origem</b></div>
-                                <div class="col-md-12"><input type="text" class="form-control" disabled="disabled" value="<?= $municipioO ?>-<?= $ufO ?>" id="medico" /></div>
+                                <ul class="list-group">
+                                    <li class="list-group-item bg-light"><b>Município de Origem: </b><?= $municipioO ?>-<?= $ufO ?></li>
+                                </ul>
                             </div>
                             <div class="col-md-3">
-                                <div class="col-md-12"><b>CNES</b></div>
-                                <div class="col-md-12"><input type="text" class="form-control" disabled="disabled" value="<?= $cnes ?>" id="cnes" /></div>
+                                <ul class="list-group">
+                                    <li class="list-group-item bg-light"><b>CNES: </b><?= $cnes ?></li>
+                                </ul>
                             </div>
                             <div class="col-md-3">
-                                <div class="col-md-12"><b>INE</b></div>
-                                <div class="col-md-12"><input type="text" class="form-control" disabled="disabled" value="<?= $ine ?>" id="ine" /></div>
+                                <ul class="list-group">
+                                    <li class="list-group-item bg-light"><b>INE: </b><?= $ine ?></li>
+                                </ul>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <?php if($nrrs2 > 0){ ?>
+        <div class="row mb-1">
+            <div class="col-12">
+                <div class="card border-1">
+                    <div class="card-header bg-dark text-white" >
+                        <label><strong>Análise realizada - Pontuação Geral</strong></label>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-2">
+                            <div class="col-md-4 offset-md-4">
+                                <ul class="list-group">
+                                    <li class="list-group-item bg-light"><b>Pontuação dos itens aprovados: </b>&nbsp;<label class="text-primary" id="ptgeral"></label></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php } ?>
         <?php
 //                        var_dump($nrrs2);
         if($nrrs2 === 0){
@@ -207,7 +231,7 @@ $rsit = mysqli_fetch_array($qit);
             <input type="hidden" value="<?= $ine ?>" name="ine">
             <input type="hidden" value="<?= $ano ?>" name="ano">
             <input type="hidden" value="<?= $ciclo ?>" name="ciclo">
-        <div class="row mb-4">
+        <div class="row mb-1">
             <div class="col-12">
                 <div class="card border-1 ">
                     <div class="card-header text-white" style="background-color: #0055A1;">
@@ -230,7 +254,7 @@ $rsit = mysqli_fetch_array($qit);
                 </div>
             </div>
         </div>
-        <div class="row mb-4">
+        <div class="row mb-1">
             <div class="col-12">
                 <div class="card border-0">
                     <div class="card-header text-white" style="background-color: #0055A1;">
@@ -300,7 +324,7 @@ $rsit = mysqli_fetch_array($qit);
                 </div>
             </div>
         </div>
-        <div class="row mb-4">
+        <div class="row mb-1">
             <div class="col-12">
                 <div class="card border-1 ">
                     <div class="card-header text-white" style="background-color: #0055A1;">
@@ -370,7 +394,7 @@ $rsit = mysqli_fetch_array($qit);
                 </div>
             </div>
         </div>
-        <div class="row mb-4">
+        <div class="row mb-1">
             <div class="col-12">
                 <div class="card border-1 ">
                     <div class="card-header text-white" style="background-color: #0055A1;">
@@ -440,7 +464,7 @@ $rsit = mysqli_fetch_array($qit);
                 </div>
             </div>
         </div>
-        <div class="row mb-4">
+        <div class="row mb-1">
             <div class="col-md-4 offset-sm-4 mt-4">
                 <!--<input type="submit" class="btn btn-success p-2 form-control" name="enviaCadastro" value="ENVIAR FORMULÁRIO" />-->
                 <button type="button" onclick="revisao();" class="shadow btn btn-success form-control" >ENVIAR FORMULÁRIO</button>
@@ -475,7 +499,7 @@ $rsit = mysqli_fetch_array($qit);
         }else{ 
 //            var_dump($nrrs2);
         ?>
-            <div class="row mb-4">
+            <div class="row mb-1">
                 <div class="col-12">
                     <div class="card border-1 ">
                         <div class="card-header text-white" style="background-color: #0055A1;">
@@ -492,73 +516,83 @@ $rsit = mysqli_fetch_array($qit);
                         if($flagparecerap !== null){
                             $flagld = true;
                         }
+                        $pontuacaoap = $rsld['pontuacao'];
+                        if ($pontuacaoap === null || $pontuacaoap === '') {
+                            $pontuacaoap = 0.00;
+                        }
+                        $pontuacaoaptxt = (string)$pontuacaoap;
+                        $pontuacaoaptxt = str_replace(".", ",", $pontuacaoaptxt);
+                        $flagupap = $rsld['flagup'];
                         $parecerap = $rsld['parecerap'];
                         $pareceruserap = $rsld['pareceruserap'];
                         $parecerdthrap = vemdata($rsld['parecerdthrap']);  
                         $parecerdthrap .= ", às ".horaEmin($rsld['parecerdthrap']).".";
         ?>
-                            <div class="row mb-4">
+                            <div class="row mb-1">
                                 <div class="col-md-12">
-                                    <div class="col-md-12"><b>Declaro que fui autorizado pela Agência para a realização de curso de longa duração?</b></div>
                                     <?php
                                     if($flagald === '1'){
-                                        $fald = "SIM";
+                                        $fald = "<label class='text-primary'>SIM</label>";
                                     }else{
-                                        $fald = "NÃO";
+                                        $fald = "<label class='text-danger'>NÃO</label>";
                                     }
                                     ?>
-                                    <div class="col-md-6"><input type="text" class="form-control" disabled="disabled" value="<?= $fald ?>" id="fald" /></div>
+                                    <ul class="list-group">
+                                        <li class="list-group-item bg-light"><b>Declaro que fui autorizado pela Agência para a realização de curso de longa duração?: </b>&nbsp;<?= $fald ?></li>
+                                    </ul>
                                 </div>
                             </div>
                         <?php if($flagld === true){ ?>
-                        <div class="row mb-4">
+                        <div class="row mb-1">
                             <div class="col-md-12">
                                 <div class="card border border">
+                                    <?php
+                                    if ($flagparecerap === '1') {
+                                        $apparecer = "<label class='text-primary'>Aprovado</label>";
+                                    ?>
+                                    <div class="card-header bg-light">
+                                        <label><strong>Análise realizada</strong></label>
+                                    </div> 
+                                    <?php
+                                    } else {
+                                        $apparecer = "<label class='text-danger'>Não aprovado</label>";
+                                    ?>
                                     <div class="card-header" style="background-color: #fcec89;">
                                         <label><strong>Análise realizada</strong></label>
-                                    </div>
+                                    </div> 
+                                    <?php } ?>
                                     <div class="card-body">
                                         <div class="row mb-2">
                                             <div class="col-md-12">
-                                                <div class="col-md-12"><b>Parecer</b></div>
-                                                <div class="col-md-12">
-                                                    <?php if($flagparecerap === '1'){ ?>
-                                                        <input type="text" class="form-control bg-light text-primary" disabled="disabled" value="Aprovado" id="pareceruserap1" />
-                                                    <?php }else{ ?>
-                                                        <input type="text" class="form-control bg-light text-danger" disabled="disabled" value="Não aprovado" id="pareceruserap2" />
-                                                    <?php } ?>
-
-                                                </div>
+                                                <ul class="list-group">
+                                                    <li class="list-group-item bg-light"><b>Parecer: </b><?= $apparecer ?></li>
+                                                </ul>
                                             </div>
                                             <div class="col-md-12">
-                                                <div class="col-md-12"><b>Descrição da Análise</b></div>
-                                                <div class="col-md-12">
-                                                    <textarea style="resize: none; height: 100px;" class="form-control bg-light" disabled="disabled" id="parecerap"><?= $parecerap ?></textarea>
-                                                </div>
+                                                <ul class="list-group">
+                                                    <li class="list-group-item bg-light"><b>Descrição da Análise: </b><?= $parecerap ?></li>
+                                                </ul>
                                             </div>
                                             <div class="col-md-6">
-                                                <div class="col-md-12"><b>Análise realizado por:</b></div>
-                                                <div class="col-md-12">
-                                                    <input type="text" class="form-control bg-light" disabled="disabled" value="<?= $pareceruserap ?>" id="pareceruserap" />
-                                                </div>
+                                                <ul class="list-group">
+                                                    <li class="list-group-item bg-light"><b>Análise realizado por: </b><?= $pareceruserap ?></li>
+                                                </ul>
+                                                <ul class="list-group">
+                                                    <li class="list-group-item bg-light"><b>Data e hora do envio: </b><?= $parecerdthrap ?></li>
+                                                </ul>
                                             </div>
                                             <div class="col-md-6">
-                                                <div class="col-md-12"><b>Data e hora do envio:</b></div>
-                                                <div class="col-md-12">
-                                                    <input type="text" class="form-control bg-light" disabled="disabled" value="<?= $parecerdthrap ?>" id="parecerdthrap" />
-                                                </div>
-                                            </div>
-<!--                                            <div class="col-md-6">
-                                                <div class="col-md-12 mt-4"><b>Pontuação adquirida:</b></div>
-                                                <div class="col-md-12">
-                                                    <?php // if($pontuacaoaptxt === '0,00'){ ?>
-                                                    <input type="text" class="form-control bg-light text-danger" disabled="disabled" value="<?= $pontuacaoaptxt ?>" id="pontuacaoaptxt1" />    
-                                                    <?php // }else{ ?>
-                                                    <input type="text" class="form-control bg-light text-primary" disabled="disabled" value="<?= $pontuacaoaptxt ?>" id="pontuacaoaptxt2" />
-                                                    <?php // } ?>
-                                                </div>
+                                                <?php 
+                                                if($pontuacaoaptxt === '0,00'){ 
+                                                    $pontoaptxt = "<label class='form-control bg-light text-danger'>$pontuacaoaptxt</label>";
+                                                }else{ 
+                                                    $pontoaptxt = "<label class='form-control bg-light text-primary'>$pontuacaoaptxt</label>";
+                                                }?>
+                                                <ul class="list-group">
+                                                    <li class="list-group-item bg-light"><b>Pontuação adquirida: </b> <?= $pontoaptxt ?></li>
+                                                </ul>
                                                 <input type="hidden" id="ptld" value="<?= $pontuacaoap ?>">
-                                            </div>-->
+                                            </div>
                                         </div>
                                     </div>
                                 </div>   
@@ -573,10 +607,10 @@ $rsit = mysqli_fetch_array($qit);
                             <input type="hidden" value="<?= $ine ?>" name="ine">
                             <input type="hidden" value="<?= $ano ?>" name="ano">
                             <input type="hidden" value="<?= $ciclo ?>" name="ciclo">
-                        <div class="row mb-4">
+                        <div class="row mb-1">
                             <div class="col-12">
                                 <div class="card border-1">
-                                    <div class="card-header" style="background-color: #fdd77e;">
+                                    <div class="card-header text-white" style="background-color: #590d97;">
                                         <label><strong>Atividade de Longa Duração - Atualização/Correção</strong></label>
                                     </div>
                                     <div class="card-body">
@@ -594,7 +628,7 @@ $rsit = mysqli_fetch_array($qit);
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6 offset-md-3 mt-4">
-                                                <button type="button" class="shadow btn btn-success form-control" data-toggle="modal" data-target="#modalLD<?= $idld ?>">ENVIAR ATIVIDADE CORRIGIDA</button>
+                                                <button type="button" class="shadow btn btn-outline-success form-control" data-toggle="modal" data-target="#modalLD<?= $idld ?>">ENVIAR ATIVIDADE CORRIGIDA</button>
                                             </div>
                                         </div>
                                         <!-- Modal -->
@@ -626,7 +660,7 @@ $rsit = mysqli_fetch_array($qit);
                             </div>
                         </div>
             <?php   }}else{ ?>
-                    <div class="row">
+                    <div class="row mt-3">
                         <div class="col-md-12">
                             <h6 class="text-info pl-3"><i class="fas fa-hand-point-right"></i> Análise em andamento...</h6>   
                         </div>
@@ -644,7 +678,7 @@ $rsit = mysqli_fetch_array($qit);
                 $fqc = "NÃO";
             }
             ?>
-            <div class="row mb-4">
+            <div class="row mb-1">
                 <div class="col-12">
                     <div class="card border-1 ">
                         <div class="card-header text-white" style="background-color: #0055A1;">
@@ -656,6 +690,8 @@ $rsit = mysqli_fetch_array($qit);
                 if($rsqc){
                     $auxqc = 0;
                     do {
+                        $flagupqc = $rsqc['flagup'];
+                        if($flagupqc !== null && $flagupqc === '1'){ continue; }
                         $auxqc++;
                         $qcid = $rsqc['id'];
                         $qcdesc = $rsqc['qcdesc'];
@@ -665,38 +701,55 @@ $rsit = mysqli_fetch_array($qit);
                         $qcflagparecer = $rsqc['flagparecer'];
                         if ($qcflagparecer !== '' && $qcflagparecer !== null) {
                             $flagqc = true;
+                        }else{
+                            $flagqc = false;
                         }
+                        $qcpontuacao = $rsqc['pontuacao'];  
+                        if($qcpontuacao === null || $qcpontuacao === ''){
+                            $qcpontuacao = 0.00;
+                        }
+                        $qcp += $qcpontuacao;
+                        $qcpontuacaotxt = (string)$qcpontuacao;
+                        $qcpontuacaotxt = str_replace(".", ",", $qcpontuacaotxt);
                         $qdthrcadastro = $rsqc['dthrcadastro'];
                         $qcparecer = trim($rsqc['parecer']);
                         $qcpareceruser = $rsqc['pareceruser'];
                         $qcparecerdthr = vemdata($rsqc['parecerdthr']);
                         $qcparecerdthr .= ", às " . horaEmin($rsqc['parecerdthr']) . ".";
             ?>
-                            <hr>
-                            <div class="row mb-3">
+                            <?php
+                            if($auxqc > 1){
+                            ?>
+                            <div class="row">
+                                <div class="col-md-12 bg-dark text-white p-2 border text-center mt-4 mb-3 font-weight-bold small align-middle"><i class="fas fa-chevron-circle-right float-left mt-1"></i> &nbsp;Qualificação Clínica: Atividade <?= $auxqc ?>&nbsp; <i class="fas fa-chevron-circle-left float-right mt-1"></i></div>
+                            </div>
+                            <?php } ?>
+                            <div class="row mb-1">
                                 <div class="col-md-9">
-                                    <div class="col-md-12"><b>Atividade</b></div>
-                                    <div class="col-md-12">
-                                        <textarea class="form-control" style="resize: none;" disabled="disabled" id="qcdesc"><?= $qcdesc ?></textarea>
-                                    </div>
+                                    <ul class="list-group">
+                                        <li class="list-group-item bg-light"><b>Atividade: </b><?= $qcdesc ?></li>
+                                    </ul>
                                 </div>
                                 <div class="col-md-3">
-                                    <div class="col-md-12"><b>Carga Horária</b></div>
-                                    <div class="col-md-12"><input type="text" class="form-control" disabled="disabled" value="<?= $qccargahr ?>"  /></div>
+                                    <ul class="list-group">
+                                        <li class="list-group-item bg-light"><b>Carga Horária: </b><?= $qccargahr ?></li>
+                                    </ul>
                                 </div>
                                 <div class="col-md-9">
-                                    <div class="col-md-12"><b>Título da atividade</b></div>
-                                    <div class="col-md-12"><input type="text" class="form-control" disabled="disabled" value="<?= $qctitulo ?>" /></div>
+                                    <ul class="list-group">
+                                        <li class="list-group-item bg-light"><b>Título da atividade: </b><?= $qctitulo ?></li>
+                                    </ul>
                                 </div>
                                 <div class="col-md-3">
-                                    <div class="col-md-12"><b>Documento Anexo</b></div>
-                                    <div class="col-md-12"><a class="btn btn-light text-danger" href="../../medico/aperfeicoamento_profissional/<?= $qcanexo ?>" target="_blank"><i class="far fa-file-pdf"></i></a></div>
+                                    <ul class="list-group">
+                                        <li class="list-group-item bg-light"><b>Documento Anexo: </b><a class="btn btn-light text-danger" href="../../medico/aperfeicoamento_profissional/<?= $qcanexo ?>" target="_blank"><i class="far fa-file-pdf"></i></a></li>
+                                    </ul>
                                 </div>
                             </div>
                         <?php if($flagqc === true){ ?>
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="card border border mb-4">
+                                <div class="card border mb-1">
                                     <?php if($qcflagparecer === '1'){ ?>
                                     <div class="card-header bg-light">
                                         <label><strong>Análise realizada</strong></label>
@@ -709,79 +762,64 @@ $rsit = mysqli_fetch_array($qit);
                                     <div class="card-body">
                                         <div class="row mb-2">
                                             <div class="col-md-12">
-                                                <div class="col-md-12"><b>Parecer</b></div>
-                                                <div class="col-md-12">
-                                                    <?php if($qcflagparecer === '1'){ ?>
-                                                    <input type="text" class="form-control bg-light text-primary" disabled="disabled" value="Aprovado" id="qcflagparecer1" />
-                                                    <?php }else{ ?>
-                                                    <input type="text" class="form-control bg-light text-danger" disabled="disabled" value="Não aprovado" id="qcflagparecer2" />
-                                                    <?php } ?>
-
-                                                </div>
+                                                <?php 
+                                                if($qcflagparecer === '1'){ 
+                                                    $parecerqc = "<label class='text-primary'>Aprovado</label>";
+                                                }else{
+                                                    $parecerqc = "<label class='text-danger'>Não aprovado</label>";
+                                                } ?>
+                                                <ul class="list-group">
+                                                    <li class="list-group-item bg-light"><b>Parecer: </b><?= $parecerqc ?></li>
+                                                </ul>
                                             </div>
                                             <div class="col-md-12">
-                                                <div class="col-md-12"><b>Descrição da Análise</b></div>
-                                                <div class="col-md-12">
-                                                    <textarea style="resize: none; height: 100px;" class="form-control bg-light" disabled="disabled" id="qcparecer"><?= $qcparecer ?></textarea>
-                                                </div>
+                                                <ul class="list-group">
+                                                    <li class="list-group-item bg-light"><b>Descrição da Análise: </b><?= $qcparecer ?></li>
+                                                </ul>
                                             </div>
                                             <div class="col-md-6">
-                                                <div class="col-md-12"><b>Análise realizado por:</b></div>
-                                                <div class="col-md-12">
-                                                    <input type="text" class="form-control bg-light" disabled="disabled" value="<?= $qcpareceruser ?>" id="qcpareceruser" />
-                                                </div>
+                                                <ul class="list-group">
+                                                    <li class="list-group-item bg-light"><b>Análise realizado por: </b><?= $qcpareceruser ?></li>
+                                                </ul>
+                                                <ul class="list-group">
+                                                    <li class="list-group-item bg-light"><b>Data e hora do envio: </b><?= $qcparecerdthr ?></li>
+                                                </ul>
                                             </div>
                                             <div class="col-md-6">
-                                                <div class="col-md-12"><b>Data e hora do envio:</b></div>
-                                                <div class="col-md-12">
-                                                    <input type="text" class="form-control bg-light" disabled="disabled" value="<?= $qcparecerdthr ?>" id="qcparecerdthr" />
-                                                </div>
+                                                <?php 
+                                                if($qcpontuacaotxt === '0,00'){ 
+                                                    $qcponttxt = "<label class='form-control bg-light text-danger'>$qcpontuacaotxt</label>";
+                                                }else{ 
+                                                    $qcponttxt = "<label class='form-control bg-light text-primary'>$qcpontuacaotxt</label>";
+                                                }?>
+                                                <ul class="list-group">
+                                                    <li class="list-group-item bg-light"><b>Pontuação adquirida: </b> <?= $qcponttxt ?></li>
+                                                </ul>
                                             </div>
-                    <!--                        <div class="col-md-6">
-                                                <div class="col-md-12 mt-4"><b>Pontuação adquirida:</b></div>
-                                                <div class="col-md-12">
-                                                    <?php // if($qcpontuacaotxt === '0,00'){ ?>
-                                                    <input type="text" class="form-control bg-light text-danger" disabled="disabled" value="<?= $qcpontuacaotxt ?>" id="qcpontuacaotxt1" />    
-                                                    <?php // }else{ ?>
-                                                    <input type="text" class="form-control bg-light text-primary" disabled="disabled" value="<?= $qcpontuacaotxt ?>" id="qcpontuacaotxt2" />
-                                                    <?php // } ?>
-                                                </div>
-                                            </div>-->
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
             <?php   
-                    if($qcflagparecer === '0'){
+                    if($qcflagparecer === '0' && $flagupqc === '0'){
             ?>
                         <form method="post" enctype="multipart/form-data" action="controller/rcbqc.php">
                             <input type="hidden" value="<?= $qcid ?>" name="qcid">
+                            <input type="hidden" value="<?= $idap ?>" name="idap">
                             <input type="hidden" value="<?= $cpftratado ?>" name="cpf">
                             <input type="hidden" value="<?= $ibgeO ?>" name="ibgeO">
                             <input type="hidden" value="<?= $cnes ?>" name="cnes">
                             <input type="hidden" value="<?= $ine ?>" name="ine">
                             <input type="hidden" value="<?= $ano ?>" name="ano">
                             <input type="hidden" value="<?= $ciclo ?>" name="ciclo">
-                        <div class="row mb-4">
+                        <div class="row mb-1">
                             <div class="col-12">
                                 <div class="card border-1">
-                                    <div class="card-header" style="background-color: #fdd77e;">
+                                    <div class="card-header text-white" style="background-color: #590d97;">
                                         <label><strong>Qualificação Clínica - Atualização/Correção</strong></label>
                                     </div>
                                     <div class="card-body">
-                                        <div class="row mb-2">
-                                            <div class="col-md-12">
-                                                <div class="col-md-12"><b>Possui atividade a declarar neste item?</b></div>
-                                                <div class="col-md-3">
-                                                    <select class="form-control " id="rdQual" name="rdQual">
-                                                        <option value="">[--SELECIONE--]</option>
-                                                        <option value="1">SIM</option>
-                                                        <option value="0">NÃO</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
                                         <div class="row mb-2">
                                             <div class="col-md-8">
                                                 <div class="col-md-12"><b>Atividade</b></div>
@@ -820,7 +858,7 @@ $rsit = mysqli_fetch_array($qit);
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6 offset-md-3 mt-4">
-                                                <button type="button" class="shadow btn btn-success form-control" data-toggle="modal" data-target="#modalQC<?= $qcid ?>">ENVIAR ATIVIDADE CORRIGIDA</button>
+                                                <button type="button" class="shadow btn btn-outline-success form-control" data-toggle="modal" data-target="#modalQC<?= $qcid ?>">ENVIAR ATIVIDADE CORRIGIDA</button>
                                             </div>
                                         </div>
                                         <!-- Modal -->
@@ -880,7 +918,7 @@ $rsit = mysqli_fetch_array($qit);
                 $fgepe = "NÃO";
             }
             ?>
-            <div class="row mb-4">
+            <div class="row mb-1">
                 <div class="col-12">
                     <div class="card border-1 ">
                         <div class="card-header text-white" style="background-color: #0055A1;">
@@ -892,6 +930,8 @@ $rsit = mysqli_fetch_array($qit);
                 if($rsgepe){
                     $auxgepe = 0;
                     do{
+                        $flagupgepe = $rsgepe['flagup'];
+                        if($flagupgepe !== null && $flagupgepe === '1'){ continue; }
                         $auxgepe++;
                         $gepeid = $rsgepe['id'];  
                         $gepedesc = $rsgepe['gdesc'];  
@@ -902,37 +942,54 @@ $rsit = mysqli_fetch_array($qit);
                         $gepeflagparecer = $rsgepe['flagparecer'];  
                         if($gepeflagparecer !== '' && $gepeflagparecer !== null){
                             $flaggepe = true;
+                        }else{
+                            $flaggepe = false;
                         }
+                        $gepepontuacao = $rsgepe['pontuacao'];  
+                        if($gepepontuacao === null || $gepepontuacao === ''){
+                            $gepepontuacao = 0.00;
+                        }
+                        $gepep += $gepepontuacao;
+                        $gepepontuacaotxt = (string)$gepepontuacao;  
+                        $gepepontuacaotxt = str_replace(".", ",", $gepepontuacaotxt);
                         $gepeparecer = trim($rsgepe['parecer']); 
                         $gepepareceruser = $rsgepe['pareceruser'];  
                         $gepeparecerdthr = vemdata($rsgepe['parecerdthr']);  
                         $gepeparecerdthr .= ", às ".horaEmin($rsgepe['parecerdthr']).".";
             ?>
-                            <hr>
-                            <div class="row mb-3">
+                            <?php
+                            if($auxgepe > 1){
+                            ?>
+                            <div class="row">
+                                <div class="col-md-12 bg-dark text-white p-2 border text-center mt-4 mb-3 font-weight-bold small align-middle"><i class="fas fa-chevron-circle-right float-left mt-1"></i> &nbsp;Gestão, Ensino, Pesquisa e Extensão: Atividade <?= $auxgepe ?>&nbsp; <i class="fas fa-chevron-circle-left float-right mt-1"></i></div>
+                            </div>
+                            <?php } ?>
+                            <div class="row mb-1">
                                 <div class="col-md-9">
-                                    <div class="col-md-12"><b>Atividade</b></div>
-                                    <div class="col-md-12">
-                                        <textarea class="form-control" style="resize: none;" disabled="disabled" id="qcdesc"><?= $gepedesc ?></textarea>
-                                    </div>
+                                    <ul class="list-group">
+                                        <li class="list-group-item bg-light"><b>Atividade: </b><?= $gepedesc ?></li>
+                                    </ul>
                                 </div>
                                 <div class="col-md-3">
-                                    <div class="col-md-12"><b>Carga Horária</b></div>
-                                    <div class="col-md-12"><input type="text" class="form-control" disabled="disabled" value="<?= $gepecargahr ?>"  /></div>
+                                    <ul class="list-group">
+                                        <li class="list-group-item bg-light"><b>Carga Horária: </b><?= $gepecargahr ?></li>
+                                    </ul>
                                 </div>
                                 <div class="col-md-9">
-                                    <div class="col-md-12"><b>Título da atividade</b></div>
-                                    <div class="col-md-12"><input type="text" class="form-control" disabled="disabled" value="<?= $gepetitulo ?>" /></div>
-                                    </div>
+                                    <ul class="list-group">
+                                        <li class="list-group-item bg-light"><b>Título da atividade: </b><?= $gepetitulo ?></li>
+                                    </ul>
+                                </div>
                                 <div class="col-md-3">
-                                    <div class="col-md-12"><b>Documento Anexo</b></div>
-                                    <div class="col-md-12"><a class="btn btn-light text-danger" href="../../medico/aperfeicoamento_profissional/<?= $gepeanexo ?>" target="_blank"><i class="far fa-file-pdf"></i></a></div>
+                                    <ul class="list-group">
+                                        <li class="list-group-item bg-light"><b>Documento Anexo: </b><a class="btn btn-light text-danger" href="../../medico/aperfeicoamento_profissional/<?= $gepeanexo ?>" target="_blank"><i class="far fa-file-pdf"></i></a></li>
+                                    </ul>
                                 </div>
                             </div>
                         <?php if($flaggepe === true){ ?>
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="card border border mb-4">
+                                <div class="card border mb-1">
                                     <?php if($gepeflagparecer === '1'){ ?>
                                     <div class="card-header bg-light">
                                         <label><strong>Análise realizada</strong></label>
@@ -946,77 +1003,63 @@ $rsit = mysqli_fetch_array($qit);
                                     <div class="card-body">
                                         <div class="row mb-2">
                                             <div class="col-md-12">
-                                                <div class="col-md-12"><b>Parecer</b></div>
-                                                <div class="col-md-12">
-                                                    <?php if($gepeflagparecer === '1'){ ?>
-                                                    <input type="text" class="form-control bg-light text-primary" disabled="disabled" value="Aprovado" id="gepeflagparecer1" />
-                                                    <?php }else{ ?>
-                                                    <input type="text" class="form-control bg-light text-danger" disabled="disabled" value="Não aprovado" id="gepeflagparecer2" />
-                                                    <?php } ?>
-                                                </div>
+                                                <?php 
+                                                if($gepeflagparecer === '1'){ 
+                                                    $parecergp = "<label class='text-primary'>Aprovado</label>";
+                                                }else{ 
+                                                    $parecergp = "<label class='text-danger'>Não aprovado</label>";
+                                                } ?>
+                                                <ul class="list-group">
+                                                    <li class="list-group-item bg-light"><b>Parecer: </b><?= $parecergp ?></li>
+                                                </ul>
                                             </div>
                                             <div class="col-md-12">
-                                                <div class="col-md-12"><b>Descrição da Análise</b></div>
-                                                <div class="col-md-12">
-                                                    <textarea style="resize: none; height: 100px;" class="form-control bg-light" disabled="disabled" id="gepeparecer"><?= $gepeparecer ?></textarea>
-                                                </div>
+                                                <ul class="list-group">
+                                                    <li class="list-group-item bg-light"><b>Descrição da Análise: </b><?= $gepeparecer ?></li>
+                                                </ul>
                                             </div>
                                             <div class="col-md-6">
-                                                <div class="col-md-12"><b>Análise realizado por:</b></div>
-                                                <div class="col-md-12">
-                                                    <input type="text" class="form-control bg-light" disabled="disabled" value="<?= $gepepareceruser ?>" id="gepepareceruser"/>
-                                                </div>
+                                                <ul class="list-group">
+                                                    <li class="list-group-item bg-light"><b>Análise realizado por: </b><?= $gepepareceruser ?></li>
+                                                </ul>
+                                                <ul class="list-group">
+                                                    <li class="list-group-item bg-light"><b>Data e hora do envio: </b><?= $gepeparecerdthr ?></li>
+                                                </ul>
                                             </div>
                                             <div class="col-md-6">
-                                                <div class="col-md-12"><b>Data e hora do envio:</b></div>
-                                                <div class="col-md-12">
-                                                    <input type="text" class="form-control bg-light" disabled="disabled" value="<?= $gepeparecerdthr ?>" id="gepeparecerdthr" />
-                                                </div>
+                                                <?php 
+                                                if($gepepontuacaotxt === '0,00'){ 
+                                                    $gepeponttxt = "<label class='form-control bg-light text-danger'>$gepepontuacaotxt</label>";
+                                                }else{ 
+                                                    $gepeponttxt = "<label class='form-control bg-light text-primary'>$gepepontuacaotxt</label>";
+                                                }?>
+                                                <ul class="list-group">
+                                                    <li class="list-group-item bg-light"><b>Pontuação adquirida: </b> <?= $gepeponttxt ?></li>
+                                                </ul>
                                             </div>
-                    <!--                        <div class="col-md-6">
-                                                <div class="col-md-12 mt-4"><b>Pontuação adquirida:</b></div>
-                                                <div class="col-md-12">
-                                                    <?php // if($gepepontuacaotxt === '0,00'){ ?>
-                                                    <input type="text" class="form-control bg-light text-danger" disabled="disabled" value="<?= $gepepontuacaotxt ?>" id="gepepontuacaotxt1" />    
-                                                    <?php // }else{ ?>
-                                                    <input type="text" class="form-control bg-light text-primary" disabled="disabled" value="<?= $gepepontuacaotxt ?>" id="gepepontuacaotxt2" />
-                                                    <?php // } ?>
-                                                </div>
-                                            </div>-->
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         
-            <?php  if($gepeflagparecer === '0'){ ?>
+            <?php  if($gepeflagparecer === '0' && $flagupgepe === '0'){ ?>
                         <form method="post" enctype="multipart/form-data" action="controller/rcbgepe.php">
-                            <input type="hidden" name="$gepeid" value="<?= $gepeid ?>">
+                            <input type="hidden" name="gepeid" value="<?= $gepeid ?>">
+                            <input type="hidden" name="idap" value="<?= $idap ?>">
                             <input type="hidden" value="<?= $cpftratado ?>" name="cpf">
                             <input type="hidden" value="<?= $ibgeO ?>" name="ibgeO">
                             <input type="hidden" value="<?= $cnes ?>" name="cnes">
                             <input type="hidden" value="<?= $ine ?>" name="ine">
                             <input type="hidden" value="<?= $ano ?>" name="ano">
                             <input type="hidden" value="<?= $ciclo ?>" name="ciclo">
-                        <div class="row mb-4">
+                        <div class="row mb-1">
                             <div class="col-12">
                                 <div class="card border-1">
-                                    <div class="card-header" style="background-color: #fdd77e;">
+                                    <div class="card-header text-white" style="background-color: #590d97;">
                                         <label><strong>Gestão, Ensino, Pesquisa e Extensão - Atualização/Correção</strong></label>
                                     </div>
                                     <div class="card-body">
-                                        <div class="row mb-2">
-                                            <div class="col-md-12">
-                                                <div class="col-md-12"><b>Possui atividade a declarar neste item?</b></div>
-                                                <div class="col-md-3">
-                                                    <select class="form-control " id="rdGes" name="rdGes">
-                                                        <option value="">[--SELECIONE--]</option>
-                                                        <option value="1">SIM</option>
-                                                        <option value="0">NÃO</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
                                         <div class="row mb-2">
                                             <div class="col-md-8">
                                                 <div class="col-md-12"><b>Atividade</b></div>
@@ -1055,7 +1098,7 @@ $rsit = mysqli_fetch_array($qit);
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6 offset-md-3 mt-4">
-                                                <button type="button" class="shadow btn btn-success form-control" data-toggle="modal" data-target="#modalGepe<?= $gepeid ?>">ENVIAR ATIVIDADE CORRIGIDA</button>
+                                                <button type="button" class="shadow btn btn-outline-success form-control" data-toggle="modal" data-target="#modalGepe<?= $gepeid ?>">ENVIAR ATIVIDADE CORRIGIDA</button>
                                             </div>
                                         </div>
                                         <!-- Modal -->
@@ -1115,7 +1158,7 @@ $rsit = mysqli_fetch_array($qit);
                 $fit = "NÃO";
             }
             ?>
-            <div class="row mb-4">
+            <div class="row mb-1">
                 <div class="col-12">
                     <div class="card border-1 ">
                         <div class="card-header text-white" style="background-color: #0055A1;">
@@ -1128,6 +1171,8 @@ $rsit = mysqli_fetch_array($qit);
                 if($rsit){
                     $auxit = 0;
                     do{
+                        $flagupit = $rsit['flagup'];
+                        if($flagupit !== null && $flagupit === '1'){ continue; }
                         $auxit++;
                         $itid = $rsit['id'];  
                         $itdesc = $rsit['idesc'];  
@@ -1138,37 +1183,54 @@ $rsit = mysqli_fetch_array($qit);
                         $itflagparecer = $rsit['flagparecer'];  
                         if($itflagparecer !== '' && $itflagparecer !== null){
                             $flagit = true;
+                        }else{
+                            $flagit = false;
                         }
                         $itparecer = trim($rsit['parecer']);
+                        $itpontuacao = $rsit['pontuacao'];  
+                        if($itpontuacao === null || $itpontuacao === ''){
+                            $itpontuacao = 0.00;
+                        }
+                        $itp += $itpontuacao;
+                        $itpontuacaotxt = (string)$itpontuacao;  
+                        $itpontuacaotxt = str_replace(".", ",", $itpontuacaotxt);
                         $itpareceruser = $rsit['pareceruser'];  
                         $itparecerdthr = vemdata($rsit['parecerdthr']);  
                         $itparecerdthr .= ", às ".horaEmin($rsit['parecerdthr']).".";
             ?>
-                        <hr>
-                        <div class="row mb-3">
+                        <?php
+                        if($auxit > 1){
+                        ?>
+                        <div class="row">
+                            <div class="col-md-12 bg-dark text-white p-2 border text-center mt-4 mb-3 font-weight-bold small align-middle"><i class="fas fa-chevron-circle-right float-left mt-1"></i> &nbsp;Inovação Tecnológica: Atividade <?= $auxit ?>&nbsp; <i class="fas fa-chevron-circle-left float-right mt-1"></i></div>
+                        </div>
+                        <?php } ?>
+                        <div class="row mb-1">
                             <div class="col-md-9">
-                                <div class="col-md-12"><b>Atividade</b></div>
-                                <div class="col-md-12">
-                                    <textarea class="form-control" style="resize: none;" disabled="disabled" id="qcdesc" ><?= $itdesc ?></textarea>
-                                </div>
+                                <ul class="list-group">
+                                    <li class="list-group-item bg-light"><b>Atividade: </b><?= $itdesc ?></li>
+                                </ul>
                             </div>
                             <div class="col-md-3">
-                                <div class="col-md-12"><b>Carga Horária</b></div>
-                                <div class="col-md-12"><input type="text" class="form-control" disabled="disabled" value="<?= $itcargahr ?>"  /></div>
+                                <ul class="list-group">
+                                    <li class="list-group-item bg-light"><b>Carga Horária: </b><?= $itcargahr ?></li>
+                                </ul>
                             </div>
                             <div class="col-md-9">
-                                <div class="col-md-12"><b>Título da atividade</b></div>
-                                <div class="col-md-12"><input type="text" class="form-control" disabled="disabled" value="<?= $ittitulo ?>" /></div>
+                                <ul class="list-group">
+                                    <li class="list-group-item bg-light"><b>Título da atividade: </b><?= $ittitulo ?></li>
+                                </ul>
                             </div>
                             <div class="col-md-3">
-                                <div class="col-md-12"><b>Documento Anexo</b></div>
-                                <div class="col-md-12"><a class="btn btn-light text-danger" href="../../medico/aperfeicoamento_profissional/<?= $itanexo ?>" target="_blank"><i class="far fa-file-pdf"></i></a></div>
+                                <ul class="list-group">
+                                    <li class="list-group-item bg-light"><b>Documento Anexo: </b><a class="btn btn-light text-danger" href="../../medico/aperfeicoamento_profissional/<?= $itanexo ?>" target="_blank"><i class="far fa-file-pdf"></i></a></li>
+                                </ul>
                             </div>
                         </div>
                         <?php if($flagit === true){ ?>
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="card border border mb-4">
+                                <div class="card border mb-1">
                                     <?php if($itflagparecer === '1'){ ?>
                                     <div class="card-header bg-light">
                                         <label><strong>Análise realizada</strong></label>
@@ -1181,76 +1243,62 @@ $rsit = mysqli_fetch_array($qit);
                                     <div class="card-body">
                                         <div class="row mb-2">
                                             <div class="col-md-12">
-                                                <div class="col-md-12"><b>Parecer</b></div>
-                                                <div class="col-md-12">
-                                                    <?php if($itflagparecer === '1'){ ?>
-                                                    <input type="text" class="form-control bg-light text-primary" disabled="disabled" value="Aprovado" id="itflagparecer1" />
-                                                    <?php }else{ ?>
-                                                    <input type="text" class="form-control bg-light text-danger" disabled="disabled" value="Não aprovado" id="itflagparecer2" />
-                                                    <?php } ?>
-                                                </div>
+                                                <?php 
+                                                if($itflagparecer === '1'){ 
+                                                    $parecerit = "<label class='text-primary'>Aprovado</label>";
+                                                }else{ 
+                                                    $parecerit = "<label class='text-danger'>Não aprovado</label>";
+                                                } ?>
+                                                <ul class="list-group">
+                                                    <li class="list-group-item bg-light"><b>Parecer: </b><?= $parecerit ?></li>
+                                                </ul>
                                             </div>
                                             <div class="col-md-12">
-                                                <div class="col-md-12"><b>Descrição da Análise</b></div>
-                                                <div class="col-md-12">
-                                                    <textarea style="resize: none; height: 100px;" class="form-control bg-light" disabled="disabled" id="itdesc" ><?= $itparecer ?></textarea>
-                                                </div>
+                                                <ul class="list-group">
+                                                    <li class="list-group-item bg-light"><b>Descrição da Análise: </b><?= $itparecer ?></li>
+                                                </ul>
                                             </div>
                                             <div class="col-md-6">
-                                                <div class="col-md-12"><b>Análise realizado por:</b></div>
-                                                <div class="col-md-12">
-                                                    <input type="text" class="form-control bg-light" disabled="disabled" value="<?= $itpareceruser ?>" id="itdesc" />
-                                                </div>
+                                                <ul class="list-group">
+                                                    <li class="list-group-item bg-light"><b>Análise realizado por: </b><?= $itpareceruser ?></li>
+                                                </ul>
+                                                <ul class="list-group">
+                                                    <li class="list-group-item bg-light"><b>Data e hora do envio: </b><?= $itparecerdthr ?></li>
+                                                </ul>
                                             </div>
                                             <div class="col-md-6">
-                                                <div class="col-md-12"><b>Data e hora do envio:</b></div>
-                                                <div class="col-md-12">
-                                                    <input type="text" class="form-control bg-light" disabled="disabled" value="<?= $itparecerdthr ?>" id="itdesc" />
-                                                </div>
+                                                <?php 
+                                                if($itpontuacaotxt === '0,00'){ 
+                                                    $itponttxt = "<label class='form-control bg-light text-danger'>$itpontuacaotxt</label>";
+                                                }else{ 
+                                                    $itponttxt = "<label class='form-control bg-light text-primary'>$itpontuacaotxt</label>";
+                                                }?>
+                                                <ul class="list-group">
+                                                    <li class="list-group-item bg-light"><b>Pontuação adquirida: </b> <?= $itponttxt ?></li>
+                                                </ul>
                                             </div>
-                    <!--                        <div class="col-md-6">
-                                                <div class="col-md-12 mt-4"><b>Pontuação adquirida:</b></div>
-                                                <div class="col-md-12">
-                                                    <?php // if($itpontuacaotxt === '0,00'){ ?>
-                                                    <input type="text" class="form-control bg-light text-danger" disabled="disabled" value="<?= $itpontuacaotxt ?>" id="itpontuacaotxt1" />    
-                                                    <?php // }else{ ?>
-                                                    <input type="text" class="form-control bg-light text-primary" disabled="disabled" value="<?= $itpontuacaotxt ?>" id="itpontuacaotxt2" />
-                                                    <?php // } ?>
-                                                </div>
-                                            </div>-->
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-            <?php if($itflagparecer === '0'){ ?>
+            <?php if($itflagparecer === '0' && $flagupit === '0'){ ?>
                         <form method="post" enctype="multipart/form-data" action="controller/rcbit.php">
-                            <input type="hidden" name="idit" value="<?= $itid ?>">
+                            <input type="hidden" name="idap" value="<?= $idap ?>">
+                            <input type="hidden" name="itid" value="<?= $itid ?>">
                             <input type="hidden" value="<?= $cpftratado ?>" name="cpf">
                             <input type="hidden" value="<?= $ibgeO ?>" name="ibgeO">
                             <input type="hidden" value="<?= $cnes ?>" name="cnes">
                             <input type="hidden" value="<?= $ine ?>" name="ine">
                             <input type="hidden" value="<?= $ano ?>" name="ano">
                             <input type="hidden" value="<?= $ciclo ?>" name="ciclo">
-                        <div class="row mb-4">
+                        <div class="row mb-1">
                             <div class="col-12">
                                 <div class="card border-1">
-                                    <div class="card-header" style="background-color: #fdd77e;">
+                                    <div class="card-header text-white" style="background-color: #590d97;">
                                         <label><strong>Inovação Tecnológica - Atualização/Correção</strong></label>
                                     </div>
                                     <div class="card-body">
-                                        <div class="row mb-2">
-                                            <div class="col-md-12">
-                                                <div class="col-md-12"><b>Possui atividade a declarar neste item?</b></div>
-                                                <div class="col-md-3">
-                                                    <select class="form-control " id="rdInov" name="rdInov">
-                                                        <option value="">[--SELECIONE--]</option>
-                                                        <option value="1">SIM</option>
-                                                        <option value="0">NÃO</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
                                         <div class="row mb-2">
                                             <div class="col-md-8">
                                                 <div class="col-md-12"><b>Atividade</b></div>
@@ -1289,7 +1337,7 @@ $rsit = mysqli_fetch_array($qit);
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6 offset-md-3 mt-4">
-                                                <button type="button" class="shadow btn btn-success form-control" data-toggle="modal" data-target="#modalIT<?= $itid ?>">ENVIAR ATIVIDADE CORRIGIDA</button>
+                                                <button type="button" class="shadow btn btn-outline-success form-control" data-toggle="modal" data-target="#modalIT<?= $itid ?>">ENVIAR ATIVIDADE CORRIGIDA</button>
                                             </div>
                                         </div>
                                         <!-- Modal -->
@@ -1344,6 +1392,8 @@ $rsit = mysqli_fetch_array($qit);
             </div>
         </div>
         </div>
+        <?php $somapt = $pontuacaoap + $qcp + $gepep + $itp; ?>
+                    <input type="hidden" id="somapt" value="<?= $somapt ?>">
     </div>
             </div>
         </div>
@@ -1364,6 +1414,29 @@ $rsit = mysqli_fetch_array($qit);
        $('.divGesEnsPesExt').hide();
        $('.divInovTec').hide();
        $('#enviarModal').modal('hide');
+       let ptgeral = 0.00;
+       if($('#ptld').val() !== null && $('#ptld').val() !== ''){
+           let ptld = parseFloat($('#ptld').val());
+       }
+       if($('#ptqc').val() !== null && $('#ptqc').val() !== ''){
+           let ptqc = parseFloat($('#ptqc').val());
+       }
+       console.log($('#ptqc').val());
+       if($('#ptgepe').val() !== null && $('#ptgepe').val() !== ''){
+           let ptgepe = parseFloat($('#ptgepe').val());
+       }
+       console.log($('#ptgepe').val());
+       if($('#ptit').val() !== null && $('#ptit').val() !== ''){
+           let ptit = parseFloat($('#ptit').val());
+       }
+       console.log($('#ptit').val());
+       ptgeral = parseFloat($('#somapt').val());
+       ptgeraltxt = ""+ptgeral;
+       ptgeraltxt = ptgeraltxt.replace('.',',');
+       if(ptgeraltxt.indexOf(',') === -1){
+           ptgeraltxt = ptgeraltxt+",00";
+       }
+       $('#ptgeral').html(ptgeraltxt);
     });
     $('#rdativ').change(function(){
         let rdativ = $('#rdativ').val();

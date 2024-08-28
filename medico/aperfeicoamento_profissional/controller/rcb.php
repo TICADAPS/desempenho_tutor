@@ -166,7 +166,7 @@ if($nrALD === 0){
 
                     // checando o tamanho máximo do arquivo
                     if ($_FILES["$f"]["size"] > 5000000) {
-                        $mensagem = "<h6 class='text-danger'>Arquivo acima do permitido (até 5.000MB).</h6>";
+                        $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;Arquivo acima do permitido (até 5.000MB).</strong></small></p>";
                         echo $mensagem;
                         $uploadOk = 0;
                         $msgBool = false;
@@ -174,7 +174,7 @@ if($nrALD === 0){
 
                     // Allow certain file formats
                     if ($arquivoFileType != "pdf") {
-                        $mensagem = "<h6 class='text-danger'>A extensão do arquivo deve ser PDF.</h6>";
+                        $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;A extensão do arquivo deve ser PDF.</strong></small></p>";
                         echo $mensagem;
                         $uploadOk = 0;
                         $msgBool = false;
@@ -185,14 +185,14 @@ if($nrALD === 0){
                         move_uploaded_file($_FILES["$f"]["tmp_name"], "../" . $target_file);
                         $voucherpassagem = $target_file;
                     } else {
-                        $_SESSION['msg'] = "<h6 class='text-danger'>Não salvou o arquivo PDF.</h6>";
-                        echo "<META HTTP-EQUIV='REFRESH' CONTENT='2;
+                        $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;Não salvou o arquivo PDF.</strong></small></p>";
+                        echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
                         URL=\"../index.php\"'>";
                         exit();
                     }
                 } else {
-                    $_SESSION['msg'] = "<h6 class='text-danger'>É necessário anexar o documento no item Qualificação Clínica.</h6>";
-                    echo "<META HTTP-EQUIV='REFRESH' CONTENT='2;
+                    $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;É necessário anexar o documento no item Qualificação Clínica.</strong></small></p>";
+                    echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
                         URL=\"../index.php\"'>";
                     exit();
                 }
@@ -234,7 +234,7 @@ if($nrALD === 0){
 
                     // checando o tamanho máximo do arquivo
                     if ($_FILES["$f"]["size"] > 5000000) {
-                        $mensagem = "<h6 class='text-danger'>Arquivo acima do permitido (até 5.000MB).</h6>";
+                        $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;Arquivo acima do permitido (até 5.000MB).</strong></small></p>";
                         echo $mensagem;
                         $uploadOk = 0;
                         $msgBool = false;
@@ -242,7 +242,7 @@ if($nrALD === 0){
 
                     // Allow certain file formats
                     if ($arquivoFileType != "pdf") {
-                        $mensagem = "<h6 class='text-danger'>A extensão do arquivo deve ser PDF.</h6>";
+                        $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;A extensão do arquivo deve ser PDF.</strong></small></p>";
                         echo $mensagem;
                         $uploadOk = 0;
                         $msgBool = false;
@@ -253,14 +253,14 @@ if($nrALD === 0){
                         move_uploaded_file($_FILES["$f"]["tmp_name"], "../" . $target_file);
                         $voucherpassagem = $target_file;
                     } else {
-                        $_SESSION['msg'] = "<h6 class='text-danger'>Não salvou o arquivo PDF.</h6>";
-                        echo "<META HTTP-EQUIV='REFRESH' CONTENT='2;
+                        $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;Não salvou o arquivo PDF.</strong></small></p>";
+                        echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
                         URL=\"../index.php\"'>";
                         exit();
                     }
                 } else {
-                    $_SESSION['msg'] = "<h6 class='text-danger'>É necessário anexar o documento no item Gestão, Ensino, Pesquisa e Extensão.</h6>";
-                    echo "<META HTTP-EQUIV='REFRESH' CONTENT='2;
+                    $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;É necessário anexar o documento no item Gestão, Ensino, Pesquisa e Extensão.</strong></small></p>";
+                    echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
                         URL=\"../index.php\"'>";
                     exit();
                 }
@@ -302,7 +302,7 @@ if($nrALD === 0){
 
                     // checando o tamanho máximo do arquivo
                     if ($_FILES["$f"]["size"] > 5000000) {
-                        $mensagem = "<h6 class='text-danger'>Arquivo acima do permitido (até 5.000MB).</h6>";
+                        $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;Arquivo acima do permitido (até 5.000MB).</strong></small></p>";
                         echo $mensagem;
                         $uploadOk = 0;
                         $msgBool = false;
@@ -310,7 +310,7 @@ if($nrALD === 0){
 
                     // Allow certain file formats
                     if ($arquivoFileType != "pdf") {
-                        $mensagem = "<h6 class='text-danger'>A extensão do arquivo deve ser PDF.</h6>";
+                        $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;A extensão do arquivo deve ser PDF.</strong></small></p>";
                         echo $mensagem;
                         $uploadOk = 0;
                         $msgBool = false;
@@ -321,14 +321,14 @@ if($nrALD === 0){
                         move_uploaded_file($_FILES["$f"]["tmp_name"], "../" . $target_file);
                         $voucherpassagem = $target_file;
                     } else {
-                        $_SESSION['msg'] = "<h6 class='text-danger'>Não salvou o arquivo PDF.</h6>";
-                        echo "<META HTTP-EQUIV='REFRESH' CONTENT='2;
+                        $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;Não salvou o arquivo PDF.</strong></small></p>";
+                        echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
                         URL=\"../index.php\"'>";
                         exit();
                     }
                 } else {
-                    $_SESSION['msg'] = "<h6 class='text-danger'>É necessário anexar o documento no item Inovação Tecnológica.</h6>";
-                    echo "<META HTTP-EQUIV='REFRESH' CONTENT='2;
+                    $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;É necessário anexar o documento no item Inovação Tecnológica.</strong></small></p>";
+                    echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
                         URL=\"../index.php\"'>";
                     exit();
                 }

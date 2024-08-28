@@ -62,11 +62,12 @@ $dthoje = date('Y-m-d H:i:s');
 $ap = (new Source\Models\Aperfeicoamentoprofissional())->findById($idap);
 //var_dump($ap);
 if($ap !== null){
+    $flagativlongduracao = $ap->flagativlongduracao;
     $ap->flagparecer = $flagparecerap;
     $ap->parecer = $parecerap;
     $ap->pareceruser = $user;
     $ap->parecerdthr = $dthoje;
-    if($flagparecerap === '1'){
+    if($flagparecerap === '1' && $flagativlongduracao === '1'){
         $ap->pontuacao = 50.00;
     }else{
         $ap->pontuacao = 0.00;

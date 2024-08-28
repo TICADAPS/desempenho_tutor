@@ -1,0 +1,108 @@
+<?php
+session_start();
+include_once './../../../conexao-agsus.php';
+include_once __DIR__ .'/../../../vendor/autoload.php';
+if(!isset($_SESSION['msg'])){
+    $_SESSION['msg'] = '';
+}
+if(!isset($_POST['cpf']) || trim($_POST['cpf']) === ''){
+    echo "<script>alert('CPF não encontrado.')</script>";
+    header('location: ../../derruba_session.php');
+    exit();
+}
+if(!isset($_POST['ibge']) || trim($_POST['ibge']) === ''){
+    echo "<script>alert('Município não encontrado.')</script>";
+    header('location: ../../derruba_session.php');
+    exit();
+}
+if(!isset($_POST['cnes']) || trim($_POST['cnes']) === ''){
+    echo "<script>alert('CNES não encontrados.')</script>";
+    header('location: ../../derruba_session.php');
+    exit();
+}
+if(!isset($_POST['ine']) || trim($_POST['ine']) === ''){
+    echo "<script>alert('INE não encontrado.')</script>";
+    header('location: ../../derruba_session.php');
+    exit();
+}
+$cpf = $_POST['cpf'];
+$ibge = $_POST['ibge'];
+$cnes = $_POST['cnes'];
+$ine = $_POST['ine'];
+$idap = $_POST['idap'];
+$ano = $_POST['ano'];
+$ciclo = $_POST['ciclo'];
+$user = 'RICARDO LIMA AMARAL';
+//var_dump($_POST);
+
+if(!isset($_POST['upEnv']) || trim($_POST['upEnv']) === ''){
+    $_SESSION['msg'] = "<h6 class='bg-warning border rounded text-dark p-2'>&nbsp;<i class='fas fa-hand-point-right'></i>&nbsp; Selecione a permissão ou não para atualização das atividades não aprovadas.</h6>";
+    echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
+	URL=\"../index.php?ct=$cpf&ib=$ibge&c=$cnes&i=$ine&a=$ano&ci=$ciclo\"'>"; 
+    exit();
+}
+$upEnv = $_POST['upEnv'];
+date_default_timezone_set('America/Sao_Paulo');
+$dthoje = date('Y-m-d H:i:s');
+//var_dump($_POST);
+$ap = (new Source\Models\Aperfeicoamentoprofissional())->findById($idap);
+//var_dump($qc);
+if($ap !== null){
+    
+    //Mudando a flagup para que o médico possa preencher e enviar a atualização das atividades
+    if($upEnv === '1'){
+        if($ap->flagparecer === '0'){
+            $ap->flagup = '0';
+            $rsap = $ap->save();
+        }
+        $qc = (new Source\Models\Medico_qualifclinica())->findJQCUp($idap);
+//        var_dump($qc);
+        if($qc !== null){
+            foreach ($qc as $q){
+                $idqc = $q->id;
+                $qcUp = (new Source\Models\Medico_qualifclinica())->findById($idqc);
+                if($qcUp !== null){
+                    if($qcUp->flagparecer === '0'){
+                        $qcUp->flagup = '0';
+                        $rsqcUp = $qcUp->save();
+                    }
+                }
+            }
+        }
+        $gepe = (new Source\Models\Medico_gesenspesext)->findJGepeUp($idap);
+        if($gepe !== null){
+            foreach ($gepe as $g){
+                $idgepe = $g->id;
+                $gepeUp = (new Source\Models\Medico_gesenspesext())->findById($idgepe);
+                if($gepeUp !== null){
+                    if($gepeUp->flagparecer === '0'){
+                        $gepeUp->flagup = '0';
+                        $gepeUp->save();
+                    }
+                }
+            }
+        }
+        $it = (new Source\Models\Medico_inovtecnologica())->findJItUp($idap);
+        if($it !== null){
+            foreach ($it as $i){
+                $idit = $i->id;
+                $itUp = (new Source\Models\Medico_inovtecnologica())->findById($idit);
+                if($itUp !== null){
+                    if($itUp->flagparecer === '0'){
+                        $itUp->flagup = '0';
+                        $itUp->save();
+                    }
+                }
+            }
+        }
+    }
+    $_SESSION['msg'] = "<h6 class='bg-success border rounded text-white p-2'>&nbsp;<i class='fas fa-hand-point-right'></i>&nbsp; E-Mail enviado com sucesso.</h6>";
+    echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
+            URL=\"../index.php?ct=$cpf&ib=$ibge&c=$cnes&i=$ine&a=$ano&ci=$ciclo\"'>";
+    exit();
+}else{
+    $_SESSION['msg'] = "<h6 class='bg-warning border rounded text-dark p-2'>&nbsp;<i class='fas fa-hand-point-right'></i>&nbsp; Cadastro de aperfeiçoamento profisional não encontrado.</h6>";
+    echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
+	URL=\"../index.php?ct=$cpf&ib=$ibge&c=$cnes&i=$ine&a=$ano&ci=$ciclo\"'>"; 
+    exit();
+}

@@ -93,70 +93,62 @@ if($rs){
             <div class="col-12 shadow rounded  ">
                 <div class="row mb-2 mt-2">
                     <div class="col-md-12 pt-2 pb-2">
-                        <div class="card border">
+                        <div class="card border-0">
                             <div class="card-header text-white bg-dark">
                                 <h5 class="text-white"><b>Comprovante de Aperfeiçoamento Profissional - Formulário Preenchido</b></h5>
                             </div>
                             <div class="card-body">
         <div class="row">
             <div class="col-12 mt-2">
-                <div class="card border-0">
+                <div class="card border-1">
                     <div class="card-header text-white" style="background-color: #0055A1;">
                         <label><strong>Dados do Tutor</strong></label>
                     </div>
                     <div class="card-body">
                         <div class="row mb-2">
-                            <div class="col-md-4">
-                                <div class="col-md-12"><b>Nome</b></div>
-                                <div class="col-md-12"><input type="text" class="form-control" disabled="disabled" value="<?= $medico ?>" id="medico" /></div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="col-md-12"><b>CPF</b></div>
-                                <div class="col-md-12"><input type="text" class="form-control" disabled="disabled" value="<?= $cpfmask ?>" id="cpf" /></div>
+                            <div class="col-md-5">
+                                <ul class="list-group">
+                                    <li class="list-group-item bg-light"><b>Nome: </b><?= $medico ?></li>
+                                </ul>
                             </div>
                             <div class="col-md-2">
-                                <div class="col-md-12"><b>Cargo</b></div>
-                                <div class="col-md-12"><input type="text" class="form-control" disabled="disabled" value="<?= $cargo ?>" id="cargo" /></div>
+                                <ul class="list-group">
+                                    <li class="list-group-item bg-light"><b>CPF: </b><?= $cpfmask ?></li>
+                                </ul>
                             </div>
                             <div class="col-md-2">
-                                <div class="col-md-12"><b>Admissão</b></div>
-                                <div class="col-md-12"><input type="text" class="form-control" disabled="disabled" value="<?= $admissao ?>" id="admissao" /></div>
+                                <ul class="list-group">
+                                    <li class="list-group-item bg-light"><b>Cargo: </b><?= $cargo ?></li>
+                                </ul>
+                            </div>
+                            <div class="col-md-3">
+                                <ul class="list-group">
+                                    <li class="list-group-item bg-light"><b>Admissão: </b><?= $admissao ?></li>
+                                </ul>
                             </div>
                         </div>
                         <div class="row mb-2">
-                            <div class="col-md-3">
-                                <div class="col-md-12"><b>Município de Origem</b></div>
-                                <div class="col-md-12"><input type="text" class="form-control" disabled="disabled" value="<?= $municipioO ?>-<?= $ufO ?>" id="medico" /></div>
+                            <div class="col-md-5">
+                                <ul class="list-group">
+                                    <li class="list-group-item bg-light"><b>Munic. Origem: </b><?= $municipioO ?>-<?= $ufO ?></li>
+                                </ul>
+                            </div>
+                            <div class="col-md-2">
+                                <ul class="list-group">
+                                    <li class="list-group-item bg-light"><b>CNES: </b><?= $cnes ?></li>
+                                </ul>
+                            </div>
+                            <div class="col-md-2">
+                                <ul class="list-group">
+                                    <li class="list-group-item bg-light"><b>INE: </b><?= $ine ?></li>
+                                </ul>
                             </div>
                             <div class="col-md-3">
-                                <div class="col-md-12"><b>CNES</b></div>
-                                <div class="col-md-12"><input type="text" class="form-control" disabled="disabled" value="<?= $cnes ?>" id="cnes" /></div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="col-md-12"><b>INE</b></div>
-                                <div class="col-md-12"><input type="text" class="form-control" disabled="disabled" value="<?= $ine ?>" id="ine" /></div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="col-md-12"><b>IVS</b></div>
-                                <div class="col-md-12"><input type="text" class="form-control" disabled="disabled" value="<?= $ivs ?>" id="ivs" /></div>
+                                <ul class="list-group">
+                                    <li class="list-group-item bg-light"><b>IVS: </b><?= $ivs ?></li>
+                                </ul>
                             </div>
                         </div>
-<!--                        <hr class="mt-4">
-                        <div class="row mb-2">
-                            <div class="col-md-6">
-                                <div class="col-md-12"><b>Pontuação dos itens aprovados</b></div>
-                                <div class="col-md-12"><input type="text" class="form-control bg-light font-weight-bold text-primary" disabled="disabled" id="ptgeral" /></div>
-                            </div>
-                            <div class="col-md-6" id="email50Mais">
-                                <div class="col-md-12"><b>Enviar E-Mail para o Médico - igual ou superior a 50 pontos.</b></div>
-                                <div class="col-md-12"><button type="button" class="shadow-sm border-light btn btn-warning form-control" ><i class="fas fa-mail-bulk"></i>&nbsp; Igual ou superior a 50 pontos</button></div>
-                            </div>
-                            <div class="col-md-6" id="emailAbaixo50">
-                                <div class="col-md-12"><b>Enviar E-Mail para o Médico - abaixo de 50 pontos</b></div>
-                                <div class="col-md-12"><button type="button" class="shadow-sm border-light btn btn-warning form-control" ><i class="fas fa-mail-bulk"></i>&nbsp; Abaixo de 50 pontos</button></div>
-                            </div>
-                        </div>
-                        <hr>-->
                     </div>
                 </div>
             </div>
@@ -165,7 +157,7 @@ if($rs){
             <div class="col-12 mt-2">
                 <div class="card border-1">
                     <div class="card-header bg-secondary text-white" >
-                        <label><strong>Análise realizada - Pontuação</strong></label>
+                        <label><strong>Análise realizada - Pontuação Geral</strong></label>
                     </div>
                     <div class="card-body">
                         <div class="row mb-2">
@@ -175,35 +167,106 @@ if($rs){
                             </div>
                             <div class="col-md-6" id="email50Mais">
                                 <div class="col-md-12"><b>Enviar E-Mail para o Médico - igual ou superior a 50 pontos.</b></div>
-                                <div class="col-md-12"><button type="button" class="shadow-sm border-light btn btn-warning form-control" ><i class="fas fa-mail-bulk"></i>&nbsp; Igual ou superior a 50 pontos</button></div>
+                                <div class="col-md-12"><button type="button" class="shadow-sm border-light btn btn-info form-control" data-toggle="modal" data-target="#modalSup50"><i class="fas fa-mail-bulk"></i>&nbsp; Igual ou superior a 50 pontos</button></div>
                             </div>
                             <div class="col-md-6" id="emailAbaixo50">
                                 <div class="col-md-12"><b>Enviar E-Mail para o Médico - abaixo de 50 pontos</b></div>
-                                <div class="col-md-12"><button type="button" class="shadow-sm border-light btn btn-warning form-control" ><i class="fas fa-mail-bulk"></i>&nbsp; Abaixo de 50 pontos</button></div>
+                                <div class="col-md-12"><button type="button" class="shadow-sm border-light btn btn-warning form-control" data-toggle="modal" data-target="#modalInf50"><i class="fas fa-mail-bulk"></i>&nbsp; Abaixo de 50 pontos</button></div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <!-- Modal #modalSup50-->
+        <div class="modal fade" id="modalSup50" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="post" action="controller/upEnvSup.php">
+                    <input type="hidden" value="<?= $cpf ?>" name="cpf">
+                    <input type="hidden" value="<?= $ibge ?>" name="ibge">
+                    <input type="hidden" value="<?= $cnes ?>" name="cnes">
+                    <input type="hidden" value="<?= $ine ?>" name="ine">
+                    <input type="hidden" value="<?= $idap ?>" name="idap">
+                    <input type="hidden" value="<?= $ano ?>" name="ano">
+                    <input type="hidden" value="<?= $ciclo ?>" name="ciclo">
+              <div class="modal-header bg-light">
+                  <h5 class="modal-title" id="exampleModalLabel"><i class="fas fa-mail-bulk"></i>&nbsp; Enviar E-Mail</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                  <p>O médico atingiu a pontuação prevista. Informá-lo através de uma mensagem eletrônica padrão.</p>
+              </div>
+              <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCELAR</button>
+                <button type="submit" class="btn btn-primary" name="envSup50">ENVIAR E-MAIL</button>
+              </div>
+                </form>
+            </div>
+          </div>
+        </div>
+        <!-- Fim do Modal #modalSup50-->
+        <!-- Modal #modalInf50-->
+        <div class="modal fade" id="modalInf50" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="post" action="controller/upEnvInf.php">
+                    <input type="hidden" value="<?= $cpf ?>" name="cpf">
+                    <input type="hidden" value="<?= $ibge ?>" name="ibge">
+                    <input type="hidden" value="<?= $cnes ?>" name="cnes">
+                    <input type="hidden" value="<?= $ine ?>" name="ine">
+                    <input type="hidden" value="<?= $idap ?>" name="idap">
+                    <input type="hidden" value="<?= $ano ?>" name="ano">
+                    <input type="hidden" value="<?= $ciclo ?>" name="ciclo">
+              <div class="modal-header bg-light">
+                  <h5 class="modal-title" id="exampleModalLabel"><i class="fas fa-mail-bulk text-warning"></i>&nbsp; Enviar E-Mail</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                  <p>O médico <label class="text-danger">NÃO</label> atingiu a pontuação prevista. Informá-lo através de uma mensagem eletrônica padrão.</p>
+                  <div class="row mt-2 mb-2">
+                      <div class="col-md-12"><b>Permitir que o médico refaça o envio das atividades não aprovadas?</b></div>
+                      <div class="col-md-12">
+                          <select name="upEnv" id="upEnv" class="form-control">
+                              <option value="">[--SELECIONE--]</option>
+                              <option value="1">SIM</option>
+                              <option value="0">NÃO</option>
+                          </select>
+                      </div>
+                  </div>
+              </div>
+              <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCELAR</button>
+                <button type="submit" class="btn btn-primary" name="envSup50">ENVIAR E-MAIL</button>
+              </div>
+                </form>
+            </div>
+          </div>
+        </div>
+        <!-- Fim do Modal #modalInf50-->
         <div class="row">
             <div class="col-12 mt-2">
-                <div class="card border-0">
+                <div class="card border-1">
                     <div class="card-header text-white" style="background-color: #0055A1;">
                         <label><strong>Atividade de Longa Duração</strong></label>
                     </div>
                     <div class="card-body">
                         <div class="row mb-4">
                             <div class="col-md-12">
-                                <div class="col-md-12"><b>Declaro que fui autorizado pela Agência para a realização de curso de longa duração?</b></div>
                                 <?php
                                 if($flagald === '1'){
-                                    $fald = "SIM";
+                                    $fald = "<label class='text-primary'>SIM</label>";
                                 }else{
-                                    $fald = "NÃO";
+                                    $fald = "<label class='text-danger'>NÃO</label>";
                                 }
                                 ?>
-                                <div class="col-md-6"><input type="text" class="form-control" disabled="disabled" value="<?= $fald ?>" id="fald" /></div>
+                                <ul class="list-group">
+                                    <li class="list-group-item bg-light"><b>Declaro que fui autorizado pela Agência para a realização de curso de longa duração? </b>&nbsp;<?= $fald ?></li>
+                                </ul>
                             </div>
                         </div>
                         <?php
@@ -216,41 +279,39 @@ if($rs){
                             <div class="card-body">
                                 <div class="row mb-2">
                                     <div class="col-md-12">
-                                        <div class="col-md-12"><b>Parecer</b></div>
-                                        <div class="col-md-12">
-                                            <?php if($flagparecerap === '1'){ ?>
-                                                <input type="text" class="form-control bg-light text-primary" disabled="disabled" value="Aprovado" id="pareceruserap1" />
-                                            <?php }else{ ?>
-                                                <input type="text" class="form-control bg-light text-danger" disabled="disabled" value="Não aprovado" id="pareceruserap2" />
-                                            <?php } ?>
-                                            
-                                        </div>
+                                        <?php if($flagparecerap === '1'){
+                                            $ldpar = "Aprovado";
+                                        }else{ 
+                                            $ldpar = "Não aprovado";
+                                        }
+                                        ?>
+                                        <ul class="list-group">
+                                            <li class="list-group-item bg-light"><b>Parecer: </b><?= $ldpar ?></li>
+                                        </ul>
                                     </div>
                                     <div class="col-md-12">
-                                        <div class="col-md-12"><b>Descrição da Análise</b></div>
-                                        <div class="col-md-12">
-                                            <textarea style="resize: none; height: 100px;" class="form-control bg-light" disabled="disabled" id="parecerap"><?= $parecerap ?></textarea>
-                                        </div>
+                                        <ul class="list-group">
+                                            <li class="list-group-item bg-light"><b>Descrição da Análise: </b><?= $parecerap ?></li>
+                                        </ul>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="col-md-12"><b>Análise realizado por:</b></div>
-                                        <div class="col-md-12">
-                                            <input type="text" class="form-control bg-light" disabled="disabled" value="<?= $pareceruserap ?>" id="pareceruserap" />
-                                        </div>
-                                        <div class="col-md-12"><b>Data e hora do envio:</b></div>
-                                        <div class="col-md-12">
-                                            <input type="text" class="form-control bg-light" disabled="disabled" value="<?= $parecerdthrap ?>" id="parecerdthrap" />
-                                        </div>
+                                        <ul class="list-group">
+                                            <li class="list-group-item bg-light"><b>Análise realizado por: </b><?= $pareceruserap ?></li>
+                                        </ul>
+                                        <ul class="list-group">
+                                            <li class="list-group-item bg-light"><b>Data e hora do envio: </b><?= $parecerdthrap ?></li>
+                                        </ul>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="col-md-12 mt-4"><b>Pontuação adquirida:</b></div>
-                                        <div class="col-md-12">
-                                            <?php if($pontuacaoaptxt === '0,00'){ ?>
-                                            <input type="text" class="form-control bg-light text-danger" disabled="disabled" value="<?= $pontuacaoaptxt ?>" id="pontuacaoaptxt1" />    
-                                            <?php }else{ ?>
-                                            <input type="text" class="form-control bg-light text-primary" disabled="disabled" value="<?= $pontuacaoaptxt ?>" id="pontuacaoaptxt2" />
-                                            <?php } ?>
-                                        </div>
+                                        <?php 
+                                        if($pontuacaoaptxt === '0,00'){
+                                            $pontuacaoaptxt = "<label class='form-control bg-light text-danger'>$pontuacaoaptxt</label>";
+                                        }else{
+                                            $pontuacaoaptxt = "<label class='form-control bg-light text-primary'>$pontuacaoaptxt</label>";
+                                        } ?>
+                                        <ul class="list-group">
+                                            <li class="list-group-item bg-light"><b>Pontuação adquirida: </b><?= $pontuacaoaptxt ?></li>
+                                        </ul>
                                         <input type="hidden" id="ptld" value="<?= $pontuacaoap ?>">
                                     </div>
                                 </div>
@@ -326,36 +387,27 @@ if($rs){
         </div>
         <div class="row">
             <div class="col-12 mt-2">
-                <div class="card border-0">
+                <div class="card border-1">
                     <div class="card-header text-white" style="background-color: #0055A1;">
                         <label><strong>Qualificação Clínica</strong></label>
                     </div>
                     <div class="card-body">
-                        <div class="row mb-2">
-                            <div class="col-md-12">
-                                <div class="col-md-12"><b>Possui atividade a declarar neste item?</b></div>
-                                <?php
-                                $sqlqc = "select q.descricao as qcdesc, mq.id, mq.titulo, mq.cargahr, mq.anexo, mq.dthrcadastro, 
+                        <?php
+                        $sqlqc = "select q.descricao as qcdesc, mq.id, mq.titulo, mq.cargahr, mq.anexo, mq.dthrcadastro, 
                                     mq.flagparecer, mq.parecer, mq.pareceruser, mq.parecerdthr, mq.pontuacao 
                                     from aperfeicoamentoprofissional ap 
                                     inner join medico_qualifclinica mq on ap.id = mq.idaperfprof 
                                     inner join qualifclinica q on mq.idqualifclinica = q.idqualifclinica 
                                     where ap.id = '$idap';";
-                                $qqc = mysqli_query($conn, $sqlqc) or die(mysqli_error($conn));
-                                $nrqc = mysqli_num_rows($qqc);
-                                $rsqc = mysqli_fetch_array($qqc);
-                                ?>
-                                    <?php
-                                    if($nrqc > 0){
-                                        $fqc = "SIM";
-                                    }else{
-                                        $fqc = "NÃO";
-                                    }
-                                    ?>
-                                <div class="col-md-3"><input type="text" class="form-control" disabled="disabled" value="<?= $fqc ?>" id="fqc" /></div> 
-                            </div>
-                        </div>
-                        <?php
+                        $qqc = mysqli_query($conn, $sqlqc) or die(mysqli_error($conn));
+                        $nrqc = mysqli_num_rows($qqc);
+                        $rsqc = mysqli_fetch_array($qqc);
+
+                        if ($nrqc > 0) {
+                            $fqc = "SIM";
+                        } else {
+                            $fqc = "NÃO";
+                        }
                         if($nrqc > 0){
                             $auxqc = 0;
                             do{
@@ -382,24 +434,40 @@ if($rs){
                               $qcparecerdthr = vemdata($rsqc['parecerdthr']);  
                               $qcparecerdthr .= ", às ".horaEmin($rsqc['parecerdthr']).".";
                         ?>
+                        <?php
+                        if($auxqc > 1){
+                        ?>
+                        <div class="row">
+                            <div class="col-md-12 bg-dark text-white p-2 border text-center mt-4 mb-3 font-weight-bold small align-middle"><i class="fas fa-chevron-circle-right float-left mt-1"></i> &nbsp;Qualificação Clínica: Atividade <?= $auxqc ?>&nbsp; <i class="fas fa-chevron-circle-left float-right mt-1"></i></div>
+                        </div>
+                        <?php } ?>
+                        <div class="row mb-2">
+                            <div class="col-md-12">
+                                <ul class="list-group">
+                                    <li class="list-group-item bg-light"><b>Possui atividade a declarar neste item? </b>&nbsp;<?= $fqc ?></li>
+                                </ul>
+                            </div>
+                        </div>
                         <div class="row mb-3">
                             <div class="col-md-9">
-                                <div class="col-md-12"><b>Atividade</b></div>
-                                <div class="col-md-12">
-                                    <textarea class="form-control" style="resize: none;" disabled="disabled" id="qcdesc"><?= $qcdesc ?></textarea>
-                                </div>
+                                <ul class="list-group">
+                                    <li class="list-group-item bg-light"><b>Atividade: </b><?= $qcdesc ?></li>
+                                </ul>
                             </div>
                             <div class="col-md-3">
-                                <div class="col-md-12"><b>Carga Horária</b></div>
-                                <div class="col-md-12"><input type="text" class="form-control" disabled="disabled" value="<?= $qccargahr ?>"  /></div>
+                                <ul class="list-group">
+                                    <li class="list-group-item bg-light"><b>Carga Horária: </b><?= $qccargahr ?></li>
+                                </ul>
                             </div>
                             <div class="col-md-9">
-                                <div class="col-md-12"><b>Título da atividade</b></div>
-                                <div class="col-md-12"><input type="text" class="form-control" disabled="disabled" value="<?= $qctitulo ?>" /></div>
+                                <ul class="list-group">
+                                    <li class="list-group-item bg-light"><b>Título da atividade: </b><?= $qctitulo ?></li>
+                                </ul>
                             </div>
                             <div class="col-md-3">
-                                <div class="col-md-12"><b>Documento Anexo</b></div>
-                                <div class="col-md-12"><a class="btn btn-light text-danger" href="../../medico/aperfeicoamento_profissional/<?= $qcanexo ?>" target="_blank"><i class="far fa-file-pdf"></i></a></div>
+                                <ul class="list-group">
+                                    <li class="list-group-item bg-light"><b>Documento Anexo: </b><a class="btn btn-light text-danger" href="../../medico/aperfeicoamento_profissional/<?= $qcanexo ?>" target="_blank"><i class="far fa-file-pdf"></i></a></li>
+                                </ul>
                             </div>
                         </div>
                         <?php
@@ -412,41 +480,40 @@ if($rs){
                             <div class="card-body">
                                 <div class="row mb-2">
                                     <div class="col-md-12">
-                                        <div class="col-md-12"><b>Parecer</b></div>
-                                        <div class="col-md-12">
-                                            <?php if($qcflagparecer === '1'){ ?>
-                                                <input type="text" class="form-control bg-light text-primary" disabled="disabled" value="Aprovado" id="qcflagparecer1" />
-                                            <?php }else{ ?>
-                                                <input type="text" class="form-control bg-light text-danger" disabled="disabled" value="Não aprovado" id="qcflagparecer2" />
-                                            <?php } ?>
-                                            
-                                        </div>
+                                        <?php if($qcflagparecer === '1'){ 
+                                            $qcpar = '<label class="text-primary">Aprovado</label>';
+                                        }else{
+                                            $qcpar = '<label class="text-danger">Não aprovado</label>';
+                                        }
+                                        ?>
+                                        <ul class="list-group">
+                                            <li class="list-group-item bg-light"><b>Parecer: </b><?= $qcpar ?></li>
+                                        </ul>
                                     </div>
                                     <div class="col-md-12">
-                                        <div class="col-md-12"><b>Descrição da Análise</b></div>
-                                        <div class="col-md-12">
-                                            <textarea style="resize: none; height: 100px;" class="form-control bg-light" disabled="disabled" id="qcparecer"><?= $qcparecer ?></textarea>
-                                        </div>
+                                        <ul class="list-group">
+                                            <li class="list-group-item bg-light"><b>Descrição da Análise: </b><?= $qcparecer ?></li>
+                                        </ul>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="col-md-12"><b>Análise realizado por:</b></div>
-                                        <div class="col-md-12">
-                                            <input type="text" class="form-control bg-light" disabled="disabled" value="<?= $qcpareceruser ?>" id="qcpareceruser" />
-                                        </div>
-                                        <div class="col-md-12"><b>Data e hora do envio:</b></div>
-                                        <div class="col-md-12">
-                                            <input type="text" class="form-control bg-light" disabled="disabled" value="<?= $qcparecerdthr ?>" id="qcparecerdthr" />
-                                        </div>
+                                        <ul class="list-group">
+                                            <li class="list-group-item bg-light"><b>Análise realizado por: </b><?= $qcpareceruser ?></li>
+                                        </ul>
+                                        <ul class="list-group">
+                                            <li class="list-group-item bg-light"><b>Data e hora do envio: </b><?= $qcparecerdthr ?></li>
+                                        </ul>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="col-md-12 mt-4"><b>Pontuação adquirida:</b></div>
-                                        <div class="col-md-12">
-                                            <?php if($qcpontuacaotxt === '0,00'){ ?>
-                                            <input type="text" class="form-control bg-light text-danger" disabled="disabled" value="<?= $qcpontuacaotxt ?>" id="qcpontuacaotxt1" />    
-                                            <?php }else{ ?>
-                                            <input type="text" class="form-control bg-light text-primary" disabled="disabled" value="<?= $qcpontuacaotxt ?>" id="qcpontuacaotxt2" />
-                                            <?php } ?>
-                                        </div>
+                                        <?php 
+                                        if($qcpontuacaotxt === '0,00'){
+                                            $qcpontuacaotxt = "<label class='form-control bg-light text-danger'>$qcpontuacaotxt</label>";
+                                        }else{
+                                            $qcpontuacaotxt = "<label class='form-control bg-light text-primary'>$qcpontuacaotxt</label>";
+                                        }
+                                        ?>
+                                        <ul class="list-group">
+                                            <li class="list-group-item bg-light"><b>Pontuação adquirida: </b><?= $qcpontuacaotxt ?></li>
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
@@ -517,7 +584,6 @@ if($rs){
                         <!-- Fim do modalLongD -->    
                         </form>
                         <?php } ?>
-                        <hr>
                         <?php
                             }while ($rsqc = mysqli_fetch_array($qqc));
                         }
@@ -528,36 +594,27 @@ if($rs){
         </div>
         <div class="row">
             <div class="col-12 mt-2">
-                <div class="card border-0">
+                <div class="card border-1">
                     <div class="card-header text-white" style="background-color: #0055A1;">
                         <label><strong>Gestão, Ensino, Pesquisa e Extensão</strong></label>
                     </div>
                     <div class="card-body">
-                        <div class="row mb-2">
-                            <div class="col-md-12">
-                                <div class="col-md-12"><b>Possui atividade a declarar neste item?</b></div>
-                                <?php
-                                $sqlgepe = "select g.descricao as gdesc, mg.id, mg.titulo, mg.cargahr, mg.anexo, mg.dthrcadastro, 
+                        <?php
+                        $sqlgepe = "select g.descricao as gdesc, mg.id, mg.titulo, mg.cargahr, mg.anexo, mg.dthrcadastro, 
                                     mg.flagparecer, mg.parecer, mg.pareceruser, mg.parecerdthr,mg.pontuacao 
                                     from aperfeicoamentoprofissional ap 
                                     inner join medico_gesenspesext mg on ap.id = mg.idaperfprof 
                                     inner join gesenspesext g on mg.idgesenspesext = g.idgesenspesext  
                                     where ap.id ='$idap';";
-                                $qgepe = mysqli_query($conn, $sqlgepe) or die(mysqli_error($conn));
-                                $nrgepe = mysqli_num_rows($qgepe);
-                                $rsgepe = mysqli_fetch_array($qgepe);
-                                ?>
-                                    <?php
-                                    if($nrgepe > 0){
-                                        $fgepe = "SIM";
-                                    }else{
-                                        $fgepe = "NÃO";
-                                    }
-                                    ?>
-                                <div class="col-md-3"><input type="text" class="form-control" disabled="disabled" value="<?= $fgepe ?>" id="fgepe" /></div> 
-                            </div>
-                        </div>
-                        <?php
+                        $qgepe = mysqli_query($conn, $sqlgepe) or die(mysqli_error($conn));
+                        $nrgepe = mysqli_num_rows($qgepe);
+                        $rsgepe = mysqli_fetch_array($qgepe);
+
+                        if ($nrgepe > 0) {
+                            $fgepe = "SIM";
+                        } else {
+                            $fgepe = "NÃO";
+                        }
                         if($nrgepe > 0){
                             $auxgepe = 0;
                             do{
@@ -584,24 +641,40 @@ if($rs){
                               $gepeparecerdthr = vemdata($rsgepe['parecerdthr']);  
                               $gepeparecerdthr .= ", às ".horaEmin($rsgepe['parecerdthr']).".";
                         ?>
+                        <?php
+                        if($auxgepe > 1){
+                        ?>
+                        <div class="row">
+                            <div class="col-md-12 bg-dark text-white p-2 border text-center mt-4 mb-3 font-weight-bold small align-middle"><i class="fas fa-chevron-circle-right float-left mt-1"></i> &nbsp;Gestão, Ensino, Pesquisa e Extensão: Atividade <?= $auxgepe ?>&nbsp; <i class="fas fa-chevron-circle-left float-right mt-1"></i></div>
+                        </div>
+                        <?php } ?>
+                        <div class="row mb-2">
+                            <div class="col-md-12">
+                                <ul class="list-group">
+                                    <li class="list-group-item bg-light"><b>Possui atividade a declarar neste item? </b>&nbsp;<?= $fgepe ?></li>
+                                </ul>
+                            </div>
+                        </div>
                         <div class="row mb-3">
                             <div class="col-md-9">
-                                <div class="col-md-12"><b>Atividade</b></div>
-                                <div class="col-md-12">
-                                    <textarea class="form-control" style="resize: none;" disabled="disabled" id="qcdesc"><?= $gepedesc ?></textarea>
-                                </div>
+                                <ul class="list-group">
+                                    <li class="list-group-item bg-light"><b>Atividade: </b><?= $gepedesc ?></li>
+                                </ul>
                             </div>
                             <div class="col-md-3">
-                                <div class="col-md-12"><b>Carga Horária</b></div>
-                                <div class="col-md-12"><input type="text" class="form-control" disabled="disabled" value="<?= $gepecargahr ?>"  /></div>
+                                <ul class="list-group">
+                                    <li class="list-group-item bg-light"><b>Carga Horária: </b><?= $gepecargahr ?></li>
+                                </ul>
                             </div>
                             <div class="col-md-9">
-                                <div class="col-md-12"><b>Título da atividade</b></div>
-                                <div class="col-md-12"><input type="text" class="form-control" disabled="disabled" value="<?= $gepetitulo ?>" /></div>
+                                <ul class="list-group">
+                                    <li class="list-group-item bg-light"><b>Título da atividade: </b><?= $gepetitulo ?></li>
+                                </ul>
                             </div>
                             <div class="col-md-3">
-                                <div class="col-md-12"><b>Documento Anexo</b></div>
-                                <div class="col-md-12"><a class="btn btn-light text-danger" href="../../medico/aperfeicoamento_profissional/<?= $gepeanexo ?>" target="_blank"><i class="far fa-file-pdf"></i></a></div>
+                                <ul class="list-group">
+                                    <li class="list-group-item bg-light"><b>Documento Anexo: </b><a class="btn btn-light text-danger" href="../../medico/aperfeicoamento_profissional/<?= $gepeanexo ?>" target="_blank"><i class="far fa-file-pdf"></i></a></li>
+                                </ul>
                             </div>
                         </div>
                         <?php
@@ -614,40 +687,39 @@ if($rs){
                             <div class="card-body">
                                 <div class="row mb-2">
                                     <div class="col-md-12">
-                                        <div class="col-md-12"><b>Parecer</b></div>
-                                        <div class="col-md-12">
-                                            <?php if($gepeflagparecer === '1'){ ?>
-                                                <input type="text" class="form-control bg-light text-primary" disabled="disabled" value="Aprovado" id="gepeflagparecer1" />
-                                            <?php }else{ ?>
-                                                <input type="text" class="form-control bg-light text-danger" disabled="disabled" value="Não aprovado" id="gepeflagparecer2" />
-                                            <?php } ?>
-                                        </div>
+                                        <?php if($gepeflagparecer === '1'){ 
+                                            $gepeflagparecer = "<label class='text-primary'>Aprovado</label>";
+                                        }else{
+                                            $gepeflagparecer = "<label class='text-danger'>Não aprovado</label>";
+                                        }
+                                        ?>
+                                        <ul class="list-group">
+                                            <li class="list-group-item bg-light"><b>Parecer: </b><?= $gepeflagparecer ?></li>
+                                        </ul>
                                     </div>
                                     <div class="col-md-12">
-                                        <div class="col-md-12"><b>Descrição da Análise</b></div>
-                                        <div class="col-md-12">
-                                            <textarea style="resize: none; height: 100px;" class="form-control bg-light" disabled="disabled" id="gepeparecer"><?= $gepeparecer ?></textarea>
-                                        </div>
+                                        <ul class="list-group">
+                                            <li class="list-group-item bg-light"><b>Descrição da Análise: </b><?= $gepeparecer ?></li>
+                                        </ul>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="col-md-12"><b>Análise realizado por:</b></div>
-                                        <div class="col-md-12">
-                                            <input type="text" class="form-control bg-light" disabled="disabled" value="<?= $gepepareceruser ?>" id="gepepareceruser"/>
-                                        </div>
-                                        <div class="col-md-12"><b>Data e hora do envio:</b></div>
-                                        <div class="col-md-12">
-                                            <input type="text" class="form-control bg-light" disabled="disabled" value="<?= $gepeparecerdthr ?>" id="gepeparecerdthr" />
-                                        </div>
+                                        <ul class="list-group">
+                                            <li class="list-group-item bg-light"><b>Análise realizado por: </b><?= $gepepareceruser ?></li>
+                                        </ul>
+                                        <ul class="list-group">
+                                            <li class="list-group-item bg-light"><b>Data e hora do envio: </b><?= $gepeparecerdthr ?></li>
+                                        </ul>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="col-md-12 mt-4"><b>Pontuação adquirida:</b></div>
-                                        <div class="col-md-12">
-                                            <?php if($gepepontuacaotxt === '0,00'){ ?>
-                                            <input type="text" class="form-control bg-light text-danger" disabled="disabled" value="<?= $gepepontuacaotxt ?>" id="gepepontuacaotxt1" />    
-                                            <?php }else{ ?>
-                                            <input type="text" class="form-control bg-light text-primary" disabled="disabled" value="<?= $gepepontuacaotxt ?>" id="gepepontuacaotxt2" />
-                                            <?php } ?>
-                                        </div>
+                                        <?php 
+                                        if($gepepontuacaotxt === '0,00'){
+                                            $gepepontuacaotxt = "<label class='form-control bg-light text-danger'>$gepepontuacaotxt</label>";
+                                        }else{
+                                            $gepepontuacaotxt = "<label class='form-control bg-light text-primary'>$gepepontuacaotxt</label>";
+                                        } ?>
+                                        <ul class="list-group">
+                                            <li class="list-group-item bg-light"><b>Pontuação adquirida: </b><?= $gepepontuacaotxt ?></li>
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
@@ -718,7 +790,6 @@ if($rs){
                         <!-- Fim do modalgepe -->
                         </form>
                         <?php } ?>
-                        <hr>
                         <?php
                             }while ($rsgepe = mysqli_fetch_array($qgepe));
                         }
@@ -729,36 +800,26 @@ if($rs){
         </div>
         <div class="row">
             <div class="col-12 mt-2">
-                <div class="card border-0">
+                <div class="card border-1">
                     <div class="card-header text-white" style="background-color: #0055A1;">
                         <label><strong>Inovação Tecnológica</strong></label>
                     </div>
                     <div class="card-body">
-                        <div class="row mb-2">
-                            <div class="col-md-12">
-                                <div class="col-md-12"><b>Possui atividade a declarar neste item?</b></div>
-                                <?php
-                                $sqlit = "select i.descricao as idesc, mi.id, mi.titulo, mi.cargahr, mi.anexo, mi.dthrcadastro, 
+                        <?php
+                        $sqlit = "select i.descricao as idesc, mi.id, mi.titulo, mi.cargahr, mi.anexo, mi.dthrcadastro, 
                                     mi.flagparecer, mi.parecer, mi.pareceruser, mi.parecerdthr, mi.pontuacao 
                                     from aperfeicoamentoprofissional ap 
                                     inner join medico_inovtecnologica mi on ap.id = mi.idaperfprof 
                                     inner join inovtecnologica i on mi.idinovtecnologica = i.idinovtecnologica  
                                     where ap.id = '$idap';";
-                                $qit = mysqli_query($conn, $sqlit) or die(mysqli_error($conn));
-                                $nrit = mysqli_num_rows($qit);
-                                $rsit = mysqli_fetch_array($qit);
-                                ?>
-                                    <?php
-                                    if($nrit > 0){
-                                        $fit = "SIM";
-                                    }else{
-                                        $fit = "NÃO";
-                                    }
-                                    ?>
-                                <div class="col-md-3"><input type="text" class="form-control" disabled="disabled" value="<?= $fit ?>" id="fgepe" /></div> 
-                            </div>
-                        </div>
-                        <?php
+                        $qit = mysqli_query($conn, $sqlit) or die(mysqli_error($conn));
+                        $nrit = mysqli_num_rows($qit);
+                        $rsit = mysqli_fetch_array($qit);
+                        if ($nrit > 0) {
+                            $fit = "SIM";
+                        } else {
+                            $fit = "NÃO";
+                        }
                         if($nrit > 0){
                             $auxit = 0;
                             do{
@@ -784,25 +845,40 @@ if($rs){
                               $itpareceruser = $rsit['pareceruser'];  
                               $itparecerdthr = vemdata($rsit['parecerdthr']);  
                               $itparecerdthr .= ", às ".horaEmin($rsit['parecerdthr']).".";
+                        
+                              if($auxit > 1){
                         ?>
+                        <div class="row">
+                            <div class="col-md-12 bg-dark text-white p-2 border text-center mt-4 mb-3 font-weight-bold small align-middle"><i class="fas fa-chevron-circle-right float-left mt-1"></i> &nbsp;Inovação Tecnológica: Atividade <?= $auxit ?>&nbsp; <i class="fas fa-chevron-circle-left float-right mt-1"></i></div>
+                        </div>
+                        <?php } ?>
+                        <div class="row mb-2">
+                            <div class="col-md-12">
+                                <ul class="list-group">
+                                    <li class="list-group-item bg-light"><b>Possui atividade a declarar neste item? </b>&nbsp;<?= $fit ?></li>
+                                </ul>
+                            </div>
+                        </div>
                         <div class="row mb-3">
                             <div class="col-md-9">
-                                <div class="col-md-12"><b>Atividade</b></div>
-                                <div class="col-md-12">
-                                    <textarea style="resize: none; height: 100px;" class="form-control" disabled="disabled" id="qcdesc" ><?= $itdesc ?></textarea>
-                                </div>
+                                <ul class="list-group">
+                                    <li class="list-group-item bg-light"><b>Atividade: </b><?= $itdesc ?></li>
+                                </ul>
                             </div>
                             <div class="col-md-3">
-                                <div class="col-md-12"><b>Carga Horária</b></div>
-                                <div class="col-md-12"><input type="text" class="form-control" disabled="disabled" value="<?= $itcargahr ?>"  /></div>
+                                <ul class="list-group">
+                                    <li class="list-group-item bg-light"><b>Carga Horária: </b><?= $itcargahr ?></li>
+                                </ul>
                             </div>
                             <div class="col-md-9">
-                                <div class="col-md-12"><b>Título da atividade</b></div>
-                                <div class="col-md-12"><input type="text" class="form-control" disabled="disabled" value="<?= $ittitulo ?>" /></div>
+                                <ul class="list-group">
+                                    <li class="list-group-item bg-light"><b>Título da atividade: </b><?= $ittitulo ?></li>
+                                </ul>
                             </div>
                             <div class="col-md-3">
-                                <div class="col-md-12"><b>Documento Anexo</b></div>
-                                <div class="col-md-12"><a class="btn btn-light text-danger" href="../../medico/aperfeicoamento_profissional/<?= $itanexo ?>" target="_blank"><i class="far fa-file-pdf"></i></a></div>
+                                <ul class="list-group">
+                                    <li class="list-group-item bg-light"><b>Documento Anexo: </b><a class="btn btn-light text-danger" href="../../medico/aperfeicoamento_profissional/<?= $itanexo ?>" target="_blank"><i class="far fa-file-pdf"></i></a></li>
+                                </ul>
                             </div>
                         </div>
                         <?php
@@ -815,41 +891,39 @@ if($rs){
                             <div class="card-body">
                                 <div class="row mb-2">
                                     <div class="col-md-12">
-                                        <div class="col-md-12"><b>Parecer</b></div>
-                                        <div class="col-md-12">
-                                            <?php if($itflagparecer === '1'){ ?>
-                                                <input type="text" class="form-control bg-light text-primary" disabled="disabled" value="Aprovado" id="itflagparecer1" />
-                                            <?php }else{ ?>
-                                                <input type="text" class="form-control bg-light text-danger" disabled="disabled" value="Não aprovado" id="itflagparecer2" />
-                                            <?php } ?>
-                                            
-                                        </div>
+                                        <?php 
+                                        if($itflagparecer === '1'){
+                                            $itflagparecer = "<label class='text-primary'>Aprovado</label>";
+                                        }else{
+                                            $itflagparecer = "<label class='text-danger'>Aprovado</label>";
+                                        } ?>
+                                        <ul class="list-group">
+                                            <li class="list-group-item bg-light"><b>Parecer: </b><?= $itflagparecer ?></li>
+                                        </ul>
                                     </div>
                                     <div class="col-md-12">
-                                        <div class="col-md-12"><b>Descrição da Análise</b></div>
-                                        <div class="col-md-12">
-                                            <textaarea style="resize: none;" class="form-control bg-light" disabled="disabled" id="itdesc" ><?= $itparecer ?></textaarea>
-                                        </div>
+                                        <ul class="list-group">
+                                            <li class="list-group-item bg-light"><b>Descrição da Análise: </b><?= $itparecer ?></li>
+                                        </ul>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="col-md-12"><b>Análise realizado por:</b></div>
-                                        <div class="col-md-12">
-                                            <input type="text" class="form-control bg-light" disabled="disabled" value="<?= $itpareceruser ?>" id="itdesc" />
-                                        </div>
-                                        <div class="col-md-12"><b>Data e hora do envio:</b></div>
-                                        <div class="col-md-12">
-                                            <input type="text" class="form-control bg-light" disabled="disabled" value="<?= $itparecerdthr ?>" id="itdesc" />
-                                        </div>
+                                        <ul class="list-group">
+                                            <li class="list-group-item bg-light"><b>Análise realizado por: </b><?= $itpareceruser ?></li>
+                                        </ul>
+                                        <ul class="list-group">
+                                            <li class="list-group-item bg-light"><b>Data e hora do envio: </b><?= $itparecerdthr ?></li>
+                                        </ul>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="col-md-12 mt-4"><b>Pontuação adquirida:</b></div>
-                                        <div class="col-md-12">
-                                            <?php if($itpontuacaotxt === '0,00'){ ?>
-                                            <input type="text" class="form-control bg-light text-danger" disabled="disabled" value="<?= $itpontuacaotxt ?>" id="itpontuacaotxt1" />    
-                                            <?php }else{ ?>
-                                            <input type="text" class="form-control bg-light text-primary" disabled="disabled" value="<?= $itpontuacaotxt ?>" id="itpontuacaotxt2" />
-                                            <?php } ?>
-                                        </div>
+                                        <?php 
+                                        if($itpontuacaotxt === '0,00'){
+                                            $itpontuacaotxt = "<label class='form-control bg-light text-danger'>$itpontuacaotxt</label>";
+                                        }else{
+                                            $itpontuacaotxt = "<label class='form-control bg-light text-primary'>$itpontuacaotxt</label>";
+                                        } ?>
+                                        <ul class="list-group">
+                                            <li class="list-group-item bg-light"><b>Pontuação adquirida: </b><?= $itpontuacaotxt ?></li>
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
@@ -920,7 +994,6 @@ if($rs){
                         <!-- Fim do modalLongD -->    
                         </form>
                         <?php } ?>
-                        <hr>
                         <?php
                             }while ($rsit = mysqli_fetch_array($qit));
                         }
@@ -976,6 +1049,7 @@ if($rs){
                 <input type="hidden" id="flags" value="0">
         <?php } ?>
             </div>
+            <input type="hidden" id="somapt" value="<?= $somapt ?>">
                         </div>
                     </div>
                 </div>
@@ -1023,6 +1097,7 @@ if($rs){
        if(isNaN(ptgeral)){
            ptgeral = "0,00";
        }
+       ptgeral = parseFloat($('#somapt').val());
        ptgeraltxt = ""+ptgeral;
        ptgeraltxt = ptgeraltxt.replace('.',',');
        if(ptgeraltxt.indexOf(',') === -1){

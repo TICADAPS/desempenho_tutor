@@ -393,7 +393,7 @@ if($rs){
                     </div>
                     <div class="card-body">
                         <?php
-                        $sqlqc = "select q.descricao as qcdesc, mq.id, mq.titulo, mq.cargahr, mq.anexo, mq.dthrcadastro, 
+                        $sqlqc = "select q.descricao as qcdesc, mq.id, mq.idqualifclinica, mq.titulo, mq.cargahr, mq.anexo, mq.dthrcadastro, 
                                     mq.flagparecer, mq.parecer, mq.pareceruser, mq.parecerdthr, mq.pontuacao 
                                     from aperfeicoamentoprofissional ap 
                                     inner join medico_qualifclinica mq on ap.id = mq.idaperfprof 
@@ -413,6 +413,15 @@ if($rs){
                             do{
                               $auxqc++;
                               $qcid = $rsqc['id'];  
+                              $qcidqualifclinica = $rsqc['idqualifclinica'];
+                              $chqc = '';
+                              if($qcidqualifclinica !== null && $qcidqualifclinica !== ''){
+                                  if($qcidqualifclinica === '3'){
+                                      $chqc = 'Conforme CME';
+                                  }else{
+                                      $chqc = 'Carga Horária';
+                                  }
+                              }
                               $qcdesc = $rsqc['qcdesc'];  
                               $qctitulo = $rsqc['titulo'];  
                               $qccargahr = $rsqc['cargahr'];  
@@ -456,7 +465,7 @@ if($rs){
                             </div>
                             <div class="col-md-3">
                                 <ul class="list-group">
-                                    <li class="list-group-item bg-light"><b>Carga Horária: </b><?= $qccargahr ?></li>
+                                    <li class="list-group-item bg-light"><b><?= $chqc ?>: </b><?= $qccargahr ?></li>
                                 </ul>
                             </div>
                             <div class="col-md-9">
@@ -600,7 +609,7 @@ if($rs){
                     </div>
                     <div class="card-body">
                         <?php
-                        $sqlgepe = "select g.descricao as gdesc, mg.id, mg.titulo, mg.cargahr, mg.anexo, mg.dthrcadastro, 
+                        $sqlgepe = "select g.descricao as gdesc, mg.id, mg.idgesenspesext, mg.titulo, mg.cargahr, mg.anexo, mg.dthrcadastro, 
                                     mg.flagparecer, mg.parecer, mg.pareceruser, mg.parecerdthr,mg.pontuacao 
                                     from aperfeicoamentoprofissional ap 
                                     inner join medico_gesenspesext mg on ap.id = mg.idaperfprof 
@@ -619,7 +628,23 @@ if($rs){
                             $auxgepe = 0;
                             do{
                               $auxgepe++;
-                              $gepeid = $rsgepe['id'];  
+                              $gepeid = $rsgepe['id']; 
+                              $gepeidgesenspesext = $rsgepe['idgesenspesext'];
+                              $chgepe = '';
+                              if($gepeidgesenspesext !== null && $gepeidgesenspesext !== ''){
+                                  switch ($gepeidgesenspesext){
+                                      case '1': $chgepe = 'Carga Horária'; break;
+                                      case '2': $chgepe = 'Carga Horária'; break;
+                                      case '3': $chgepe = 'Qtd de Publicações'; break;
+                                      case '4': $chgepe = 'Qtd de Publicações'; break;
+                                      case '5': $chgepe = 'Qtd de Publicações'; break;
+                                      case '6': $chgepe = 'Qtd de Publicações'; break;
+                                      case '7': $chgepe = 'Qtd de Participação'; break;
+                                      case '8': $chgepe = 'Qtd de Participação'; break;
+                                      case '9': $chgepe = 'Qtd de Participação'; break;
+                                      case '10': $chgepe = 'Qtd de Horas de Atividade'; break;
+                                  }
+                              }
                               $gepedesc = $rsgepe['gdesc'];  
                               $gepetitulo = $rsgepe['titulo'];  
                               $gepecargahr = $rsgepe['cargahr'];  
@@ -663,7 +688,7 @@ if($rs){
                             </div>
                             <div class="col-md-3">
                                 <ul class="list-group">
-                                    <li class="list-group-item bg-light"><b>Carga Horária: </b><?= $gepecargahr ?></li>
+                                    <li class="list-group-item bg-light"><b><?= $chgepe ?>: </b><?= $gepecargahr ?></li>
                                 </ul>
                             </div>
                             <div class="col-md-9">
@@ -806,7 +831,7 @@ if($rs){
                     </div>
                     <div class="card-body">
                         <?php
-                        $sqlit = "select i.descricao as idesc, mi.id, mi.titulo, mi.cargahr, mi.anexo, mi.dthrcadastro, 
+                        $sqlit = "select i.descricao as idesc, mi.id, mi.idinovtecnologica, mi.titulo, mi.cargahr, mi.anexo, mi.dthrcadastro, 
                                     mi.flagparecer, mi.parecer, mi.pareceruser, mi.parecerdthr, mi.pontuacao 
                                     from aperfeicoamentoprofissional ap 
                                     inner join medico_inovtecnologica mi on ap.id = mi.idaperfprof 
@@ -825,6 +850,14 @@ if($rs){
                             do{
                               $auxit++;
                               $itid = $rsit['id'];  
+                              $itidinovtecnologica = $rsit['idinovtecnologica'];
+                              $chit = '';
+                              if($itidinovtecnologica !== null && $itidinovtecnologica !== ''){
+                                  switch ($itidinovtecnologica){
+                                      case '1': $chit = "Carga Horária"; break;
+                                      case '2': $chit = "Carga Horária"; break;
+                                  }
+                              }
                               $itdesc = $rsit['idesc'];  
                               $ittitulo = $rsit['titulo'];  
                               $itcargahr = $rsit['cargahr'];  
@@ -867,7 +900,7 @@ if($rs){
                             </div>
                             <div class="col-md-3">
                                 <ul class="list-group">
-                                    <li class="list-group-item bg-light"><b>Carga Horária: </b><?= $itcargahr ?></li>
+                                    <li class="list-group-item bg-light"><b><?= $chit ?>: </b><?= $itcargahr ?></li>
                                 </ul>
                             </div>
                             <div class="col-md-9">

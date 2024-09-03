@@ -71,7 +71,7 @@ if($rs2){
     }while ($rs2 = mysqli_fetch_array($query2));
 }
 //verifica se há parecer negativo para essa a atividade Qualificação Clínica
-$sqlqc = "select q.descricao as qcdesc, mq.id, mq.titulo, mq.cargahr, mq.anexo, mq.dthrcadastro, 
+$sqlqc = "select q.descricao as qcdesc, mq.id, mq.idqualifclinica, mq.titulo, mq.cargahr, mq.anexo, mq.dthrcadastro, 
     mq.flagparecer, mq.parecer, mq.pareceruser, mq.parecerdthr, mq.pontuacao, mq.flagup 
     from aperfeicoamentoprofissional ap 
     inner join medico_qualifclinica mq on ap.id = mq.idaperfprof 
@@ -81,7 +81,7 @@ $qqc = mysqli_query($conn, $sqlqc) or die(mysqli_error($conn));
 $nrqc = mysqli_num_rows($qqc);
 $rsqc = mysqli_fetch_array($qqc);
 //verifica se há parecer negativo para essa a atividade Gestão, Ensino, Pesquisa e Extensão
-$sqlgepe = "select g.descricao as gdesc, mg.id, mg.titulo, mg.cargahr, mg.anexo, mg.dthrcadastro, 
+$sqlgepe = "select g.descricao as gdesc, mg.id, mg.idgesenspesext, mg.titulo, mg.cargahr, mg.anexo, mg.dthrcadastro, 
     mg.flagparecer, mg.parecer, mg.pareceruser, mg.parecerdthr,mg.pontuacao, mg.flagup 
     from aperfeicoamentoprofissional ap 
     inner join medico_gesenspesext mg on ap.id = mg.idaperfprof 
@@ -91,7 +91,7 @@ $qgepe = mysqli_query($conn, $sqlgepe) or die(mysqli_error($conn));
 $nrgepe = mysqli_num_rows($qgepe);
 $rsgepe = mysqli_fetch_array($qgepe);
 //verifica se há parecer negativo para essa a atividade Inovação Tecnológica
-$sqlit = "select i.descricao as idesc, mi.id, mi.titulo, mi.cargahr, mi.anexo, mi.dthrcadastro, 
+$sqlit = "select i.descricao as idesc, mi.id, mi.idinovtecnologica, mi.titulo, mi.cargahr, mi.anexo, mi.dthrcadastro, 
     mi.flagparecer, mi.parecer, mi.pareceruser, mi.parecerdthr, mi.pontuacao , mi.flagup 
     from aperfeicoamentoprofissional ap 
     inner join medico_inovtecnologica mi on ap.id = mi.idaperfprof 
@@ -274,7 +274,7 @@ $rsit = mysqli_fetch_array($qit);
                             </div>
                         </div>
                         <div class="row mb-2 divQualiClinica">
-                            <div class="col-md-8">
+                            <div class="col-md-9">
                                 <div class="col-md-12"><b>Atividade</b></div>
                                 <div class="col-md-12">
                                     <select class="form-control" id="slQualiClinica" name="slQualiClinica">
@@ -296,8 +296,8 @@ $rsit = mysqli_fetch_array($qit);
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                <div class="col-md-12"><b>Carga Horária</b></div>
+                            <div class="col-md-3">
+                                <div class="col-md-12" id="qcch"><b>Carga Horária</b></div>
                                 <div class="col-md-12"><input type="number" class="form-control" min="1" id="cargahrQualiClinica" name="cargahrQualiClinica" /></div>
                             </div>
                             <div class="col-md-6">
@@ -310,13 +310,18 @@ $rsit = mysqli_fetch_array($qit);
                             </div>
                         </div>
                         <div class="row mb-2 divQualiClinica">
-                            <div class="col-md-6">
+                            <div class="col-md-3">
+                                <div class="col-md-12"><b>Qtd de novas atividades</b></div>
+                                <div class="col-md-12"><input type="number" class="form-control" min="1" id="qtdatvqc" name="qtdatvqc" /></div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="col-md-12">&nbsp;</div>    
                                 <div class="col-md-12"><button type="button" class="btn btn-primary" id="btnQualiClinica" ><i class="fas fa-plus-circle"></i> ADD ATIVIDADES</button></div>
                             </div>
                         </div>
                         <div class="row mb-2 divQualiClinica">
                             <div class="col-md-12 pl-5">
-                                <label class="text-info"><small><i class="fas fa-hand-point-up"></i> &nbsp;Clique conforme o número de atividades a serem preenchidas.</small>
+                                <label class="text-info"><small><i class="fas fa-hand-point-up"></i> &nbsp;Digite o número de atividades a serem preenchidas.</small>
                             </div>
                         </div>
                         <div class="row mb-2 divQualiClinica" id="divQualiClinica1"></div>
@@ -335,7 +340,7 @@ $rsit = mysqli_fetch_array($qit);
                             <div class="col-md-12">
                                 <div class="col-md-12"><b>Possui atividade a declarar neste item?</b></div>
                                 <div class="col-md-3">
-                                    <select class="form-control " id="rdGes" name="rdGes">
+                                    <select class="form-control" id="rdGes" name="rdGes">
                                         <option value="">[--SELECIONE--]</option>
                                         <option value="1">SIM</option>
                                         <option value="0">NÃO</option>
@@ -344,7 +349,7 @@ $rsit = mysqli_fetch_array($qit);
                             </div>
                         </div>
                         <div class="row mb-2 divGesEnsPesExt">
-                            <div class="col-md-8">
+                            <div class="col-md-9">
                                 <div class="col-md-12"><b>Atividade</b></div>
                                 <div class="col-md-12">
                                     <select class="form-control" id="slGesEnsPesExt" name="slGesEnsPesExt">
@@ -366,8 +371,8 @@ $rsit = mysqli_fetch_array($qit);
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                <div class="col-md-12"><b>Carga Horária</b></div>
+                            <div class="col-md-3">
+                                <div class="col-md-12" id="gepech"><b>Carga Horária</b></div>
                                 <div class="col-md-12"><input type="number" class="form-control" min="1" id="cargahrGesEnsPesExt" name="cargahrGesEnsPesExt" /></div>
                             </div>
                             <div class="col-md-6">
@@ -380,13 +385,18 @@ $rsit = mysqli_fetch_array($qit);
                             </div>
                         </div>
                         <div class="row mb-2 divGesEnsPesExt">
-                            <div class="col-md-6">
+                            <div class="col-md-3">
+                                <div class="col-md-12"><b>Qtd de novas atividades</b></div>
+                                <div class="col-md-12"><input type="number" class="form-control" min="1" id="qtdatvgepe" name="qtdatvgepe" /></div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="col-md-12">&nbsp;</div>
                                 <div class="col-md-12"><button type="button" class="btn btn-primary" id="btnGesEnsPesExt" ><i class="fas fa-plus-circle"></i> ADD ATIVIDADES</button></div>
                             </div>
                         </div>
                         <div class="row mb-2 divGesEnsPesExt">
                             <div class="col-md-12 pl-5">
-                                <label class="text-info"><small><i class="fas fa-hand-point-up"></i> &nbsp;Clique conforme o número de atividades a serem preenchidas.</small>
+                                <label class="text-info"><small><i class="fas fa-hand-point-up"></i> &nbsp;Digite o número de atividades a serem preenchidas.</small>
                             </div>
                         </div>
                         <div class="row mb-2 divGesEnsPesExt" id="divGesEnsPesExt1"></div>
@@ -414,7 +424,7 @@ $rsit = mysqli_fetch_array($qit);
                             </div>
                         </div>
                         <div class="row mb-2 divInovTec">
-                            <div class="col-md-8">
+                            <div class="col-md-9">
                                 <div class="col-md-12"><b>Atividade</b></div>
                                 <div class="col-md-12">
                                     <select class="form-control" id="slInovTec" name="slInovTec">
@@ -436,7 +446,7 @@ $rsit = mysqli_fetch_array($qit);
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="col-md-12"><b>Carga Horária</b></div>
                                 <div class="col-md-12"><input type="number" class="form-control" min="1" id="cargahrInovTec" name="cargahrInovTec" /></div>
                             </div>
@@ -450,13 +460,18 @@ $rsit = mysqli_fetch_array($qit);
                             </div>
                         </div>
                         <div class="row mb-2 divInovTec">
-                            <div class="col-md-6">
+                            <div class="col-md-3">
+                                <div class="col-md-12"><b>Qtd de novas atividades</b></div>
+                                <div class="col-md-12"><input type="number" class="form-control" min="1" id="qtdatvit" name="qtdatvit" /></div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="col-md-12">&nbsp;</div>    
                                 <div class="col-md-12"><button type="button" class="btn btn-primary" id="btnInovTec" ><i class="fas fa-plus-circle"></i> ADD ATIVIDADES</button></div>
                             </div>
                         </div>
                         <div class="row mb-2 divInovTec">
                             <div class="col-md-12 pl-5">
-                                <label class="text-info"><small><i class="fas fa-hand-point-up"></i> &nbsp;Clique conforme o número de atividades a serem preenchidas.</small>
+                                <label class="text-info"><small><i class="fas fa-hand-point-up"></i> &nbsp;Digite o número de atividades a serem preenchidas.</small>
                             </div>
                         </div>
                         <div class="row mb-2 divInovTec" id="divInovTec1"></div>
@@ -575,18 +590,15 @@ $rsit = mysqli_fetch_array($qit);
                                             </div>
                                             <div class="col-md-6">
                                                 <ul class="list-group">
-                                                    <li class="list-group-item bg-light"><b>Análise realizado por: </b><?= $pareceruserap ?></li>
-                                                </ul>
-                                                <ul class="list-group">
-                                                    <li class="list-group-item bg-light"><b>Data e hora do envio: </b><?= $parecerdthrap ?></li>
+                                                    <li class="list-group-item bg-light"><b>Data e hora do envio: </b><label><?= $parecerdthrap ?></label></li>
                                                 </ul>
                                             </div>
                                             <div class="col-md-6">
                                                 <?php 
                                                 if($pontuacaoaptxt === '0,00'){ 
-                                                    $pontoaptxt = "<label class='form-control bg-light text-danger'>$pontuacaoaptxt</label>";
+                                                    $pontoaptxt = "<label class='text-danger'>$pontuacaoaptxt</label>";
                                                 }else{ 
-                                                    $pontoaptxt = "<label class='form-control bg-light text-primary'>$pontuacaoaptxt</label>";
+                                                    $pontoaptxt = "<label class='text-primary'>$pontuacaoaptxt</label>";
                                                 }?>
                                                 <ul class="list-group">
                                                     <li class="list-group-item bg-light"><b>Pontuação adquirida: </b> <?= $pontoaptxt ?></li>
@@ -694,6 +706,15 @@ $rsit = mysqli_fetch_array($qit);
                         if($flagupqc !== null && $flagupqc === '1'){ continue; }
                         $auxqc++;
                         $qcid = $rsqc['id'];
+                        $qcidqualifclinica = $rsqc['idqualifclinica'];
+                        $chqc = '';
+                        if($qcidqualifclinica !== null && $qcidqualifclinica !== ''){
+                            if($qcidqualifclinica === '3'){
+                                $chqc = 'Conforme CME';
+                            }else{
+                                $chqc = 'Carga Horária';
+                            }
+                        }
                         $qcdesc = $rsqc['qcdesc'];
                         $qctitulo = $rsqc['titulo'];
                         $qccargahr = $rsqc['cargahr'];
@@ -732,7 +753,7 @@ $rsit = mysqli_fetch_array($qit);
                                 </div>
                                 <div class="col-md-3">
                                     <ul class="list-group">
-                                        <li class="list-group-item bg-light"><b>Carga Horária: </b><?= $qccargahr ?></li>
+                                        <li class="list-group-item bg-light"><b><?= $chqc ?>: </b><?= $qccargahr ?></li>
                                     </ul>
                                 </div>
                                 <div class="col-md-9">
@@ -779,18 +800,15 @@ $rsit = mysqli_fetch_array($qit);
                                             </div>
                                             <div class="col-md-6">
                                                 <ul class="list-group">
-                                                    <li class="list-group-item bg-light"><b>Análise realizado por: </b><?= $qcpareceruser ?></li>
-                                                </ul>
-                                                <ul class="list-group">
-                                                    <li class="list-group-item bg-light"><b>Data e hora do envio: </b><?= $qcparecerdthr ?></li>
+                                                    <li class="list-group-item bg-light"><b>Data e hora do envio: </b><label><?= $qcparecerdthr ?></label></li>
                                                 </ul>
                                             </div>
                                             <div class="col-md-6">
                                                 <?php 
                                                 if($qcpontuacaotxt === '0,00'){ 
-                                                    $qcponttxt = "<label class='form-control bg-light text-danger'>$qcpontuacaotxt</label>";
+                                                    $qcponttxt = "<label class='text-danger'>$qcpontuacaotxt</label>";
                                                 }else{ 
-                                                    $qcponttxt = "<label class='form-control bg-light text-primary'>$qcpontuacaotxt</label>";
+                                                    $qcponttxt = "<label class='text-primary'>$qcpontuacaotxt</label>";
                                                 }?>
                                                 <ul class="list-group">
                                                     <li class="list-group-item bg-light"><b>Pontuação adquirida: </b> <?= $qcponttxt ?></li>
@@ -824,7 +842,7 @@ $rsit = mysqli_fetch_array($qit);
                                             <div class="col-md-8">
                                                 <div class="col-md-12"><b>Atividade</b></div>
                                                 <div class="col-md-12">
-                                                    <select class="form-control" id="slQualiClinica" name="slQualiClinica">
+                                                    <select class="form-control" id="slQualiClinicaup" name="slQualiClinica">
                                                         <option value="">[--SELECIONE--]</option>
                                                         <?php
                                                         $sqlqualifcli = "select idqualifclinica as idq, descricao as descq from qualifclinica";
@@ -844,7 +862,7 @@ $rsit = mysqli_fetch_array($qit);
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
-                                                <div class="col-md-12"><b>Carga Horária</b></div>
+                                                <div class="col-md-12" id="qcup"><b>Carga Horária</b></div>
                                                 <div class="col-md-12"><input type="number" class="form-control" min="1" id="cargahrQualiClinica" name="cargahrQualiClinica" /></div>
                                             </div>
                                             <div class="col-md-6">
@@ -934,6 +952,22 @@ $rsit = mysqli_fetch_array($qit);
                         if($flagupgepe !== null && $flagupgepe === '1'){ continue; }
                         $auxgepe++;
                         $gepeid = $rsgepe['id'];  
+                        $gepeidgesenspesext = $rsgepe['idgesenspesext'];
+                        $chgepe = '';
+                        if($gepeidgesenspesext !== null && $gepeidgesenspesext !== ''){
+                            switch ($gepeidgesenspesext){
+                                case '1': $chgepe = 'Carga Horária'; break;
+                                case '2': $chgepe = 'Carga Horária'; break;
+                                case '3': $chgepe = 'Qtd de Publicações'; break;
+                                case '4': $chgepe = 'Qtd de Publicações'; break;
+                                case '5': $chgepe = 'Qtd de Publicações'; break;
+                                case '6': $chgepe = 'Qtd de Publicações'; break;
+                                case '7': $chgepe = 'Qtd de Participação'; break;
+                                case '8': $chgepe = 'Qtd de Participação'; break;
+                                case '9': $chgepe = 'Qtd de Participação'; break;
+                                case '10': $chgepe = 'Qtd de Horas de Atividade'; break;
+                            }
+                        }
                         $gepedesc = $rsgepe['gdesc'];  
                         $gepetitulo = $rsgepe['titulo'];  
                         $gepecargahr = $rsgepe['cargahr'];  
@@ -972,7 +1006,7 @@ $rsit = mysqli_fetch_array($qit);
                                 </div>
                                 <div class="col-md-3">
                                     <ul class="list-group">
-                                        <li class="list-group-item bg-light"><b>Carga Horária: </b><?= $gepecargahr ?></li>
+                                        <li class="list-group-item bg-light"><b><?= $chgepe ?>: </b><?= $gepecargahr ?></li>
                                     </ul>
                                 </div>
                                 <div class="col-md-9">
@@ -1020,18 +1054,15 @@ $rsit = mysqli_fetch_array($qit);
                                             </div>
                                             <div class="col-md-6">
                                                 <ul class="list-group">
-                                                    <li class="list-group-item bg-light"><b>Análise realizado por: </b><?= $gepepareceruser ?></li>
-                                                </ul>
-                                                <ul class="list-group">
-                                                    <li class="list-group-item bg-light"><b>Data e hora do envio: </b><?= $gepeparecerdthr ?></li>
+                                                    <li class="list-group-item bg-light"><b>Data e hora do envio: </b><label><?= $gepeparecerdthr ?></label></li>
                                                 </ul>
                                             </div>
                                             <div class="col-md-6">
                                                 <?php 
                                                 if($gepepontuacaotxt === '0,00'){ 
-                                                    $gepeponttxt = "<label class='form-control bg-light text-danger'>$gepepontuacaotxt</label>";
+                                                    $gepeponttxt = "<label class='text-danger'>$gepepontuacaotxt</label>";
                                                 }else{ 
-                                                    $gepeponttxt = "<label class='form-control bg-light text-primary'>$gepepontuacaotxt</label>";
+                                                    $gepeponttxt = "<label class='text-primary'>$gepepontuacaotxt</label>";
                                                 }?>
                                                 <ul class="list-group">
                                                     <li class="list-group-item bg-light"><b>Pontuação adquirida: </b> <?= $gepeponttxt ?></li>
@@ -1064,7 +1095,7 @@ $rsit = mysqli_fetch_array($qit);
                                             <div class="col-md-8">
                                                 <div class="col-md-12"><b>Atividade</b></div>
                                                 <div class="col-md-12">
-                                                    <select class="form-control" id="slGesEnsPesExt" name="slGesEnsPesExt">
+                                                    <select class="form-control" id="slGesEnsPesExtup" name="slGesEnsPesExt">
                                                         <option value="">[--SELECIONE--]</option>
                                                         <?php
                                                         $sqlgesenspesext = "select idgesenspesext as idg, descricao as descg from gesenspesext";
@@ -1084,7 +1115,7 @@ $rsit = mysqli_fetch_array($qit);
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
-                                                <div class="col-md-12"><b>Carga Horária</b></div>
+                                                <div class="col-md-12" id="gepechup"><b>Carga Horária</b></div>
                                                 <div class="col-md-12"><input type="number" class="form-control" min="1" id="cargahrGesEnsPesExt" name="cargahrGesEnsPesExt" /></div>
                                             </div>
                                             <div class="col-md-6">
@@ -1175,6 +1206,14 @@ $rsit = mysqli_fetch_array($qit);
                         if($flagupit !== null && $flagupit === '1'){ continue; }
                         $auxit++;
                         $itid = $rsit['id'];  
+                        $itidinovtecnologica = $rsit['idinovtecnologica'];
+                        $chit = '';
+                        if($itidinovtecnologica !== null && $itidinovtecnologica !== ''){
+                            switch ($itidinovtecnologica){
+                                case '1': $chit = "Carga Horária"; break;
+                                case '2': $chit = "Carga Horária"; break;
+                            }
+                        }
                         $itdesc = $rsit['idesc'];  
                         $ittitulo = $rsit['titulo'];  
                         $itcargahr = $rsit['cargahr'];  
@@ -1213,7 +1252,7 @@ $rsit = mysqli_fetch_array($qit);
                             </div>
                             <div class="col-md-3">
                                 <ul class="list-group">
-                                    <li class="list-group-item bg-light"><b>Carga Horária: </b><?= $itcargahr ?></li>
+                                    <li class="list-group-item bg-light"><b><?= $chit ?>: </b><?= $itcargahr ?></li>
                                 </ul>
                             </div>
                             <div class="col-md-9">
@@ -1260,18 +1299,15 @@ $rsit = mysqli_fetch_array($qit);
                                             </div>
                                             <div class="col-md-6">
                                                 <ul class="list-group">
-                                                    <li class="list-group-item bg-light"><b>Análise realizado por: </b><?= $itpareceruser ?></li>
-                                                </ul>
-                                                <ul class="list-group">
-                                                    <li class="list-group-item bg-light"><b>Data e hora do envio: </b><?= $itparecerdthr ?></li>
+                                                    <li class="list-group-item bg-light"><b>Data e hora do envio: </b><label><?= $itparecerdthr ?></label></li>
                                                 </ul>
                                             </div>
                                             <div class="col-md-6">
                                                 <?php 
                                                 if($itpontuacaotxt === '0,00'){ 
-                                                    $itponttxt = "<label class='form-control bg-light text-danger'>$itpontuacaotxt</label>";
+                                                    $itponttxt = "<label class='text-danger'>$itpontuacaotxt</label>";
                                                 }else{ 
-                                                    $itponttxt = "<label class='form-control bg-light text-primary'>$itpontuacaotxt</label>";
+                                                    $itponttxt = "<label class='text-primary'>$itpontuacaotxt</label>";
                                                 }?>
                                                 <ul class="list-group">
                                                     <li class="list-group-item bg-light"><b>Pontuação adquirida: </b> <?= $itponttxt ?></li>
@@ -1491,9 +1527,12 @@ $rsit = mysqli_fetch_array($qit);
             return;
        }
        let a = 0;
-       a = document.querySelectorAll('.divQualiClinica').length;
+//       a = document.querySelectorAll('.divQualiClinica').length;
+       a = $("#qtdatvqc").val();
 //       console.log(a);
-       addQualiClinica(a);
+       if(a !== '0' && a !== ''){
+           addQualiClinica(a);
+       }
     });
     $('#btnGesEnsPesExt').click(function(){
        let slGesEnsPesExt = $('#slGesEnsPesExt').val();
@@ -1510,9 +1549,12 @@ $rsit = mysqli_fetch_array($qit);
             return;
        }
        let a = 0;
-       a = document.querySelectorAll('.divGesEnsPesExt').length;
+//       a = document.querySelectorAll('.divGesEnsPesExt').length;
+       a = $("#qtdatvgepe").val();
 //       console.log(a);
-       addGesEnsPesExt(a);
+       if(a !== '0' && a !== ''){
+           addGesEnsPesExt(a);
+       }
     });
     $('#btnInovTec').click(function(){
        let slInovTec = $('#slInovTec').val();
@@ -1529,9 +1571,12 @@ $rsit = mysqli_fetch_array($qit);
             return;
        }
        let a = 0;
-       a = document.querySelectorAll('.divInovTec').length;
+//       a = document.querySelectorAll('.divInovTec').length;
+       a = $("#qtdatvit").val();
 //       console.log(a);
-       addInovTec(a);
+       if(a !== '0' && a !== ''){
+           addInovTec(a);
+       }
     });
     function retiraAtvLongDur(num){
         $('#atvLongDur'+num).remove();
@@ -1732,6 +1777,134 @@ $rsit = mysqli_fetch_array($qit);
         }
 //        console.log(analise);
     }
+    
+    $("#slGesEnsPesExtup").change(function(){
+       let slgepeup =  $("#slGesEnsPesExtup").val();
+       if(slgepeup !== ""){
+           switch(slgepeup){
+               case '1': $("#gepechup").html('');
+                   $("#gepechup").html('<b>Carga Horária</b>'); break;
+               case '2': $("#gepechup").html('');
+                   $("#gepechup").html('<b>Carga Horária</b>'); break;
+               case '3': $("#gepechup").html('');
+                   $("#gepechup").html('<b>Qtd de Publicações</b>'); break;
+               case '4': $("#gepechup").html('');
+                   $("#gepechup").html('<b>Qtd de Publicações</b>'); break;
+               case '5': $("#gepechup").html('');
+                   $("#gepechup").html('<b>Qtd de Publicações</b>'); break;
+               case '6': $("#gepechup").html('');
+                   $("#gepechup").html('<b>Qtd de Publicações</b>'); break;
+               case '7': $("#gepechup").html('');
+                   $("#gepechup").html('<b>Qtd de Participação</b>'); break;
+               case '8': $("#gepechup").html('');
+                   $("#gepechup").html('<b>Qtd de Participação</b>'); break;
+               case '9': $("#gepechup").html('');
+                   $("#gepechup").html('<b>Qtd de Participação</b>'); break;
+               case '10': $("#gepechup").html('');
+                   $("#gepechup").html('<b>Qtd de Horas de Atividade</b>'); break;
+               
+           }
+       }
+    });
+    $("#slGesEnsPesExt").change(function(){
+       let slgepe =  $("#slGesEnsPesExt").val();
+       if(slgepe !== ""){
+           switch(slgepe){
+               case '1': $("#gepech").html('');
+                   $("#gepech").html('<b>Carga Horária</b>'); break;
+               case '2': $("#gepech").html('');
+                   $("#gepech").html('<b>Carga Horária</b>'); break;
+               case '3': $("#gepech").html('');
+                   $("#gepech").html('<b>Qtd de Publicações</b>'); break;
+               case '4': $("#gepech").html('');
+                   $("#gepech").html('<b>Qtd de Publicações</b>'); break;
+               case '5': $("#gepech").html('');
+                   $("#gepech").html('<b>Qtd de Publicações</b>'); break;
+               case '6': $("#gepech").html('');
+                   $("#gepech").html('<b>Qtd de Publicações</b>'); break;
+               case '7': $("#gepech").html('');
+                   $("#gepech").html('<b>Qtd de Participação</b>'); break;
+               case '8': $("#gepech").html('');
+                   $("#gepech").html('<b>Qtd de Participação</b>'); break;
+               case '9': $("#gepech").html('');
+                   $("#gepech").html('<b>Qtd de Participação</b>'); break;
+               case '10': $("#gepech").html('');
+                   $("#gepech").html('<b>Qtd de Horas de Atividade</b>'); break;
+               
+           }
+       }
+    });
+    function slgepeall(a){
+        console.log("entrou no slgepeall");
+        $("#slGesEnsPesExt"+a).change(function(){
+            let slgepe =  $("#slGesEnsPesExt"+a).val();
+            if(slgepe !== ""){
+                switch(slgepe){
+                    case '1': $("#gepech"+a).html('');
+                        $("#gepech"+a).html('<b>Carga Horária</b>'); break;
+                    case '2': $("#gepech"+a).html('');
+                        $("#gepech"+a).html('<b>Carga Horária</b>'); break;
+                    case '3': $("#gepech"+a).html('');
+                        $("#gepech"+a).html('<b>Qtd de Publicações</b>'); break;
+                    case '4': $("#gepech"+a).html('');
+                        $("#gepech"+a).html('<b>Qtd de Publicações</b>'); break;
+                    case '5': $("#gepech"+a).html('');
+                        $("#gepech"+a).html('<b>Qtd de Publicações</b>'); break;
+                    case '6': $("#gepech"+a).html('');
+                        $("#gepech"+a).html('<b>Qtd de Publicações</b>'); break;
+                    case '7': $("#gepech"+a).html('');
+                        $("#gepech"+a).html('<b>Qtd de Participação</b>'); break;
+                    case '8': $("#gepech"+a).html('');
+                        $("#gepech"+a).html('<b>Qtd de Participação</b>'); break;
+                    case '9': $("#gepech"+a).html('');
+                        $("#gepech"+a).html('<b>Qtd de Participação</b>'); break;
+                    case '10': $("#gepech"+a).html('');
+                        $("#gepech"+a).html('<b>Qtd de Horas de Atividade</b>'); break;
+
+                }
+            }
+         });
+    }
+    $("#slQualiClinica").change(function(){
+       let slqc = $("#slQualiClinica").val();
+       if(slqc !== ''){
+           if(slqc === '3'){
+               $("#qcch").html('');
+               $("#qcch").html('<b>Conforme CME</b>');
+           }else{
+               $("#qcch").html('');
+               $("#qcch").html('<b>Carga Horária</b>');
+           }
+       }
+    });
+    function slqcall(a){
+        console.log("entrou no slqcall");
+        $("#slQualiClinica"+a).change(function(){
+            let slqc = $("#slQualiClinica"+a).val();
+            if(slqc !== ''){
+                if(slqc === '3'){
+                    $("#qcch"+a).html('');
+                    $("#qcch"+a).html('<b>Conforme CME</b>');
+                }else{
+                    $("#qcch"+a).html('');
+                    $("#qcch"+a).html('<b>Carga Horária</b>');
+                }
+            }
+        });
+    }
+    
+    $("#slQualiClinicaup").change(function(){
+       let slqcup = $("#slQualiClinicaup").val();
+       if(slqcup !== ''){
+           if(slqcup === '3'){
+               $("#qcup").html('');
+               $("#qcup").html('<b>Conforme CME</b>');
+           }else{
+               $("#qcup").html('');
+               $("#qcup").html('<b>Carga Horária</b>');
+           }
+       }
+    });
     </script>
 </body>
 

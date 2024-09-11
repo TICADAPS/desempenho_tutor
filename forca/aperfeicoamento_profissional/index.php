@@ -41,7 +41,7 @@ date_default_timezone_set('America/Sao_Paulo');
 //$anoAtual = date('Y');
 $anoAtual = 2024;
 $ano = 2024;
-$ciclo = 1;
+$ciclo = 3;
 $ctap = 0;
 $sql = "select distinct m.nome, m.admissao, m.cargo, m.tipologia, m.uf, m.municipio, m.datacadastro, m.cpf, m.ibge, m.cnes,
  m.ine, ivs.descricao as ivs from medico m left join ivs on m.fkivs = ivs.idivs order by m.nome";
@@ -185,7 +185,7 @@ $contt = 0;
                     <img src="../../img_agsus/Logo_400x200.png" class="img-fluid" alt="logoAdaps" width="250" title="Logo Adaps">
                 </div>
                 <div class="col-12 col-md-9 mt-5 ">
-                    <h4 class="mb-4 font-weight-bold">Unidade de Serviços em Saúde - Aperfeiçoamento Profissional</h4>
+                    <h4 class="mb-4 font-weight-bold">Unidade de Serviços em Saúde | Aperfeiçoamento Profissional</h4>
                 </div>
             </div>
             <div class="row">

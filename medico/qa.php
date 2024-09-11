@@ -1,11 +1,9 @@
 <?php
 session_start();
 include './../conexao-agsus.php';
-$ine = $_GET['i'];
-
 date_default_timezone_set('America/Sao_Paulo');
-
-$anoAtual = 2023;
+$ine = $_REQUEST['i'];
+$anoAtual = $_REQUEST['ano'];
 $inetratado = str_replace("-", "", $ine);
 $inetratado = str_replace(".", "", $inetratado);
 $inetratado = str_replace(".", "", $inetratado);
@@ -62,12 +60,13 @@ if ($nrrs > 0) {
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <div id="menuPrincipal" class="collapse navbar-collapse">
-                            <ul class="navbar-nav">
-
+                            <ul class="navbar-nav p-1">
+                                <li class="text-secondary pl-2 pr-2"><a href="./" class="btn">Início</a></li>
+                                <li class="text-secondary pl-2 pr-2"><a href="./controller/derruba_session.php" class="btn"><i class="fas fa-sign-out-alt"></i></a></li>
 
                             </ul>
                         </div>
-                    </nav> 
+                    </nav>
                 </div>
             </div>
             <div class="row p-2">

@@ -18,9 +18,9 @@ $anoAtual = date('Y');
 $anomesdiaAtual = date('Ymd');
 $anomesdiaAtual = (int)$anomesdiaAtual;
 //$anoAtual = 2023;
-$ano = 2023;
-$ciclo = 1;
-$idperiodo = 25;
+$ano = $_SESSION['ano'];
+$ciclo = $_SESSION['ciclo'];
+$idperiodo = $_SESSION['periodo'];
 $flagincent = 0;
 $cpftratado = str_replace("-", "", $cpf);
 $cpftratado = str_replace(".", "", $cpftratado);
@@ -222,17 +222,50 @@ if ($nrrsqa > 0) {
             #incentivo:hover{
                 font-size: 13px;
             }
+            .testeira{
+                width: 100%;
+                height: 100px;
+            }
+            .titulotes{
+                border: 1px solid #0269B0;
+                background-color: #0269B0;
+                border-top-left-radius: 60px;
+                border-top-right-radius: 60px;
+                padding: 15px 0px 10px 40px;
+                width: 55%;
+                color: #fff;
+                font-weight: bold;
+            }
+            .testeirabody{
+                border: 1px solid #0269B0;
+                background-color: #fff;
+                border-top-left-radius: 40px;
+                border-top-right-radius: 40px;
+                border-bottom-left-radius: 40px;
+                border-bottom-right-radius: 40px;
+                padding: 15px;
+                margin-top: -20px;
+                width: 80%;
+                margin-left: -6px;
+            }
         </style>
     </head>
 
     <body>
         <div class="container-fluid p-3">
-            <div class="row">
+            <div class="row mb-4">
                 <div class="col-12 col-md-3 mt-4 pl-5">
                     <img src="../img_agsus/Logo_400x200.png" class="img-fluid" alt="logoAdaps" width="250" title="Logo Adaps">
                 </div>
-                <div class="col-12 col-md-9 mt-2 text-center">
-                    <img src="../img_agsus/TESTEIRA001.png" class="img-fluid">
+                <div class="col-12 col-md-7 offset-1 mt-2 pl-5 pr-4 mb-4">
+                    <div class="testeira">
+                        <div class="titulotes"><h4>Painel de Resultados</h4></div>
+                        <div class="testeirabody h5 text-primary text-center">
+                          <?= $ciclo ?>º Ciclo do Programa de Avaliação do 
+                          Desempenho do Médico Tutor <br>(Ano <?= $ano ?>)
+                        </div>
+                    </div>
+                    <!--<img src="../img_agsus/TESTEIRA001.png" class="img-fluid">-->
 <!--                    <h4 class="mb-4 font-weight-bold text-center">Painel de Resultados</h4> 
                     <h4 class="mb-4 font-weight-bold text-center">1º Ciclo do Programa de Avaliação de Desempenho do Médico Tutor - Ano <?= $ano1 ?></h4>-->
                 </div>
@@ -259,6 +292,9 @@ if ($nrrsqa > 0) {
                                         <a class="dropdown-item" href="../ano.php?c=<?= $cpftratado ?>&a=2023">2023</a>
                                     </div>
                                 </li>-->
+                                <li class="nav-item">
+                                    <a href="../medico/" class="nav-link">Início</a>
+                                </li>
                                 <li class="nav-item">
                                     <a href="" class="nav-link">Painel de Resultados</a>
                                 </li>

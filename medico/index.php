@@ -4,32 +4,7 @@ include '../conexao_agsus_2.php';
 include '../conexao-agsus.php';
 include '../Controller_agsus/maskCpf.php';
 include '../Controller_agsus/fdatas.php';
-//if (!isset($_SESSION['cpf'])) {
-//   header("Location: ../derruba_session.php"); exit();
-//}
-//$cpf = $_SESSION['cpf'];
-//if (!isset($_SESSION['idUser'])) {
-//    header("Location: ../derruba_session.php");
-//    exit();
-//}
-//if (!isset($_SESSION['perfil'])) {
-//    header("Location: ../derruba_session.php");
-//    exit();
-//}
-//if (!isset($_SESSION['nivel'])) {
-//    header("Location: ../derruba_session.php");
-//    exit();
-//}
-//if($_SESSION['perfil'] !== '2' && $_SESSION['perfil'] !== '3' && $_SESSION['perfil'] !== '6' && $_SESSION['perfil'] !== '7' && $_SESSION['perfil'] !== '8'){
-//    header("Location: ../derruba_session.php");
-//    exit();
-//}
-//$perfil = $_SESSION['perfil'];
-//$nivel = $_SESSION['nivel'];
-$perfil = '3';
-$nivel = '1';
-$_SESSION['perfil'] = $perfil;
-$_SESSION['nivel'] = $nivel;
+
 if (!isset($_SESSION['msg'])) {
     $_SESSION['msg'] = "";
 }
@@ -55,20 +30,20 @@ if (!isset($_SESSION['ciclo'])) {
     $_SESSION['ciclo'] = '';
 }
 //var_dump($_SESSION['msg']);
-//$cpftratado = '00101831161';
-//$_SESSION['cpf'] = $cpftratado;
-//$cpf = substr_replace($cpftratado, "-", 9, 0);
-//$cpf = substr_replace($cpf, ".", 6, 0);
-//$cpf = substr_replace($cpf, ".", 3, 0);
-//$medico = 'CAROLINA MILITAO SPAGNOL';
-//$ibgeO = '352690';
-//$cnes = '3797902';
-//$ine = '1587021';
-//$_SESSION['cpft'] = $cpftratado;
-//$_SESSION['nome'] = $medico;
-//$_SESSION['ibgeO'] = $ibgeO;
-//$_SESSION['cnes'] = $cnes;
-//$_SESSION['ine'] = $ine;
+$cpftratado = '00101831161';
+$_SESSION['cpf'] = $cpftratado;
+$cpf = substr_replace($cpftratado, "-", 9, 0);
+$cpf = substr_replace($cpf, ".", 6, 0);
+$cpf = substr_replace($cpf, ".", 3, 0);
+$medico = 'CAROLINA MILITAO SPAGNOL';
+$ibgeO = '352690';
+$cnes = '3797902';
+$ine = '1587021';
+$_SESSION['cpft'] = $cpftratado;
+$_SESSION['nome'] = $medico;
+$_SESSION['ibgeO'] = $ibgeO;
+$_SESSION['cnes'] = $cnes;
+$_SESSION['ine'] = $ine;
 $sqlano = "select ano from anoacicloavaliacao group by ano";
 $queryano = mysqli_query($conn, $sqlano) or die(mysqli_error($conn));
 $rsano = mysqli_fetch_array($queryano);
@@ -96,11 +71,11 @@ $rsano4 = mysqli_fetch_array($queryano4);
     <body>
         <div class="container-fluid mt-2">
             <div class="row">
-                <div class="col-12 col-md-3 mt-4 pl-5">
+                <div class="col-12 col-md-4 mt-4 pl-5">
                     <img src="../img_agsus/Logo_400x200.png" class="img-fluid" alt="logoAdaps" width="250" title="Logo Adaps">
                 </div>
-                <div class="col-12 col-md-9 mt-5">
-                    <h4 class="mb-4 font-weight-bold text-left">Unidade de Serviços em Saúde | Painel dos Domínios da Avaliação de Desempenho</h4>
+                <div class="col-12 col-md-8 mt-5">
+                    <h4 class="mb-4 font-weight-bold text-left">Painel dos Domínios da Avaliação de Desempenho</h4>
                 </div>
             </div>
             <div class="row">
@@ -144,9 +119,16 @@ $rsano4 = mysqli_fetch_array($queryano4);
                                         <div class="p-2">
                                             <h5 class="text-info mt-3">Qualidade Assistencial</h5>
                                             <div class="card ">
+                                                <!--                            <div class="card-header" style="background-color: #bfddf3;">
+                                                                              Título do card
+                                                                            </div>-->
                                                 <div class="card-body">
                                                     <blockquote class="blockquote mb-3">
-                                                        <form method="post" enctype="multipart/form-data" action="./controller/lqa.php">
+                                                        <form method="post" enctype="multipart/form-data" action="qa.php">
+                        <!--                                    <input type="hidden" value="<?= $cpftratado ?>" name="cpf">
+                                                            <input type="hidden" value="<?= $ibgeO ?>" name="ibgeO">
+                                                            <input type="hidden" value="<?= $cnes ?>" name="cnes">-->
+                                                            <input type="hidden" value="<?= $ine ?>" name="i">
                                                             <p>Texto explicativo - conteúdo com opção de escolha do ano.</p>
                                                             <div class="row">
                                                                 <div class="col-md-4">
@@ -170,7 +152,7 @@ $rsano4 = mysqli_fetch_array($queryano4);
                                                                 <div class="col-md-4">
                                                                     <div class="col-12">&nbsp;</div>
                                                                     <div class="col-12">
-                                                                        <button type="submit" class="btn btn-primary form-control" >Pesquisar <i class="fas fa-search"></i></button>
+                                                                        <button type="submit" class="btn btn-outline-primary form-control" >Pesquisar <i class="fas fa-search"></i></button>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -184,9 +166,17 @@ $rsano4 = mysqli_fetch_array($queryano4);
                                         <div class="p-2">
                                             <h5 class="text-info mt-3">Aperfeiçoamento Profissional</h5>
                                             <div class="card ">
+                                                <!--                            <div class="card-header" style="background-color: #bfddf3;">
+                                                                              Título do card
+                                                                            </div>-->
                                                 <div class="card-body">
                                                     <blockquote class="blockquote mb-3">
-                                                        <form method="post" enctype="multipart/form-data" action="./controller/lap.php">
+                                                        <form method="post" enctype="multipart/form-data" action="./controller/transfdadosap.php">
+                                                            <input type="hidden" value="<?= $cpftratado ?>" name="cpf">
+                                                            <input type="hidden" value="<?= $medico ?>" name="nome">
+                                                            <input type="hidden" value="<?= $ibgeO ?>" name="ibgeO">
+                                                            <input type="hidden" value="<?= $cnes ?>" name="cnes">
+                                                            <input type="hidden" value="<?= $ine ?>" name="ine">
                                                             <p>Texto explicativo - conteúdo com opção de escolha do ano e do ciclo.</p>
                                                             <div class="row">
                                                                 <div class="col-md-4">
@@ -221,7 +211,7 @@ $rsano4 = mysqli_fetch_array($queryano4);
                                                                 <div class="col-md-4">
                                                                     <div class="col-12">&nbsp;</div>
                                                                     <div class="col-12">
-                                                                        <button type="submit" class="btn btn-primary form-control" >Pesquisar <i class="fas fa-search"></i></button>
+                                                                        <button type="submit" class="btn btn-outline-primary form-control" >Pesquisar <i class="fas fa-search"></i></button>
                                                                     </div>
 
                                                                 </div>
@@ -232,13 +222,20 @@ $rsano4 = mysqli_fetch_array($queryano4);
                                             </div>
                                         </div>
                                     </div>
-                                    <div id="menu2" class="tab-pane fade">
+<!--                                    <div id="menu2" class="tab-pane fade">
                                         <div class="p-2">
                                             <h5 class="text-info mt-3">Avaliação de Competências Profissionais</h5>
                                             <div class="card ">
+                                                                            <div class="card-header" style="background-color: #bfddf3;">
+                                                                              Título do card
+                                                                            </div>
                                                 <div class="card-body">
                                                     <blockquote class="blockquote mb-3">
-                                                        <form method="post" enctype="multipart/form-data" action="./controller/lacp.php">
+                                                        <form method="post" enctype="multipart/form-data" action="./autoavaliacao/">
+                                                            <input type="hidden" value="<?= $cpftratado ?>" name="cpf">
+                                                            <input type="hidden" value="<?= $ibgeO ?>" name="ibgeO">
+                                                            <input type="hidden" value="<?= $cnes ?>" name="cnes">
+                                                            <input type="hidden" value="<?= $ine ?>" name="ine">
                                                             <p>Texto explicativo - conteúdo com opção de escolha do ano e do ciclo.</p>
                                                             <div class="row">
                                                                 <div class="col-md-4">
@@ -272,7 +269,7 @@ $rsano4 = mysqli_fetch_array($queryano4);
                                                                 <div class="col-md-4">
                                                                     <div class="col-12">&nbsp;</div>
                                                                     <div class="col-12">
-                                                                        <button type="submit" class="btn btn-primary form-control" >Pesquisar <i class="fas fa-search"></i></button>
+                                                                        <button type="submit" class="btn btn-outline-primary form-control" >Pesquisar <i class="fas fa-search"></i></button>
                                                                     </div>
 
                                                                 </div>
@@ -282,14 +279,21 @@ $rsano4 = mysqli_fetch_array($queryano4);
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div>-->
                                     <div id="menu3" class="tab-pane fade">
                                         <div class="p-2">
                                             <h5 class="text-info mt-3">Demonstrativo</h5>
                                             <div class="card ">
+                                                <!--                            <div class="card-header" style="background-color: #bfddf3;">
+                                                                              Título do card
+                                                                            </div>-->
                                                 <div class="card-body">
                                                     <blockquote class="blockquote mb-3">
-                                                        <form method="post" enctype="multipart/form-data" action="./controller/ldem.php">
+                                                        <form method="post" enctype="multipart/form-data" action="./controller/transfdadosd.php">
+                                                            <input type="hidden" value="<?= $cpftratado ?>" name="cpf">
+                                                            <input type="hidden" value="<?= $ibgeO ?>" name="ibgeO">
+                                                            <input type="hidden" value="<?= $cnes ?>" name="cnes">
+                                                            <input type="hidden" value="<?= $ine ?>" name="ine">
                                                             <p>Texto explicativo - conteúdo com opção de escolha do ano e do ciclo.</p>
                                                             <div class="row">
                                                                 <div class="col-md-3">
@@ -332,7 +336,7 @@ $rsano4 = mysqli_fetch_array($queryano4);
                                                                 <div class="col-md-3">
                                                                     <div class="col-12">&nbsp;</div>
                                                                     <div class="col-12">
-                                                                        <button type="submit" id="btdemons" class="btn btn-primary form-control" >Pesquisar <i class="fas fa-search"></i></button>
+                                                                        <button type="submit" id="btdemons" class="btn btn-outline-primary form-control" >Pesquisar <i class="fas fa-search"></i></button>
                                                                     </div>
 
                                                                 </div>

@@ -45,13 +45,6 @@ if($rsm){
         $nome = $rsm['NomeMedico'];
         $email = $rsm['email'];
     }while ($rsm = mysqli_fetch_array($qm));
-    if(!isset($_POST['upEnv']) || trim($_POST['upEnv']) === ''){
-        $_SESSION['msg'] = "<h6 class='bg-warning border rounded text-dark p-2'>&nbsp;<i class='fas fa-hand-point-right'></i>&nbsp; Selecione a permissão ou não para atualização das atividades não aprovadas.</h6>";
-        echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
-            URL=\"../index.php?ct=$cpf&ib=$ibge&c=$cnes&i=$ine&a=$ano&ci=$ciclo\"'>"; 
-        exit();
-    }
-    $upEnv = $_POST['upEnv'];
     date_default_timezone_set('America/Sao_Paulo');
     $dthoje = date('Y-m-d H:i:s');
     //var_dump($_POST);
@@ -63,7 +56,7 @@ if($rsm){
         $mensagemEmail = "*** ATENÇÃO: Este é um e-mail automático enviado pelo sistema. Informamos que esta caixa de e-mail não é monitorada, portanto, por favor, não responda a esta mensagem."
                 . "<br><br>";
         $mensagemEmail .= "Prezado(a) Tutor(a) Médico(a) $nome, <br><br>";
-        $mensagemEmail .= 'Comunicamos que <b>VOCÊ AINDA NÃO ALCANÇOU A META DE 50 CRÉDITOS</b> referente ao domínio de Comprovantes de Aperfeiçoamento, desta forma solicito que insira na plataforma outros comprovantes que no seu somatório compute o mínimo créditos exigidos para o "Ciclo do Programa de Avaliação de Desempenho do Médico Tutor". <br><br>';
+        $mensagemEmail .= 'Comunicamos que <b>VOCÊ ALCANÇOU A META DE 50 CRÉDITOS</b> referente ao domínio de Comprovantes de Aperfeiçoamento, conforme exigido para o "Ciclo do Programa de Avaliação de Desempenho do Médico Tutor". <br><br>';
         $mensagemEmail .= "-- <br>";
         $mensagemEmail .= "Atenciosamente, <br><br>";
         $mensagemEmail .= "Agência Brasileira de Apoio à Gestão do Sistema Único de Saúde - AgSUS.";
@@ -78,51 +71,46 @@ if($rsm){
         if ($email->send()) {
             $ap->flagemail = '1';
             $ap->dthremail = $dthoje;
-            $ap->save();
-
+            
             //Mudando a flagup para que o médico possa preencher e enviar a atualização das atividades
-            if($upEnv === '1'){
-                if($ap->flagparecer === '0'){
-                    $ap->flagup = '0';
-                    $rsap = $ap->save();
-                }
-                $qc = (new Source\Models\Medico_qualifclinica())->findJQCUp($idap);
-        //        var_dump($qc);
-                if($qc !== null){
-                    foreach ($qc as $q){
-                        $idqc = $q->id;
-                        $qcUp = (new Source\Models\Medico_qualifclinica())->findById($idqc);
-                        if($qcUp !== null){
-                            if($qcUp->flagparecer === '0'){
-                                $qcUp->flagup = '0';
-                                $rsqcUp = $qcUp->save();
-                            }
+            $ap->flagparecer = '1';
+            $ap->save();
+            $qc = (new Source\Models\Medico_qualifclinica())->findJQCUp($idap);
+            //        var_dump($qc);
+            if ($qc !== null) {
+                foreach ($qc as $q) {
+                    $idqc = $q->id;
+                    $qcUp = (new Source\Models\Medico_qualifclinica())->findById($idqc);
+                    if ($qcUp !== null) {
+                        if ($qcUp->flagparecer === '0') {
+                            $qcUp->flagup = '1';
+                            $rsqcUp = $qcUp->save();
                         }
                     }
                 }
-                $gepe = (new Source\Models\Medico_gesenspesext)->findJGepeUp($idap);
-                if($gepe !== null){
-                    foreach ($gepe as $g){
-                        $idgepe = $g->id;
-                        $gepeUp = (new Source\Models\Medico_gesenspesext())->findById($idgepe);
-                        if($gepeUp !== null){
-                            if($gepeUp->flagparecer === '0'){
-                                $gepeUp->flagup = '0';
-                                $gepeUp->save();
-                            }
+            }
+            $gepe = (new Source\Models\Medico_gesenspesext)->findJGepeUp($idap);
+            if ($gepe !== null) {
+                foreach ($gepe as $g) {
+                    $idgepe = $g->id;
+                    $gepeUp = (new Source\Models\Medico_gesenspesext())->findById($idgepe);
+                    if ($gepeUp !== null) {
+                        if ($gepeUp->flagparecer === '0') {
+                            $gepeUp->flagup = '1';
+                            $gepeUp->save();
                         }
                     }
                 }
-                $it = (new Source\Models\Medico_inovtecnologica())->findJItUp($idap);
-                if($it !== null){
-                    foreach ($it as $i){
-                        $idit = $i->id;
-                        $itUp = (new Source\Models\Medico_inovtecnologica())->findById($idit);
-                        if($itUp !== null){
-                            if($itUp->flagparecer === '0'){
-                                $itUp->flagup = '0';
-                                $itUp->save();
-                            }
+            }
+            $it = (new Source\Models\Medico_inovtecnologica())->findJItUp($idap);
+            if ($it !== null) {
+                foreach ($it as $i) {
+                    $idit = $i->id;
+                    $itUp = (new Source\Models\Medico_inovtecnologica())->findById($idit);
+                    if ($itUp !== null) {
+                        if ($itUp->flagparecer === '0') {
+                            $itUp->flagup = '1';
+                            $itUp->save();
                         }
                     }
                 }

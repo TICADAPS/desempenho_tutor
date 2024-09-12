@@ -54,6 +54,7 @@ if (!isset($_SESSION['ano'])) {
 if (!isset($_SESSION['ciclo'])) {
     $_SESSION['ciclo'] = '';
 }
+$_SESSION["idUser"] = 2765;
 //var_dump($_SESSION['msg']);
 //$cpftratado = '00101831161';
 //$_SESSION['cpf'] = $cpftratado;

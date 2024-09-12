@@ -110,10 +110,10 @@ if (!empty($_FILES["arquivo"]["tmp_name"])) {
             $query = mysqli_query($conn, $sql) or die(mysql0i_error($conn));
             $nrrs = mysqli_num_rows($query);
             if($nrrs > 0){
-                $ano = 2023;
+                $ano = 2024;
                 $ciclo = 1;
                 $fkincentivo = 1;
-                $periodo = 25;
+                $periodo = 23;
 //                echo "$a - passou aqui <br>";
                 $linha = mysqli_fetch_array($query);
                 do{

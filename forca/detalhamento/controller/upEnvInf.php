@@ -34,7 +34,16 @@ $ine = $_POST['ine'];
 $idap = $_POST['idap'];
 $ano = $_POST['ano'];
 $ciclo = $_POST['ciclo'];
-$user = 'RICARDO LIMA AMARAL';
+$iduser = $_SESSION["idUser"];
+$sqlu = "select * from usuarios where id_user = '$iduser'";
+$qu = mysqli_query($conn2, $sqlu) or die(mysqli_error($conn2));
+$ru = mysqli_fetch_array($qu);
+$user = "";
+if($ru){
+    do{
+        $user = $ru['nome_user'];
+    }while($ru = mysqli_fetch_array($qu));
+}
 //var_dump($_POST);
 $cpfmask = mask($cpf, "###.###.###-##");
 $sqlm = "select NomeMedico, email from medico where CpfMedico = '$cpfmask' and flagInativo <> 1 limit 1";
@@ -78,6 +87,7 @@ if($rsm){
         if ($email->send()) {
             $ap->flagemail = '1';
             $ap->dthremail = $dthoje;
+            $ap->usuario = $user;
             $ap->save();
 
             //Mudando a flagup para que o médico possa preencher e enviar a atualização das atividades

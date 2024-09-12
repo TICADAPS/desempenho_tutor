@@ -18,7 +18,8 @@ $ciclo = $_GET['ci'];
 $qcp = $gepep = $itp = 0;
 $sql = "select m.nome, m.admissao, m.cargo, mun.Municipio, e.UF, ivs.descricao, ap.id, 
     ap.dthrcadastro, ap.flagativlongduracao, ap.flagparecer as flagparecerap, ap.pontuacao,
-    ap.parecer as parecerap, ap.pareceruser as pareceruserap, ap.parecerdthr as parecerdthrap 
+    ap.parecer as parecerap, ap.pareceruser as pareceruserap, ap.parecerdthr as parecerdthrap,
+    ap.flagemail, ap.dthremail 
     from medico m inner join aperfeicoamentoprofissional ap on m.cpf = ap.cpf and 
     m.ibge = ap.ibge and m.cnes = ap.cnes and m.ine = ap.ine 
     inner join municipio mun on mun.cod_munc = m.ibge 
@@ -28,7 +29,7 @@ $sql = "select m.nome, m.admissao, m.cargo, mun.Municipio, e.UF, ivs.descricao, 
         . "and ap.ano = '$ano' and ap.ciclo='$ciclo'";
 $query = mysqli_query($conn, $sql) or die(mysqli_error($conn));
 $rs = mysqli_fetch_array($query);
-$municipioO = $ufO = "";
+$municipioO = $ufO = $flagemail = $dthremail = "";
 $flagld = $flagqc = $flaggepe = $flagit = false;
 if($rs){
     do{
@@ -54,8 +55,14 @@ if($rs){
         $pareceruserap = $rs['pareceruserap'];
         $parecerdthrap = vemdata($rs['parecerdthrap']);  
         $parecerdthrap .= ", às ".horaEmin($rs['parecerdthrap']).".";
+        $flagemail = $rs['flagemail'];
+        $dthremail = $rs['dthremail'];
     }while ($rs = mysqli_fetch_array($query));
 }
+if($flagemail !== null && $flagemail !== '' && $flagemail === '1'){
+    $dthremail = "E-Mail enviado: ".vemdata($dthremail).", às ". hora2($dthremail);
+}
+//var_dump($dthremail);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -76,6 +83,48 @@ if($rs){
             </div>
             <div class="col-12 col-md-8 mt-5">
                 <h4 class="mb-4 font-weight-bold text-left">Comprovante de Aperfeiçoamento Profissional</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 mb-2">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light rounded">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menuPrincipal" aria-controls="menuPrincipal" aria-expanded="false" aria-label="Menu collapse">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+
+                    <div id="menuPrincipal" class="collapse navbar-collapse pr-2 pl-3">
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a href="../index.php" class="nav-link">Inicio </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="">|</a>
+                            </li>
+                            <!-- Navbar dropdown -->
+                            <li class="nav-item dropdown">
+                                <!--<a class="nav-link dropdown-toggle" href="../relatorios/relatorio_geral_igad.php">Relatório Geral IGAD - 1º ciclo de 2023</a>-->
+                                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">Relatórios</a>
+                                <div class="dropdown-menu">
+                                    <?php if ($perfil === '3' && $nivel === '1') { ?>
+                                        <!--<a class="dropdown-item" href="../relatorios/relatorio_geral_igad.php">Relatório Geral IGAD - 1º ciclo de 2024</a>-->
+                                    <?php } ?>
+                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="">|</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="../derruba_session.php"><i class="fas fa-sign-out-alt pt-1"></i></a>
+                            </li>
+                            <li class="nav-item">
+                                <div id="loading">
+                                    &nbsp;<img class="float-right" src="../../img/carregando.gif" width="40" height="40" />
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </nav> 
             </div>
         </div>
         <div class="container-fluid mt-4">
@@ -161,17 +210,22 @@ if($rs){
                     </div>
                     <div class="card-body">
                         <div class="row mb-2">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="col-md-12"><b>Pontuação dos itens aprovados</b></div>
                                 <div class="col-md-12"><input type="text" class="form-control bg-light font-weight-bold text-primary" disabled="disabled" id="ptgeral" /></div>
                             </div>
-                            <div class="col-md-6" id="email50Mais">
+                            <div class="col-md-4" id="email50Mais">
                                 <div class="col-md-12"><b>Enviar E-Mail para o Médico - igual ou superior a 50 pontos.</b></div>
                                 <div class="col-md-12"><button type="button" class="shadow-sm border-light btn btn-info form-control" data-toggle="modal" data-target="#modalSup50"><i class="fas fa-mail-bulk"></i>&nbsp; Igual ou superior a 50 pontos</button></div>
                             </div>
-                            <div class="col-md-6" id="emailAbaixo50">
+                            <div class="col-md-4" id="emailAbaixo50">
                                 <div class="col-md-12"><b>Enviar E-Mail para o Médico - abaixo de 50 pontos</b></div>
                                 <div class="col-md-12"><button type="button" class="shadow-sm border-light btn btn-warning form-control" data-toggle="modal" data-target="#modalInf50"><i class="fas fa-mail-bulk"></i>&nbsp; Abaixo de 50 pontos</button></div>
+                            </div>
+                            <div class="col-md-4">
+                                <?php if($dthremail !== null && $dthremail !== ''){ ?>
+                                <div class="col-md-12 text-info"><br><b><i class="fas fa-mail-bulk"></i> &nbsp;<i><?= $dthremail ?></i>.</b></div>
+                                <?php } ?>
                             </div>
                         </div>
                     </div>
@@ -198,10 +252,15 @@ if($rs){
               </div>
               <div class="modal-body">
                   <p>O médico atingiu a pontuação prevista. Informá-lo através de uma mensagem eletrônica padrão.</p>
+                  <div class="row mt-2 mb-2">
+                      <div class="col-md-4 offset-4">
+                          <img class="float-right" id="loading1" src="./../../img/carregando.gif" width="40" height="40" />
+                      </div>
+                  </div>
               </div>
               <div class="modal-footer bg-light">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCELAR</button>
-                <button type="submit" class="btn btn-primary" name="envSup50">ENVIAR E-MAIL</button>
+                <button type="submit" class="btn btn-primary" id="btenvsup50" name="envSup50">ENVIAR E-MAIL</button>
               </div>
                 </form>
             </div>
@@ -229,19 +288,22 @@ if($rs){
               <div class="modal-body">
                   <p>O médico <label class="text-danger">NÃO</label> atingiu a pontuação prevista. Informá-lo através de uma mensagem eletrônica padrão.</p>
                   <div class="row mt-2 mb-2">
-                      <div class="col-md-12"><b>Permitir que o médico refaça o envio das atividades não aprovadas?</b></div>
-                      <div class="col-md-12">
+                      <div class="col-md-12 mb-2"><b>Permitir que o médico refaça o envio das atividades não aprovadas?</b></div>
+                      <div class="col-md-10">
                           <select name="upEnv" id="upEnv" class="form-control">
                               <option value="">[--SELECIONE--]</option>
                               <option value="1">SIM</option>
                               <option value="0">NÃO</option>
                           </select>
                       </div>
+                      <div class="col-md-2">
+                          <img class="float-right" id="loading2" src="./../../img/carregando.gif" width="40" height="40" />
+                      </div>
                   </div>
               </div>
               <div class="modal-footer bg-light">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCELAR</button>
-                <button type="submit" class="btn btn-primary" name="envSup50">ENVIAR E-MAIL</button>
+                <button type="submit" class="btn btn-primary" id="btenvinf50" name="envSup50">ENVIAR E-MAIL</button>
               </div>
                 </form>
             </div>
@@ -1099,6 +1161,25 @@ if($rs){
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="addcamps.js"></script>
     <script>
+    $(function () {
+        $('.dropdown-toggle').dropdown();
+    }); 
+    $(document).on('click', '.dropdown-toggle ', function (e) {
+        e.stopPropagation();
+    });
+          
+    $(document).ready(function () {
+        //console.log("clicou");
+        document.getElementById("loading").style.display = "block";
+    });
+    var i = setInterval(function () {
+        clearInterval(i);
+        // O código desejado é apenas isto:
+        document.getElementById("loading").style.display = "none";
+        document.getElementById("conteudo").style.display = "inline";
+    }, 1000);
+    </script>
+    <script>
     $(document).ready(function (){
        $('.divLongDuracao').hide();
        $('.divQualiClinica').hide();
@@ -1441,6 +1522,39 @@ if($rs){
         }
 //        console.log(analise);
     }
+    
+    // Selecionar o botão e a imagem da ampulheta
+    const btenvsup50 = document.getElementById('btenvsup50');
+    const loading1 = document.getElementById('loading1');
+    loading1.style.display = 'none';
+    // Adicionar um evento de clique ao botão ENVIAR E-MAIL
+    btenvsup50.addEventListener('click', function() {
+        // Mostrar a imagem da ampulheta
+        loading1.style.display = 'block';
+        // Simular um atraso de envio de e-mail (somente para fins de demonstração)
+        setTimeout(function() {
+          // Ocultar o modal após o envio
+          $('#modalSup50').modal('hide');
+          // Ocultar novamente a imagem da ampulheta após fechar o modal
+          loading1.style.display = 'none';
+        }, 3000); // 3 segundos simulados de envio
+    });
+    // Selecionar o botão e a imagem da ampulheta
+    const btenvinf50 = document.getElementById('btenvinf50');
+    const loading2 = document.getElementById('loading2');
+    loading2.style.display = 'none';
+    // Adicionar um evento de clique ao botão ENVIAR E-MAIL
+    btenvinf50.addEventListener('click', function() {
+    // Mostrar a imagem da ampulheta
+        loading2.style.display = 'block';
+        // Simular um atraso de envio de e-mail (somente para fins de demonstração)
+        setTimeout(function() {
+          // Ocultar o modal após o envio
+          $('#modalInf50').modal('hide');
+          // Ocultar novamente a imagem da ampulheta após fechar o modal
+          loading2.style.display = 'none';
+        }, 3000); // 3 segundos simulados de envio
+    });
     </script>
 </body>
 

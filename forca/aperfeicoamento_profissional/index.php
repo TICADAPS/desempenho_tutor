@@ -198,39 +198,31 @@ $contt = 0;
 
                         <div id="menuPrincipal" class="collapse navbar-collapse pr-2 pl-3">
                             <ul class="navbar-nav">
-<!--                                <li class="nav-item">
+                                <li class="nav-item">
                                     <a href="../index.php" class="nav-link">Inicio </a>
                                 </li>
-                                 Navbar dropdown 
+                                <li class="nav-item">
+                                    <a class="nav-link" href="">|</a>
+                                </li>
+                                <!-- Navbar dropdown -->
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">Ano </a>
+                                    <!--<a class="nav-link dropdown-toggle" href="../relatorios/relatorio_geral_igad.php">Relatório Geral IGAD - 1º ciclo de 2023</a>-->
+                                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">Relatórios</a>
                                     <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="#">2024</a>
-                                        <a class="dropdown-item" href="#">2023</a>
+                                        <?php if($perfil === '3' && $nivel === '1'){ ?>
+                                        <!--<a class="dropdown-item" href="../relatorios/relatorio_geral_igad.php">Relatório Geral IGAD - 1º ciclo de 2024</a>-->
+                                        <?php } ?>
                                     </div>
-                                </li>-->
-<!--                                <li class="nav-item">
-                                        <a class="nav-link" href="">|</a>
-                                    </li>-->
-                                    <!-- Navbar dropdown -->
-                                    <li class="nav-item dropdown">
-                                        <!--<a class="nav-link dropdown-toggle" href="../relatorios/relatorio_geral_igad.php">Relatório Geral IGAD - 1º ciclo de 2023</a>-->
-                                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">Relatórios</a>
-                                        <div class="dropdown-menu">
-                                            <?php if($perfil === '3' && $nivel === '1'){ ?>
-                                            <!--<a class="dropdown-item" href="../relatorios/relatorio_geral_igad.php">Relatório Geral IGAD - 1º ciclo de 2024</a>-->
-                                            <?php } ?>
-                                        </div>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="">|</a>
-                                    </li>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="">|</a>
+                                </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="../derruba_session.php"><i class="fas fa-sign-out-alt pt-1"></i></a>
                                 </li>
                                 <li class="nav-item">
                                     <div id="loading">
-                                        &nbsp;<img class="float-right" src="../img_agsus/carregando.gif" width="40" height="40" />
+                                        &nbsp;<img class="float-right" src="../../img/carregando.gif" width="40" height="40" />
                                     </div>
                                 </li>
                             </ul>

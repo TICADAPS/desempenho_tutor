@@ -15,5 +15,5 @@ $_SESSION['ano'] = $_POST['ano'];
 $_SESSION['ciclo'] = $_POST['ciclo'];
 $_SESSION['periodo'] = $_POST['periodo'];
 
-header("location: ../listaDesempenho.php");
+header("location: ../aperfeicoamento_profissional/");
 exit();

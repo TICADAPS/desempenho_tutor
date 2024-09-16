@@ -8,18 +8,18 @@ include '../../Controller_agsus/fdatas.php';
 if (!isset($_SESSION['msg'])) {
     $_SESSION['msg'] = "";
 }
-$cpf = $_GET['ct'];
+$cpf = $_REQUEST['ct'];
 $cpfmask = mask($cpf, "###.###.###-##");
-$ibge = $_GET['ib'];
-$cnes = $_GET['c'];
-$ine = $_GET['i'];
-$ano = $_GET['a'];
-$ciclo = $_GET['ci'];
+$ibge = $_REQUEST['ib'];
+$cnes = $_REQUEST['c'];
+$ine = $_REQUEST['i'];
+$ano = $_REQUEST['a'];
+$ciclo = $_REQUEST['ci'];
 $qcp = $gepep = $itp = 0;
 $sql = "select m.nome, m.admissao, m.cargo, mun.Municipio, e.UF, ivs.descricao, ap.id, 
     ap.dthrcadastro, ap.flagativlongduracao, ap.flagparecer as flagparecerap, ap.pontuacao,
     ap.parecer as parecerap, ap.pareceruser as pareceruserap, ap.parecerdthr as parecerdthrap,
-    ap.flagemail, ap.dthremail 
+    ap.flagemail, ap.dthremail, ap.flagterminou 
     from medico m inner join aperfeicoamentoprofissional ap on m.cpf = ap.cpf and 
     m.ibge = ap.ibge and m.cnes = ap.cnes and m.ine = ap.ine 
     inner join municipio mun on mun.cod_munc = m.ibge 
@@ -57,6 +57,7 @@ if($rs){
         $parecerdthrap .= ", às ".horaEmin($rs['parecerdthrap']).".";
         $flagemail = $rs['flagemail'];
         $dthremail = $rs['dthremail'];
+        $flagterminou = $rs['flagterminou'];
     }while ($rs = mysqli_fetch_array($query));
 }
 if($flagemail !== null && $flagemail !== '' && $flagemail === '1'){
@@ -214,6 +215,7 @@ if($flagemail !== null && $flagemail !== '' && $flagemail === '1'){
                                 <div class="col-md-12"><b>Pontuação dos itens aprovados</b></div>
                                 <div class="col-md-12"><input type="text" class="form-control bg-light font-weight-bold text-primary" disabled="disabled" id="ptgeral" /></div>
                             </div>
+                            <?php if($flagterminou !== '1'){ ?>
                             <div class="col-md-4" id="email50Mais">
                                 <div class="col-md-12"><b>Enviar E-Mail para o Médico - igual ou superior a 50 pontos.</b></div>
                                 <div class="col-md-12"><button type="button" class="shadow-sm border-light btn btn-info form-control" data-toggle="modal" data-target="#modalSup50"><i class="fas fa-mail-bulk"></i>&nbsp; Igual ou superior a 50 pontos</button></div>
@@ -222,6 +224,14 @@ if($flagemail !== null && $flagemail !== '' && $flagemail === '1'){
                                 <div class="col-md-12"><b>Enviar E-Mail para o Médico - abaixo de 50 pontos</b></div>
                                 <div class="col-md-12"><button type="button" class="shadow-sm border-light btn btn-warning form-control" data-toggle="modal" data-target="#modalInf50"><i class="fas fa-mail-bulk"></i>&nbsp; Abaixo de 50 pontos</button></div>
                             </div>
+                            <?php }else{ ?>
+                            <div class="col-md-4">
+                                <div class="col-md-12">&nbsp;</div>
+                                <div class="col-md-12 text-center">
+                                    <label class="text-danger h6"><i class="fas fa-chevron-circle-right float-left mt-1"></i>&nbsp;&nbsp; Análise Finalizada &nbsp;&nbsp;<i class="fas fa-chevron-circle-left float-right mt-1"></i></label>
+                                </div>
+                            </div>
+                            <?php } ?>
                             <div class="col-md-4">
                                 <?php if($dthremail !== null && $dthremail !== ''){ ?>
                                 <div class="col-md-12 text-info"><br><b><i class="fas fa-mail-bulk"></i> &nbsp;<i><?= $dthremail ?></i>.</b></div>
@@ -292,8 +302,8 @@ if($flagemail !== null && $flagemail !== '' && $flagemail === '1'){
                       <div class="col-md-10">
                           <select name="upEnv" id="upEnv" class="form-control">
                               <option value="">[--SELECIONE--]</option>
-                              <option value="1">SIM</option>
-                              <option value="0">NÃO</option>
+                              <option value="0">SIM</option>
+                              <option value="1">NÃO</option>
                           </select>
                       </div>
                       <div class="col-md-2">
@@ -342,9 +352,9 @@ if($flagemail !== null && $flagemail !== '' && $flagemail === '1'){
                                 <div class="row mb-2">
                                     <div class="col-md-12">
                                         <?php if($flagparecerap === '1'){
-                                            $ldpar = "Aprovado";
+                                            $ldpar = "<label class='text-primary'>Aprovado</label>";
                                         }else{ 
-                                            $ldpar = "Não aprovado";
+                                            $ldpar = "<label class='text-danger'>Não aprovado</label>";
                                         }
                                         ?>
                                         <ul class="list-group">

@@ -101,7 +101,7 @@ $rsano4 = mysqli_fetch_array($queryano4);
                     <img src="../img_agsus/Logo_400x200.png" class="img-fluid" alt="logoAdaps" width="250" title="Logo Adaps">
                 </div>
                 <div class="col-12 col-md-9 mt-5">
-                    <h4 class="mb-4 font-weight-bold text-left">Unidade de Serviços em Saúde | Painel dos Domínios da Avaliação de Desempenho</h4>
+                    <h4 class="mb-4 font-weight-bold text-left">Unidade de Serviços em Saúde &nbsp;|&nbsp; Painel da Avaliação de Desempenho</h4>
                 </div>
             </div>
             <div class="row">
@@ -123,59 +123,150 @@ $rsano4 = mysqli_fetch_array($queryano4);
             <div class="col-12 shadow rounded pt-3 pb-3 mb-3">
                 <div class="p-2">
                     <div class="card">
-                        <div class="card-header" style="background-color: #0055A1; color: #fff;"><b>Domínios da Avaliação de Desempenho</b></div>
+                        <div class="card-header" style="background-color: #0055A1; color: #fff;"><b>Avaliação de Desempenho</b></div>
                         <div class="card-body">
                             <blockquote class="blockquote mb-3">
                                 <ul class="nav nav-tabs">
                                     <li class="nav-item active small" id="itemAtivado">
-                                        <a class="nav-link" data-toggle="tab" href="#home">Qualidade Assistencial</a>
+                                        <a class="nav-link" data-toggle="tab" href="#home">Domínios</a>
                                     </li>
                                     <li class="nav-item small" onclick="itemDesativado();">
-                                        <a class="nav-link" data-toggle="tab" href="#menu1">Aperfeiçoamento Profissional</a>
+                                        <a class="nav-link" data-toggle="tab" href="#menu1">Resultado da Avaliação de Desempenho</a>
+                                    </li>
+                                    <li class="nav-item small" onclick="itemDesativado();">
+                                        <a class="nav-link" data-toggle="tab" href="#menu2">Abertura e Fechamento de Ciclo</a>
                                     </li>
 <!--                                    <li class="nav-item small" onclick="itemDesativado();">
-                                        <a class="nav-link" data-toggle="tab" href="#menu2">Avaliação de Competências Profissionais</a>
-                                    </li>-->
-                                    <li class="nav-item small" onclick="itemDesativado();">
                                         <a class="nav-link" data-toggle="tab" href="#menu3">Demonstrativo</a>
-                                    </li>
+                                    </li>-->
                                 </ul>
                                 <div class="tab-content">
                                     <div id="home" class="tab-pane fade in show active">
                                         <div class="p-2">
-                                            <h5 class="text-info mt-3">Qualidade Assistencial</h5>
-                                            <div class="card ">
+                                            <div class="card border-0">
                                                 <div class="card-body">
                                                     <blockquote class="blockquote mb-3">
-                                                        <form method="post" enctype="multipart/form-data" action="./controller/lqa.php">
-                                                            <p>Texto explicativo - conteúdo com opção de escolha do ano.</p>
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <div class="col-12"><b>Escolha o ano:</b></div>
-                                                                    <div class="col-12">
-                                                                        <select class="form-control" name="ano" id="ano">
-                                                                            <option value="">[--SELECIONE--]</option>
-                                                                            <?php
-                                                                            if ($rsano) {
-                                                                                do {
-                                                                                    $ano = $rsano['ano'];
-                                                                                    ?>
-                                                                                    <option><?= $ano ?></option>
-                                                                                    <?php
-                                                                                } while ($rsano = mysqli_fetch_array($queryano));
-                                                                            }
-                                                                            ?>
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <div class="col-12">&nbsp;</div>
-                                                                    <div class="col-12">
-                                                                        <button type="submit" class="btn btn-primary form-control" >Pesquisar <i class="fas fa-search"></i></button>
+                                                        <ul class="nav nav-tabs">
+                                                            <li class="nav-item active small" id="itemAtivado">
+                                                                <a class="nav-link" data-toggle="tab" href="#home2">Aperfeiçoamento Profissional</a>
+                                                            </li>
+                                                            <li class="nav-item small" onclick="itemDesativado();">
+                                                                <a class="nav-link" data-toggle="tab" href="#menu2_1">Competências Profissionais</a>
+                                                            </li>
+<!--                                                            <li class="nav-item small" onclick="itemDesativado();">
+                                                                <a class="nav-link" data-toggle="tab" href="#menu2">Avaliação de Competências Profissionais</a>
+                                                            </li>-->
+                        <!--                                    <li class="nav-item small" onclick="itemDesativado();">
+                                                                <a class="nav-link" data-toggle="tab" href="#menu3">Demonstrativo</a>
+                                                            </li>-->
+                                                        </ul>
+                                                        <div class="tab-content">
+                                                            <div id="home2" class="tab-pane fade in show active">
+                                                                <div class="p-2">
+                                                                    <h5 class="text-info mt-3">Aperfeiçoamento Profissional</h5>
+                                                                    <div class="card ">
+                                                                        <div class="card-body">
+                                                                            <blockquote class="blockquote mb-3">
+                                                                                <form method="post" enctype="multipart/form-data" action="./controller/lap.php">
+                                                                                    <div class="row">
+                                                                                        <div class="col-md-3">
+                                                                                            <div class="col-12"><b>Escolha o ano:</b></div>
+                                                                                            <div class="col-12">
+                                                                                                <select class="form-control" name="ano" id="anoap">
+                                                                                                    <option value="">[--SELECIONE--]</option>
+                                                                                                    <?php
+                                                                                                    if ($rsano2) {
+                                                                                                        do {
+                                                                                                            $ano2 = $rsano2['ano'];
+                                                                                                            ?>
+                                                                                                            <option><?= $ano2 ?></option>
+                                                                                                            <?php
+                                                                                                        } while ($rsano2 = mysqli_fetch_array($queryano2));
+                                                                                                    }
+                                                                                                    ?>
+                                                                                                </select>
+                                                                                            </div>
+
+                                                                                        </div>
+                                                                                        <div class="col-md-3">
+                                                                                            <div class="col-12"><b>Escolha o ciclo:</b></div>
+                                                                                            <div class="col-12">
+                                                                                                <select class="form-control" name="ciclo" id="cicloap">
+                                                                                                    <option value="">[--SELECIONE--]</option>
+
+                                                                                                </select>
+                                                                                            </div>
+
+                                                                                        </div>
+                                                                                        <div class="col-md-3">
+                                                                                            <div class="col-12">&nbsp;</div>
+                                                                                            <div class="col-12">
+                                                                                                <button type="submit" class="btn btn-primary form-control" >Pesquisar <i class="fas fa-search"></i></button>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="col-md-3">
+                                                                                            <div class="col-12 text-center"><img src="./../img/aperfeicoamento.png" class="btn rounded-circle" width="60%;"></div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </form>
+                                                                            </blockquote>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </form>
+                                                            <div id="menu2_1" class="tab-pane fade">
+                                                                <div class="p-2">
+                                                                    <h5 class="text-info mt-3">Competências Profissionais</h5>
+                                                                    <div class="card ">
+                                                                        <div class="card-body">
+                                                                            <blockquote class="blockquote mb-3">
+                                                                                <form method="post" enctype="multipart/form-data" action="./controller/lacp.php">
+                                                                                    <div class="row">
+                                                                                        <div class="col-md-3">
+                                                                                            <div class="col-12"><b>Escolha o ano:</b></div>
+                                                                                            <div class="col-12">
+                                                                                                <select class="form-control" name="ano" id="anoav">
+                                                                                                    <option value="">[--SELECIONE--]</option>
+                                                                                                    <?php
+                                                                                                    if ($rsano3) {
+                                                                                                        do {
+                                                                                                            $ano3 = $rsano3['ano'];
+                                                                                                            ?>
+                                                                                                            <option><?= $ano3 ?></option>
+                                                                                                            <?php
+                                                                                                        } while ($rsano3 = mysqli_fetch_array($queryano3));
+                                                                                                    }
+                                                                                                    ?>
+                                                                                                </select>
+                                                                                            </div>
+
+                                                                                        </div>
+                                                                                        <div class="col-md-3">
+                                                                                            <div class="col-12"><b>Escolha o ciclo:</b></div>
+                                                                                            <div class="col-12">
+                                                                                                <select class="form-control" name="ciclo" id="cicloav">
+                                                                                                    <option value="">[--SELECIONE--]</option>
+                                                                                                </select>
+                                                                                            </div>
+
+                                                                                        </div>
+                                                                                        <div class="col-md-3">
+                                                                                            <div class="col-12">&nbsp;</div>
+                                                                                            <div class="col-12">
+                                                                                                <button type="submit" class="btn btn-primary form-control" >Pesquisar <i class="fas fa-search"></i></button>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="col-md-3">
+                                                                                            <div class="col-12 text-center"><img src="./../img/autoavaliacao.png" class="btn rounded-circle" width="60%;"></div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </form>
+                                                                            </blockquote>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </blockquote>
                                                 </div>
                                             </div>
@@ -183,117 +274,13 @@ $rsano4 = mysqli_fetch_array($queryano4);
                                     </div>
                                     <div id="menu1" class="tab-pane fade">
                                         <div class="p-2">
-                                            <h5 class="text-info mt-3">Aperfeiçoamento Profissional</h5>
-                                            <div class="card ">
-                                                <div class="card-body">
-                                                    <blockquote class="blockquote mb-3">
-                                                        <form method="post" enctype="multipart/form-data" action="./controller/lap.php">
-                                                            <p>Texto explicativo - conteúdo com opção de escolha do ano e do ciclo.</p>
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <div class="col-12"><b>Escolha o ano:</b></div>
-                                                                    <div class="col-12">
-                                                                        <select class="form-control" name="ano" id="anoap">
-                                                                            <option value="">[--SELECIONE--]</option>
-                                                                            <?php
-                                                                            if ($rsano2) {
-                                                                                do {
-                                                                                    $ano2 = $rsano2['ano'];
-                                                                                    ?>
-                                                                                    <option><?= $ano2 ?></option>
-                                                                                    <?php
-                                                                                } while ($rsano2 = mysqli_fetch_array($queryano2));
-                                                                            }
-                                                                            ?>
-                                                                        </select>
-                                                                    </div>
-
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <div class="col-12"><b>Escolha o ciclo:</b></div>
-                                                                    <div class="col-12">
-                                                                        <select class="form-control" name="ciclo" id="cicloap">
-                                                                            <option value="">[--SELECIONE--]</option>
-
-                                                                        </select>
-                                                                    </div>
-
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <div class="col-12">&nbsp;</div>
-                                                                    <div class="col-12">
-                                                                        <button type="submit" class="btn btn-primary form-control" >Pesquisar <i class="fas fa-search"></i></button>
-                                                                    </div>
-
-                                                                </div>
-                                                            </div>
-                                                        </form>
-                                                    </blockquote>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div id="menu2" class="tab-pane fade">
-                                        <div class="p-2">
-                                            <h5 class="text-info mt-3">Avaliação de Competências Profissionais</h5>
-                                            <div class="card ">
-                                                <div class="card-body">
-                                                    <blockquote class="blockquote mb-3">
-                                                        <form method="post" enctype="multipart/form-data" action="./controller/lacp.php">
-                                                            <p>Texto explicativo - conteúdo com opção de escolha do ano e do ciclo.</p>
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <div class="col-12"><b>Escolha o ano:</b></div>
-                                                                    <div class="col-12">
-                                                                        <select class="form-control" name="ano" id="anoav">
-                                                                            <option value="">[--SELECIONE--]</option>
-                                                                            <?php
-                                                                            if ($rsano3) {
-                                                                                do {
-                                                                                    $ano3 = $rsano3['ano'];
-                                                                                    ?>
-                                                                                    <option><?= $ano3 ?></option>
-                                                                                    <?php
-                                                                                } while ($rsano3 = mysqli_fetch_array($queryano3));
-                                                                            }
-                                                                            ?>
-                                                                        </select>
-                                                                    </div>
-
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <div class="col-12"><b>Escolha o ciclo:</b></div>
-                                                                    <div class="col-12">
-                                                                        <select class="form-control" name="ciclo" id="cicloav">
-                                                                            <option value="">[--SELECIONE--]</option>
-                                                                        </select>
-                                                                    </div>
-
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <div class="col-12">&nbsp;</div>
-                                                                    <div class="col-12">
-                                                                        <button type="submit" class="btn btn-primary form-control" >Pesquisar <i class="fas fa-search"></i></button>
-                                                                    </div>
-
-                                                                </div>
-                                                            </div>
-                                                        </form>
-                                                    </blockquote>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div id="menu3" class="tab-pane fade">
-                                        <div class="p-2">
-                                            <h5 class="text-info mt-3">Demonstrativo</h5>
+                                            <h5 class="text-info mt-3">Resultado da Avaliação de Desempenho</h5>
                                             <div class="card ">
                                                 <div class="card-body">
                                                     <blockquote class="blockquote mb-3">
                                                         <form method="post" enctype="multipart/form-data" action="./controller/ldem.php">
-                                                            <p>Texto explicativo - conteúdo com opção de escolha do ano e do ciclo.</p>
                                                             <div class="row">
-                                                                <div class="col-md-3">
+                                                                <div class="col-md-2">
                                                                     <div class="col-12"><b>Escolha o ano:</b></div>
                                                                     <div class="col-12">
                                                                         <select class="form-control" name="ano" id="anod">
@@ -312,7 +299,7 @@ $rsano4 = mysqli_fetch_array($queryano4);
                                                                     </div>
 
                                                                 </div>
-                                                                <div class="col-md-3">
+                                                                <div class="col-md-2">
                                                                     <div class="col-12"><b>Escolha o ciclo:</b></div>
                                                                     <div class="col-12">
                                                                         <select class="form-control" name="ciclo" id="ciclod">
@@ -330,18 +317,77 @@ $rsano4 = mysqli_fetch_array($queryano4);
                                                                     </div>
 
                                                                 </div>
-                                                                <div class="col-md-3">
+                                                                <div class="col-md-2">
                                                                     <div class="col-12">&nbsp;</div>
                                                                     <div class="col-12">
                                                                         <button type="submit" id="btdemons" class="btn btn-primary form-control" >Pesquisar <i class="fas fa-search"></i></button>
                                                                     </div>
-
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <div class="col-12 text-center"><img src="./../img/desempenho2.jpg" class="btn rounded-circle border-info" width="50%;"></div>
                                                                 </div>
                                                             </div>
                                                         </form>
                                                     </blockquote>
                                                 </div>
                                             </div>
+                                        </div>
+                                    </div>
+                                    <div id="menu2" class="tab-pane fade">
+                                        <div class="p-2">
+                                            <h5 class="text-info mt-3">Abertura e Fechamento de Ciclo</h5>
+                                            <div class="card ">
+                                                <div class="card-body">
+                                                    <blockquote class="blockquote mb-3">
+                                                        <form method="post" enctype="multipart/form-data" action="./controller/lafc.php">
+                                                            <div class="row">
+                                                                <div class="col-md-3">
+                                                                    <div class="col-12"><b>Escolha o ano:</b></div>
+                                                                    <div class="col-12">
+                                                                        <select class="form-control" name="ano" id="anoav">
+                                                                            <option value="">[--SELECIONE--]</option>
+                                                                            <option>2024</option>
+                                                                            <option>2025</option>
+                                                                            <option>2026</option>
+                                                                            <option>2027</option>
+                                                                            <option>2028</option>
+                                                                            <option>2029</option>
+                                                                            <option>2030</option>
+                                                                        </select>
+                                                                    </div>
+
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <div class="col-12"><b>Escolha o ciclo:</b></div>
+                                                                    <div class="col-12">
+                                                                        <select class="form-control" name="ciclo" id="cicloav">
+                                                                            <option value="">[--SELECIONE--]</option>
+                                                                            <option value="1">1º Ciclo</option>
+                                                                            <option value="2">2º Ciclo</option>
+                                                                            <option value="3">3º Ciclo</option>
+                                                                        </select>
+                                                                    </div>
+
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <div class="col-12">&nbsp;</div>
+                                                                    <div class="col-12">
+                                                                        <button type="submit" class="btn btn-primary form-control" >Pesquisar <i class="fas fa-search"></i></button>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <div class="col-12 text-center"><img src="./../img/ciclo.jpg" class="btn rounded-circle" width="50%;"></div>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </blockquote>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="menu3" class="tab-pane fade">
+                                        <div class="p-2">
+                                            
                                         </div>
                                     </div>
                                 </div>

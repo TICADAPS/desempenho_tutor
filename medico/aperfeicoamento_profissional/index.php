@@ -48,7 +48,7 @@ if($rs){
 }
 $sql2 = "select m.nome, m.admissao, m.cargo, mun.Municipio, e.UF, ivs.descricao, ap.id, 
     ap.dthrcadastro, ap.flagativlongduracao, ap.flagparecer as flagparecerap, ap.pontuacao,
-    ap.parecer as parecerap, ap.pareceruser as pareceruserap, ap.parecerdthr as parecerdthrap, ap.flagup  
+    ap.parecer as parecerap, ap.pareceruser as pareceruserap, ap.parecerdthr as parecerdthrap, ap.flagup, ap.flagterminou 
     from medico m inner join aperfeicoamentoprofissional ap on m.cpf = ap.cpf and 
     m.ibge = ap.ibge and m.cnes = ap.cnes and m.ine = ap.ine 
     inner join municipio mun on mun.cod_munc = m.ibge 
@@ -62,6 +62,7 @@ $rs2 = mysqli_fetch_array($query2);
 $rsld = $rs2;
 //var_dump($rsld);
 $flagld = $flagqc = $flaggepe = $flagit = false;
+$flagterminouap = '';
 $idap = null;
 if($rs2){
     do{
@@ -81,6 +82,7 @@ if($rs2){
         }
         $parecerap = $rs2['parecerap'];
         $flagupap = $rs2['flagup'];
+        $flagterminouap = $rs2['flagterminou'];
         $pareceruserap = $rs2['pareceruserap'];
         $parecerdthrap = vemdata($rs2['parecerdthrap']);  
         $parecerdthrap .= ", às ".horaEmin($rs2['parecerdthrap']).".";
@@ -144,7 +146,7 @@ $rsit = mysqli_fetch_array($qit);
                 <img src="../../img_agsus/Logo_400x200.png" class="img-fluid" alt="logoAdaps" width="250" title="Logo Adaps">
             </div>
             <div class="col-12 col-md-8 mt-5">
-                <h4 class="mb-4 font-weight-bold text-left">Comprovante de Aperfeiçoamento Profissional</h4>
+                <h4 class="mb-4 font-weight-bold text-left">Médico Tutor &nbsp;|&nbsp; Comprovante de Aperfeiçoamento Profissional</h4>
             </div>
         </div>
         <div class="row mt-2">
@@ -191,10 +193,14 @@ $rsit = mysqli_fetch_array($qit);
                                                 </div>
                                                 <div class="card-body">
                                                     <div class="row mb-1">
-                                                        <div class="col-md-4 offset-md-4">
-                                                            <ul class="list-group">
+                                                        <div class="col-md-6 offset-md-3 text-center">
+                                                            <ul class="list-group ">
                                                                 <li class="list-group-item bg-light"><label class=""><b>Ano: </b><?= $ano ?></label>
-                                                                    <br><b><?= $ciclo ?>º Ciclo: </b><?= $ciclodescricao ?></li>
+                                                                    <br><b><?= $ciclo ?>º Ciclo: </b><?= $ciclodescricao ?>
+                                                                    <?php if($flagterminouap === '1'){ ?>
+                                                                    <br><br><label class="text-danger h6"><i class="fas fa-chevron-circle-right float-left mt-1"></i>&nbsp;&nbsp; Análise Finalizada &nbsp;&nbsp;<i class="fas fa-chevron-circle-left float-right mt-1"></i></label><br>
+                                                                    <?php } ?>
+                                                                </li>
                                                             </ul>
                                                         </div>
                                                     </div>
@@ -631,7 +637,11 @@ $rsit = mysqli_fetch_array($qit);
                                                                     $pontuacaoaptxt = (string) $pontuacaoap;
                                                                     $pontuacaoaptxt = str_replace(".", ",", $pontuacaoaptxt);
                                                                     $flagupap = $rsld['flagup'];
+                                                                    if($flagupap === null){
+                                                                        $flagupap = '';
+                                                                    }
                                                                     $parecerap = $rsld['parecerap'];
+                                                                    $flagterminouap = $rsld['flagterminou'];
                                                                     $pareceruserap = $rsld['pareceruserap'];
                                                                     $parecerdthrap = vemdata($rsld['parecerdthrap']);
                                                                     $parecerdthrap .= ", às " . horaEmin($rsld['parecerdthrap']) . ".";
@@ -715,7 +725,7 @@ $rsit = mysqli_fetch_array($qit);
                                                                                 </div>   
                                                                             </div>
                                                                         </div>
-                                                                        <?php if ($flagparecerap === '0') { ?>
+                                                                        <?php if ($flagparecerap === '0' && $flagupap === '0' && $flagterminouap !== '1') { ?>
                                                                             <form method="post" enctype="multipart/form-data" action="controller/rcbld.php">
                                                                                 <input type="hidden" value="<?= $idld ?>" name="idld">
                                                                                 <input type="hidden" value="<?= $cpftratado ?>" name="cpf">
@@ -953,7 +963,7 @@ $rsit = mysqli_fetch_array($qit);
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
-                                                                            <?php if ($qcflagparecer === '0' && $flagupqc === '0') { ?>
+                                                                            <?php if ($qcflagparecer === '0' && $flagupqc === '0' && $flagterminouap !== '1') { ?>
                                                                                 <form method="post" enctype="multipart/form-data" action="controller/rcbqc.php">
                                                                                     <input type="hidden" value="<?= $qcid ?>" name="qcid">
                                                                                     <input type="hidden" value="<?= $idap ?>" name="idap">
@@ -1255,7 +1265,7 @@ $rsit = mysqli_fetch_array($qit);
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
-                                                                            <?php if ($gepeflagparecer === '0' && $flagupgepe === '0') { ?>
+                                                                            <?php if ($gepeflagparecer === '0' && $flagupgepe === '0' && $flagterminouap !== '1') { ?>
                                                                                 <form method="post" enctype="multipart/form-data" action="controller/rcbgepe.php">
                                                                                     <input type="hidden" name="gepeid" value="<?= $gepeid ?>">
                                                                                     <input type="hidden" name="idap" value="<?= $idap ?>">
@@ -1525,7 +1535,7 @@ $rsit = mysqli_fetch_array($qit);
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                        <?php if ($itflagparecer === '0' && $flagupit === '0') { ?>
+                                                                        <?php if ($itflagparecer === '0' && $flagupit === '0' && $flagterminouap !== '1') { ?>
                                                                         <form method="post" enctype="multipart/form-data" action="controller/rcbit.php">
                                                                             <input type="hidden" name="idap" value="<?= $idap ?>">
                                                                             <input type="hidden" name="itid" value="<?= $itid ?>">

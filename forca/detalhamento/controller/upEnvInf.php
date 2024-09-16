@@ -4,6 +4,8 @@ include_once './../../../conexao-agsus.php';
 include_once './../../../conexao_agsus_2.php';
 include_once './../../../mask.php';
 include_once __DIR__ .'/../../../vendor/autoload.php';
+//var_dump($_POST);
+
 if(!isset($_SESSION['msg'])){
     $_SESSION['msg'] = '';
 }
@@ -67,34 +69,55 @@ if($rsm){
     $ap = (new Source\Models\Aperfeicoamentoprofissional())->findById($idap);
     //var_dump($qc);
     if($ap !== null){
-        //E-Mail disparado automático pelo app.
-        $assunto = "Assunto do E-Mail";
-        $mensagemEmail = "*** ATENÇÃO: Este é um e-mail automático enviado pelo sistema. Informamos que esta caixa de e-mail não é monitorada, portanto, por favor, não responda a esta mensagem."
-                . "<br><br>";
-        $mensagemEmail .= "Prezado(a) Tutor(a) Médico(a) $nome, <br><br>";
-        $mensagemEmail .= 'Comunicamos que <b>VOCÊ AINDA NÃO ALCANÇOU A META DE 50 CRÉDITOS</b> referente ao domínio de Comprovantes de Aperfeiçoamento, desta forma solicito que insira na plataforma outros comprovantes que no seu somatório compute o mínimo créditos exigidos para o "Ciclo do Programa de Avaliação de Desempenho do Médico Tutor". <br><br>';
-        $mensagemEmail .= "-- <br>";
-        $mensagemEmail .= "Atenciosamente, <br><br>";
-        $mensagemEmail .= "Agência Brasileira de Apoio à Gestão do Sistema Único de Saúde - AgSUS.";
-        $email = (new \Source\Support\Email())->bootstrap(
-                "$assunto",
-                "$mensagemEmail",
-                "$email",
-                "$nome",
-                "",
-                "");
-        $email->attach("../../../img/Logo_400x200.png", "AgSUS");
+        if($upEnv === '0'){
+            //E-Mail disparado automático pelo app.
+            $assunto = "Assunto do E-Mail";
+            $mensagemEmail = "*** ATENÇÃO: Este é um e-mail automático enviado pelo sistema. Informamos que esta caixa de e-mail não é monitorada, portanto, por favor, não responda a esta mensagem."
+                    . "<br><br>";
+            $mensagemEmail .= "Prezado(a) Tutor(a) Médico(a) $nome, <br><br>";
+            $mensagemEmail .= 'Comunicamos que <b>VOCÊ AINDA NÃO ALCANÇOU A META DE 50 CRÉDITOS</b> referente ao domínio de Comprovantes de Aperfeiçoamento, desta forma solicito que insira na plataforma outros comprovantes que no seu somatório compute o mínimo créditos exigidos para o "Ciclo do Programa de Avaliação de Desempenho do Médico Tutor". <br><br>';
+            $mensagemEmail .= "-- <br>";
+            $mensagemEmail .= "Atenciosamente, <br><br>";
+            $mensagemEmail .= "Agência Brasileira de Apoio à Gestão do Sistema Único de Saúde - AgSUS.<br><br>";
+            $mensagemEmail .= "Link de acesso: https://agsusbrasil.org/sistema-integrado/login.php";
+            $email = (new \Source\Support\Email())->bootstrap(
+                    "$assunto",
+                    "$mensagemEmail",
+                    "$email",
+                    "$nome",
+                    "",
+                    "");
+            $email->attach("../../../img/Logo_agsus.jpg", "AgSUS");
+        }else{
+            //E-Mail disparado automático pelo app.
+            $assunto = "Assunto do E-Mail";
+            $mensagemEmail = "*** ATENÇÃO: Este é um e-mail automático enviado pelo sistema. Informamos que esta caixa de e-mail não é monitorada, portanto, por favor, não responda a esta mensagem."
+                    . "<br><br>";
+            $mensagemEmail .= "Prezado(a) Tutor(a) Médico(a) $nome, <br><br>";
+            $mensagemEmail .= 'Comunicamos que <b>VOCÊ NÃO ALCANÇOU A META DE 50 CRÉDITOS</b> referente ao domínio de Comprovantes de Aperfeiçoamento. A análise foi encerrada. Agradecemos a sua participação. <br><br>';
+            $mensagemEmail .= "-- <br>";
+            $mensagemEmail .= "Atenciosamente, <br><br>";
+            $mensagemEmail .= "Agência Brasileira de Apoio à Gestão do Sistema Único de Saúde - AgSUS.<br><br>";
+            $mensagemEmail .= "Link de acesso: https://agsusbrasil.org/sistema-integrado/login.php";
+            $email = (new \Source\Support\Email())->bootstrap(
+                    "$assunto",
+                    "$mensagemEmail",
+                    "$email",
+                    "$nome",
+                    "",
+                    "");
+            $email->attach("../../../img/Logo_agsus.jpg", "AgSUS");
+        }
+        
         if ($email->send()) {
             $ap->flagemail = '1';
             $ap->dthremail = $dthoje;
             $ap->usuario = $user;
-            $ap->save();
-
+            
             //Mudando a flagup para que o médico possa preencher e enviar a atualização das atividades
-            if($upEnv === '1'){
+            if($upEnv === '0'){
                 if($ap->flagparecer === '0'){
                     $ap->flagup = '0';
-                    $rsap = $ap->save();
                 }
                 $qc = (new Source\Models\Medico_qualifclinica())->findJQCUp($idap);
         //        var_dump($qc);
@@ -136,6 +159,10 @@ if($rsm){
                         }
                     }
                 }
+                $ap->save();
+            }else{
+                $ap->flagterminou = '1';
+                $ap->save();
             }
             $_SESSION['msg'] = "<h6 class='bg-success border rounded text-white p-2'>&nbsp;<i class='fas fa-hand-point-right'></i>&nbsp; E-Mail enviado com sucesso.</h6>";
             echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;

@@ -46,13 +46,22 @@ if (!empty($_FILES["arquivo"]["tmp_name"])) {
         $a=0;
         $objeto = fopen($arquivo, 'r');
         while(($dados = fgetcsv($objeto, 10000,","))!==FALSE){
-            $a++;
+            ++$a;
+            if($a <= 1){
+                continue;
+            }
             //captura cada item separado por vírgula na sequência
             $cpf = trim(utf8_encode($dados[0]));
             $nome = trim(utf8_encode($dados[1]));
-            $notasenior = trim(utf8_encode($dados[3]));
-            $notasispmb = trim(utf8_encode($dados[4]));
-            $autosimnao = trim(utf8_encode($dados[5]));
+            $ibge = trim(utf8_encode($dados[2]));
+            $ine = trim(utf8_encode($dados[3]));
+            $cnes = trim(utf8_encode($dados[4]));
+            $notasenior = trim(utf8_encode($dados[5]));
+            $autosimnao = trim(utf8_encode($dados[6]));
+            $notasispmb = trim(utf8_encode($dados[7]));
+            $ano = trim(utf8_encode($dados[8]));
+            $ciclo = trim(utf8_encode($dados[9]));
+            $periodo = trim(utf8_encode($dados[10]));
             
             $nome = strtoupper($nome);
             $nome = str_replace("'", "", $nome);
@@ -65,7 +74,7 @@ if (!empty($_FILES["arquivo"]["tmp_name"])) {
             $nome = str_replace("Ü", "U", $nome);
             $nome = str_replace("/", "", $nome);
             $nome = str_replace("-", "", $nome);
-
+            
             //formata a máscara do cpf (caso venha ou não com a máscara)
             $cpftratado = str_replace("-", "", $cpf);
             $cpftratado = str_replace(".", "", $cpftratado);
@@ -93,9 +102,15 @@ if (!empty($_FILES["arquivo"]["tmp_name"])) {
                 return;
             }
             
+            $notasenior = str_replace("'", "", $notasenior);
             $notasenior = str_replace(",", ".", $notasenior);
+            
+            $notasispmb = str_replace("'", "", $notasispmb);
             $notasispmb = str_replace(",", ".", $notasispmb);
-            if($autosimnao === 'Sim'){
+            
+            $autosimnao = str_replace("'", "", $autosimnao);
+            $autosimnao = strtoupper($autosimnao);
+            if($autosimnao === 'SIM'){
                 $autosimnao = 1;  
             }else{
                  $autosimnao = 0;  
@@ -106,14 +121,11 @@ if (!empty($_FILES["arquivo"]["tmp_name"])) {
 //                    $prenatal_consultas,$prenatal_sifilis_hiv,$cobertura_citopatologico,
 //                    $hipertensao,$diabetes,$ano,$periodo,$datahoje);
                         
-            $sql = "select * from medico where cpf = '$cpftratado' limit 1";
+            $sql = "select * from medico where cpf = '$cpftratado' and ibge = '$ibge' and cnes = '$cnes' and ine = '$ine' limit 1";
             $query = mysqli_query($conn, $sql) or die(mysql0i_error($conn));
             $nrrs = mysqli_num_rows($query);
             if($nrrs > 0){
-                $ano = 2024;
-                $ciclo = 1;
                 $fkincentivo = 1;
-                $periodo = 23;
 //                echo "$a - passou aqui <br>";
                 $linha = mysqli_fetch_array($query);
                 do{
@@ -121,33 +133,16 @@ if (!empty($_FILES["arquivo"]["tmp_name"])) {
                     $ibge=$linha['ibge'];
                     $ine=$linha['ine'];
                     $sqlq = "select * from demonstrativo where fkcpf = '$cpftratado' and fkibge = '$ibge' and fkcnes = '$cnes' and fkine = '$ine' and "
-                            . "fkincentivo = '$fkincentivo' and ano = '$ano' and ciclo = '$ciclo'  limit 1";
+                            . "fkincentivo = '$fkincentivo' and ano = '$ano' and ciclo = '$ciclo' and fkperiodo = '$periodo' limit 1";
                     $queryq = mysqli_query($conn, $sqlq) or die(mysqli_error($conn));
                     $nrrsq = mysqli_num_rows($queryq);
                     if($nrrsq === 0){
-                        $sqliq = "insert into demonstrativo values (null, '$ano', '$ciclo', '$autosimnao','$notasenior', '$notasispmb', "
+                        $sqliq = "insert into demonstrativo (ano,ciclo,competencias,aperfeicoamento,qualidade,desempenho,fkcpf,fkibge,fkcnes,fkine,fkincentivo,fkperiodo)"
+                                . "values ('$ano', '$ciclo', '$autosimnao','$notasenior', '$notasispmb', "
                                 . "null, '$cpftratado','$ibge','$cnes','$ine','$fkincentivo','$periodo')";
                         mysqli_query($conn, $sqliq) or die(mysqli_error($conn));
+                        echo "$a - $cpftratado - $nome - $autosimnao - $notasenior - $notasispmb<br>";
                     }
-                    
-//                    if($nrrsq === 0){
-//                        $sqliq = "insert into qualidade values (null, '$notasispmb', '$cpftratado','$ibge','$cnes','$ine','2024','1')";
-//                        mysqli_query($conn, $sqliq) or die(mysqli_error($conn));
-//                    }
-//                    $sqla = "select * from aperfeicoamento where medico_cpf = '$cpftratado' and medico_ibge = '$ibge' and medico_cnes = '$cnes' and medico_ine = '$ine' limit 1";
-//                    $querya = mysqli_query($conn, $sqla) or die(mysqli_error($conn));
-//                    $nrrsa = mysqli_num_rows($querya);
-//                    if($nrrsa === 0){
-//                        $sqlia = "insert into aperfeicoamento values (null, '$notasenior', '$cpftratado','$ibge','$cnes','$ine','2024','1')";
-//                        mysqli_query($conn, $sqlia) or die(mysqli_error($conn));
-//                    }
-//                    $sqlc = "select * from competencias where medico_cpf = '$cpftratado' and medico_ibge = '$ibge' and medico_cnes = '$cnes' and medico_ine = '$ine' limit 1";
-//                    $queryc = mysqli_query($conn, $sqlc) or die(mysqli_error($conn));
-//                    $nrrsc = mysqli_num_rows($queryc);
-//                    if($nrrsc === 0){
-//                        $sqlci = "insert into competencias values (null, '$autosimnao', '$cpftratado','$ibge','$cnes','$ine','2024','1')";
-//                        mysqli_query($conn, $sqlci) or die(mysqli_error($conn));
-//                    }
                 }while($linha = mysqli_fetch_array($query));
             }
         }

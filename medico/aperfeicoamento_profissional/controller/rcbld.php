@@ -34,6 +34,7 @@ if($apold !== null){
    $apold->pareceruser = null;
    $apold->parecerdthr = null;
    $apold->pontuacao = null;
+   $apold->flagretorno = 1;
    $rsapold = $apold->save();
    if ($rsapold === null) {
         $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;Erro no gravação dos dados.</strong></small></p>";

@@ -122,6 +122,11 @@ if($gepeold !== null){
                                 URL=\"../index.php\"'>";
         exit();
     }
+    $ap = (new \Source\Models\Aperfeicoamentoprofissional())->findById($idap);
+    if($ap !== null){
+        $ap->flagretorno = 1;
+        $ap->save();
+    }
 }
 $_SESSION['msg'] = "<p class='text-success bg-light shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;Dados cadastrados com sucesso!</strong></small></p>";
 echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;

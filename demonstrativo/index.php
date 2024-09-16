@@ -17,10 +17,19 @@ date_default_timezone_set('America/Sao_Paulo');
 $anoAtual = date('Y');
 $anomesdiaAtual = date('Ymd');
 $anomesdiaAtual = (int)$anomesdiaAtual;
-//$anoAtual = 2023;
+//$anoAtual = <?= $ano 
 $ano = $_SESSION['ano'];
 $ciclo = $_SESSION['ciclo'];
 $idperiodo = $_SESSION['periodo'];
+$sqlp = "select * from periodo where idperiodo = '$idperiodo'";
+$qp = mysqli_query($conn, $sqlp) or die(mysqli_errno($conn));
+$rsp = mysqli_fetch_array($qp);
+$descperiodo = '';
+if($rsp){
+    do{
+        $descperiodo = $rsp['descricaoperiodo'];
+    }while($rsp = mysqli_fetch_array($qp));
+}
 $flagincent = 0;
 $cpftratado = str_replace("-", "", $cpf);
 $cpftratado = str_replace(".", "", $cpftratado);
@@ -32,7 +41,7 @@ $sql = "select distinct m.nome, m.admissao, m.cargo, m.tipologia, m.uf, m.munici
     left join ivs on m.fkivs = ivs.idivs 
     where m.cpf = '$cpftratado' and d.ano = '$ano' and d.ciclo = '$ciclo' and i.flaginativo = '$flagincent' and d.fkperiodo = '$idperiodo'"
         . "and (d.flaginativo is null or d.flaginativo <> 1);";
-$query = mysqli_query($conn, $sql);
+$query = mysqli_query($conn, $sql) or die(mysqli_errno($conn));
 $nrrs = mysqli_num_rows($query);
 $rs = mysqli_fetch_array($query);
 $rs1 = mysqli_fetch_array($query);
@@ -260,7 +269,7 @@ if ($nrrsqa > 0) {
                 <div class="col-12 col-md-7 offset-1 mt-2 pl-5 pr-4 mb-4">
                     <div class="testeira">
                         <div class="titulotes"><h4>Painel de Resultados</h4></div>
-                        <div class="testeirabody h5 text-primary text-center">
+                        <div class="testeirabody h5 text-primary text-center mb-4">
                           <?= $ciclo ?>º Ciclo do Programa de Avaliação do 
                           Desempenho do Médico Tutor <br>(Ano <?= $ano ?>)
                         </div>
@@ -270,6 +279,7 @@ if ($nrrsqa > 0) {
                     <h4 class="mb-4 font-weight-bold text-center">1º Ciclo do Programa de Avaliação de Desempenho do Médico Tutor - Ano <?= $ano1 ?></h4>-->
                 </div>
             </div>
+            <br><br>
             <div class="row">
                 <div class="col-12 mb-2">
                     <nav class="navbar navbar-expand-lg navbar-light bg-light rounded">
@@ -289,7 +299,7 @@ if ($nrrsqa > 0) {
                                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">Ano </a>
                                     <div class="dropdown-menu">
                                         <a class="dropdown-item" href="../ano.php?c=<?= $cpftratado ?>&a=2024">2024</a>
-                                        <a class="dropdown-item" href="../ano.php?c=<?= $cpftratado ?>&a=2023">2023</a>
+                                        <a class="dropdown-item" href="../ano.php?c=<?= $cpftratado ?>&a=<?= $ano ?>"><?= $ano ?></a>
                                     </div>
                                 </li>-->
                                 <li class="nav-item">
@@ -360,7 +370,7 @@ if ($nrrsqa > 0) {
                                         <label><b>Ano</b></label>
                                         <select name="a" class="form-control">
                                             <option value="" >[--SELECIONE--]</option>
-                                            <option>2023</option>
+                                            <option><?= $ano ?></option>
                                             //<?php
 //                                            if ($rsano !== null) {
 //                                                foreach ($rsano->results as $ra) {
@@ -397,8 +407,6 @@ if ($nrrsqa > 0) {
                         $ine = $rs['ine'];
                         $ivs = strtoupper($rs['ivs']);
                         $datacadastro = $rs['datacadastro'];
-                        $ano = $rs['ano'];
-                        $ciclo = $rs['ciclo'];
                         $nivel = $rs['nivel'];
                         $valor = $rs['valor'];
                         $valortext = number_format($valor, 2, ',', ' ');
@@ -415,7 +423,6 @@ if ($nrrsqa > 0) {
                         if($rs2){
                             do{
                                 $periodo = $rs2['descricaoperiodo'];
-                                $idperiodo = $rs2['idperiodo'];
                                 $prenatal_consultas = $rs2['prenatal_consultas'];
                                 $rpctxt2 = $prenatal_consultas;
                                 $rpctxt2 = str_replace(",", "", $rpctxt2);
@@ -935,8 +942,8 @@ if ($nrrsqa > 0) {
                                                                             <div class="card-body">
                                                                                 <div class="row">
                                                                                     <div class="col-md-12">
-                                                                                        <p class="text-justify ">Apresentamos o resultado individual da sua Avaliação de Desempenho Individual, referente ao 1º Ciclo  de 2023, que compreendeu o período 
-                                                                                            de julho a dezembro de 2023. Essa avaliação se constituiu como uma importante ferramenta para avaliar o desempenho dos empregados desta 
+                                                                                        <p class="text-justify ">Apresentamos o resultado individual da sua Avaliação de Desempenho Individual, referente ao <?= $ciclo ?>º Ciclo  de <?= $ano ?>, que compreendeu o período 
+                                                                                            de julho a dezembro de <?= $ano ?>. Essa avaliação se constituiu como uma importante ferramenta para avaliar o desempenho dos empregados desta 
                                                                                             Agência, reconhecendo pontos fortes e identificando oportunidades de aprimoramento. Clique no botão abaixo para ler todo o feedback.</p>
                                                                                         <button type="button" data-toggle="modal" data-target=".modalFeedback" class="btn btn-light shadow-sm text-info">Feedback &nbsp;<i class="far fa-file-pdf text-danger"></i></button>
                                                                                     </div>
@@ -975,7 +982,7 @@ if ($nrrsqa > 0) {
                                                                             <p class="text-justify">Utilize o modelo de recurso disponibilizado. Nele, exponha seus argumentos marcando os pontos (domínios) nos quais discorda da avaliação e da nota atribuída.</p>
                                                                             <p class="text-justify">Após a elaboração do recurso, mantenha-se atento(a) aos avisos dentro do painel de resultados.</p>
                                                                             <p class="text-justify">Por favor, observe o prazo estabelecido para a contestação do recurso, que se encerra 15 (quinze) dias após a publicação do resultado.</p>
-                                                                            <p class="text-justify">Estamos à disposição para fornecer esclarecimentos adicionais e agradecemos sua participação no Programa de Avaliação e Desempenho do Tutor Médico 2023.<br></p>
+                                                                            <p class="text-justify">Estamos à disposição para fornecer esclarecimentos adicionais e agradecemos sua participação no Programa de Avaliação e Desempenho do Tutor Médico <?= $ano ?>.<br></p>
                                                                             <button type="button" data-toggle="modal" data-target=".modalContestacao" class="btn btn-warning shadow-sm "><i class="fas fa-arrow-circle-right"></i> &nbsp;FAZER CONTESTAÇÃO</button>
                                                                                 <?php }else{ ?>
                                                                             <p>Prezados(as) Colaboradores(as),</p>
@@ -1061,12 +1068,12 @@ if ($nrrsqa > 0) {
                                                             </div>
 <!--                                                            <p class="text-justify">Parabéns pelo seu primeiro ano de dedicação ao Programa Médicos pelo Brasil! A partir de agora, sua atuação como tutor será avaliada continuamente.</p>-->
                                                             <p class="text-justify">Neste feedback individual queremos apresentar um detalhamento do resultado do 1º ciclo da sua Avaliação de Desempenho, referente ao 
-                                                                período de julho a dezembro de 2023 e instituída pela Portaria n.º 26, de 28 de fevereiro de 2023.</p>
+                                                                <?= $descperiodo ?> de <?= $ano ?> e instituída pela Portaria n.º 26, de 28 de fevereiro de 2023.</p>
                                                             <p class="text-justify">Esta é uma importante ferramenta da AgSUS e uma expressão do nosso compromisso em promover uma cultura de gestão com base em resultados
                                                                 que visa reconhecer avanços e identificar oportunidades de aprimoramento. É uma iniciativa inspirada em práticas, nacionais e internacionais, que visam 
                                                                 fortalecer a Atenção Primária à Saúde (APS).</p>
                                                             <p class="text-justify">Neste primeiro ciclo, você alcançou a Nota Geral <label class="text-danger"><?= $mftext ?></label> como resultado da sua Avaliação 
-                                                                Individual, referente ao período de julho a dezembro de 2023.</p>
+                                                                Individual, referente ao <?= $descperiodo ?> de <?= $ano ?>.</p>
                                                             <p class="text-justify">A Avaliação de Desempenho é estruturada em dois eixos principais: Avaliação de Resultados e Avaliação de Competências, subdivididos 
                                                                 em domínios que abrangem tanto especificidades técnicas profissionais relacionadas às atividades do cargo, quanto características comportamentais 
                                                                 relacionadas à interação nos ambientes de trabalho, que diz respeito ao tratamento interpessoal com usuários, bolsistas, equipe de saúde e gestores. 
@@ -1086,7 +1093,7 @@ if ($nrrsqa > 0) {
                                                                         municipal na busca por resultados</dd>
                                                                     <dd>2. O seu resultado nesse domínio alcançou a Nota <label class="text-danger"><?= $qatext ?></label>, você poderá obter de forma detalhada a 
                                                                         mensuração de cada indicador acessando o link https://agsusbrasil.org/sistema-integrado/login.php onde terá a evolução dos indicadores ao longo
-                                                                        dos três quadrimestres de 2023.</dd>
+                                                                        dos três quadrimestres de <?= $ano ?>.</dd>
                                                                 <dt>2. Qualidade da Tutoria:</dt>
                                                                     <dd>1. A tutoria será avaliada a partir da verificação de um conjunto de evidências relacionadas às atribuições do Tutor Médico no processo de 
                                                                         realização do estágio experimental remunerado. Consiste, portanto, na opinião do bolsista em relação às vivências de tutoria clínica. Ter uma
@@ -1098,7 +1105,7 @@ if ($nrrsqa > 0) {
                                                                         sistema de créditos, o estímulo ao desenvolvimento contínuo de competências técnicas e comportamentais desses empregados, a partir da realização
                                                                         de atividades de qualificação clínica e de gestão, ensino, pesquisa, extensão e inovação tecnológica. Para tanto adotou-se o sistema de créditos
                                                                         como base para a verificação e julgamento do desempenho esperado. Os critérios e pesos das atividades de curta duração estão divulgados na 
-                                                                        Instrução Normativa nº 002/2023 - Plano de Educação Continuada para os Médicos da Adaps.</dd>
+                                                                        Instrução Normativa nº 002/<?= $ano ?> - Plano de Educação Continuada para os Médicos da Adaps.</dd>
                                                                     <dd>2. Com base na creditação atribuída aos documentos que você inseriu na plataforma sênior, você alcançou a pontuação 
                                                                         de <label class="text-danger"><?= $anotatext ?></label>.</dd>
                                                             </dl>    
@@ -1116,7 +1123,7 @@ if ($nrrsqa > 0) {
                                                             <p class="float-right mt-5"><div class='text-center' style="margin-bottom: 40px;"><img src='./../img_agsus/Logo_400x200.png' class='img-fluid' width="200"></div></p>
                                                         </div>
                                                         <div class="col-sm-2  mt-5">
-                                                            <a id="pdffeedback" href="./pdf/feedbackdemonstrativo.php?nome=<?= $nome ?>&ano=<?=$ano?>&qa=<?= $qatext ?>&qnota=<?= $qnotatext ?>&anota=<?= $anotatext ?>&mftext=<?= $mftext ?>" title="Impressão em PDF" target="_blank" class="btn btn-outline-danger shadow-sm rounded ml-5 mr-5 p-2 float-right">&nbsp;&nbsp;&nbsp; <i class="far fa-file-pdf"></i> &nbsp;&nbsp;&nbsp;</a>
+                                                            <a id="pdffeedback" href="./pdf/feedbackdemonstrativo.php?nome=<?= $nome ?>&ano=<?=$ano?>&qa=<?= $qatext ?>&qnota=<?= $qnotatext ?>&anota=<?= $anotatext ?>&mftext=<?= $mftext ?>&c=<?= $ciclo ?>&p=<?= $idperiodo ?>" title="Impressão em PDF" target="_blank" class="btn btn-outline-danger shadow-sm rounded ml-5 mr-5 p-2 float-right">&nbsp;&nbsp;&nbsp; <i class="far fa-file-pdf"></i> &nbsp;&nbsp;&nbsp;</a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1450,7 +1457,7 @@ if ($nrrsqa > 0) {
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-12">
-                                                    <p class="mt-3  text-secondary mb-0"><label class="font-weight-bold">* Fonte: </label> <a href="./../pdf/manual_2023.pdf" target="_blank">Manual Programa de Avaliação de Desempenho Tutor Médico 2023</a></p>
+                                                    <p class="mt-3  text-secondary mb-0"><label class="font-weight-bold">* Fonte: </label> <a href="./../pdf/manual_<?= $ano ?>.pdf" target="_blank">Manual Programa de Avaliação de Desempenho Tutor Médico <?= $ano ?></a></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -1575,10 +1582,10 @@ if ($nrrsqa > 0) {
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-12 mb-2">
-                                                    <p class="mt-2  text-secondary mb-0"><a href="./../qa/" class="btn btn-primary shadow-sm" target="_blank"><i class="fas fa-arrow-alt-circle-right"></i>&nbsp; Visite o painel da Evolução da Qualidade Assistencial</a></p>
+                                                    <p class="mt-2  text-secondary mb-0"><a href="./../qa/index.php?a=<?= $ano ?>" class="btn btn-primary shadow-sm" target="_blank"><i class="fas fa-arrow-alt-circle-right"></i>&nbsp; Visite o painel da Evolução da Qualidade Assistencial</a></p>
                                                 </div>
                                                 <div class="col-sm-12">
-                                                    <p class=" text-secondary mb-0"><label class="font-weight-bold">* Fonte: </label> <a href="./../pdf/manual_2023.pdf" target="_blank">Manual Programa de Avaliação de Desempenho Tutor Médico 2023</a></p>
+                                                    <p class=" text-secondary mb-0"><label class="font-weight-bold">* Fonte: </label> <a href="./../pdf/manual_<?= $ano ?>.pdf" target="_blank">Manual Programa de Avaliação de Desempenho Tutor Médico <?= $ano ?></a></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -1754,7 +1761,7 @@ if ($nrrsqa > 0) {
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-12">
-                                                    <p class="mt-3  text-secondary mb-0"><label class="font-weight-bold">* Fonte: </label> <a href="./../pdf/manual_2023.pdf" target="_blank">Manual Programa de Avaliação de Desempenho Tutor Médico 2023</a></p>
+                                                    <p class="mt-3  text-secondary mb-0"><label class="font-weight-bold">* Fonte: </label> <a href="./../pdf/manual_<?= $ano ?>.pdf" target="_blank">Manual Programa de Avaliação de Desempenho Tutor Médico <?= $ano ?></a></p>
                                                 </div>
                                             </div>
                                         </div>

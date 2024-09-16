@@ -213,9 +213,10 @@ $contt = $conta = $contb = 0;
 
                         <div id="menuPrincipal" class="collapse navbar-collapse pr-2 pl-3">
                             <ul class="navbar-nav">
-<!--                                <li class="nav-item">
-                                    <a href="../index.php" class="nav-link">Inicio </a>
+                                <li class="nav-item">
+                                    <a href="index.php" class="nav-link">Inicio </a>
                                 </li>
+                                <!--
                                  Navbar dropdown 
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">Ano </a>
@@ -233,7 +234,7 @@ $contt = $conta = $contb = 0;
                                         <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">Relatórios</a>
                                         <div class="dropdown-menu">
                                             <?php if($perfil === '3' && $nivel === '1'){ ?>
-                                            <a class="dropdown-item" href="../relatorios/relatorio_geral_igad.php">Relatório Geral IGAD - 1º ciclo de 2023</a>
+                                            <a class="dropdown-item" href="../relatorios/relatorio_geral_igad.php">Relatório Geral IGAD - <?= $ciclo ?>º ciclo de <?= $ano ?></a>
                                             <?php } ?>
                                         </div>
                                     </li>
@@ -325,8 +326,6 @@ $contt = $conta = $contb = 0;
                                                         $ine = $rs['ine'];
                                                         $ivs = strtoupper($rs['ivs']);
                                                         $datacadastro = vemdata($rs['datacadastro']);
-                                                        $ano = $rs['ano'];
-                                                        $ciclo = $rs['ciclo'];
                                                         $sql2 = "select p.idperiodo, p.descricaoperiodo, d.prenatal_consultas, d.prenatal_sifilis_hiv, d.cobertura_citopatologico, 
                                                             d.hipertensao, d.diabetes 
                                                             from periodo p inner join desempenho d on p.idperiodo = d.idperiodo
@@ -549,7 +548,7 @@ $contt = $conta = $contb = 0;
                                                             </div>
                                                             </form>
                                                         </div>
-                                                              <?php }}else{ ?>
+                                                        <?php }}else{ ?>
                                                         <button type="button" data-toggle="modal" data-target=".modalResposta<?= $iddemonstrativo ?>" class="btn btn-light shadow-sm "><i class="fas fa-check text-success"></i></button>
                                                         <!-- modal modalResposta -->
                                                         <div class="modal fad modalResposta<?= $iddemonstrativo ?> mt-2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

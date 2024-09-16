@@ -38,10 +38,8 @@ if (!isset($_SESSION['pgmsg'])) {
 $perfil = '3';
 $nivel = '1';
 date_default_timezone_set('America/Sao_Paulo');
-//$anoAtual = date('Y');
-$anoAtual = 2024;
-$ano = 2024;
-$ciclo = 3;
+$ano = $_SESSION['ano'];
+$ciclo = $_SESSION['ciclo'];
 $ctap = 0;
 $sql = "select distinct m.nome, m.admissao, m.cargo, m.tipologia, m.uf, m.municipio, m.datacadastro, m.cpf, m.ibge, m.cnes,
  m.ine, ivs.descricao as ivs from medico m left join ivs on m.fkivs = ivs.idivs order by m.nome";
@@ -185,7 +183,8 @@ $contt = 0;
                     <img src="../../img_agsus/Logo_400x200.png" class="img-fluid" alt="logoAdaps" width="250" title="Logo Adaps">
                 </div>
                 <div class="col-12 col-md-9 mt-5 ">
-                    <h4 class="mb-4 font-weight-bold">Unidade de Serviços em Saúde | Aperfeiçoamento Profissional</h4>
+                    <h4 class="mb-4 font-weight-bold text-center">Unidade de Serviços em Saúde &nbsp;|&nbsp; Aperfeiçoamento Profissional</h4>
+                    <h5 class="mb-4 text-primary text-center">Ano: <?= $ano ?> &nbsp;-&nbsp; <?= $ciclo ?>º Ciclo</h5>
                 </div>
             </div>
             <div class="row">
@@ -297,10 +296,33 @@ $contt = 0;
                                                     $sqlALD = "select * from aperfeicoamentoprofissional where cpf='$cpftratado' and ibge='$ibge' and cnes='$cnes' and ine='$ine' and ano='$ano' and ciclo='$ciclo'";
                                                     $qALD = mysqli_query($conn, $sqlALD) or die(mysqli_error($conn));
                                                     $nrALD = mysqli_num_rows($qALD);
+                                                    $rsALD = mysqli_fetch_array($qALD);
 //                                                    var_dump($nrALD);
-                                                    if($nrALD > 0){ ?>  
+                                                    $flagup = '';
+                                                    if($nrALD > 0){
+                                                        do{
+                                                            $flagup = $rsALD['flagup'];
+                                                            $flagterminou = $rsALD['flagterminou'];
+                                                            $flagretorno = $rsALD['flagretorno'];
+                                                            if($flagup === null){
+                                                                $flagup = '';
+                                                            }
+                                                        }while($rsALD = mysqli_fetch_array($qALD));
+                                                        if($flagterminou !== null && $flagterminou === '1'){
+                                                ?>
+                                                    <td><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center"><i class="fas fa-check text-success"></i></a></td>
+                                                <?php    
+                                                        }elseif($flagup === ''){
+                                                ?>  
                                                     <td><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center"><i class="fas fa-info-circle text-primary"></i></a></td>
-                                                <?php 
+                                                <?php }elseif($flagup === '0'){
+                                                           if($flagretorno === '1'){ ?>
+                                                    <td><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center"><i class="fas fa-info-circle text-danger"></i></a></td>        
+                                                <?php       }else{ ?>
+                                                    <td><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center"><i class="fas fa-info-circle text-warning"></i></a></td> 
+                                                <?php }}else{ ?>
+                                                    <td><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center"><i class="fas fa-check text-success"></i></a></td> 
+                                                <?php }
                                                     $ctap++;
                                                     }else{?>
                                                 <td></td>

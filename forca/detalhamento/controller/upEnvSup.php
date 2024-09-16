@@ -68,7 +68,8 @@ if($rsm){
         $mensagemEmail .= 'Comunicamos que <b>VOCÊ ALCANÇOU A META DE 50 CRÉDITOS</b> referente ao domínio de Comprovantes de Aperfeiçoamento, conforme exigido para o "Ciclo do Programa de Avaliação de Desempenho do Médico Tutor". <br><br>';
         $mensagemEmail .= "-- <br>";
         $mensagemEmail .= "Atenciosamente, <br><br>";
-        $mensagemEmail .= "Agência Brasileira de Apoio à Gestão do Sistema Único de Saúde - AgSUS.";
+        $mensagemEmail .= "Agência Brasileira de Apoio à Gestão do Sistema Único de Saúde - AgSUS.<br><br>";
+        $mensagemEmail .= "Link de acesso: https://agsusbrasil.org/sistema-integrado/login.php";
         $email = (new \Source\Support\Email())->bootstrap(
                 "$assunto",
                 "$mensagemEmail",
@@ -76,13 +77,15 @@ if($rsm){
                 "$nome",
                 "",
                 "");
-        $email->attach("../../../img/Logo_400x200.png", "AgSUS");
+        $email->attach("../../../img/Logo_agsus.jpg", "AgSUS");
         if ($email->send()) {
             $ap->flagemail = '1';
+            $ap->flagup = '0'; // nega a atualização e finaliza o processo.
             $ap->dthremail = $dthoje;
             $ap->usuario = $user;
             //Mudando a flagup para que o médico possa preencher e enviar a atualização das atividades
             $ap->flagparecer = '1';
+            $ap->flagterminou = '1';
             $ap->save();
             $qc = (new Source\Models\Medico_qualifclinica())->findJQCUp($idap);
             //        var_dump($qc);
@@ -91,10 +94,8 @@ if($rsm){
                     $idqc = $q->id;
                     $qcUp = (new Source\Models\Medico_qualifclinica())->findById($idqc);
                     if ($qcUp !== null) {
-                        if ($qcUp->flagparecer === '0') {
-                            $qcUp->flagup = '1';
-                            $rsqcUp = $qcUp->save();
-                        }
+                        $qcUp->flagup = '0';
+                        $rsqcUp = $qcUp->save();
                     }
                 }
             }
@@ -104,10 +105,8 @@ if($rsm){
                     $idgepe = $g->id;
                     $gepeUp = (new Source\Models\Medico_gesenspesext())->findById($idgepe);
                     if ($gepeUp !== null) {
-                        if ($gepeUp->flagparecer === '0') {
-                            $gepeUp->flagup = '1';
-                            $gepeUp->save();
-                        }
+                        $gepeUp->flagup = '0';
+                        $gepeUp->save();
                     }
                 }
             }
@@ -117,10 +116,8 @@ if($rsm){
                     $idit = $i->id;
                     $itUp = (new Source\Models\Medico_inovtecnologica())->findById($idit);
                     if ($itUp !== null) {
-                        if ($itUp->flagparecer === '0') {
-                            $itUp->flagup = '1';
-                            $itUp->save();
-                        }
+                        $itUp->flagup = '0';
+                        $itUp->save();
                     }
                 }
             }

@@ -115,7 +115,18 @@ if ($rsmIT === null) {
 $itold = (new \Source\Models\Medico_inovtecnologica())->findById($itid);
 if($itold !== null){
     $itold->flagup = 1;
-    $itold->save();
+    $rsitold = $itold->save();
+    if ($rsitold === null) {
+        $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;Erro no gravação dos dados.</strong></small></p>";
+        echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
+                                URL=\"../index.php\"'>";
+        exit();
+    }
+    $ap = (new \Source\Models\Aperfeicoamentoprofissional())->findById($idap);
+    if($ap !== null){
+        $ap->flagretorno = 1;
+        $ap->save();
+    }
 }
 $_SESSION['msg'] = "<p class='text-success bg-light shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;Dados cadastrados com sucesso!</strong></small></p>";
 echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;

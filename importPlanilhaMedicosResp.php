@@ -46,7 +46,10 @@ if (!empty($_FILES["arquivo"]["tmp_name"])) {
         $a=0;
         $objeto = fopen($arquivo, 'r');
         while(($dados = fgetcsv($objeto, 10000,","))!==FALSE){
-            $a++;
+            ++$a;
+            if($a <= 1){
+                continue;
+            }
             //captura cada item separado por vírgula na sequência
             $cpf = trim(utf8_encode($dados[0]));
             $nome = trim(utf8_encode($dados[1]));
@@ -80,29 +83,46 @@ if (!empty($_FILES["arquivo"]["tmp_name"])) {
             
             $cpf = str_replace("'", "", $cpf);
             $admissao = str_replace("'", "", $admissao);
+            $cargo = strtoupper($cargo);
             $cargo = str_replace("'", "", $cargo);
-            $nome = str_replace("'", "", $nome);
-            $nome = str_replace("Á", "A", $nome);
-            $nome = str_replace("É", "E", $nome);
-            $nome = str_replace("Í", "I", $nome);
-            $nome = str_replace("Ó", "O", $nome);
-            $nome = str_replace("Ú", "U", $nome);
-            $nome = str_replace("Ç", "C", $nome);
-            $nome = str_replace("Ü", "U", $nome);
-            $nome = str_replace("/", "", $nome);
-            $nome = str_replace("-", "", $nome);
-            $nome = str_replace("'", "", $nome);
-            $nome = str_replace("Á", "A", $nome);
-            $nome = str_replace("É", "E", $nome);
-            $nome = str_replace("Í", "I", $nome);
-            $nome = str_replace("Ó", "O", $nome);
-            $nome = str_replace("Ú", "U", $nome);
-            $nome = str_replace("Ç", "C", $nome);
-            $nome = str_replace("Ü", "U", $nome);
-            $nome = str_replace("/", "", $nome);
-            $nome = str_replace("-", "", $nome);
-            $tipologia = str_replace("'", "", $tipologia);
+            $cargo = str_replace("'", "", $cargo);
+            $cargo = str_replace("Á", "A", $cargo);
+            $cargo = str_replace("É", "E", $cargo);
+            $cargo = str_replace("Í", "I", $cargo);
+            $cargo = str_replace("Ó", "O", $cargo);
+            $cargo = str_replace("Ú", "U", $cargo);
+            $cargo = str_replace("Ç", "C", $cargo);
+            $cargo = str_replace("Ü", "U", $cargo);
+            $cargo = str_replace("/", "", $cargo);
+            $cargo = str_replace("-", "", $cargo);
+            
             $municipio = str_replace("'", "", $municipio);
+            $municipio = strtoupper($municipio);
+            $municipio = str_replace("Á", "A", $municipio);
+            $municipio = str_replace("É", "E", $municipio);
+            $municipio = str_replace("Í", "I", $municipio);
+            $municipio = str_replace("Ó", "O", $municipio);
+            $municipio = str_replace("Ú", "U", $municipio);
+            $municipio = str_replace("Ç", "C", $municipio);
+            $municipio = str_replace("Ü", "U", $municipio);
+            $municipio = str_replace("/", "", $municipio);
+            $municipio = str_replace("-", "", $municipio);
+            
+            $uf = str_replace("'", "", $uf);
+            $uf = strtoupper($uf);
+            
+            $tipologia = str_replace("'", "", $tipologia);
+            $tipologia = strtoupper($tipologia);
+            $tipologia = str_replace("Á", "A", $tipologia);
+            $tipologia = str_replace("É", "E", $tipologia);
+            $tipologia = str_replace("Í", "I", $tipologia);
+            $tipologia = str_replace("Ó", "O", $tipologia);
+            $tipologia = str_replace("Ú", "U", $tipologia);
+            $tipologia = str_replace("Ç", "C", $tipologia);
+            $tipologia = str_replace("Ü", "U", $tipologia);
+            $tipologia = str_replace("/", "", $tipologia);
+            $tipologia = str_replace("-", "", $tipologia);
+            
             $cnes = str_replace("'", "", $cnes);
             $ine = str_replace("'", "", $ine);
             $ibge = str_replace("'", "", $ibge);
@@ -146,15 +166,16 @@ if (!empty($_FILES["arquivo"]["tmp_name"])) {
             $query = mysqli_query($conn, $sql) or die(mysqli_error($conn));
             $nrrs = mysqli_num_rows($query);
             if($nrrs==0){
-                $sql2 = "insert into medico values ('$cpftratado','$ibge','$cnes','$ine','$nome','$admissao','$cargo','$tipologia','$uf','$municipio','$datahoje')";
+                $sql2 = "insert into medico (cpf,ibge,cnes,ine,nome,admissao,cargo,tipologia,uf,municipio,datacadastro) "
+                        . "values ('$cpftratado','$ibge','$cnes','$ine','$nome','$admissao','$cargo','$tipologia','$uf','$municipio','$datahoje')";
                 mysqli_query($conn, $sql2) or die(mysqli_error($conn));
             }
             $sql4 = "select iddesempenho from desempenho where cpf = '$cpftratado' and ibge = '$ibge' and cnes = '$cnes' and ine = '$ine' and ano = '$ano' and idperiodo = '$periodo' limit 1";
             $query3 = mysqli_query($conn, $sql4) or die(mysqli_error($conn));
             $nrrs3 = mysqli_num_rows($query3); 
             if($nrrs3 == 0){
-                $sql2 = "insert into desempenho values (null, '$ano','$periodo','$prenatal_consultas','$prenatal_sifilis_hiv','$cobertura_citopatologico',"
-                    . "'$hipertensao','$diabetes','$cpftratado','$ibge','$cnes','$ine','2023','1')";
+                $sql2 = "insert into desempenho (ano,idperiodo,prenatal_consultas,prenatal_sifilis_hiv,cobertura_citopatologico,hipertensao,diabetes,cpf,ibge,cnes,ine,demonstrativo_ano,demonstrativo_ciclo) "
+                        . "values ('$ano','$periodo','$prenatal_consultas','$prenatal_sifilis_hiv','$cobertura_citopatologico','$hipertensao','$diabetes','$cpftratado','$ibge','$cnes','$ine','$ano','2')";
                 mysqli_query($conn, $sql2) or die(mysqli_error($conn));
             }else{
                 echo "$cpftratado - $nome - $ibge - $cnes - $ine - Ano $ano e período $periodo cadastrado anteriormente<br>";

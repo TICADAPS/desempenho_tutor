@@ -15,18 +15,18 @@ if (!isset($_SESSION['pgmsg'])) {
 //    header("Location: ../derruba_session.php");
 //    exit();
 //}
-//$cpf = $_GET['c'];
-$cpf = '04365468413';
+$cpf = $_REQUEST['c'];
+//$cpf = '04365468413';
 $_SESSION['cpf'] = $cpf;
 date_default_timezone_set('America/Sao_Paulo');
 $anoAtual = date('Y');
 //$anoAtual = 2023;
-//$ano = $_GET['a'];
-$ano = 2023;
-//$ciclo = $_GET['cl'];
-$ciclo = 1;
-//$idperiodo = $_GET['p'];
-$idperiodo = 25;
+$ano = $_REQUEST['a'];
+//$ano = 2023;
+$ciclo = $_REQUEST['cl'];
+//$ciclo = 1;
+$idperiodo = $_REQUEST['p'];
+//$idperiodo = 25;
 $flagincent = 0;
 $cpftratado = str_replace("-", "", $cpf);
 $cpftratado = str_replace(".", "", $cpftratado);
@@ -228,21 +228,55 @@ if ($nrrsqa > 0) {
             #incentivo:hover{
                 font-size: 13px;
             }
+            .testeira{
+                width: 100%;
+                height: 100px;
+            }
+            .titulotes{
+                border: 1px solid #0269B0;
+                background-color: #0269B0;
+                border-top-left-radius: 60px;
+                border-top-right-radius: 60px;
+                padding: 15px 0px 10px 40px;
+                width: 55%;
+                color: #fff;
+                font-weight: bold;
+            }
+            .testeirabody{
+                border: 1px solid #0269B0;
+                background-color: #fff;
+                border-top-left-radius: 40px;
+                border-top-right-radius: 40px;
+                border-bottom-left-radius: 40px;
+                border-bottom-right-radius: 40px;
+                padding: 15px;
+                margin-top: -20px;
+                width: 80%;
+                margin-left: -6px;
+            }
         </style>
     </head>
 
     <body>
         <div class="container-fluid p-3">
-            <div class="row">
+            <div class="row mb-4">
                 <div class="col-12 col-md-3 mt-4 pl-5">
                     <img src="../img_agsus/Logo_400x200.png" class="img-fluid" alt="logoAdaps" width="250" title="Logo Adaps">
                 </div>
                 <div class="col-12 col-md-9 mt-2 text-center">
-                    <img src="../img_agsus/TESTEIRA001.png" class="img-fluid">
+                    <div class="testeira">
+                        <div class="titulotes"><h4>Painel de Resultados</h4></div>
+                        <div class="testeirabody h5 text-primary text-center mb-4">
+                          <?= $ciclo ?>º Ciclo do Programa de Avaliação do 
+                          Desempenho do Médico Tutor <br>(Ano <?= $ano ?>)
+                        </div>
+                    </div>
+                    <!--<img src="../img_agsus/TESTEIRA001.png" class="img-fluid">-->
 <!--                    <h4 class="mb-4 font-weight-bold text-center">Painel de Resultados</h4> 
                     <h4 class="mb-4 font-weight-bold text-center">1º Ciclo do Programa de Avaliação de Desempenho do Médico Tutor - Ano <?= $ano1 ?></h4>-->
                 </div>
             </div>
+            <br><br>
             <div class="row">
                 <div class="col-12 mb-2">
                     <nav class="navbar navbar-expand-lg navbar-light bg-light rounded">
@@ -251,9 +285,10 @@ if ($nrrsqa > 0) {
                         </button>
                         <div id="menuPrincipal" class="collapse navbar-collapse pr-3 pl-3">
                             <ul class="navbar-nav">
-<!--                                <li class="nav-item">
-                                    <a href="../index.php" class="nav-link">Inicio </a>
+                                <li class="nav-item">
+                                    <a href="index.php" class="nav-link">Inicio </a>
                                 </li>
+                                <!--
                                 <li class="nav-item">
                                     <a class="nav-link" href="">|</a>
                                 </li>
@@ -266,7 +301,7 @@ if ($nrrsqa > 0) {
                                     </div>
                                 </li>-->
                                 <li class="nav-item">
-                                    <a href="index.php" class="nav-link">Painel de Resultados Geral</a>
+                                    <a href="listaDesempenho.php" class="nav-link">Painel de Resultados Geral</a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="demonstrativo.php?c=<?= $cpftratado ?>&a=<?= $ano ?>&cl=<?= $ciclo ?>&p=<?= $idperiodo ?>" class="nav-link">Painel de Resultados do Tutor</a>

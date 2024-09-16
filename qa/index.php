@@ -8,7 +8,7 @@ $cpf = $_SESSION['cpf'];
 //$cpf = '054.040.031-97';
 date_default_timezone_set('America/Sao_Paulo');
 //$anoAtual = date('Y');
-$anoAtual = $_POST['a'];
+$anoAtual = $_REQUEST['a'];
 $cpftratado = str_replace("-", "", $cpf);
 $cpftratado = str_replace(".", "", $cpftratado);
 $cpftratado = str_replace(".", "", $cpftratado);

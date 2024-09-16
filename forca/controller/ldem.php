@@ -13,6 +13,7 @@ if(!isset($_SESSION['nivel'])){
 }
 $_SESSION['ano'] = $_POST['ano'];
 $_SESSION['ciclo'] = $_POST['ciclo'];
+$_SESSION['periodo'] = $_POST['periodo'];
 
-header("location: ../aperfeicoamento_profissional/");
+header("location: ../listaDesempenho.php");
 exit();

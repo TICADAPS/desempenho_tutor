@@ -8,13 +8,13 @@ if($_SESSION['perfil'] !== '3'){
     header("Location: ../derruba_session.php");
     exit();
 }
-$cpf = $_GET['c'];
+$cpf = $_REQUEST['c'];
 //$cpf = '054.040.031-97';
 date_default_timezone_set('America/Sao_Paulo');
 //$ano = date('Y');
-$ano = $_GET['a'];
-$ciclo = $_GET['cl'];
-$idperiodo = $_GET['p'];
+$ano = $_REQUEST['a'];
+$ciclo = $_REQUEST['cl'];
+$idperiodo = $_REQUEST['p'];
 $cpftratado = str_replace("-", "", $cpf);
 $cpftratado = str_replace(".", "", $cpftratado);
 $cpftratado = str_replace(".", "", $cpftratado);
@@ -72,7 +72,10 @@ if ($nrrs > 0) {
                         <div id="menuPrincipal" class="collapse navbar-collapse">
                             <ul class="navbar-nav">
                                 <li class="nav-item">
-                                    <a href="index.php" class="nav-link">Painel de Resultados Geral</a>
+                                    <a href="index.php" class="nav-link">Inicio </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="listaDesempenho.php" class="nav-link">Painel de Resultados Geral</a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="demonstrativo.php?c=<?= $cpftratado ?>&a=<?= $ano ?>&cl=<?= $ciclo ?>&p=<?= $idperiodo ?>" class="nav-link">Painel de Resultados do Tutor</a>

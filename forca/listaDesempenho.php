@@ -56,6 +56,7 @@ $sql = "select distinct m.nome, m.admissao, m.cargo, m.tipologia, m.uf, m.munici
 $query = mysqli_query($conn, $sql);
 $nrrs = mysqli_num_rows($query);
 $rs = mysqli_fetch_array($query);
+//var_dump($nrrs,$rs);
 $rscpf = false;
 if ($nrrs > 0) {
     $rscpf = true;
@@ -234,7 +235,7 @@ $contt = $conta = $contb = 0;
                                         <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">Relatórios</a>
                                         <div class="dropdown-menu">
                                             <?php if($perfil === '3' && $nivel === '1'){ ?>
-                                            <a class="dropdown-item" href="../relatorios/relatorio_geral_igad.php">Relatório Geral IGAD - <?= $ciclo ?>º ciclo de <?= $ano ?></a>
+                                            <a class="dropdown-item" href="../relatorios/relatorio_geral_igad.php?a=<?= $ano ?>&c=<?= $ciclo ?>&p=<?= $idperiodo ?>">Relatório Geral IGAD - <?= $ciclo ?>º ciclo de <?= $ano ?></a>
                                             <?php } ?>
                                         </div>
                                     </li>
@@ -296,7 +297,6 @@ $contt = $conta = $contb = 0;
                                                 <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;" title="Qualidade Tutoria">QT</td>
                                                 <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;" title="Competências Profissionais">CP</td>
                                                 <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;" title="Aperfeiçoamento Profissional">AP</td>
-                                                <td class="bg-gradient-dark text-light align-middle text-center" style="width: 10%;position: sticky; top: 0px;"><i class="fas fa-calendar-alt"></i></td>
                                                 <?php if($perfil === '3' && $nivel === '1'){ ?>
                                                 <td class="bg-gradient-dark text-light align-middle text-center" style="width: 10%;position: sticky; top: 0px;"><i class="far fa-eye"></i></td>
                                                 <?php } ?>
@@ -325,7 +325,7 @@ $contt = $conta = $contb = 0;
                                                         $cnes = $rs['cnes'];
                                                         $ine = $rs['ine'];
                                                         $ivs = strtoupper($rs['ivs']);
-                                                        $datacadastro = vemdata($rs['datacadastro']);
+//                                                        $datacadastro = vemdata($rs['datacadastro']);
                                                         $sql2 = "select p.idperiodo, p.descricaoperiodo, d.prenatal_consultas, d.prenatal_sifilis_hiv, d.cobertura_citopatologico, 
                                                             d.hipertensao, d.diabetes 
                                                             from periodo p inner join desempenho d on p.idperiodo = d.idperiodo
@@ -660,7 +660,7 @@ $contt = $conta = $contb = 0;
                                                 <td><?= $qnotatext ?></td>
                                                 <td><?= $cpossuitext ?></td>
                                                 <td><?= $anotatext ?></td>
-                                                <td><?= $datacadastro ?></td>
+                                                <!--<td><?= $datacadastro ?></td>-->
                                                 <?php if($perfil === '3' && $nivel === '1'){ ?>
                                                 <td><a href="demonstrativo.php?c=<?= $cpftratado ?>&a=<?= $ano ?>&cl=<?= $ciclo ?>&p=<?= $idperiodo ?>" class="btn btn-light shadow-sm" title="Demonstrativo"><i class="far fa-eye"></i></a></td>
                                                 <?php } ?>

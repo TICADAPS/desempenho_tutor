@@ -24,10 +24,9 @@ set_time_limit(1000);
 //$ano = $_GET['ano'];
 //$periodo = $_GET['periodo'];
 //var_dump($ciclo,$idCalendario);
-$anoAtual = 2023;
-$ano = 2023;
-$ciclo = 1;
-$idperiodo = 25;
+$ano = $_REQUEST['a'];
+$ciclo = $_REQUEST['c'];
+$idperiodo = $_REQUEST['p'];
 $sql = "select distinct m.nome, m.admissao, m.cargo, m.tipologia, m.uf, m.municipio, m.datacadastro, m.cpf, m.ibge, m.cnes,
  m.ine, ivs.descricao as ivs, p.descricaoperiodo, de.iddemonstrativo, de.ano, de.ciclo, de.competencias, de.aperfeicoamento, de.qualidade 
  from medico m inner join demonstrativo de on de.fkcpf = m.cpf and de.fkibge = m.ibge and de.fkcnes = m.cnes and de.fkine = m.ine 

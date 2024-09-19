@@ -140,7 +140,7 @@ $rsit = mysqli_fetch_array($qit);
     </style>
 </head>
 <body>
-    <div class="container-fluid mt-2">
+    <div class="container-fluid mt-2 mb-3">
         <div class="row">
             <div class="col-12 col-md-4 mt-4 pl-5">
                 <img src="../../img_agsus/Logo_400x200.png" class="img-fluid" alt="logoAdaps" width="250" title="Logo Adaps">
@@ -249,6 +249,17 @@ $rsit = mysqli_fetch_array($qit);
                                         </div>
                                     </div>
                                     <?php
+                                    if ($flaganociclo !== '1') { ?>
+                                    <div class="row mb-3 mt-2">
+                                        <div class="col-md-12">
+                                            <div class="card border-1 ">
+                                                <div class="card-body bg-warning">
+                                                    <h5 class="text-dark font-weight-bold text-center"><i class="fas fa-hand-point-right"></i>&nbsp; O ciclo não está aberto &nbsp;<i class="fas fa-hand-point-left"></i></h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>                    
+                                    <?php }else{ 
                                     if ($rsano !== null) {
                                         if ($nrrs2 > 0) {
                                             ?>
@@ -603,16 +614,7 @@ $rsit = mysqli_fetch_array($qit);
                                                 </div>
                                             </form>
                                             <?php
-                                        } else {
-                                            if ($flaganociclo !== '1') {
-//            var_dump($nrrs2);
-                                                ?>
-                                                <div class="row mb-3 mt-2">
-                                                    <div class="col-md-12">
-                                                        <p class="text-danger font-weight-bold text-center">*** Ciclo finalizado ***</p>
-                                                    </div>
-                                                </div>                    
-                                            <?php } ?>
+                                        } else { ?>
                                             <div class="row mb-1">
                                                 <div class="col-12">
                                                     <div class="card border-1 ">
@@ -1668,14 +1670,14 @@ $rsit = mysqli_fetch_array($qit);
                                     O ano <?= $ano ?> e o ciclo <?= $ciclo ?> não foi aberto.
                                 </div>
                             </div>   
-                        <?php } ?>
+                        <?php }} ?>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <!-- Modal -->
-    <div class="modal fade" id="modalptexp"  tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade mb-3" id="modalptexp"  tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header bg-warning">

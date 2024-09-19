@@ -20,13 +20,29 @@ $cpf = $_REQUEST['c'];
 $_SESSION['cpf'] = $cpf;
 date_default_timezone_set('America/Sao_Paulo');
 $anoAtual = date('Y');
-//$anoAtual = 2023;
 $ano = $_REQUEST['a'];
-//$ano = 2023;
 $ciclo = $_REQUEST['cl'];
 //$ciclo = 1;
 $idperiodo = $_REQUEST['p'];
 //$idperiodo = 25;
+$sqlanocliclo = "select * from anoacicloavaliacao where ano = '$ano' and ciclo = '$ciclo'";
+$qanocliclo = mysqli_query($conn, $sqlanocliclo) or die(mysqli_errno($conn));
+$rsanocliclo = mysqli_fetch_array($qanocliclo);
+$descciclo = '';
+if($rsanocliclo){
+    do{
+        $descciclo = $rsanocliclo['descricao'];
+    }while($rsanocliclo = mysqli_fetch_array($qanocliclo));
+}
+$sqlp = "select * from periodo where idperiodo = '$idperiodo'";
+$qp = mysqli_query($conn, $sqlp) or die(mysqli_errno($conn));
+$rsp = mysqli_fetch_array($qp);
+$descperiodo = '';
+if($rsp){
+    do{
+        $descperiodo = $rsp['descricaoperiodo'];
+    }while($rsp = mysqli_fetch_array($qp));
+}
 $flagincent = 0;
 $cpftratado = str_replace("-", "", $cpf);
 $cpftratado = str_replace(".", "", $cpftratado);
@@ -233,17 +249,17 @@ if ($nrrsqa > 0) {
                 height: 100px;
             }
             .titulotes{
-                border: 1px solid #0269B0;
-                background-color: #0269B0;
+                border: 1px solid #1160AD;
+                background-color: #1160AD;
                 border-top-left-radius: 60px;
                 border-top-right-radius: 60px;
                 padding: 15px 0px 10px 40px;
-                width: 55%;
+                width: 66%;
                 color: #fff;
                 font-weight: bold;
             }
             .testeirabody{
-                border: 1px solid #0269B0;
+                border: 1px solid #1160AD;
                 background-color: #fff;
                 border-top-left-radius: 40px;
                 border-top-right-radius: 40px;
@@ -251,7 +267,7 @@ if ($nrrsqa > 0) {
                 border-bottom-right-radius: 40px;
                 padding: 15px;
                 margin-top: -20px;
-                width: 80%;
+                width: 100%;
                 margin-left: -6px;
             }
         </style>
@@ -259,13 +275,13 @@ if ($nrrsqa > 0) {
 
     <body>
         <div class="container-fluid p-3">
-            <div class="row mb-4">
-                <div class="col-12 col-md-3 mt-4 pl-5">
+            <div class="row mb-2">
+                <div class="col-md-3 mt-4 pl-5">
                     <img src="../img_agsus/Logo_400x200.png" class="img-fluid" alt="logoAdaps" width="250" title="Logo Adaps">
                 </div>
-                <div class="col-12 col-md-9 mt-2 text-center">
-                    <div class="testeira">
-                        <div class="titulotes"><h4>Painel de Resultados</h4></div>
+                <div class="col-md-9 mt-2 mb-2 align-middle">
+                    <div class="testeira text-center">
+                        <div class="titulotes text-left"><h4>Painel de Resultados</h4></div>
                         <div class="testeirabody h5 text-primary text-center mb-4">
                           <?= $ciclo ?>º Ciclo do Programa de Avaliação do 
                           Desempenho do Médico Tutor <br>(Ano <?= $ano ?>)
@@ -273,7 +289,7 @@ if ($nrrsqa > 0) {
                     </div>
                     <!--<img src="../img_agsus/TESTEIRA001.png" class="img-fluid">-->
 <!--                    <h4 class="mb-4 font-weight-bold text-center">Painel de Resultados</h4> 
-                    <h4 class="mb-4 font-weight-bold text-center">1º Ciclo do Programa de Avaliação de Desempenho do Médico Tutor - Ano <?= $ano1 ?></h4>-->
+                    <h4 class="mb-4 font-weight-bold text-center"><?= $ciclo ?>º ciclo do Programa de Avaliação de Desempenho do Médico Tutor - Ano <?= $ano1 ?></h4>-->
                 </div>
             </div>
             <br><br>
@@ -297,7 +313,7 @@ if ($nrrsqa > 0) {
                                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">Ano </a>
                                     <div class="dropdown-menu">
                                         <a class="dropdown-item" href="../ano.php?c=<?= $cpftratado ?>&a=2024">2024</a>
-                                        <a class="dropdown-item" href="../ano.php?c=<?= $cpftratado ?>&a=2023">2023</a>
+                                        <a class="dropdown-item" href="../ano.php?c=<?= $cpftratado ?>&a=<?= $ano ?>"><?= $ano ?></a>
                                     </div>
                                 </li>-->
                                 <li class="nav-item">
@@ -520,33 +536,33 @@ if ($nrrsqa > 0) {
                                                             </div>
                                                             <div class="col-md-10 p-3 mt-2">
                                                                 <div class="row mt-3">
-                                                                    <div class="col-md-6">
-                                                                        <label class="font-weight-bold text-primary">Nome: &nbsp;<?= $nome ?></label>
+                                                                    <div class="col-md-4">
+                                                                        <label class="font-weight-bold text-dark">Nome: &nbsp;<?= $nome ?></label>
                                                                     </div>
-                                                                    <div class="col-md-3">
-                                                                        <label class="font-weight-bold text-primary">CPF: &nbsp;<?= $cpf ?></label>
-                                                                    </div>
-                                                                    <div class="col-md-3">
-                                                                        <label class="font-weight-bold">Cargo: </label><label> &nbsp;&nbsp;<?= $cargo ?></label>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="row">
-                                                                    <div class="col-md-6">
+                                                                    <div class="col-md-4">
                                                                         <label class="font-weight-bold">Município-UF: </label><label>&nbsp;&nbsp;<?php echo "$municipio-$uf"; ?></label>
                                                                     </div>
-                                                                    <div class="col-md-3">
-                                                                        <label class="font-weight-bold">CNES: </label><label>&nbsp;&nbsp;<?= $cnes ?></label>
-                                                                    </div>
-                                                                    <div class="col-md-3">
-                                                                        <label class="font-weight-bold">INE: </label><label>&nbsp;&nbsp;<?= $ine ?></label>
+                                                                    <div class="col-md-4">
+                                                                        <label class="font-weight-bold">Tipologia: </label><label> &nbsp;&nbsp;<?= $tipologia ?></label>
                                                                     </div>
                                                                 </div>
                                                                 <div class="row">
-                                                                    <div class="col-md-6">
-                                                                        <label class="font-weight-bold">Tipologia: </label><label> &nbsp;&nbsp;<?= $tipologia ?></label>
+                                                                    <div class="col-md-4">
+                                                                        <label class="font-weight-bold text-dark">CPF: &nbsp;<?= $cpf ?></label>
                                                                     </div>
-                                                                    <div class="col-md-6">
+                                                                    <div class="col-md-4">
+                                                                        <label class="font-weight-bold">CNES: </label><label>&nbsp;&nbsp;<?= $cnes ?></label>
+                                                                    </div>
+                                                                    <div class="col-md-4">
                                                                         <label class="font-weight-bold">IVS: </label><label> &nbsp;&nbsp;<?= $ivs ?></label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-4">
+                                                                        <label class="font-weight-bold">Cargo: </label><label> &nbsp;&nbsp;<?= $cargo ?></label>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <label class="font-weight-bold">INE: </label><label>&nbsp;&nbsp;<?= $ine ?></label>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -582,7 +598,7 @@ if ($nrrsqa > 0) {
                                                                                 <p class="card-text  text-white text-justify">Domínio mensurado por meio de indicadores de saúde- SISAB/Previne Brasil, que 
                                                                                     tem a participação direta do profissional médico e da equipe de médicos bolsista de   cada tutor no cuidado - 
                                                                                     Compõem 50% do valor total da nota. </p>
-                                                                                <button type="button" data-toggle="modal" data-target=".modalaqa" class="btn btn-info shadow-sm text-white">Mais detalhes...</button>
+                                                                                <button type="button" data-toggle="modal" data-target=".modalaqa" class="btn btn-primary shadow-sm text-white">Mais detalhes...</button>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -602,10 +618,54 @@ if ($nrrsqa > 0) {
                                                                             <div class="col-10" style="margin-top: -80px;">
                                                                                 <!--<h6 class="card-title  text-white font-weight-bold">Qualidade da Tutoria: <?= $qnotatext ?>%</h6>-->
                                                                                 <h6 class="card-title text-white font-weight-bold">Qualidade da Tutoria:</h6>
-                                                                                <p class="card-text  text-white text-justify">Domínio mensurado por meio da Avaliação dos bolsistas em relação às vivências 
-                                                                                    de tutorias clínicas: sistema da UNASUS, essa aferição da qualidade da tutoria é realizada pelos médicos 
-                                                                                    bolsistas em relação a seus tutores tem se dado de forma contínua desde o início do programa a cada tutoria no 
-                                                                                    SISPMB (Sistema do Programa Médicos pelo Brasil). Compõem 10% do valor total da nota.</p>
+                                                                                <p class="card-text  text-white text-justify">A qualidade tutoria clínica está
+                                                                                integrada ao Curso de Especialização em Medicina de Família e Comunidade e é
+                                                                                avaliada através de evidências das responsabilidades do Tutor Médico durante o
+                                                                                estágio remunerado. A avaliação da tutoria é baseada no feedback dos bolsistas
+                                                                                sobre suas experiências...</p>
+                                                                                <button class="btn btn-success text-white" id="btqt">Mais detalhes...</button>
+                                                                            </div>
+                                                                            <div id="qt2" class="row mt-4 pl-2 pr-2" style="display: none;">
+                                                                                <div class="col-12 text-white text-justify rounded p-2" style='background-color: #53b6a3;'>
+                                                                                    <p>
+                                                                                        A atividade de tutoria clínica está
+                                                                                        vinculada ao Curso de Especialização em Medicina de Família e Comunidade.
+                                                                                    </p>
+                                                                                    <p>
+                                                                                        A tutoria será avaliada a partir da
+                                                                                        verificação de um conjunto de evidências relacionadas às atribuições do Tutor
+                                                                                        Médico no processo de realização do estágio experimental remunerado. Consiste
+                                                                                        portanto, na opinião do bolsista em relação às vivências de tutoria clínica.
+                                                                                    </p>
+                                                                                    <p>
+                                                                                        A aferição da qualidade da tutoria
+                                                                                        será feita com base em dados fornecidos pelos bolsistas vinculados e assistidos
+                                                                                        por cada tutor, no intuito de propiciar feedback sobre suas habilidades.
+                                                                                    </p>
+                                                                                    <p>
+                                                                                        A medição do desempenho do Tutor
+                                                                                        Médico nas atribuições de tutoria clínica é realizada por meio de instrumento
+                                                                                        validado no Brasil. O instrumento Maastricht Clinical Teaching Questionnaire
+                                                                                        (MCTQ) é destinado a captar a qualidade de preceptores por médicos em formação
+                                                                                        atuando no cenário prático, garantindo-se a coerência com as responsabilidades
+                                                                                        e competências esperadas do Tutor Médico.
+                                                                                    </p>
+                                                                                    <p>
+                                                                                        O MCTQ analisa a performance dos
+                                                                                        tutores em cinco áreas: demonstração de tarefas e feedback, estímulo ao
+                                                                                        pensamento crítico dos bolsistas, apoio na definição e alcance dos objetivos de
+                                                                                        aprendizagem, e a criação de um ambiente de aprendizagem respeitoso e
+                                                                                        colaborativo:
+                                                                                        <ol type="i">
+                                                                                            <li>a demonstrações práticas de tarefas e às ações de feedback dadas aos bolsistas;</li>
+                                                                                            <li>a capacidade de estimular o raciocínio dos mesmos explorando suas potencialidades e
+                                                                                                evidenciando suas fragilidades;
+                                                                                            </li>
+                                                                                            <li>a habilidade de apoiar a construção e alcance dos objetivos de aprendizagem, e;</li>
+                                                                                            <li>ao clima de aprendizagem de respeito, autonomia, interação, entre outros.</li>
+                                                                                        </ol>
+                                                                                    </p>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -625,9 +685,33 @@ if ($nrrsqa > 0) {
                                                                             <div class="col-10" style="margin-top: -80px;">
                                                                                 <!--<h6 class="card-title  text-white font-weight-bold">Aperfeiçoamento Profissional: <?= $anotatext ?>%</h6>-->
                                                                                 <h6 class="card-title text-white font-weight-bold">Aperfeiçoamento Profissional:</h6>
-                                                                                <p class="card-text  text-white text-justify">Domínio mensurado por meio da quantidade de créditos alcançados em atividades 
-                                                                                    desenvolvidas no semestre conforme os comprovantes registrados dos cursos realizados e inseridos no sistema na 
-                                                                                    plataforma sênior. Compõem 10% do valor total da nota.</p>
+                                                                                <p class="card-text  text-white text-justify">O domínio de
+                                                                                aperfeiçoamento profissional tem objetivo de promover a atualização e aprimoramento
+                                                                                dos profissionais nos cargos de Tutor...</p>
+                                                                                <button class="btn btn-info" id="btap">Mais detalhes...</button>
+                                                                            </div>
+                                                                            <div id="ap2" class="row mt-4 pl-2 pr-2" style="display: none;">
+                                                                                <div class="col-12 text-white text-justify rounded p-2" style='background-color: #9ac77f;'>
+                                                                                    <p>
+                                                                                        O domínio 
+                                                                                        aperfeiçoamento profissional está conectado com as atividades do Plano de
+                                                                                        Educação Continuada. O Plano concentra as estratégias de atualização e
+                                                                                        aperfeiçoamento dos empregados em exercício nos cargos de Tutor Médico e Médico
+                                                                                        de Família e Comunidade. O PEC organiza, por meio de um sistema de créditos, o
+                                                                                        estímulo ao desenvolvimento contínuo de competências técnicas e comportamentais
+                                                                                        desses empregados, a partir da realização de atividades de qualificação clínica
+                                                                                        e de gestão, ensino, pesquisa, extensão e inovação tecnológica.
+                                                                                    </p>
+                                                                                    <p>
+                                                                                        O objetivo desse
+                                                                                        domínio na Avaliação é estimular a adesão e implementação do Plano favorecendo
+                                                                                        um processo de formação com base em necessidades articuladas com o cotidiano do
+                                                                                        trabalho e com a missão institucional. Para tanto adotou-se o sistema de
+                                                                                        créditos como base para a verificação e julgamento do desempenho esperado. Os
+                                                                                        critérios e pesos das atividades de curta duração estão divulgados na Instrução
+                                                                                        Normativa nº 002/2023 - Plano de Educação Continuada para os Médicos.
+                                                                                    </p>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -647,9 +731,39 @@ if ($nrrsqa > 0) {
                                                                             <div class="col-10" style="margin-top: -80px;">
                                                                                 <!--<h6 class="card-title  text-white font-weight-bold">Competências Profissionais: <?= $cpossuitext ?>%</h6>-->
                                                                                 <h6 class="card-title text-white font-weight-bold">Competências Profissionais:</h6>
-                                                                                <p class="card-text  text-white text-justify">Domínio mensurado por meio da Autoavaliação do médico tutor, que envolve capacidades 
-                                                                                    técnicas e comportamentos desejáveis para o exercício do cargo, alinhados na direção da missão, valores, propósitos da 
-                                                                                    agência-AgSUS.</p>
+                                                                                <p class="card-text  text-white text-justify">O domínio Competências foca em
+                                                                                capacidades técnicas e comportamentais alinhadas à missão e objetivos
+                                                                                organizacionais, visando desenvolver perfis profissionais que fortaleçam a
+                                                                                Atenção Primária à Saúde (APS).</p>
+                                                                                <button class="btn btn-warning" id="btcp">Mais detalhes...</button>
+                                                                            </div>
+                                                                            <div id="cp2" class="row mt-4 p-2 " style="display: none;">
+                                                                                <div class="col-12 text-white text-justify bg-warning rounded p-2">
+                                                                                    <p>
+                                                                                        O domínio das Competências
+                                                                                        Profissionais abrange um conjunto de atributos e habilidades que facilitam o
+                                                                                        cumprimento das expectativas institucionais pelos empregados. Ele inclui tanto
+                                                                                        as competências técnicas quanto os comportamentos desejáveis para o desempenho
+                                                                                        das funções, alinhados com a missão, valores e objetivos da organização. O
+                                                                                        objetivo é estimular o desenvolvimento de perfis profissionais que fortaleçam
+                                                                                        uma Atenção Primária à Saúde (APS) de alta qualidade.
+                                                                                    </p>
+                                                                                    <p>
+                                                                                        O instrumento de avaliação
+                                                                                        desenvolvido foi criado para medir o desempenho dos profissionais nas unidades
+                                                                                        de saúde. Sua construção baseou-se na estrutura de competências CanMeds, na
+                                                                                        Política Nacional de Atenção Básica (PNAB) e nos objetivos do PMpB.
+                                                                                    </p>
+                                                                                    <p>
+                                                                                        Além das habilidades técnicas, como
+                                                                                        empatia, flexibilidade e resiliência, para lidar com a complexidade do trabalho
+                                                                                        na área da saúde. Assim, o instrumento de avaliação de competências abrange
+                                                                                        nove áreas: profissionalismo, comunicação, liderança, governança clínica,
+                                                                                        advocacia em saúde, dedicação acadêmica, colaboração, conduta ética e
+                                                                                        compromisso com o modelo de atenção. Cada competência é classificada com base
+                                                                                        em evidências específicas, que determinam a avaliação final.
+                                                                                    </p>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -689,18 +803,18 @@ if ($nrrsqa > 0) {
                                                                 <div class="row">
                                                                     <div class="col-md-12">
                                                                         <div class="card">
-                                                                            <div class="card-header text-info font-weight-bold">
-                                                                                <h6 class="card-title text-primary">IGAD - ÍNDICE GLOBAL DE AVALIAÇÃO DE DESEMPENHO</h6>
+                                                                            <div class="card-header text-white font-weight-bold" style="background-color: #A50E0E;">
+                                                                                <h6>IGAD - ÍNDICE GLOBAL DE AVALIAÇÃO DE DESEMPENHO</h6>
                                                                             </div>
                                                                             <div class="card-body">
                                                                                 <div class="row">
-                                                                                    <div class="col-sm-12">
+                                                                                    <div class="col-md-12">
                                                                                         <div class="box">
                                                                                             <div class="chart" data-percent="<?= $mf ?>" data-scale-color="#ffb400"><?= $mftext ?>%</div>
                                                                                         </div>
                                                                                         <p class="text-center  text-primary mt-1 font-weight-bold">IGAD  (percentual alcançado)</p>
                                                                                     </div>
-                                                                                    <div class="col-sm-12 ">
+                                                                                    <div class="col-md-12 ">
                                                                                         <p class="card-text mt-3 font-weight-bold">
                                                                                             <?php if($mf >= 70){ ?>
                                                                                                 <label class="text-danger">*</label> Incentivo de Desempenho Alcançado: <label class="text-info">R$ <?php echo number_format($valor, 2, ',', '.'); ?></label>
@@ -711,8 +825,8 @@ if ($nrrsqa > 0) {
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="row mt-2">
-                                                                                    <div class="col-sm-12">
-                                                                                        <button type="button" data-toggle="modal" data-target=".modaligad" class="btn btn-light shadow-sm text-info">Mais detalhes...</button>
+                                                                                    <div class="col-md-12">
+                                                                                        <button type="button" data-toggle="modal" data-target=".modaligad" class="btn btn-outline-danger shadow-sm">Mais detalhes...</button>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -878,7 +992,7 @@ if ($nrrsqa > 0) {
                                                                             }
                                                                             ?>
                                                                         <div class="col-md-6 mt-3">
-                                                                            <p class="text-center align-content-center p-4 "><?= $mfat ?>% dos tutores avaliados alcançou a pontuação de 70 pontos ou mais.</p>
+                                                                            <p class="text-center align-content-center p-4 text-info"><b><?= $mfat ?>%</b> dos tutores avaliados alcançou a pontuação de 70 pontos ou mais.</p>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -895,14 +1009,14 @@ if ($nrrsqa > 0) {
                                                                 <div class="row">
                                                                     <div class="col-md-12">
                                                                         <div class="card">
-                                                                            <div class="card-header text-primary font-weight-bold">
+                                                                            <div class="card-header text-primary font-weight-bold" style="background-color: #E0E4E9;">
                                                                                 <h6>FEEDBACK DO <?= $ciclo ?>º CICLO AVALIATIVO</h6>
                                                                             </div>
                                                                             <div class="card-body">
                                                                                 <div class="row">
                                                                                     <div class="col-md-12">
-                                                                                        <p class="text-justify ">Apresentamos o resultado individual da sua Avaliação de Desempenho Individual, referente ao 1º Ciclo  de 2023, que compreendeu o período 
-                                                                                            de julho a dezembro de 2023. Essa avaliação se constituiu como uma importante ferramenta para avaliar o desempenho dos empregados desta 
+                                                                                        <p class="text-justify ">Apresentamos o resultado individual da sua Avaliação de Desempenho Individual, referente ao <?= $ciclo ?>º ciclo, que compreendeu o período 
+                                                                                            <?= $descciclo ?> de <?= $ano ?>. Essa avaliação se constituiu como uma importante ferramenta para avaliar o desempenho dos empregados desta 
                                                                                             Agência, reconhecendo pontos fortes e identificando oportunidades de aprimoramento. Clique no botão abaixo para ler todo o feedback.</p>
                                                                                         <button type="button" data-toggle="modal" data-target=".modalFeedback" class="btn btn-light shadow-sm text-info">Feedback &nbsp;<i class="far fa-file-pdf text-danger"></i></button>
                                                                                     </div>
@@ -922,7 +1036,7 @@ if ($nrrsqa > 0) {
                                                                 <div class="row">
                                                                     <div class="col-md-12">
                                                                         <div class="card">
-                                                                            <div class="card-header text-primary font-weight-bold">
+                                                                            <div class="card-header text-white font-weight-bold" style="background-color: #FFB400;">
                                                                                 <h6>CONTESTAÇÃO</h6>
                                                                             </div>
                                                                             <div class="card-body ">
@@ -940,7 +1054,7 @@ if ($nrrsqa > 0) {
                                                                             <p class="text-justify">Utilize o modelo de recurso disponibilizado. Nele, exponha seus argumentos marcando os pontos (domínios) nos quais discorda da avaliação e da nota atribuída.</p>
                                                                             <p class="text-justify">Após a elaboração do recurso, mantenha-se atento(a) aos avisos dentro do painel de resultados.</p>
                                                                             <p class="text-justify">Por favor, observe o prazo estabelecido para a contestação do recurso, que se encerra 15 (quinze) dias após a publicação do resultado.</p>
-                                                                            <p class="text-justify">Estamos à disposição para fornecer esclarecimentos adicionais e agradecemos sua participação no Programa de Avaliação e Desempenho do Tutor Médico 2023.<br></p>
+                                                                            <p class="text-justify">Estamos à disposição para fornecer esclarecimentos adicionais e agradecemos sua participação no Programa de Avaliação e Desempenho do Tutor Médico <?= $ano ?>.<br></p>
                                                                             <!--<button type="button" data-toggle="modal" data-target=".modalContestacao" class="btn btn-warning shadow-sm "><i class="fas fa-arrow-circle-right"></i> &nbsp;FAZER CONTESTAÇÃO</button>-->
                                                                             <?php }else{ 
                                                                                     do{
@@ -984,45 +1098,36 @@ if ($nrrsqa > 0) {
                             </div>
                             <!-- modal modalFeedback -->
                             <div class="modal fad modalFeedback mt-2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog mw-100 w-75">
+                                <div class="modal-dialog mw-100 w-90">
                                     <div class="modal-content">
-                                        <div class="modal-header bg-light">
+                                        <div class="modal-header" style="background-color: #E0E4E9;">
                                             <div class="col-10 mt-1">
                                                 <h5 class="modal-title text-left text-primary" id="exampleModalLabel"><i class="fas fa-arrow-circle-right"></i>&nbsp; FEEDBACK DO <?= $ciclo ?>º CICLO AVALIATIVO</h5>
                                             </div>
                                             <div class="col-2">
-                                                <button type="button" class="bg-light close" data-dismiss="modal" aria-label="close">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="close" style="background-color: #E0E4E9;">
                                                     <span aria-hidden="true">&times;</span> </button>
                                             </div>
                                         </div>
                                         <div class="modal-body">
                                             <div class="row mt-1 pr-2 pl-2">
-                                                <div class="col-sm-12 p-3 border rounded">
+                                                <div class="col-md-12 p-3 border rounded">
                                                     <div class="row mb-2">
-                                                        <div class="col-sm-12">
-                                                            <!--<h6 class="text-dark font-weight-bold text-center mb-5">PROGRAMA DE AVALIAÇÃO DE DESEMPENHO TUTOR MÉDICO <?= $ano ?></h6>-->
-                                                            <div class="row mb-3">
-                                                                <div class="col-sm-12  mt-2 mb-2">
-                                                                    <table class="border-0">
-                                                                        <tr>
-                                                                            <td style="width: 60%; vertical-align: bottom;" class="mb-3"><h4 class="mt-4 font-weight-bold" style="color: #1F3B9B;">Prezado(a) Tutor(a) <?= $nome ?>,</h4></td>
-                                                                            <td style="width: 40%; text-align: center;"><img src="../img_agsus/ciclo1_parabens.png" class="img-fluid rounded" width="70%"></td>
-                                                                        </tr>
-                                                                    </table>
-                                                                    
-                                                                </div>
-<!--                                                                <div class="col-sm-6 text-center">
-                                                                    <img src="../img_agsus/ciclo1_parabens.png" class="img-fluid rounded" width="80%">
-                                                                </div>-->
-                                                            </div>
+                                                        <div class="col-md-12">
+                                                            <img src="../img/feedback.jpg" class="img-fluid rounded shadow">
+                                                        </div>
+                                                        <div class="col-md-12 mb-2 mt-4 text-left">
+                                                            <h5 class="font-weight-bold" style="color: #1F3B9B;">Prezado(a) Tutor(a) <?= $nome ?>,</h5>
+                                                        </div>
+                                                        <div class="col-md-12">
 <!--                                                            <p class="text-justify">Parabéns pelo seu primeiro ano de dedicação ao Programa Médicos pelo Brasil! A partir de agora, sua atuação como tutor será avaliada continuamente.</p>-->
                                                             <p class="text-justify">Neste feedback individual queremos apresentar um detalhamento do resultado do 1º ciclo da sua Avaliação de Desempenho, referente ao 
-                                                                período de julho a dezembro de 2023 e instituída pela Portaria n.º 26, de 28 de fevereiro de 2023.</p>
+                                                                período de <?= $descciclo ?> de <?= $ano ?> e instituída pela Portaria n.º 26, de 28 de fevereiro de 2023.</p>
                                                             <p class="text-justify">Esta é uma importante ferramenta da AgSUS e uma expressão do nosso compromisso em promover uma cultura de gestão com base em resultados
                                                                 que visa reconhecer avanços e identificar oportunidades de aprimoramento. É uma iniciativa inspirada em práticas, nacionais e internacionais, que visam 
                                                                 fortalecer a Atenção Primária à Saúde (APS).</p>
                                                             <p class="text-justify">Neste primeiro ciclo, você alcançou a Nota Geral <label class="text-danger"><?= $mftext ?></label> como resultado da sua Avaliação 
-                                                                Individual, referente ao período de julho a dezembro de 2023.</p>
+                                                                Individual, referente ao período <?= $descciclo ?> de <?= $ano ?>.</p>
                                                             <p class="text-justify">A Avaliação de Desempenho é estruturada em dois eixos principais: Avaliação de Resultados e Avaliação de Competências, subdivididos 
                                                                 em domínios que abrangem tanto especificidades técnicas profissionais relacionadas às atividades do cargo, quanto características comportamentais 
                                                                 relacionadas à interação nos ambientes de trabalho, que diz respeito ao tratamento interpessoal com usuários, bolsistas, equipe de saúde e gestores. 
@@ -1042,7 +1147,7 @@ if ($nrrsqa > 0) {
                                                                         municipal na busca por resultados</dd>
                                                                     <dd>2. O seu resultado nesse domínio alcançou a Nota <label class="text-danger"><?= $qatext ?></label>, você poderá obter de forma detalhada a 
                                                                         mensuração de cada indicador acessando o link https://agsusbrasil.org/sistema-integrado/login.php onde terá a evolução dos indicadores ao longo
-                                                                        dos três quadrimestres de 2023.</dd>
+                                                                        dos três quadrimestres de <?= $ano ?>.</dd>
                                                                 <dt>2. Qualidade da Tutoria:</dt>
                                                                     <dd>1. A tutoria será avaliada a partir da verificação de um conjunto de evidências relacionadas às atribuições do Tutor Médico no processo de 
                                                                         realização do estágio experimental remunerado. Consiste, portanto, na opinião do bolsista em relação às vivências de tutoria clínica. Ter uma
@@ -1054,7 +1159,7 @@ if ($nrrsqa > 0) {
                                                                         sistema de créditos, o estímulo ao desenvolvimento contínuo de competências técnicas e comportamentais desses empregados, a partir da realização
                                                                         de atividades de qualificação clínica e de gestão, ensino, pesquisa, extensão e inovação tecnológica. Para tanto adotou-se o sistema de créditos
                                                                         como base para a verificação e julgamento do desempenho esperado. Os critérios e pesos das atividades de curta duração estão divulgados na 
-                                                                        Instrução Normativa nº 002/2023 - Plano de Educação Continuada para os Médicos da Adaps.</dd>
+                                                                        Instrução Normativa nº 002/<?= $ano ?> - Plano de Educação Continuada para os Médicos da Adaps.</dd>
                                                                     <dd>2. Com base na creditação atribuída aos documentos que você inseriu na plataforma sênior, você alcançou a pontuação 
                                                                         de <label class="text-danger"><?= $anotatext ?></label>.</dd>
                                                             </dl>    
@@ -1068,11 +1173,11 @@ if ($nrrsqa > 0) {
                                                         </div>
                                                     </div>
                                                     <div class="row">
-                                                        <div class="col-sm-10">
-                                                            <p class="float-right mt-5"><div class='text-center' style="margin-bottom: 40px;"><img src='./../img_agsus/Logo_400x200.png' class='img-fluid' width="200"></div></p>
+                                                        <div class="col-md-10">
+                                                            <p class="float-right mt-5"><div class='text-center' style="margin-bottom: 20px; margin-top: 20px; margin-left: 15%;"><img src='./../img_agsus/Logo_400x200.png' class='img-fluid' width="200"></div></p>
                                                         </div>
-                                                        <div class="col-sm-2  mt-5">
-                                                            <a id="pdffeedback" href="../demonstrativo/pdf/feedbackdemonstrativo.php?nome=<?= $nome ?>&ano=<?=$ano?>&qa=<?= $qatext ?>&qnota=<?= $qnotatext ?>&anota=<?= $anotatext ?>&mftext=<?= $mftext ?>" title="Impressão em PDF" target="_blank" class="btn btn-outline-danger shadow-sm rounded ml-5 mr-5 p-2 float-right">&nbsp;&nbsp;&nbsp; <i class="far fa-file-pdf"></i> &nbsp;&nbsp;&nbsp;</a>
+                                                        <div class="col-md-2  mt-5">
+                                                            <a id="pdffeedback" href="../demonstrativo/pdf/feedbackdemonstrativo.php?nome=<?= $nome ?>&ano=<?=$ano?>&qa=<?= $qatext ?>&qnota=<?= $qnotatext ?>&anota=<?= $anotatext ?>&mftext=<?= $mftext ?>&c=<?= $ciclo ?>&p=<?= $idperiodo ?>" title="Impressão em PDF" target="_blank" class="btn btn-outline-danger shadow-sm rounded ml-5 mr-5 p-2 float-right">&nbsp;&nbsp;&nbsp; <i class="far fa-file-pdf"></i> &nbsp;&nbsp;&nbsp;</a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1106,12 +1211,12 @@ if ($nrrsqa > 0) {
                                         </div>
                                         <div class="modal-body p-4">
                                             <div class="row mt-2 mb-2 pr-2 pl-2">
-                                                <div class="col-sm-12 pr-3 pl-2">
+                                                <div class="col-md-12 pr-3 pl-2">
                                                     <div class="card border-light">
                                                         <h6 class="card-header text-dark font-weight-bold">Marque o(s) domínio(s) nos quais discorda da avaliação e da nota atribuída. &nbsp;<i class="far fa-file-alt"></i></h6>
                                                         <div class="card-body">
                                                             <div class="row pr-1 pl-1">
-                                                                <div class="col-sm-12">
+                                                                <div class="col-md-12">
                                                                     <div class="input-group mb-1">
                                                                         <div class="input-group-prepend">
                                                                             <div class="input-group-text">
@@ -1123,13 +1228,13 @@ if ($nrrsqa > 0) {
                                                                 </div>
                                                             </div>
                                                             <div class="row pr-1 pl-1 divassunto1 mb-3">
-                                                                <div class="col-sm-12 mt-1">
+                                                                <div class="col-md-12 mt-1">
                                                                     <h6 class="text-dark">Registre a sua contestação:</h6>
                                                                     <textarea name="contestacao1" id="contestacao1" class="form-control" rows="4" style="resize: none;"></textarea>
                                                                 </div>
                                                             </div>
                                                             <div class="row pr-1 pl-1">
-                                                                <div class="col-sm-12">
+                                                                <div class="col-md-12">
                                                                     <div class="input-group mb-1">
                                                                         <div class="input-group-prepend">
                                                                             <div class="input-group-text">
@@ -1141,13 +1246,13 @@ if ($nrrsqa > 0) {
                                                                 </div>
                                                             </div>
                                                             <div class="row pr-1 pl-1 divassunto2 mb-3">
-                                                                <div class="col-sm-12 mt-1">
+                                                                <div class="col-md-12 mt-1">
                                                                     <h6 class="text-dark">Registre a sua contestação:</h6>
                                                                     <textarea name="contestacao2" id="contestacao2" class="form-control" rows="4" style="resize: none;"></textarea>
                                                                 </div>
                                                             </div>
                                                             <div class="row pr-1 pl-1">
-                                                                <div class="col-sm-12">
+                                                                <div class="col-md-12">
                                                                     <div class="input-group mb-1">
                                                                         <div class="input-group-prepend">
                                                                             <div class="input-group-text">
@@ -1159,13 +1264,13 @@ if ($nrrsqa > 0) {
                                                                 </div>
                                                             </div>
                                                             <div class="row pr-1 pl-1 divassunto3 mb-3">
-                                                                <div class="col-sm-12 mt-1">
+                                                                <div class="col-md-12 mt-1">
                                                                     <h6 class="text-dark">Registre a sua contestação:</h6>
                                                                     <textarea name="contestacao3" id="contestacao3" class="form-control" rows="4" style="resize: none;"></textarea>
                                                                 </div>
                                                             </div>
                                                             <div class="row pr-1 pl-1">
-                                                                <div class="col-sm-12">
+                                                                <div class="col-md-12">
                                                                     <div class="input-group mb-1">
                                                                         <div class="input-group-prepend">
                                                                             <div class="input-group-text">
@@ -1177,13 +1282,13 @@ if ($nrrsqa > 0) {
                                                                 </div>
                                                             </div>
                                                             <div class="row pr-1 pl-1 divassunto4 mb-3">
-                                                                <div class="col-sm-12 mt-1">
+                                                                <div class="col-md-12 mt-1">
                                                                     <h6 class="text-dark">Registre a sua contestação:</h6>
                                                                     <textarea name="contestacao4" id="contestacao4" class="form-control" rows="4" style="resize: none;"></textarea>
                                                                 </div>
                                                             </div>
                                                             <div class="row pr-1 pl-1">
-                                                                <div class="col-sm-12">
+                                                                <div class="col-md-12">
                                                                     <div class="input-group mb-1">
                                                                         <div class="input-group-prepend">
                                                                             <div class="input-group-text">
@@ -1195,14 +1300,14 @@ if ($nrrsqa > 0) {
                                                                 </div>
                                                             </div>
                                                             <div class="row pr-1 pl-1">
-                                                                <div class="col-sm-12">
+                                                                <div class="col-md-12">
                                                                     <h6 class="text-dark mt-3" id="hassuntonovo">Outro Assunto:</h6>
                                                                     <input type="text" name="assuntonovo" id="assuntonovo" class="form-control mb-0">
                                                                     <label class="text-danger mt-1 mb-2 " id="lassuntonovo">* Digite o assunto da contestação</label>
                                                                 </div>
                                                             </div>
                                                             <div class="row pr-1 pl-1 divassunto5">
-                                                                <div class="col-sm-12 mt-1">
+                                                                <div class="col-md-12 mt-1">
                                                                     <h6 class="text-dark">Registre a sua contestação:</h6>
                                                                     <textarea name="contestacao5" id="contestacao5" class="form-control" rows="4" style="resize: none;"></textarea>
                                                                 </div>
@@ -1235,7 +1340,7 @@ if ($nrrsqa > 0) {
                                         </div>
                                         <div class="modal-body p-4">
                                             <div class="row mt-2">
-                                                <div class="col-sm-12">
+                                                <div class="col-md-12">
                                                     <h6 class="text-secondary">A avaliação de resultados correspondente até 70% do resultado final.</h6>
                                                     <h6 class="text-secondary">Resultado:  &nbsp;<label class="text-danger"><?= $artext ?>%</label>&nbsp; do resultado final.</h6>
                                                 </div>
@@ -1263,7 +1368,7 @@ if ($nrrsqa > 0) {
                                         </div>
                                         <div class="modal-body p-4">
                                             <div class="row mt-2">
-                                                <div class="col-sm-12">
+                                                <div class="col-md-12">
                                                     <h6 class="text-secondary">A avaliação de competências correspondente até 30% do resultado final.</h6>
                                                     <h6 class="text-secondary">Resultado:  &nbsp;<label class="text-danger"><?= $cpossuitext ?>%</label>&nbsp; do resultado final.</h6>
                                                 </div>
@@ -1291,9 +1396,9 @@ if ($nrrsqa > 0) {
                                         </div>
                                         <div class="modal-body p-4">
                                             <div class="row mt-2">
-                                                <div class="col-sm-12">
+                                                <div class="col-md-12">
                                                     <div class="row mt-2">
-                                                        <div class="col-sm-6">
+                                                        <div class="col-md-6">
                                                             <h6 class="font-weight-bold"><u>Resultado Final - Ano <?= $ano ?>, Período <?= $periodoqa ?></u>:</h6>
                                                             <p class="font-weight-bold">Médico(a) Tutor(a): <?= $nome ?></p>
                                                             <h6 class="text-secondary font-weight-bold">Resultado final (IGAD)(%):  &nbsp;<label class="text-danger"><?= $mftext ?></label> - distribuídos em:</h6>
@@ -1303,14 +1408,14 @@ if ($nrrsqa > 0) {
                                                                 <li>Aperfeiçoamento Profissional (%): <?= $anotatext ?></li>
                                                                 <li>Competências Profissionais (%): <?= $cpossuitext ?></li>
                                                             </ul>
-                                                            <div class="col-sm-12">
+                                                            <div class="col-md-12">
                                                                 <p>O valor pago a título de incentivo de desempenho será dimensionado da seguinte forma: </p>
                                                                 <ul>
                                                                     <li><strong>IGAD igual ou maior que 70 pontos:</strong> o incentivo de desempenho será igual ao teto estabelecido em ato normativo da Agência.</li>
                                                                     <li><strong>IGAD menor que 70 pontos:</strong> o incentivo de desempenho será proporcional aos pontos alcançados.</li>
                                                                 </ul>
                                                             </div>
-                                                            <div class="col-sm-12">
+                                                            <div class="col-md-12">
 <!--                                                                <table class="small" style="border: none;">
                                                                     <tr>
                                                                         <td class=" text-center"><img src="./../img_agsus/incentivo70.jpg" width="70%" class="img-fluid border rounded"></td>
@@ -1325,7 +1430,7 @@ if ($nrrsqa > 0) {
                                                                 </p>
                                                             </div>
                                                         </div>
-                                                        <div class="col-sm-6">
+                                                        <div class="col-md-6">
                                                             <fieldset class="border pr-3 pl-3 rounded"><legend class="border pt-2 pb-2 pr-3 pl-3 small rounded font-weight-bold bg-gradient-info text-white mb-2 ">Tabela de resultados da avaliação de desempenho</legend>
                                                             <table class="table mt-2 border">
                                                                 <thead class="bg-gradient-dark text-white">
@@ -1361,7 +1466,7 @@ if ($nrrsqa > 0) {
                                                         </div>
                                                     </div>
                                                     <div class="row mt-3">
-                                                        <div class="col-sm-12">
+                                                        <div class="col-md-12">
                                                             <fieldset class="border pr-3 pl-3 rounded"><legend class="border pt-2 pb-2 pr-3 pl-3 small rounded font-weight-bold bg-gradient-info text-white mb-2 ">Cálculo do Indicador Geral da Avaliação de Desempenho</legend>
                                                             <table class="table mt-2 border table-responsive">
                                                                 <thead class="bg-gradient-dark text-white">
@@ -1405,8 +1510,8 @@ if ($nrrsqa > 0) {
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-12">
-                                                    <p class="mt-3  text-secondary mb-0"><label class="font-weight-bold">* Fonte: </label> <a href="./../pdf/manual_2023.pdf" target="_blank">Manual Programa de Avaliação de Desempenho Tutor Médico 2023</a></p>
+                                                <div class="col-md-12">
+                                                    <p class="mt-3  text-secondary mb-0"><label class="font-weight-bold">* Fonte: </label> <a href="./../pdf/manual_<?= $ano ?>.pdf" target="_blank">Manual Programa de Avaliação de Desempenho Tutor Médico <?= $ano ?></a></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -1432,9 +1537,9 @@ if ($nrrsqa > 0) {
                                         </div>
                                         <div class="modal-body pr-4 pl-4 pt-2 pb-2">
                                             <div class="row mt-2">
-                                                <div class="col-sm-12">
+                                                <div class="col-md-12">
                                                     <div class="row mt-2">
-                                                        <div class="col-sm-12">
+                                                        <div class="col-md-12">
                                                             <h6 class="font-weight-bold"><u>Resultado dos Indicadores - Ano <?= $ano ?> - Período <?= $periodoqa ?></u>:</h6>
                                                             <p class="font-weight-bold">Médico(a) Tutor(a): <?= $nome ?></p>
                                                             <h6 class="text-secondary font-weight-bold">Resultado:  &nbsp;<label class="text-danger"><?= $qatext ?>%</label></h6>
@@ -1524,17 +1629,17 @@ if ($nrrsqa > 0) {
                                                             </fieldset>
                                                             </p>
                                                         </div>
-<!--                                                        <div class="col-sm-6">
+<!--                                                        <div class="col-md-6">
                                                             <h6 class="font-weight-bold"><u>Cálculo do Desempenho do Domínio Qualidade Assistencial</u></h6>
                                                             <p><img src="../img/calculoQA.png" width="100%"></p>
                                                         </div>-->
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-12 mb-2">
+                                                <div class="col-md-12 mb-2">
                                                     <p class="mt-2  text-secondary mb-0"><a href="./qa_tutor.php?c=<?= $cpf ?>&a=<?= $ano ?>&cl=<?= $ciclo ?>&p=<?= $idperiodo ?>" class="btn btn-primary shadow-sm" target="_blank"><i class="fas fa-arrow-alt-circle-right"></i>&nbsp; Visite o painel da Evolução da Qualidade Assistencial</a></p>
                                                 </div>
-                                                <div class="col-sm-12">
-                                                    <p class=" text-secondary mb-0"><label class="font-weight-bold">* Fonte: </label> <a href="./../pdf/manual_2023.pdf" target="_blank">Manual Programa de Avaliação de Desempenho Tutor Médico 2023</a></p>
+                                                <div class="col-md-12">
+                                                    <p class=" text-secondary mb-0"><label class="font-weight-bold">* Fonte: </label> <a href="./../pdf/manual_<?= $ano ?>.pdf" target="_blank">Manual Programa de Avaliação de Desempenho Tutor Médico <?= $ano ?></a></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -1560,7 +1665,7 @@ if ($nrrsqa > 0) {
                                         </div>
                                         <div class="modal-body p-4">
                                             <div class="row mt-2">
-                                                <div class="col-sm-12">
+                                                <div class="col-md-12">
                                                     <h6 class="text-secondary">A qualidade da tutoria corresponde até 10% do resultado final.</h6>
                                                     <h6 class="text-secondary">Resultado:  &nbsp;<label class="text-danger"><?= $qnotatext ?>%</label>&nbsp; do resultado final.</h6>
                                                 </div>
@@ -1588,7 +1693,7 @@ if ($nrrsqa > 0) {
                                         </div>
                                         <div class="modal-body p-4">
                                             <div class="row mt-2">
-                                                <div class="col-sm-12">
+                                                <div class="col-md-12">
                                                     <h6 class="text-secondary">O aperfeiçoamento profissional corresponde até 10% do resultado final.</h6>
                                                     <h6 class="text-secondary">Resultado:  &nbsp;<label class="text-danger"><?= $anotatext ?>%</label>&nbsp; do resultado final.</h6>
                                                 </div>
@@ -1616,7 +1721,7 @@ if ($nrrsqa > 0) {
                                         </div>
                                         <div class="modal-body p-4">
                                             <div class="row mt-2">
-                                                <div class="col-sm-12">
+                                                <div class="col-md-12">
                                                     <h6 class="text-secondary">As competências Profissionais correspondem até 30% do resultado final.</h6>
                                                     <h6 class="text-secondary">Resultado:  &nbsp;<label class="text-danger"><?= $cpossuitext ?>%</label>&nbsp; do resultado final.</h6>
                                                 </div>
@@ -1644,9 +1749,9 @@ if ($nrrsqa > 0) {
                                         </div>
                                         <div class="modal-body pr-4 pl-4 pt-2 pb-2">
                                             <div class="row mt-2">
-                                                <div class="col-sm-12">
+                                                <div class="col-md-12">
                                                     <div class="row mt-2">
-                                                        <div class="col-sm-12 pr-2 pl-2">
+                                                        <div class="col-md-12 pr-2 pl-2">
                                                             <h6 class="font-weight-bold"><u>Resultado dos Indicadores - Ano <?= $ano ?> - Período <?= $periodoqa ?></u>:</h6>
                                                             <p class="font-weight-bold">Médico(a) Tutor(a): <?= $nome ?></p>
                                                             <h6 class="text-secondary font-weight-bold">Deixou de alcançar: <label class="text-danger"><?= $faltamtext ?>%</label></h6>
@@ -1703,14 +1808,14 @@ if ($nrrsqa > 0) {
                                                             }
                                                             ?>
                                                         </div>
-<!--                                                        <div class="col-sm-6">
+<!--                                                        <div class="col-md-6">
                                                             <h6 class="font-weight-bold"><u>Cálculo do Desempenho do Domínio Qualidade Assistencial</u></h6>
                                                             <p><img src="../img/calculoQA.png" width="100%"></p>
                                                         </div>-->
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-12">
-                                                    <p class="mt-3  text-secondary mb-0"><label class="font-weight-bold">* Fonte: </label> <a href="./../pdf/manual_2023.pdf" target="_blank">Manual Programa de Avaliação de Desempenho Tutor Médico 2023</a></p>
+                                                <div class="col-md-12">
+                                                    <p class="mt-3  text-secondary mb-0"><label class="font-weight-bold">* Fonte: </label> <a href="./../pdf/manual_<?= $ano ?>.pdf" target="_blank">Manual Programa de Avaliação de Desempenho Tutor Médico <?= $ano ?></a></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -1822,6 +1927,15 @@ if ($nrrsqa > 0) {
                       $('#lassuntonovo').html('* Digite o assunto da contestação');
                   }
                });
+            });
+            $("#btqt").click(function(){
+                $("#qt2").toggle(300);
+            });
+            $("#btap").click(function(){
+                $("#ap2").toggle(300);
+            });
+            $("#btcp").click(function(){
+                $("#cp2").toggle(300);
             });
             function clickAssunto1(){
                 if($('#ckassunto1').is(":checked")){

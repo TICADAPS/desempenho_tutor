@@ -75,7 +75,8 @@ if($rsm){
             $mensagemEmail = "*** ATENÇÃO: Este é um e-mail automático enviado pelo sistema. Informamos que esta caixa de e-mail não é monitorada, portanto, por favor, não responda a esta mensagem."
                     . "<br><br>";
             $mensagemEmail .= "Prezado(a) Tutor(a) Médico(a) $nome, <br><br>";
-            $mensagemEmail .= 'Comunicamos que <b>VOCÊ AINDA NÃO ALCANÇOU A META DE 50 CRÉDITOS</b> referente ao domínio de Comprovantes de Aperfeiçoamento, desta forma solicito que insira na plataforma outros comprovantes que no seu somatório compute o mínimo créditos exigidos para o "Ciclo do Programa de Avaliação de Desempenho do Médico Tutor". <br><br>';
+            $mensagemEmail .= 'Comunicamos que <b>VOCÊ AINDA NÃO ALCANÇOU A META DE 50 CRÉDITOS</b> referente ao domínio de Comprovantes de Aperfeiçoamento, desta forma solicitamos que insira na plataforma outros '
+                    . 'comprovantes que no seu somatório compute o mínimo de créditos exigidos para o "Ciclo do Programa de Avaliação de Desempenho do Médico Tutor". <br><br>';
             $mensagemEmail .= "-- <br>";
             $mensagemEmail .= "Atenciosamente, <br><br>";
             $mensagemEmail .= "Agência Brasileira de Apoio à Gestão do Sistema Único de Saúde - AgSUS.<br><br>";
@@ -94,7 +95,8 @@ if($rsm){
             $mensagemEmail = "*** ATENÇÃO: Este é um e-mail automático enviado pelo sistema. Informamos que esta caixa de e-mail não é monitorada, portanto, por favor, não responda a esta mensagem."
                     . "<br><br>";
             $mensagemEmail .= "Prezado(a) Tutor(a) Médico(a) $nome, <br><br>";
-            $mensagemEmail .= 'Comunicamos que <b>VOCÊ NÃO ALCANÇOU A META DE 50 CRÉDITOS</b> referente ao domínio de Comprovantes de Aperfeiçoamento. A análise foi encerrada. Agradecemos a sua participação. <br><br>';
+            $mensagemEmail .= 'Comunicamos que <b>VOCÊ NÃO ALCANÇOU A META DE 50 CRÉDITOS</b> referente ao domínio de Comprovantes de Aperfeiçoamento. A análise foi encerrada. '
+                    . 'Agradecemos a sua participação. <br><br>';
             $mensagemEmail .= "-- <br>";
             $mensagemEmail .= "Atenciosamente, <br><br>";
             $mensagemEmail .= "Agência Brasileira de Apoio à Gestão do Sistema Único de Saúde - AgSUS.<br><br>";

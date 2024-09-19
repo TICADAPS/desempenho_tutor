@@ -2,15 +2,31 @@
 include_once("../../conexao-agsus.php");
 ini_set('memory_limit', '1024M');
 set_time_limit(200);
+//referenciar o DomPDF com namespace
+use Dompdf\Dompdf;
 
-$nome = $_GET['nome'];
-$ano = $_GET['ano'];
-$qatext = $_GET['qa'];
-$qnotatext = $_GET['qnota'];
-$anotatext = $_GET['anota'];
-$mftext = $_GET['mftext'];
-$ciclo = $_GET['c'];
-$idperiodo = $_GET['p'];
+// include autoloader
+require_once("./../../vendor/autoload.php");
+
+$nome = $_REQUEST['nome'];
+$ano = $_REQUEST['ano'];
+$qatext = $_REQUEST['qa'];
+$qnotatext = $_REQUEST['qnota'];
+$anotatext = $_REQUEST['anota'];
+$mftext = $_REQUEST['mftext'];
+$ciclo = $_REQUEST['c'];
+$idperiodo = $_REQUEST['p'];
+//var_dump($_REQUEST);
+
+$sqlanocliclo = "select * from anoacicloavaliacao where ano = '$ano' and ciclo = '$ciclo'";
+$qanocliclo = mysqli_query($conn, $sqlanocliclo) or die(mysqli_errno($conn));
+$rsanocliclo = mysqli_fetch_array($qanocliclo);
+$descciclo = '';
+if($rsanocliclo){
+    do{
+        $descciclo = $rsanocliclo['descricao'];
+    }while($rsanocliclo = mysqli_fetch_array($qanocliclo));
+}
 $sqlp = "select * from periodo where idperiodo = '$idperiodo'";
 $qp = mysqli_query($conn, $sqlp) or die(mysqli_errno($conn));
 $rsp = mysqli_fetch_array($qp);
@@ -20,11 +36,7 @@ if($rsp){
         $descperiodo = $rsp['descricaoperiodo'];
     }while($rsp = mysqli_fetch_array($qp));
 }
-//referenciar o DomPDF com namespace
-use Dompdf\Dompdf;
 
-// include autoloader
-require_once("./../../vendor/autoload.php");
 
 //Criando a Instancia
 $dompdf = new DOMPDF();
@@ -48,11 +60,11 @@ $html .= '      <td style="width: 40%; text-align: center;"><img src="'.$titulo.
 $html .= '  </tr>';
 $html .= '</table>';
 $html .= "<p style='text-align: justify;'>Neste feedback individual queremos apresentar um detalhamento do resultado do ".$ciclo."º ciclo da sua Avaliação de Desempenho, referente ao 
-            $descperiodo de $ano e instituída pela Portaria n.º 26, de 28 de fevereiro de 2023.</p>";
+            $descperiodo, $descciclo de $ano e instituída pela Portaria n.º 26, de 28 de fevereiro de 2023.</p>";
 $html .= "<p style='text-align: justify;'>Esta é uma importante ferramenta da AgSUS e uma expressão do nosso compromisso em promover uma cultura de gestão com base em resultados
            que visa reconhecer avanços e identificar oportunidades de aprimoramento. É uma iniciativa inspirada em práticas, nacionais e internacionais, que visam 
             fortalecer a Atenção Primária à Saúde (APS).</p>";
-$html .= "<p style='text-align: justify;'>Neste primeiro ciclo, você alcançou a Nota Geral <label style='color: red;'>$mftext</label> como resultado da sua Avaliação Individual, referente ao $descperiodo de $ano.</p>";
+$html .= "<p style='text-align: justify;'>Neste primeiro ciclo, você alcançou a Nota Geral <label style='color: red;'>$mftext</label> como resultado da sua Avaliação Individual, referente ao $descperiodo, $descciclo  de $ano.</p>";
 $html .= "<p style='text-align: justify;'>A Avaliação de Desempenho é estruturada em dois eixos principais: Avaliação de Resultados e Avaliação de Competências, subdivididos 
             em domínios que abrangem tanto especificidades técnicas profissionais relacionadas às atividades do cargo, quanto características comportamentais 
             relacionadas à interação nos ambientes de trabalho, que diz respeito ao tratamento interpessoal com usuários, bolsistas, equipe de saúde e gestores. 

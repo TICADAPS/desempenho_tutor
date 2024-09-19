@@ -1,7 +1,7 @@
 window.onload = () => {
     var codMunicipio = "";
     // buscar os dados dos estados
-    fetch('http://localhost/desempenho_tutor/recursos_online/api/v1/get_all_estados')
+    fetch('http://localhost:83/desempenho_tutor/recursos_online/api/v1/get_all_estados')
         .then(response => {
             console.log(response)
             if (response.status === 200) {
@@ -32,7 +32,7 @@ window.onload = () => {
         let id = select_estado.value;
 
         if (id !== 0) {
-            fetch('http://localhost/desempenho_tutor/recursos_online/api/v1/get_all_municipios/?id=' + id)
+            fetch('http://localhost:83/desempenho_tutor/recursos_online/api/v1/get_all_municipios/?id=' + id)
                 .then(response => {
                     if (response.status === 200) {
                         return response.json();
@@ -70,7 +70,7 @@ window.onload = () => {
                             codMunicipio = select.value;
 
                             if (codMunicipio !== 0) {
-                                fetch('http://localhost/desempenho_tutor/recursos_online/api/v1/get_all_medicos/?ibge=' + codMunicipio)
+                                fetch('../recursos_online/api/v1/get_all_medicos/?ibge=' + codMunicipio)
                                     .then(response => {
                                         //console.log(response)
                                         if (response.status === 200) {
@@ -126,8 +126,5 @@ window.onload = () => {
                 })
         }
     })
-
-
     // selecionar os médicos por estado e município
-
 }

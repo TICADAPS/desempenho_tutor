@@ -32,7 +32,18 @@ $ine = $_POST['ine'];
 $idap = $_POST['idap'];
 $ano = $_POST['ano'];
 $ciclo = $_POST['ciclo'];
-$user = 'RICARDO LIMA AMARAL';
+date_default_timezone_set('America/Sao_Paulo');
+$dthoje = date('d/m/Y');
+$iduser = $_SESSION["idUser"];
+$sqlu = "select * from usuarios where id_user = '$iduser'";
+$queryu = mysqli_query($conn2, $sqlu) or die(mysqli_error($conn2));
+$rsu = mysqli_fetch_array($queryu);
+$user = '';
+if($rsu){
+    do{
+        $user = $rsu['nome_user'];
+    }while($rsu = mysqli_fetch_array($queryu));
+}
 //var_dump($_POST);
 
 if(!isset($_POST['flagparecerap']) || trim($_POST['flagparecerap']) === ''){

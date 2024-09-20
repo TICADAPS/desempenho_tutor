@@ -47,16 +47,18 @@ $data = file_get_contents($path);
 $agsus = 'data:image/' . $type . ';base64,' . base64_encode($data);
 
 $dompdf->setPaper('A4', 'landscape'); //Paisagem
-$path2 = './../../img_agsus/ciclo1_parabens.png';
+$path2 = './../../img/feedback.jpg';
 $type2 = pathinfo($path2, PATHINFO_EXTENSION);
 $data2 = file_get_contents($path2);
 $titulo = 'data:image/' . $type2 . ';base64,' . base64_encode($data2);
 
 $html = "";
-$html .= '<table border=0 style="margin-top: 0px; margin-bottom: 30px;">';
+$html .= '<table border=0 style="margin-top: 0px; margin-bottom: 10px;">';
 $html .= '  <tr>';
-$html .= '      <td style="width: 60%; vertical-align: bottom;" class="mb-2"><h3 class="mt-4 font-weight-bold" style="color: #1F3B9B;">Prezado(a) Tutor(a) '. $nome .',</h3></td>';
-$html .= '      <td style="width: 40%; text-align: center;"><img src="'.$titulo.'" style="border-radius:6px;" width="70%"></td>';
+$html .= '      <td style="width: 100%; text-align: center;"><img src="'.$titulo.'" style="border-radius:6px;" width="100%"></td>';
+$html .= '  </tr>';
+$html .= '  <tr>';
+$html .= '      <td style="width: 50%; vertical-align: bottom;" class="mb-2"><h3 class="mt-4 font-weight-bold" style="color: #1F3B9B;">Prezado(a) Tutor(a) '. $nome .',</h3></td>';
 $html .= '  </tr>';
 $html .= '</table>';
 $html .= "<p style='text-align: justify;'>Neste feedback individual queremos apresentar um detalhamento do resultado do ".$ciclo."º ciclo da sua Avaliação de Desempenho, referente ao 

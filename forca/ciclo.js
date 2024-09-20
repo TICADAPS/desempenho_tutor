@@ -158,6 +158,44 @@ function addciclo4(a){
             console.log('Erro: '+err);
         });
 }
+function addciclo5(a){ 
+    console.log(a);
+    fetch('http://localhost:83/desempenho_tutor/recursos_online/api/v1/getciclo/index.php?a='+a)
+        .then(response => {
+            console.log(response);
+            if (response.status === 200) {
+                return response.json();
+            } else {
+                throw Error('erro');
+            }
+        })
+        .then(dados => {
+            //console.log(dados);
+            if (dados.status === 'success') {
+                let cicloaf = document.querySelector("#cicloc");
+                removerTodasAsOptions(cicloaf);
+                var option1 = document.createElement('option');
+                    option1.value = "";
+                    option1.textContent = "[--SELECIONE--]";
+                cicloaf.appendChild(option1); 
+                console.log(cicloaf);
+                let html = '';
+                dados.results.forEach(d => {
+                    var option = document.createElement('option');
+                    option.value = d.ciclo;
+                    option.textContent = d.ciclo+"º ciclo";
+                    cicloaf.appendChild(option);
+                });
+                cicloaf.innerHTML += html;
+                console.log(cicloaf);
+            } else {
+                throw Error('erro');
+            }
+        })
+        .catch(err => {
+            console.log('Erro: '+err);
+        });
+}
 function addperiodo(a,c){ 
     fetch('http://localhost:83/desempenho_tutor/recursos_online/api/v1/getperiodo/index.php?a='+a+'&c='+c)
         .then(response => {

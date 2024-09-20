@@ -20,6 +20,8 @@ $cpf = $_REQUEST['c'];
 $_SESSION['cpf'] = $cpf;
 date_default_timezone_set('America/Sao_Paulo');
 $anoAtual = date('Y');
+$anomesdiaAtual = date('Ymd');
+$anomesdiaAtual = (int)$anomesdiaAtual;
 $ano = $_REQUEST['a'];
 $ciclo = $_REQUEST['cl'];
 //$ciclo = 1;
@@ -304,6 +306,8 @@ if ($nrrsqa > 0) {
                                 <li class="nav-item">
                                     <a href="index.php" class="nav-link">Inicio </a>
                                 </li>
+                                
+                                <li class="text-secondary pl-2 pr-2"><a href="./listaDesempenho.php" class="btn">Demonstrativo</a></li>
                                 <!--
                                 <li class="nav-item">
                                     <a class="nav-link" href="">|</a>
@@ -1047,16 +1051,40 @@ if ($nrrsqa > 0) {
                                                                                 $nrrsc = mysqli_num_rows($queryc);
                                                                                 $rsc = mysqli_fetch_array($queryc);
                                                                                 if($nrrsc === 0){
+                                                                                    $sqdtlimite = "select * from anoacicloavaliacao where ano = '$ano' and ciclo = '$ciclo'";
+                                                                                    $qdtlim = mysqli_query($conn, $sqdtlimite) or die(mysqli_error($conn));
+                                                                                    $rsdtlim = mysqli_fetch_array($qdtlim);
+//                                                                                    var_dump($rsdtlim);
+                                                                                    $dtlim = 0;
+                                                                                    if($rsdtlim){
+                                                                                        do{
+                                                                                            $flagdtlim = $rsdtlim['flagdtlimitecontestacao'];
+                                                                                            if($flagdtlim === '1'){
+                                                                                                $dtlim = $rsdtlim['dtlimitecontestacao'];
+                                                                                                $dtlim = str_replace("-", "", $dtlim);
+                                                                                                $dtlim = str_replace("/", "", $dtlim);
+                                                                                                $dtlim = (int)$dtlim;
+                                                                                            }
+                                                                                        }while($rsdtlim = mysqli_fetch_array($qdtlim));
+                                                                                    }
+                                                                                    if($anomesdiaAtual <= $dtlim){
                                                                             ?> 
-                                                                            <p>Prezado(a) Colaborador(a),</p>
-                                                                            <p class="text-justify">Caso tenha objeção em relação ao resultado do Índice Global de Avaliação de Desempenho (IGAD) atribuído à sua NOTA FINAL no Programa de Avaliação de Desempenho, gostaríamos de orientá-lo(a) sobre como proceder com o recurso administrativo:</p>
-                                                                            <p class="text-justify">Primeiramente, acesse o detalhamento do seu desempenho na Plataforma-Painel de Resultados.</p>
-                                                                            <p class="text-justify">Utilize o modelo de recurso disponibilizado. Nele, exponha seus argumentos marcando os pontos (domínios) nos quais discorda da avaliação e da nota atribuída.</p>
-                                                                            <p class="text-justify">Após a elaboração do recurso, mantenha-se atento(a) aos avisos dentro do painel de resultados.</p>
-                                                                            <p class="text-justify">Por favor, observe o prazo estabelecido para a contestação do recurso, que se encerra 15 (quinze) dias após a publicação do resultado.</p>
-                                                                            <p class="text-justify">Estamos à disposição para fornecer esclarecimentos adicionais e agradecemos sua participação no Programa de Avaliação e Desempenho do Tutor Médico <?= $ano ?>.<br></p>
-                                                                            <!--<button type="button" data-toggle="modal" data-target=".modalContestacao" class="btn btn-warning shadow-sm "><i class="fas fa-arrow-circle-right"></i> &nbsp;FAZER CONTESTAÇÃO</button>-->
-                                                                            <?php }else{ 
+                                                                                <p><b>Prezado(a) Colaborador(a),</b></p>
+                                                                            <p class="text-justify">Caso você não concorde com o resultado de sua Avaliação de Desempenho, terá até 15 dias após a divulgação da nota para apresentar sua contestação. Para isso, basta 
+                                                                                clicar no ícone abaixo e detalhar, em cada domínio específico, os motivos de sua discordância.</p>
+                                                                            <p class="text-justify">Todas as contestações serão analisadas com cuidado, e você será notificado(a) por e-mail assim que sua solicitação for avaliada. Após receber a notificação, 
+                                                                                será necessário acessar este painel novamente para consultar a resposta à sua contestação.<br></p>
+                                                                            <button type="button" data-toggle="modal" data-target=".modalContestacao" class="btn btn-warning shadow-sm "><i class="fas fa-arrow-circle-right"></i> &nbsp;FAZER CONTESTAÇÃO</button>
+                                                                            <?php }else{ ?>
+                                                                            <p>Prezados(as) Colaboradores(as),</p>
+                                                                            <p class="text-justify">Gostaríamos de informar a todos os interessados que o período de contestação referente a Nota da Avaliação de Desempenho foi oficialmente encerrado quinze dias após a publicação do resultado, conforme previsto.</p>      
+                                                                            <p class="text-justify">Durante o período designado, recebemos e revisamos atentamente todas as contestações e observações submetidas. Agradecemos por sua participação ativa neste processo.</p>      
+                                                                            <p class="text-justify">Ressaltamos que todas as contestações recebidas foram consideradas de forma justa e imparcial, contribuindo para uma avaliação abrangente e completa.</p>      
+                                                                            <p class="text-justify">Neste sentido o resultado publicado já é a Nota Final.</p>      
+                                                                            <p class="text-justify">A partir deste momento, não serão mais aceitas contestações referentes aos resultados do primeiro ciclo.</p>      
+                                                                            <p class="text-justify">Atenciosamente,</p>      
+                                                                            <p class="text-justify">Equipe AgSUS!</p>      
+                                                                                <?php }}else{ 
                                                                                     do{
                                                                                         if($rsc['fkassunto'] === '1'){
                                                                                             echo "<label class='text-dark font-weight-bold'>".$rsc['assuntonovo']."</label><br>";

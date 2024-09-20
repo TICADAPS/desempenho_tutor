@@ -146,7 +146,7 @@ $rsano4 = mysqli_fetch_array($queryano4);
                         </div>
                         <div class="col-md-4">
                             <button type="button" class="btn btn-light rounded" data-toggle="modal" data-target="#modalRAD">
-                                <img src="./../img/desempenho2.jpg" class="img-fluid rounded" width="50%">
+                                <img src="./../img/demostrativo.png" class="img-fluid rounded" width="50%">
                             </button>
                         </div>
                     </div>
@@ -162,9 +162,9 @@ $rsano4 = mysqli_fetch_array($queryano4);
                             </button>
                         </div>
                         <div class="col-md-4">
-                            <button type="button" class="btn btn-light rounded" data-toggle="modal" data-target="#modalTLC">
+                            <a class="btn btn-light rounded" href="limiteContestacao/">
                                 <img src="./../img/time_limit.png" class="img-fluid rounded" width="50%">
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -448,7 +448,7 @@ $rsano4 = mysqli_fetch_array($queryano4);
                     </div>
                 </div>
                 <!-- Modal -->
-                <div class="modal fade" id="modalTLC" tabindex="-1" aria-labelledby="modalTLC" aria-hidden="true">
+<!--                <div class="modal fade" id="modalTLC" tabindex="-1" aria-labelledby="modalTLC" aria-hidden="true">
                     <div class="modal-dialog">
                         <form method="post" enctype="multipart/form-data" action="./controller/ldt.php">
                             <div class="modal-content">
@@ -502,7 +502,7 @@ $rsano4 = mysqli_fetch_array($queryano4);
                                                             <button type="button" class="btn btn-outline-danger form-control mt-2" data-toggle="modal" data-target="#modalDtlimiteParar">INATIVAR &nbsp;<i class="far fa-stop-circle"></i></button>
                                                         </div>
                                                     </div>
-                                                    <!-- Modal modalDtlimite -->
+                                                     Modal modalDtlimite 
                                                     <div class="modal fade" id="modalDtlimite" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                         <div class="modal-dialog" role="document">
                                                             <div class="modal-content">
@@ -522,8 +522,8 @@ $rsano4 = mysqli_fetch_array($queryano4);
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <!-- FIM do Modal modalDtlimite -->
-                                                    <!-- Modal modalDtlimiteParar -->
+                                                     FIM do Modal modalDtlimite 
+                                                     Modal modalDtlimiteParar 
                                                     <div class="modal fade" id="modalDtlimiteParar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                         <div class="modal-dialog" role="document">
                                                             <div class="modal-content">
@@ -543,7 +543,7 @@ $rsano4 = mysqli_fetch_array($queryano4);
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <!-- FIM do Modal modalDtlimite -->
+                                                     FIM do Modal modalDtlimite 
                                             </blockquote>
                                         </div>
                                     </div>
@@ -555,7 +555,7 @@ $rsano4 = mysqli_fetch_array($queryano4);
                             </div>
                         </form>
                     </div>
-                </div>
+                </div>-->
             </div>
         </div>
 

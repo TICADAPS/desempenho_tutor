@@ -9,7 +9,7 @@ if (!isset($_SESSION['msg'])) {
     $_SESSION['msg'] = "";
 }
 if (!isset($_SESSION['cpf'])) {
-    $_SESSION['cpf'] = '';
+   header("Location: controller/derruba_session.php"); exit();
 }
 if (!isset($_SESSION['nome'])) {
     $_SESSION['nome'] = '';

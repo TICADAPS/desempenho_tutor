@@ -1,6 +1,7 @@
 <?php
 session_start();
 include './../conexao-agsus.php';
+include './../Controller_agsus/maskCpf.php';
 if (!isset($_SESSION['cpf'])) {
    header("Location: ../derruba_session.php"); exit();
 }
@@ -13,6 +14,7 @@ $cpf = $_REQUEST['c'];
 date_default_timezone_set('America/Sao_Paulo');
 //$ano = date('Y');
 $ano = $_REQUEST['a'];
+$anoAtual = $ano;
 $ciclo = $_REQUEST['cl'];
 $idperiodo = $_REQUEST['p'];
 $cpftratado = str_replace("-", "", $cpf);
@@ -70,57 +72,628 @@ if ($nrrs > 0) {
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <div id="menuPrincipal" class="collapse navbar-collapse">
-                            <ul class="navbar-nav">
-                                <li class="nav-item">
-                                    <a href="index.php" class="nav-link">Inicio </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="listaDesempenho.php" class="nav-link">Painel de Resultados Geral</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="demonstrativo.php?c=<?= $cpftratado ?>&a=<?= $ano ?>&cl=<?= $ciclo ?>&p=<?= $idperiodo ?>" class="nav-link">Painel de Resultados do Tutor</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="qa_tutor.php?c=<?= $cpftratado ?>&a=<?= $ano ?>&cl=<?= $ciclo ?>&p=<?= $idperiodo ?>" class="nav-link">Qualidade Assistencial do Tutor</a>
-                                </li>
-                                <!-- Navbar dropdown -->
-<!--                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">Ano </a>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="./ano.php?c=<?= $cpftratado ?>&a=2024">2024</a>
-                                        <a class="dropdown-item" href="./ano.php?c=<?= $cpftratado ?>&a=2023">2023</a>
-                                    </div>
-                                </li>-->
-<!--                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">Quadrimestres</a>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="./ano.php?c=<?= $cpftratado ?>&q=23">1º Quadrimestre</a>
-                                        <a class="dropdown-item" href="./ano.php?c=<?= $cpftratado ?>&q=24">2º Quadrimestre</a>
-                                        <a class="dropdown-item" href="./ano.php?c=<?= $cpftratado ?>&q=25">3º Quadrimestre</a>
-                                    </div>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="">|</a>
-                                </li>-->
-                                <li class="nav-item">
-                                    <a class="nav-link" href="https://agsusbrasil.org/sistema-integrado/painelMedico.php"><i class="fas fa-sign-out-alt pt-1"></i></a>
-                                </li>
-                                <li class="nav-item">
-                                    <div id="loading">
-                                        &nbsp;<img class="float-right" src="../img_agsus/carregando.gif" width="40" height="40" />
-                                    </div>
-                                </li>
+                            <ul class="navbar-nav p-1">
+                                <li class="text-secondary pl-2 pr-2"><a href="./" class="btn">Início</a></li>
+                                <li class="text-secondary pl-2 pr-2"><a href="./listaDesempenho.php" class="btn">Demonstrativo</a></li>
+                                <li class="text-secondary pl-2 pr-2"><a href="./controller/derruba_session.php" class="btn"><i class="fas fa-sign-out-alt"></i></a></li>
+
                             </ul>
                         </div>
-                    </nav> 
+                    </nav>
                 </div>
             </div>
             <div class="row p-2">
             <?php
+            $nrrsant = 0;
             if ($rscpf === true) {
-                if ($nrrs == 1) {
+              if ($nrrs == 1) {
+                $rsnovo = $rs2 = $rs;
+                do{
+                    $cpfnovo = $rsnovo['cpf'];
+                }while ($rsnovo = mysqli_fetch_array($query));
+                $anoant = "".(((int)$anoAtual) -1);
+                $sqlant = "select * from medico m inner join desempenho d on m.ine = d.ine and m.ibge = d.ibge"
+                    . " inner join periodo p on p.idperiodo = d.idperiodo "
+                    . " left join ivs on idivs = fkivs "
+                    . " where d.cpf = '$cpfnovo' and ano = '$anoant' order by d.idperiodo desc limit 1;";
+                $qant = mysqli_query($conn, $sqlant) or die(mysqli_error($conn));
+                $nrrsant = mysqli_num_rows($qant);
+                $rsant = mysqli_fetch_array($qant);
+//                var_dump($rsant);
+//                var_dump($rs2);
+                ?>
+                <input type="hidden" id="nrrsant2" value="<?= $nrrsant ?>" >
+                <?php
+                if($nrrsant > 0){
+                    $a = 0;
+                    $aux = 0;
+                    $pn1 = $pn2 = $pn3 = 0;
+                    $psh1 = $psh2 = $psh3 = 0;
+                    $cc1 = $cc2 = $cc3 = 0;
+                    $hi1 = $hi2 = $hi3 = 0;
+                    $diab1 = $diab2 = $diab3 = 0;
+                    $periodo = array();
+                    $idperiodo = array();
+                    do {
+                        $aux++;
+                        $nome = $rsant['nome'];
+                        $ibge = $rsant['ibge'];
+                        $admissao = $rsant['admissao'];
+                        $cargo = $rsant['cargo'];
+                        $tipologia = $rsant['tipologia'];
+                        if($rsant['descricao'] !== null){
+                            $ivs = strtoupper($rsant['descricao']);
+                        }else{
+                            $ivs = "";
+                        }
+                        $uf = $rsant['uf'];
+                        $municipio = $rsant['municipio'];
+                        $cnes = $rsant['cnes'];
+                        $ine = $rsant['ine'];
+                        $datacadastro = $rsant['datacadastro'];
+                        $ano = $rsant['ano'];
+                        $periodo[$a] = $rsant['descricaoperiodo'];
+                        $idperiodo[$a] = $rsant['idperiodo'];
+                        $prenatal_consultas = $rsant['prenatal_consultas'];
+                        $prenatal_consultastext = str_replace(",", "", $prenatal_consultas);
+                        $prenatal_consultastext = str_replace(".", ",", $prenatal_consultastext);
+                        $prenatal_sifilis_hiv = $rsant['prenatal_sifilis_hiv'];
+                        $prenatal_sifilis_hivtext = str_replace(",", "", $prenatal_sifilis_hiv);
+                        $prenatal_sifilis_hivtext = str_replace(".", ",", $prenatal_sifilis_hivtext);
+                        $cobertura_citopatologico = $rsant['cobertura_citopatologico'];
+                        $cobertura_citopatologicotext = str_replace(",", "", $cobertura_citopatologico);
+                        $cobertura_citopatologicotext = str_replace(".", ",", $cobertura_citopatologicotext);
+                        $hipertensao = $rsant['hipertensao'];
+                        $hipertensaotext = str_replace(",", "", $hipertensao);
+                        $hipertensaotext = str_replace(".", ",", $hipertensaotext);
+                        $diabetes = $rsant['diabetes'];
+                        $diabetestext = str_replace(",", "", $diabetes);
+                        $diabetestext = str_replace(".", ",", $diabetestext);
+                        switch ($aux){
+                            case 1 : 
+                                $pn1 = (int)$rsant['prenatal_consultas']; 
+                                $psh1 = (int)$rsant['prenatal_sifilis_hiv']; 
+                                $cc1 = (int)$rsant['cobertura_citopatologico']; 
+                                $hi1 = (int)$rsant['hipertensao']; 
+                                $diab1 = (int)$rsant['diabetes']; break;
+                            case 2 : 
+                                $pn2 = (int)$rsant['prenatal_consultas']; 
+                                $psh2 = (int)$rsant['prenatal_sifilis_hiv']; 
+                                $cc2 = (int)$rsant['cobertura_citopatologico']; 
+                                $hi2 = (int)$rsant['hipertensao']; 
+                                $diab2 = (int)$rsant['diabetes']; break;
+                            case 3 : 
+                                $pn3 = (int)$rsant['prenatal_consultas']; 
+                                $psh3 = (int)$rsant['prenatal_sifilis_hiv']; 
+                                $cc3 = (int)$rsant['cobertura_citopatologico']; 
+                                $hi3 = (int)$rsant['hipertensao']; 
+                                $diab3 = (int)$rsant['diabetes']; break;
+                        }
+                        $a++;
+                    } while ($rsant = mysqli_fetch_array($query));
+                    do {
+                        $aux++;
+                        $nome = $rs2['nome'];
+                        $ibge = $rs2['ibge'];
+                        $admissao = $rs2['admissao'];
+                        $cargo = $rs2['cargo'];
+                        $tipologia = $rs2['tipologia'];
+                        if($rs2['descricao'] !== null){
+                            $ivs = strtoupper($rs2['descricao']);
+                        }else{
+                            $ivs = "";
+                        }
+                        $uf = $rs2['uf'];
+                        $municipio = $rs2['municipio'];
+                        $cnes = $rs2['cnes'];
+                        $ine = $rs2['ine'];
+                        $datacadastro = $rs2['datacadastro'];
+                        $ano = $rs2['ano'];
+                        $periodo[$a] = $rs2['descricaoperiodo'];
+                        $idperiodo[$a] = $rs2['idperiodo'];
+                        $prenatal_consultas = $rs2['prenatal_consultas'];
+                        $prenatal_consultastext = str_replace(",", "", $prenatal_consultas);
+                        $prenatal_consultastext = str_replace(".", ",", $prenatal_consultastext);
+                        $prenatal_sifilis_hiv = $rs2['prenatal_sifilis_hiv'];
+                        $prenatal_sifilis_hivtext = str_replace(",", "", $prenatal_sifilis_hiv);
+                        $prenatal_sifilis_hivtext = str_replace(".", ",", $prenatal_sifilis_hivtext);
+                        $cobertura_citopatologico = $rs2['cobertura_citopatologico'];
+                        $cobertura_citopatologicotext = str_replace(",", "", $cobertura_citopatologico);
+                        $cobertura_citopatologicotext = str_replace(".", ",", $cobertura_citopatologicotext);
+                        $hipertensao = $rs2['hipertensao'];
+                        $hipertensaotext = str_replace(",", "", $hipertensao);
+                        $hipertensaotext = str_replace(".", ",", $hipertensaotext);
+                        $diabetes = $rs2['diabetes'];
+                        $diabetestext = str_replace(",", "", $diabetes);
+                        $diabetestext = str_replace(".", ",", $diabetestext);
+                        switch ($aux){
+                            case 1 : 
+                                $pn1 = (int)$rs2['prenatal_consultas']; 
+                                $psh1 = (int)$rs2['prenatal_sifilis_hiv']; 
+                                $cc1 = (int)$rs2['cobertura_citopatologico']; 
+                                $hi1 = (int)$rs2['hipertensao']; 
+                                $diab1 = (int)$rs2['diabetes']; break;
+                            case 2 : 
+                                $pn2 = (int)$rs2['prenatal_consultas']; 
+                                $psh2 = (int)$rs2['prenatal_sifilis_hiv']; 
+                                $cc2 = (int)$rs2['cobertura_citopatologico']; 
+                                $hi2 = (int)$rs2['hipertensao']; 
+                                $diab2 = (int)$rs2['diabetes']; break;
+                            case 3 : 
+                                $pn3 = (int)$rs2['prenatal_consultas']; 
+                                $psh3 = (int)$rs2['prenatal_sifilis_hiv']; 
+                                $cc3 = (int)$rs2['cobertura_citopatologico']; 
+                                $hi3 = (int)$rs2['hipertensao']; 
+                                $diab3 = (int)$rs2['diabetes']; break;
+                        }
+                        $a++;
+                    } while ($rs2 = mysqli_fetch_array($query));
+                ?>
+                            <div class="col-md-12 shadow rounded pt-2 pr-3 pl-3 mb-2">
+                                <form >
+                                    <div class="row p-3">
+                                        <div class="col-md-12 mt-3 mb-3">
+                                            <div class="row mt-3 mb-4 pl-3">
+                                                <div class="col-md-12">
+                                                    <div class="row">
+                                                        <div class="col-md-6 ">
+                                                            <label class="text-info font-weight-bold">Nome: &nbsp;<?= $nome ?></label>
+                                                        </div>                                                  
+
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-3">
+                                                            <h6 class=" font-weight-bold"><?php echo "Município-UF: $municipio-$uf" ?></h6>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <h6 class=" font-weight-bold"><?php echo "CNES: $cnes" ?></h6>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <h6 class="font-weight-bold"><?php echo "INE: $ine" ?></h6>
+                                                        </div>
+                                                        <div class="col-md-3 ">
+                                                            <label class="font-weight-bold">Cargo: </label><label> &nbsp;&nbsp;<?= $cargo ?></label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-3">
+                                                            <label class="font-weight-bold">Tipologia: </label><label> &nbsp;&nbsp;<?= $tipologia ?></label>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <label class="font-weight-bold">IVS: </label><label class=""> &nbsp;&nbsp;<?= $ivs ?></label>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <h6 class="text-info font-weight-bold"><?php echo "Ano: $ano" ?></h6>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <h6 class="text-info font-weight-bold">
+                                                                <?php
+                                                                if ($a === 2) {
+                                                                    echo "Períodos: 1º e 2º Quadrimestre";
+                                                                } else {
+                                                                    echo "Períodos: 1º, 2º e 3º Quadrimestre";
+                                                                }
+                                                                ?>
+                                                            </h6>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row mt-3">
+                                                <div class="col-md-4">
+                                                    <!-- Bar Chart -->
+                                                    <div class="card shadow mb-4 divexp1r">
+                                                        <div class="card-header py-3">
+                                                            <h6 class="m-0 font-weight-bold text-primary">Pré-Natal (6 consultas)</h6>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <div class="chart-bar">
+                                                                <canvas id="myBarPrenatal"></canvas>
+                                                            </div>
+                                                            <div class="row mt-3 pr-2 pl-2">
+                                                                <div class="col-md-12 border rounded pr-3 pl-3 pt-2">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <label class="small text-justify">
+                                                                                Proporção de gestantes com pelo menos 6 (seis) consultas pré-natal realizadas,
+                                                                                sendo a 1ª (primeira) até a 12ª (décima segunda) semana de gestação.
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <label class="small text-justify font-weight-bold text-primary">
+                                                                                META: 45%
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <label class="small text-justify font-weight-bold text-primary">
+                                                                                * Sinalização semafórica do alcance (metas) dos indicadores
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-xl-12">
+                                                                            <div class="row">
+                                                                                <div class="col-1 mt-1">
+                                                                                    <div class="bg-gradient-danger rounded" style="width: 20px; height: 20px;"></div>
+                                                                                </div>
+                                                                                <div class="col-5">
+                                                                                    <label class="small text-justify">< 18%</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-xl-12">
+                                                                            <div class="row">
+                                                                                <div class="col-1 mt-1">
+                                                                                    <div class="bg-gradient-warning rounded" style="width: 20px; height: 20px;"></div>
+                                                                                </div>
+                                                                                <div class="col-5">
+                                                                                    <label class="small text-justify">>= 18% < 31%</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-xl-12">
+                                                                            <div class="row">
+                                                                                <div class="col-1 mt-1">
+                                                                                    <div class="bg-gradient-success rounded" style="width: 20px; height: 20px;"></div>
+                                                                                </div>
+                                                                                <div class="col-5">
+                                                                                    <label class="small text-justify">>= 31% < 45%</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-xl-12">
+                                                                            <div class="row">
+                                                                                <div class="col-1 mt-1">
+                                                                                    <div class="bg-gradient-primary rounded" style="width: 20px; height: 20px;"></div>
+                                                                                </div>
+                                                                                <div class="col-5">
+                                                                                    <label class="small text-justify">>= 45%</label>
+                                                                                </div>
+                                                                            </div>    
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <!-- Bar Chart -->
+                                                    <div class="card shadow mb-4 divexp2r">
+                                                        <div class="card-header py-3">
+                                                            <h6 class="m-0 font-weight-bold text-primary">Pré-Natal (Sífilis e HIV)</h6>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <div class="chart-bar">
+                                                                <canvas id="myBarChartSifilis"></canvas>
+                                                            </div>
+                                                            <div class="row mt-3 pr-2 pl-2">
+                                                                <div class="col-md-12 border rounded pr-3 pl-3 pt-2">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <label class="small text-justify">
+                                                                                Proporção de gestantes com realização de exames para sífilis e HIV.
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <label class="small text-justify font-weight-bold text-primary">
+                                                                                META: 60%
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <label class="small text-justify font-weight-bold text-primary">
+                                                                                * Sinalização semafórica do alcance (metas) dos indicadores
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-xl-12">
+                                                                            <div class="row">
+                                                                                <div class="col-1 mt-1">
+                                                                                    <div class="bg-gradient-danger rounded" style="width: 20px; height: 20px;"></div>
+                                                                                </div>
+                                                                                <div class="col-5">
+                                                                                    <label class="small text-justify">< 24%</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-xl-12">
+                                                                            <div class="row">
+                                                                                <div class="col-1 mt-1">
+                                                                                    <div class="bg-gradient-warning rounded" style="width: 20px; height: 20px;"></div>
+                                                                                </div>
+                                                                                <div class="col-5">
+                                                                                    <label class="small text-justify">>= 24% < 42%</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-xl-12">
+                                                                            <div class="row">
+                                                                                <div class="col-1 mt-1">
+                                                                                    <div class="bg-gradient-success rounded" style="width: 20px; height: 20px;"></div>
+                                                                                </div>
+                                                                                <div class="col-5">
+                                                                                    <label class="small text-justify">>= 42% < 60%</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-xl-12">
+                                                                            <div class="row">
+                                                                                <div class="col-1 mt-1">
+                                                                                    <div class="bg-gradient-primary rounded" style="width: 20px; height: 20px;"></div>
+                                                                                </div>
+                                                                                <div class="col-5">
+                                                                                    <label class="small text-justify">>= 60%</label>
+                                                                                </div>
+                                                                            </div>    
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <!-- Bar Chart -->
+                                                    <div class="card shadow mb-4 divexp3r">
+                                                        <div class="card-header py-3">
+                                                            <h6 class="m-0 font-weight-bold text-primary">Cobertura Citopatológico</h6>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <div class="chart-bar">
+                                                                <canvas id="myBarChartCitopatologico"></canvas>
+                                                            </div>
+                                                            <div class="row mt-3 pr-2 pl-2">
+                                                                <div class="col-md-12 border rounded pr-3 pl-3 pt-2">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <label class="small text-justify">
+                                                                                Proporção de mulheres com coleta de citopatológico na APS.
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <label class="small text-justify font-weight-bold text-primary">
+                                                                                META: 40%
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <label class="small text-justify font-weight-bold text-primary">
+                                                                                * Sinalização semafórica do alcance (metas) dos indicadores
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-xl-12">
+                                                                            <div class="row">
+                                                                                <div class="col-1 mt-1">
+                                                                                    <div class="bg-gradient-danger rounded" style="width: 20px; height: 20px;"></div>
+                                                                                </div>
+                                                                                <div class="col-5">
+                                                                                    <label class="small text-justify">< 16%</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-xl-12">
+                                                                            <div class="row">
+                                                                                <div class="col-1 mt-1">
+                                                                                    <div class="bg-gradient-warning rounded" style="width: 20px; height: 20px;"></div>
+                                                                                </div>
+                                                                                <div class="col-5">
+                                                                                    <label class="small text-justify">>= 16% < 28%</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-xl-12">
+                                                                            <div class="row">
+                                                                                <div class="col-1 mt-1">
+                                                                                    <div class="bg-gradient-success rounded" style="width: 20px; height: 20px;"></div>
+                                                                                </div>
+                                                                                <div class="col-5">
+                                                                                    <label class="small text-justify">>= 28% < 40%</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-xl-12">
+                                                                            <div class="row">
+                                                                                <div class="col-1 mt-1">
+                                                                                    <div class="bg-gradient-primary rounded" style="width: 20px; height: 20px;"></div>
+                                                                                </div>
+                                                                                <div class="col-5">
+                                                                                    <label class="small text-justify">>= 40%</label>
+                                                                                </div>
+                                                                            </div>    
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row mt-3 pr-2 pl-2">
+                                                <div class="col-md-6">
+                                                    <!-- Bar Chart -->
+                                                    <div class="card shadow mb-4 divexp4r">
+                                                        <div class="card-header py-3">
+                                                            <h6 class="m-0 font-weight-bold text-primary">Hipertensão (PA Aferida)</h6>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <div class="chart-bar">
+                                                                <canvas id="myBarChartHipertensao"></canvas>
+                                                            </div>
+                                                            <div class="row mt-3 pr-2 pl-2">
+                                                                <div class="col-md-12 border rounded pr-3 pl-3 pt-2">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <label class="small text-justify">
+                                                                                Proporção de pessoas com hipertensão, com consulta e pressão arterial aferida no semestre.
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <label class="small text-justify font-weight-bold text-primary">
+                                                                                META: 50%
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <label class="small text-justify font-weight-bold text-primary">
+                                                                                * Sinalização semafórica do alcance (metas) dos indicadores
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-xl-12">
+                                                                            <div class="row">
+                                                                                <div class="col-1 mt-1">
+                                                                                    <div class="bg-gradient-danger rounded" style="width: 20px; height: 20px;"></div>
+                                                                                </div>
+                                                                                <div class="col-5">
+                                                                                    <label class="small text-justify">< 20%</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-xl-12">
+                                                                            <div class="row">
+                                                                                <div class="col-1 mt-1">
+                                                                                    <div class="bg-gradient-warning rounded" style="width: 20px; height: 20px;"></div>
+                                                                                </div>
+                                                                                <div class="col-5">
+                                                                                    <label class="small text-justify">>= 20% < 35%</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-xl-12">
+                                                                            <div class="row">
+                                                                                <div class="col-1 mt-1">
+                                                                                    <div class="bg-gradient-success rounded" style="width: 20px; height: 20px;"></div>
+                                                                                </div>
+                                                                                <div class="col-5">
+                                                                                    <label class="small text-justify">>= 35% < 50%</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-xl-12">
+                                                                            <div class="row">
+                                                                                <div class="col-1 mt-1">
+                                                                                    <div class="bg-gradient-primary rounded" style="width: 20px; height: 20px;"></div>
+                                                                                </div>
+                                                                                <div class="col-5">
+                                                                                    <label class="small text-justify">>= 50%</label>
+                                                                                </div>
+                                                                            </div>    
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <!-- Bar Chart -->
+                                                    <div class="card shadow mb-4 divexp5r">
+                                                        <div class="card-header py-3">
+                                                            <h6 class="m-0 font-weight-bold text-primary">Diabetes (Hemoglobina Glicada)</h6>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <div class="chart-bar">
+                                                                <canvas id="myBarChartDiabetes"></canvas>
+                                                            </div>
+                                                            <div class="row mt-3 pr-2 pl-2">
+                                                                <div class="col-md-12 border rounded pr-3 pl-3 pt-2">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <label class="small text-justify">
+                                                                                Proporção de pessoas com diabetes, com consulta e hemoglobina glicada solicitada no semestre.
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <label class="small text-justify font-weight-bold text-primary">
+                                                                                META: 50%
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <label class="small text-justify font-weight-bold text-primary">
+                                                                                * Sinalização semafórica do alcance (metas) dos indicadores
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-xl-12">
+                                                                            <div class="row">
+                                                                                <div class="col-1 mt-1">
+                                                                                    <div class="bg-gradient-danger rounded" style="width: 20px; height: 20px;"></div>
+                                                                                </div>
+                                                                                <div class="col-5">
+                                                                                    <label class="small text-justify">< 20%</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-xl-12">
+                                                                            <div class="row">
+                                                                                <div class="col-1 mt-1">
+                                                                                    <div class="bg-gradient-warning rounded" style="width: 20px; height: 20px;"></div>
+                                                                                </div>
+                                                                                <div class="col-5">
+                                                                                    <label class="small text-justify">>= 20% < 35%</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-xl-12">
+                                                                            <div class="row">
+                                                                                <div class="col-1 mt-1">
+                                                                                    <div class="bg-gradient-success rounded" style="width: 20px; height: 20px;"></div>
+                                                                                </div>
+                                                                                <div class="col-5">
+                                                                                    <label class="small text-justify">>= 35% < 50%</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-xl-12">
+                                                                            <div class="row">
+                                                                                <div class="col-1 mt-1">
+                                                                                    <div class="bg-gradient-primary rounded" style="width: 20px; height: 20px;"></div>
+                                                                                </div>
+                                                                                <div class="col-5">
+                                                                                    <label class="small text-justify">>= 50%</label>
+                                                                                </div>
+                                                                            </div>    
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                <?php
+                }else{
                     do {
                         $nome = $rs['nome'];
+                        $cpf = $rs['cpf'];
+                        $cpf = mask ($cpf, "###.###.###-##");
                         $ibge = $rs['ibge'];
                         $admissao = $rs['admissao'];
                         $cargo = $rs['cargo'];
@@ -757,6 +1330,7 @@ if ($nrrs > 0) {
                             </div>
                         <?php
                     } while ($rs = mysqli_fetch_array($query));
+                }
                 } else {
                     $a = 0;
                     $aux = 0;
@@ -834,16 +1408,11 @@ if ($nrrs > 0) {
                                                 <div class="row">
                                                     <div class="col-md-6 ">
                                                         <label class="text-info font-weight-bold">Nome: &nbsp;<?= $nome ?></label>
-                                                    </div>
-                                                    <div class="col-md-3 ">
-                                                        <label class="font-weight-bold">CPF: </label><label> &nbsp;&nbsp;<?= $cpf ?></label>
-                                                    </div>
-                                                    <div class="col-md-3 ">
-                                                        <label class="font-weight-bold">Cargo: </label><label> &nbsp;&nbsp;<?= $cargo ?></label>
-                                                    </div>
+                                                    </div>                                                  
+                                                   
                                                 </div>
                                                 <div class="row">
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-3">
                                                         <h6 class=" font-weight-bold"><?php echo "Município-UF: $municipio-$uf" ?></h6>
                                                     </div>
                                                     <div class="col-md-3">
@@ -851,6 +1420,9 @@ if ($nrrs > 0) {
                                                     </div>
                                                     <div class="col-md-3">
                                                         <h6 class="font-weight-bold"><?php echo "INE: $ine" ?></h6>
+                                                    </div>
+                                                    <div class="col-md-3 ">
+                                                        <label class="font-weight-bold">Cargo: </label><label> &nbsp;&nbsp;<?= $cargo ?></label>
                                                     </div>
                                                 </div>
                                                 <div class="row">
@@ -1434,451 +2006,910 @@ if ($nrrs > 0) {
               }
               return s.join(dec);
             }
-            
+            var nrrs = parseInt(<?= $nrrs ?>);
+            var nrrsant = 0;
+            var anoant = "";
+            var anoAtual = <?= $anoAtual ?>;
+            if(nrrs === 1){
+                nrrsant = parseInt(<?= $nrrsant ?>);
+                if(nrrsant > 0){
+                    anoant = (anoAtual - 1);
+                }
+            }
+            console.log(nrrsant,anoant);
             // myBarPrenatal
-            var ctx = document.getElementById("myBarPrenatal");
-            var myBarPrenatal = new Chart(ctx, {
-              type: 'bar',
-              data: {
-                labels: ["1º Quadrim.", "2º Quadrim.", "3º Quadrim."],
-                datasets: [{
-                  label: "Proporção",
-                  backgroundColor: [
-                    '<?php if($pn1 < 18) { echo "#d10e0e"; }elseif($pn1 < 31){ echo "#e6b20b"; }elseif($pn1 < 45){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>', 
-                    '<?php if($pn2 < 18) { echo "#d10e0e"; }elseif($pn2 < 31){ echo "#e6b20b"; }elseif($pn2 < 45){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>',
-                    '<?php if($pn3 < 18) { echo "#d10e0e"; }elseif($pn3 < 31){ echo "#e6b20b"; }elseif($pn3 < 45){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>'],
-                  hoverBackgroundColor: [
-                    '<?php if($pn1 < 18) { echo "#ba0a0a"; }elseif($pn1 < 31){ echo "#d2a208"; }elseif($pn1 < 45){ echo "#15b436"; }else{ echo "#325cd4"; } ?>', 
-                    '<?php if($pn2 < 18) { echo "#ba0a0a"; }elseif($pn2 < 31){ echo "#d2a208"; }elseif($pn2 < 45){ echo "#15b436"; }else{ echo "#325cd4"; } ?>',
-                    '<?php if($pn3 < 18) { echo "#ba0a0a"; }elseif($pn3 < 31){ echo "#d2a208"; }elseif($pn3 < 45){ echo "#15b436"; }else{ echo "#325cd4"; } ?>'],
-                  borderColor: "#5c5f68",
-                  data: [<?php echo $pn1; ?>,<?php echo $pn2; ?>,<?php echo $pn3; ?>]
-                }]
-              },
-              options: {
-                maintainAspectRatio: false,
-                layout: {
-                  padding: {
-                    left: 10,
-                    right: 25,
-                    top: 25,
-                    bottom: 0
-                  }
-                },
-                scales: {
-                  xAxes: [{
-                    time: {
-                      unit: 'month'
-                    },
-                    gridLines: {
-                      display: false,
-                      drawBorder: false
-                    },
-                    ticks: {
-                      maxTicksLimit: 6
-                    },
-                    maxBarThickness: 40
-                  }],
-                  yAxes: [{
-                    ticks: {
-                      min: 0,
-                      max: 100,
-                      maxTicksLimit: 10,
-                      padding: 10,
-                      // Include a dollar sign in the ticks
-                      callback: function(value, index, values) {
-                        return number_format(value) + "%";
+            if(nrrs === 1 && nrrsant > 0){
+                var ctx = document.getElementById("myBarPrenatal");
+                var myBarPrenatal = new Chart(ctx, {
+                  type: 'bar',
+                  data: {
+                    labels: [anoant, anoAtual, ""],
+                    datasets: [{
+                      label: "Proporção",
+                      backgroundColor: [
+                        '<?php if($pn1 < 18) { echo "#d10e0e"; }elseif($pn1 < 31){ echo "#e6b20b"; }elseif($pn1 < 45){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>', 
+                        '<?php if($pn2 < 18) { echo "#d10e0e"; }elseif($pn2 < 31){ echo "#e6b20b"; }elseif($pn2 < 45){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>',
+                        '<?php if($pn3 < 18) { echo "#d10e0e"; }elseif($pn3 < 31){ echo "#e6b20b"; }elseif($pn3 < 45){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>'],
+                      hoverBackgroundColor: [
+                        '<?php if($pn1 < 18) { echo "#ba0a0a"; }elseif($pn1 < 31){ echo "#d2a208"; }elseif($pn1 < 45){ echo "#15b436"; }else{ echo "#325cd4"; } ?>', 
+                        '<?php if($pn2 < 18) { echo "#ba0a0a"; }elseif($pn2 < 31){ echo "#d2a208"; }elseif($pn2 < 45){ echo "#15b436"; }else{ echo "#325cd4"; } ?>',
+                        '<?php if($pn3 < 18) { echo "#ba0a0a"; }elseif($pn3 < 31){ echo "#d2a208"; }elseif($pn3 < 45){ echo "#15b436"; }else{ echo "#325cd4"; } ?>'],
+                      borderColor: "#5c5f68",
+                      data: [<?php echo $pn1; ?>,<?php echo $pn2; ?>,<?php echo $pn3; ?>]
+                    }]
+                  },
+                  options: {
+                    maintainAspectRatio: false,
+                    layout: {
+                      padding: {
+                        left: 10,
+                        right: 25,
+                        top: 25,
+                        bottom: 0
                       }
                     },
-                    gridLines: {
-                      color: "rgb(234, 236, 244)",
-                      zeroLineColor: "rgb(234, 236, 244)",
-                      drawBorder: false,
-                      borderDash: [2],
-                      zeroLineBorderDash: [2]
-                    }
-                  }]
-                },
-                legend: {
-                  display: false
-                },
-                tooltips: {
-                  titleMarginBottom: 10,
-                  titleFontColor: '#6e707e',
-                  titleFontSize: 14,
-                  backgroundColor: "rgb(255,255,255)",
-                  bodyFontColor: "#858796",
-                  borderColor: '#dddfeb',
-                  borderWidth: 1,
-                  xPadding: 15,
-                  yPadding: 15,
-                  displayColors: false,
-                  caretPadding: 10,
-                  callbacks: {
-                    label: function(tooltipItem, chart) {
-                      var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-                      return datasetLabel + ': ' + number_format(tooltipItem.yLabel,2,',','.') + "%";
+                    scales: {
+                      xAxes: [{
+                        time: {
+                          unit: 'month'
+                        },
+                        gridLines: {
+                          display: false,
+                          drawBorder: false
+                        },
+                        ticks: {
+                          maxTicksLimit: 6
+                        },
+                        maxBarThickness: 40
+                      }],
+                      yAxes: [{
+                        ticks: {
+                          min: 0,
+                          max: 100,
+                          maxTicksLimit: 10,
+                          padding: 10,
+                          // Include a dollar sign in the ticks
+                          callback: function(value, index, values) {
+                            return number_format(value) + "%";
+                          }
+                        },
+                        gridLines: {
+                          color: "rgb(234, 236, 244)",
+                          zeroLineColor: "rgb(234, 236, 244)",
+                          drawBorder: false,
+                          borderDash: [2],
+                          zeroLineBorderDash: [2]
+                        }
+                      }]
+                    },
+                    legend: {
+                      display: false
+                    },
+                    tooltips: {
+                      titleMarginBottom: 10,
+                      titleFontColor: '#6e707e',
+                      titleFontSize: 14,
+                      backgroundColor: "rgb(255,255,255)",
+                      bodyFontColor: "#858796",
+                      borderColor: '#dddfeb',
+                      borderWidth: 1,
+                      xPadding: 15,
+                      yPadding: 15,
+                      displayColors: false,
+                      caretPadding: 10,
+                      callbacks: {
+                        label: function(tooltipItem, chart) {
+                          var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                          return datasetLabel + ': ' + number_format(tooltipItem.yLabel,2,',','.') + "%";
+                        }
+                      }
                     }
                   }
-                }
-              }
-            });
-            
+                });
+            }else if(nrrs > 1){
+                var ctx = document.getElementById("myBarPrenatal");
+                var myBarPrenatal = new Chart(ctx, {
+                  type: 'bar',
+                  data: {
+                    labels: ["1º Quadrim.", "2º Quadrim.", "3º Quadrim."],
+                    datasets: [{
+                      label: "Proporção",
+                      backgroundColor: [
+                        '<?php if($pn1 < 18) { echo "#d10e0e"; }elseif($pn1 < 31){ echo "#e6b20b"; }elseif($pn1 < 45){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>', 
+                        '<?php if($pn2 < 18) { echo "#d10e0e"; }elseif($pn2 < 31){ echo "#e6b20b"; }elseif($pn2 < 45){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>',
+                        '<?php if($pn3 < 18) { echo "#d10e0e"; }elseif($pn3 < 31){ echo "#e6b20b"; }elseif($pn3 < 45){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>'],
+                      hoverBackgroundColor: [
+                        '<?php if($pn1 < 18) { echo "#ba0a0a"; }elseif($pn1 < 31){ echo "#d2a208"; }elseif($pn1 < 45){ echo "#15b436"; }else{ echo "#325cd4"; } ?>', 
+                        '<?php if($pn2 < 18) { echo "#ba0a0a"; }elseif($pn2 < 31){ echo "#d2a208"; }elseif($pn2 < 45){ echo "#15b436"; }else{ echo "#325cd4"; } ?>',
+                        '<?php if($pn3 < 18) { echo "#ba0a0a"; }elseif($pn3 < 31){ echo "#d2a208"; }elseif($pn3 < 45){ echo "#15b436"; }else{ echo "#325cd4"; } ?>'],
+                      borderColor: "#5c5f68",
+                      data: [<?php echo $pn1; ?>,<?php echo $pn2; ?>,<?php echo $pn3; ?>]
+                    }]
+                  },
+                  options: {
+                    maintainAspectRatio: false,
+                    layout: {
+                      padding: {
+                        left: 10,
+                        right: 25,
+                        top: 25,
+                        bottom: 0
+                      }
+                    },
+                    scales: {
+                      xAxes: [{
+                        time: {
+                          unit: 'month'
+                        },
+                        gridLines: {
+                          display: false,
+                          drawBorder: false
+                        },
+                        ticks: {
+                          maxTicksLimit: 6
+                        },
+                        maxBarThickness: 40
+                      }],
+                      yAxes: [{
+                        ticks: {
+                          min: 0,
+                          max: 100,
+                          maxTicksLimit: 10,
+                          padding: 10,
+                          // Include a dollar sign in the ticks
+                          callback: function(value, index, values) {
+                            return number_format(value) + "%";
+                          }
+                        },
+                        gridLines: {
+                          color: "rgb(234, 236, 244)",
+                          zeroLineColor: "rgb(234, 236, 244)",
+                          drawBorder: false,
+                          borderDash: [2],
+                          zeroLineBorderDash: [2]
+                        }
+                      }]
+                    },
+                    legend: {
+                      display: false
+                    },
+                    tooltips: {
+                      titleMarginBottom: 10,
+                      titleFontColor: '#6e707e',
+                      titleFontSize: 14,
+                      backgroundColor: "rgb(255,255,255)",
+                      bodyFontColor: "#858796",
+                      borderColor: '#dddfeb',
+                      borderWidth: 1,
+                      xPadding: 15,
+                      yPadding: 15,
+                      displayColors: false,
+                      caretPadding: 10,
+                      callbacks: {
+                        label: function(tooltipItem, chart) {
+                          var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                          return datasetLabel + ': ' + number_format(tooltipItem.yLabel,2,',','.') + "%";
+                        }
+                      }
+                    }
+                  }
+                });
+            }
             // myBarChartSifilis
-            var ctx = document.getElementById("myBarChartSifilis");
-            var myBarChartSifilis = new Chart(ctx, {
-              type: 'bar',
-              data: {
-                labels: ["1º Quadrim.", "2º Quadrim.", "3º Quadrim."],
-                datasets: [{
-                  label: "Proporção",
-                  backgroundColor: [
-                    '<?php if($psh1 < 24) { echo "#d10e0e"; }elseif($psh1 < 42){ echo "#e6b20b"; }elseif($psh1 < 60){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>', 
-                    '<?php if($psh2 < 24) { echo "#d10e0e"; }elseif($psh2 < 42){ echo "#e6b20b"; }elseif($psh2 < 60){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>',
-                    '<?php if($psh3 < 24) { echo "#d10e0e"; }elseif($psh3 < 42){ echo "#e6b20b"; }elseif($psh3 < 60){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>'],
-                  hoverBackgroundColor: [
-                    '<?php if($psh1 < 24) { echo "#ba0a0a"; }elseif($psh1 < 42){ echo "#d2a208"; }elseif($psh1 < 60){ echo "#15b436"; }else{ echo "#325cd4"; } ?>', 
-                    '<?php if($psh2 < 24) { echo "#ba0a0a"; }elseif($psh2 < 42){ echo "#d2a208"; }elseif($psh2 < 60){ echo "#15b436"; }else{ echo "#325cd4"; } ?>',
-                    '<?php if($psh3 < 24) { echo "#ba0a0a"; }elseif($psh3 < 42){ echo "#d2a208"; }elseif($psh3 < 60){ echo "#15b436"; }else{ echo "#325cd4"; } ?>'],
-                  borderColor: "#5c5f68",
-                  data: [<?php echo $psh1; ?>,<?php echo $psh2; ?>,<?php echo $psh3; ?>]
-                }]
-              },
-              options: {
-                maintainAspectRatio: false,
-                layout: {
-                  padding: {
-                    left: 10,
-                    right: 25,
-                    top: 25,
-                    bottom: 0
-                  }
-                },
-                scales: {
-                  xAxes: [{
-                    time: {
-                      unit: 'month'
-                    },
-                    gridLines: {
-                      display: false,
-                      drawBorder: false
-                    },
-                    ticks: {
-                      maxTicksLimit: 6
-                    },
-                    maxBarThickness: 40
-                  }],
-                  yAxes: [{
-                    ticks: {
-                      min: 0,
-                      max: 100,
-                      maxTicksLimit: 10,
-                      padding: 10,
-                      // Include a dollar sign in the ticks
-                      callback: function(value, index, values) {
-                        return number_format(value) + "%";
+            if(nrrs === 1 && nrrsant > 0){
+                var ctx = document.getElementById("myBarChartSifilis");
+                var myBarChartSifilis = new Chart(ctx, {
+                  type: 'bar',
+                  data: {
+                    labels: [anoant, anoAtual, ""],
+                    datasets: [{
+                      label: "Proporção",
+                      backgroundColor: [
+                        '<?php if($psh1 < 24) { echo "#d10e0e"; }elseif($psh1 < 42){ echo "#e6b20b"; }elseif($psh1 < 60){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>', 
+                        '<?php if($psh2 < 24) { echo "#d10e0e"; }elseif($psh2 < 42){ echo "#e6b20b"; }elseif($psh2 < 60){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>',
+                        '<?php if($psh3 < 24) { echo "#d10e0e"; }elseif($psh3 < 42){ echo "#e6b20b"; }elseif($psh3 < 60){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>'],
+                      hoverBackgroundColor: [
+                        '<?php if($psh1 < 24) { echo "#ba0a0a"; }elseif($psh1 < 42){ echo "#d2a208"; }elseif($psh1 < 60){ echo "#15b436"; }else{ echo "#325cd4"; } ?>', 
+                        '<?php if($psh2 < 24) { echo "#ba0a0a"; }elseif($psh2 < 42){ echo "#d2a208"; }elseif($psh2 < 60){ echo "#15b436"; }else{ echo "#325cd4"; } ?>',
+                        '<?php if($psh3 < 24) { echo "#ba0a0a"; }elseif($psh3 < 42){ echo "#d2a208"; }elseif($psh3 < 60){ echo "#15b436"; }else{ echo "#325cd4"; } ?>'],
+                      borderColor: "#5c5f68",
+                      data: [<?php echo $psh1; ?>,<?php echo $psh2; ?>,<?php echo $psh3; ?>]
+                    }]
+                  },
+                  options: {
+                    maintainAspectRatio: false,
+                    layout: {
+                      padding: {
+                        left: 10,
+                        right: 25,
+                        top: 25,
+                        bottom: 0
                       }
                     },
-                    gridLines: {
-                      color: "rgb(234, 236, 244)",
-                      zeroLineColor: "rgb(234, 236, 244)",
-                      drawBorder: false,
-                      borderDash: [2],
-                      zeroLineBorderDash: [2]
-                    }
-                  }]
-                },
-                legend: {
-                  display: false
-                },
-                tooltips: {
-                  titleMarginBottom: 10,
-                  titleFontColor: '#6e707e',
-                  titleFontSize: 14,
-                  backgroundColor: "rgb(255,255,255)",
-                  bodyFontColor: "#858796",
-                  borderColor: '#dddfeb',
-                  borderWidth: 1,
-                  xPadding: 15,
-                  yPadding: 15,
-                  displayColors: false,
-                  caretPadding: 10,
-                  callbacks: {
-                    label: function(tooltipItem, chart) {
-                      var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-                      return datasetLabel + ': ' + number_format(tooltipItem.yLabel,2,',','.') + "%";
+                    scales: {
+                      xAxes: [{
+                        time: {
+                          unit: 'month'
+                        },
+                        gridLines: {
+                          display: false,
+                          drawBorder: false
+                        },
+                        ticks: {
+                          maxTicksLimit: 6
+                        },
+                        maxBarThickness: 40
+                      }],
+                      yAxes: [{
+                        ticks: {
+                          min: 0,
+                          max: 100,
+                          maxTicksLimit: 10,
+                          padding: 10,
+                          // Include a dollar sign in the ticks
+                          callback: function(value, index, values) {
+                            return number_format(value) + "%";
+                          }
+                        },
+                        gridLines: {
+                          color: "rgb(234, 236, 244)",
+                          zeroLineColor: "rgb(234, 236, 244)",
+                          drawBorder: false,
+                          borderDash: [2],
+                          zeroLineBorderDash: [2]
+                        }
+                      }]
+                    },
+                    legend: {
+                      display: false
+                    },
+                    tooltips: {
+                      titleMarginBottom: 10,
+                      titleFontColor: '#6e707e',
+                      titleFontSize: 14,
+                      backgroundColor: "rgb(255,255,255)",
+                      bodyFontColor: "#858796",
+                      borderColor: '#dddfeb',
+                      borderWidth: 1,
+                      xPadding: 15,
+                      yPadding: 15,
+                      displayColors: false,
+                      caretPadding: 10,
+                      callbacks: {
+                        label: function(tooltipItem, chart) {
+                          var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                          return datasetLabel + ': ' + number_format(tooltipItem.yLabel,2,',','.') + "%";
+                        }
+                      }
                     }
                   }
-                }
-              }
-            });
+                });
+            }else if(nrrs > 1){
+                var ctx = document.getElementById("myBarChartSifilis");
+                var myBarChartSifilis = new Chart(ctx, {
+                  type: 'bar',
+                  data: {
+                    labels: ["1º Quadrim.", "2º Quadrim.", "3º Quadrim."],
+                    datasets: [{
+                      label: "Proporção",
+                      backgroundColor: [
+                        '<?php if($psh1 < 24) { echo "#d10e0e"; }elseif($psh1 < 42){ echo "#e6b20b"; }elseif($psh1 < 60){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>', 
+                        '<?php if($psh2 < 24) { echo "#d10e0e"; }elseif($psh2 < 42){ echo "#e6b20b"; }elseif($psh2 < 60){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>',
+                        '<?php if($psh3 < 24) { echo "#d10e0e"; }elseif($psh3 < 42){ echo "#e6b20b"; }elseif($psh3 < 60){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>'],
+                      hoverBackgroundColor: [
+                        '<?php if($psh1 < 24) { echo "#ba0a0a"; }elseif($psh1 < 42){ echo "#d2a208"; }elseif($psh1 < 60){ echo "#15b436"; }else{ echo "#325cd4"; } ?>', 
+                        '<?php if($psh2 < 24) { echo "#ba0a0a"; }elseif($psh2 < 42){ echo "#d2a208"; }elseif($psh2 < 60){ echo "#15b436"; }else{ echo "#325cd4"; } ?>',
+                        '<?php if($psh3 < 24) { echo "#ba0a0a"; }elseif($psh3 < 42){ echo "#d2a208"; }elseif($psh3 < 60){ echo "#15b436"; }else{ echo "#325cd4"; } ?>'],
+                      borderColor: "#5c5f68",
+                      data: [<?php echo $psh1; ?>,<?php echo $psh2; ?>,<?php echo $psh3; ?>]
+                    }]
+                  },
+                  options: {
+                    maintainAspectRatio: false,
+                    layout: {
+                      padding: {
+                        left: 10,
+                        right: 25,
+                        top: 25,
+                        bottom: 0
+                      }
+                    },
+                    scales: {
+                      xAxes: [{
+                        time: {
+                          unit: 'month'
+                        },
+                        gridLines: {
+                          display: false,
+                          drawBorder: false
+                        },
+                        ticks: {
+                          maxTicksLimit: 6
+                        },
+                        maxBarThickness: 40
+                      }],
+                      yAxes: [{
+                        ticks: {
+                          min: 0,
+                          max: 100,
+                          maxTicksLimit: 10,
+                          padding: 10,
+                          // Include a dollar sign in the ticks
+                          callback: function(value, index, values) {
+                            return number_format(value) + "%";
+                          }
+                        },
+                        gridLines: {
+                          color: "rgb(234, 236, 244)",
+                          zeroLineColor: "rgb(234, 236, 244)",
+                          drawBorder: false,
+                          borderDash: [2],
+                          zeroLineBorderDash: [2]
+                        }
+                      }]
+                    },
+                    legend: {
+                      display: false
+                    },
+                    tooltips: {
+                      titleMarginBottom: 10,
+                      titleFontColor: '#6e707e',
+                      titleFontSize: 14,
+                      backgroundColor: "rgb(255,255,255)",
+                      bodyFontColor: "#858796",
+                      borderColor: '#dddfeb',
+                      borderWidth: 1,
+                      xPadding: 15,
+                      yPadding: 15,
+                      displayColors: false,
+                      caretPadding: 10,
+                      callbacks: {
+                        label: function(tooltipItem, chart) {
+                          var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                          return datasetLabel + ': ' + number_format(tooltipItem.yLabel,2,',','.') + "%";
+                        }
+                      }
+                    }
+                  }
+                });
+            }
             
             // myBarChartCitopatologico
-            var ctx = document.getElementById("myBarChartCitopatologico");
-            var myBarChartCitopatologico = new Chart(ctx, {
-              type: 'bar',
-              data: {
-                labels: ["1º Quadrim.", "2º Quadrim.", "3º Quadrim."],
-                datasets: [{
-                  label: "Proporção",
-                  backgroundColor: [
-                    '<?php if($cc1 < 16) { echo "#d10e0e"; }elseif($cc1 < 28){ echo "#e6b20b"; }elseif($cc1 < 40){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>', 
-                    '<?php if($cc2 < 16) { echo "#d10e0e"; }elseif($cc2 < 28){ echo "#e6b20b"; }elseif($cc2 < 40){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>',
-                    '<?php if($cc3 < 16) { echo "#d10e0e"; }elseif($cc3 < 28){ echo "#e6b20b"; }elseif($cc3 < 40){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>'],
-                  hoverBackgroundColor: [
-                    '<?php if($cc1 < 16) { echo "#ba0a0a"; }elseif($cc1 < 28){ echo "#d2a208"; }elseif($cc1 < 40){ echo "#15b436"; }else{ echo "#325cd4"; } ?>', 
-                    '<?php if($cc2 < 16) { echo "#ba0a0a"; }elseif($cc2 < 28){ echo "#d2a208"; }elseif($cc2 < 40){ echo "#15b436"; }else{ echo "#325cd4"; } ?>',
-                    '<?php if($cc3 < 16) { echo "#ba0a0a"; }elseif($cc3 < 28){ echo "#d2a208"; }elseif($cc3 < 40){ echo "#15b436"; }else{ echo "#325cd4"; } ?>'],
-                  borderColor: "#5c5f68",
-                  data: [<?php echo $cc1; ?>,<?php echo $cc2; ?>,<?php echo $cc3; ?>]
-                }]
-              },
-              options: {
-                maintainAspectRatio: false,
-                layout: {
-                  padding: {
-                    left: 10,
-                    right: 25,
-                    top: 25,
-                    bottom: 0
-                  }
-                },
-                scales: {
-                  xAxes: [{
-                    time: {
-                      unit: 'month'
-                    },
-                    gridLines: {
-                      display: false,
-                      drawBorder: false
-                    },
-                    ticks: {
-                      maxTicksLimit: 6
-                    },
-                    maxBarThickness: 40
-                  }],
-                  yAxes: [{
-                    ticks: {
-                      min: 0,
-                      max: 100,
-                      maxTicksLimit: 10,
-                      padding: 10,
-                      // Include a dollar sign in the ticks
-                      callback: function(value, index, values) {
-                        return number_format(value) + "%";
+            if(nrrs === 1 && nrrsant > 0){
+                var ctx = document.getElementById("myBarChartCitopatologico");
+                var myBarChartCitopatologico = new Chart(ctx, {
+                  type: 'bar',
+                  data: {
+                    labels: [anoant, anoAtual, ""],
+                    datasets: [{
+                      label: "Proporção",
+                      backgroundColor: [
+                        '<?php if($cc1 < 16) { echo "#d10e0e"; }elseif($cc1 < 28){ echo "#e6b20b"; }elseif($cc1 < 40){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>', 
+                        '<?php if($cc2 < 16) { echo "#d10e0e"; }elseif($cc2 < 28){ echo "#e6b20b"; }elseif($cc2 < 40){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>',
+                        '<?php if($cc3 < 16) { echo "#d10e0e"; }elseif($cc3 < 28){ echo "#e6b20b"; }elseif($cc3 < 40){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>'],
+                      hoverBackgroundColor: [
+                        '<?php if($cc1 < 16) { echo "#ba0a0a"; }elseif($cc1 < 28){ echo "#d2a208"; }elseif($cc1 < 40){ echo "#15b436"; }else{ echo "#325cd4"; } ?>', 
+                        '<?php if($cc2 < 16) { echo "#ba0a0a"; }elseif($cc2 < 28){ echo "#d2a208"; }elseif($cc2 < 40){ echo "#15b436"; }else{ echo "#325cd4"; } ?>',
+                        '<?php if($cc3 < 16) { echo "#ba0a0a"; }elseif($cc3 < 28){ echo "#d2a208"; }elseif($cc3 < 40){ echo "#15b436"; }else{ echo "#325cd4"; } ?>'],
+                      borderColor: "#5c5f68",
+                      data: [<?php echo $cc1; ?>,<?php echo $cc2; ?>,<?php echo $cc3; ?>]
+                    }]
+                  },
+                  options: {
+                    maintainAspectRatio: false,
+                    layout: {
+                      padding: {
+                        left: 10,
+                        right: 25,
+                        top: 25,
+                        bottom: 0
                       }
                     },
-                    gridLines: {
-                      color: "rgb(234, 236, 244)",
-                      zeroLineColor: "rgb(234, 236, 244)",
-                      drawBorder: false,
-                      borderDash: [2],
-                      zeroLineBorderDash: [2]
-                    }
-                  }]
-                },
-                legend: {
-                  display: false
-                },
-                tooltips: {
-                  titleMarginBottom: 10,
-                  titleFontColor: '#6e707e',
-                  titleFontSize: 14,
-                  backgroundColor: "rgb(255,255,255)",
-                  bodyFontColor: "#858796",
-                  borderColor: '#dddfeb',
-                  borderWidth: 1,
-                  xPadding: 15,
-                  yPadding: 15,
-                  displayColors: false,
-                  caretPadding: 10,
-                  callbacks: {
-                    label: function(tooltipItem, chart) {
-                      var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-                      return datasetLabel + ': ' + number_format(tooltipItem.yLabel,2,',','.') + "%";
+                    scales: {
+                      xAxes: [{
+                        time: {
+                          unit: 'month'
+                        },
+                        gridLines: {
+                          display: false,
+                          drawBorder: false
+                        },
+                        ticks: {
+                          maxTicksLimit: 6
+                        },
+                        maxBarThickness: 40
+                      }],
+                      yAxes: [{
+                        ticks: {
+                          min: 0,
+                          max: 100,
+                          maxTicksLimit: 10,
+                          padding: 10,
+                          // Include a dollar sign in the ticks
+                          callback: function(value, index, values) {
+                            return number_format(value) + "%";
+                          }
+                        },
+                        gridLines: {
+                          color: "rgb(234, 236, 244)",
+                          zeroLineColor: "rgb(234, 236, 244)",
+                          drawBorder: false,
+                          borderDash: [2],
+                          zeroLineBorderDash: [2]
+                        }
+                      }]
+                    },
+                    legend: {
+                      display: false
+                    },
+                    tooltips: {
+                      titleMarginBottom: 10,
+                      titleFontColor: '#6e707e',
+                      titleFontSize: 14,
+                      backgroundColor: "rgb(255,255,255)",
+                      bodyFontColor: "#858796",
+                      borderColor: '#dddfeb',
+                      borderWidth: 1,
+                      xPadding: 15,
+                      yPadding: 15,
+                      displayColors: false,
+                      caretPadding: 10,
+                      callbacks: {
+                        label: function(tooltipItem, chart) {
+                          var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                          return datasetLabel + ': ' + number_format(tooltipItem.yLabel,2,',','.') + "%";
+                        }
+                      }
                     }
                   }
-                }
-              }
-            });
+                });
+            }else if(nrrs > 1){
+                var ctx = document.getElementById("myBarChartCitopatologico");
+                var myBarChartCitopatologico = new Chart(ctx, {
+                  type: 'bar',
+                  data: {
+                    labels: ["1º Quadrim.", "2º Quadrim.", "3º Quadrim."],
+                    datasets: [{
+                      label: "Proporção",
+                      backgroundColor: [
+                        '<?php if($cc1 < 16) { echo "#d10e0e"; }elseif($cc1 < 28){ echo "#e6b20b"; }elseif($cc1 < 40){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>', 
+                        '<?php if($cc2 < 16) { echo "#d10e0e"; }elseif($cc2 < 28){ echo "#e6b20b"; }elseif($cc2 < 40){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>',
+                        '<?php if($cc3 < 16) { echo "#d10e0e"; }elseif($cc3 < 28){ echo "#e6b20b"; }elseif($cc3 < 40){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>'],
+                      hoverBackgroundColor: [
+                        '<?php if($cc1 < 16) { echo "#ba0a0a"; }elseif($cc1 < 28){ echo "#d2a208"; }elseif($cc1 < 40){ echo "#15b436"; }else{ echo "#325cd4"; } ?>', 
+                        '<?php if($cc2 < 16) { echo "#ba0a0a"; }elseif($cc2 < 28){ echo "#d2a208"; }elseif($cc2 < 40){ echo "#15b436"; }else{ echo "#325cd4"; } ?>',
+                        '<?php if($cc3 < 16) { echo "#ba0a0a"; }elseif($cc3 < 28){ echo "#d2a208"; }elseif($cc3 < 40){ echo "#15b436"; }else{ echo "#325cd4"; } ?>'],
+                      borderColor: "#5c5f68",
+                      data: [<?php echo $cc1; ?>,<?php echo $cc2; ?>,<?php echo $cc3; ?>]
+                    }]
+                  },
+                  options: {
+                    maintainAspectRatio: false,
+                    layout: {
+                      padding: {
+                        left: 10,
+                        right: 25,
+                        top: 25,
+                        bottom: 0
+                      }
+                    },
+                    scales: {
+                      xAxes: [{
+                        time: {
+                          unit: 'month'
+                        },
+                        gridLines: {
+                          display: false,
+                          drawBorder: false
+                        },
+                        ticks: {
+                          maxTicksLimit: 6
+                        },
+                        maxBarThickness: 40
+                      }],
+                      yAxes: [{
+                        ticks: {
+                          min: 0,
+                          max: 100,
+                          maxTicksLimit: 10,
+                          padding: 10,
+                          // Include a dollar sign in the ticks
+                          callback: function(value, index, values) {
+                            return number_format(value) + "%";
+                          }
+                        },
+                        gridLines: {
+                          color: "rgb(234, 236, 244)",
+                          zeroLineColor: "rgb(234, 236, 244)",
+                          drawBorder: false,
+                          borderDash: [2],
+                          zeroLineBorderDash: [2]
+                        }
+                      }]
+                    },
+                    legend: {
+                      display: false
+                    },
+                    tooltips: {
+                      titleMarginBottom: 10,
+                      titleFontColor: '#6e707e',
+                      titleFontSize: 14,
+                      backgroundColor: "rgb(255,255,255)",
+                      bodyFontColor: "#858796",
+                      borderColor: '#dddfeb',
+                      borderWidth: 1,
+                      xPadding: 15,
+                      yPadding: 15,
+                      displayColors: false,
+                      caretPadding: 10,
+                      callbacks: {
+                        label: function(tooltipItem, chart) {
+                          var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                          return datasetLabel + ': ' + number_format(tooltipItem.yLabel,2,',','.') + "%";
+                        }
+                      }
+                    }
+                  }
+                });
+            }
             
             // myBarChartHipertensao
-            var ctx = document.getElementById("myBarChartHipertensao");
-            var myBarChartHipertensao = new Chart(ctx, {
-              type: 'bar',
-              data: {
-                labels: ["1º Quadrim.", "2º Quadrim.", "3º Quadrim."],
-                datasets: [{
-                  label: "Proporção",
-                  backgroundColor: [
-                    '<?php if($hi1 < 20) { echo "#d10e0e"; }elseif($hi1 < 35){ echo "#e6b20b"; }elseif($hi1 < 50){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>', 
-                    '<?php if($hi2 < 20) { echo "#d10e0e"; }elseif($hi2 < 35){ echo "#e6b20b"; }elseif($hi2 < 50){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>',
-                    '<?php if($hi3 < 20) { echo "#d10e0e"; }elseif($hi3 < 35){ echo "#e6b20b"; }elseif($hi3 < 50){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>'],
-                  hoverBackgroundColor: [
-                    '<?php if($hi1 < 20) { echo "#ba0a0a"; }elseif($hi1 < 35){ echo "#d2a208"; }elseif($hi1 < 50){ echo "#15b436"; }else{ echo "#325cd4"; } ?>', 
-                    '<?php if($hi2 < 20) { echo "#ba0a0a"; }elseif($hi2 < 35){ echo "#d2a208"; }elseif($hi2 < 50){ echo "#15b436"; }else{ echo "#325cd4"; } ?>',
-                    '<?php if($hi3 < 20) { echo "#ba0a0a"; }elseif($hi3 < 35){ echo "#d2a208"; }elseif($hi3 < 50){ echo "#15b436"; }else{ echo "#325cd4"; } ?>'],
-                  borderColor: "#5c5f68",
-                  data: [<?php echo $hi1; ?>,<?php echo $hi2; ?>,<?php echo $hi3; ?>]
-                }]
-              },
-              options: {
-                maintainAspectRatio: false,
-                layout: {
-                  padding: {
-                    left: 10,
-                    right: 25,
-                    top: 25,
-                    bottom: 0
-                  }
-                },
-                scales: {
-                  xAxes: [{
-                    time: {
-                      unit: 'month'
-                    },
-                    gridLines: {
-                      display: false,
-                      drawBorder: false
-                    },
-                    ticks: {
-                      maxTicksLimit: 6
-                    },
-                    maxBarThickness: 40
-                  }],
-                  yAxes: [{
-                    ticks: {
-                      min: 0,
-                      max: 100,
-                      maxTicksLimit: 10,
-                      padding: 10,
-                      // Include a dollar sign in the ticks
-                      callback: function(value, index, values) {
-                        return number_format(value) + "%";
+            if(nrrs === 1 && nrrsant > 0){
+                var ctx = document.getElementById("myBarChartHipertensao");
+                var myBarChartHipertensao = new Chart(ctx, {
+                  type: 'bar',
+                  data: {
+                    labels: [anoant, anoAtual, ""],
+                    datasets: [{
+                      label: "Proporção",
+                      backgroundColor: [
+                        '<?php if($hi1 < 20) { echo "#d10e0e"; }elseif($hi1 < 35){ echo "#e6b20b"; }elseif($hi1 < 50){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>', 
+                        '<?php if($hi2 < 20) { echo "#d10e0e"; }elseif($hi2 < 35){ echo "#e6b20b"; }elseif($hi2 < 50){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>',
+                        '<?php if($hi3 < 20) { echo "#d10e0e"; }elseif($hi3 < 35){ echo "#e6b20b"; }elseif($hi3 < 50){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>'],
+                      hoverBackgroundColor: [
+                        '<?php if($hi1 < 20) { echo "#ba0a0a"; }elseif($hi1 < 35){ echo "#d2a208"; }elseif($hi1 < 50){ echo "#15b436"; }else{ echo "#325cd4"; } ?>', 
+                        '<?php if($hi2 < 20) { echo "#ba0a0a"; }elseif($hi2 < 35){ echo "#d2a208"; }elseif($hi2 < 50){ echo "#15b436"; }else{ echo "#325cd4"; } ?>',
+                        '<?php if($hi3 < 20) { echo "#ba0a0a"; }elseif($hi3 < 35){ echo "#d2a208"; }elseif($hi3 < 50){ echo "#15b436"; }else{ echo "#325cd4"; } ?>'],
+                      borderColor: "#5c5f68",
+                      data: [<?php echo $hi1; ?>,<?php echo $hi2; ?>,<?php echo $hi3; ?>]
+                    }]
+                  },
+                  options: {
+                    maintainAspectRatio: false,
+                    layout: {
+                      padding: {
+                        left: 10,
+                        right: 25,
+                        top: 25,
+                        bottom: 0
                       }
                     },
-                    gridLines: {
-                      color: "rgb(234, 236, 244)",
-                      zeroLineColor: "rgb(234, 236, 244)",
-                      drawBorder: false,
-                      borderDash: [2],
-                      zeroLineBorderDash: [2]
-                    }
-                  }]
-                },
-                legend: {
-                  display: false
-                },
-                tooltips: {
-                  titleMarginBottom: 10,
-                  titleFontColor: '#6e707e',
-                  titleFontSize: 14,
-                  backgroundColor: "rgb(255,255,255)",
-                  bodyFontColor: "#858796",
-                  borderColor: '#dddfeb',
-                  borderWidth: 1,
-                  xPadding: 15,
-                  yPadding: 15,
-                  displayColors: false,
-                  caretPadding: 10,
-                  callbacks: {
-                    label: function(tooltipItem, chart) {
-                      var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-                      return datasetLabel + ': ' + number_format(tooltipItem.yLabel,2,',','.') + "%";
+                    scales: {
+                      xAxes: [{
+                        time: {
+                          unit: 'month'
+                        },
+                        gridLines: {
+                          display: false,
+                          drawBorder: false
+                        },
+                        ticks: {
+                          maxTicksLimit: 6
+                        },
+                        maxBarThickness: 40
+                      }],
+                      yAxes: [{
+                        ticks: {
+                          min: 0,
+                          max: 100,
+                          maxTicksLimit: 10,
+                          padding: 10,
+                          // Include a dollar sign in the ticks
+                          callback: function(value, index, values) {
+                            return number_format(value) + "%";
+                          }
+                        },
+                        gridLines: {
+                          color: "rgb(234, 236, 244)",
+                          zeroLineColor: "rgb(234, 236, 244)",
+                          drawBorder: false,
+                          borderDash: [2],
+                          zeroLineBorderDash: [2]
+                        }
+                      }]
+                    },
+                    legend: {
+                      display: false
+                    },
+                    tooltips: {
+                      titleMarginBottom: 10,
+                      titleFontColor: '#6e707e',
+                      titleFontSize: 14,
+                      backgroundColor: "rgb(255,255,255)",
+                      bodyFontColor: "#858796",
+                      borderColor: '#dddfeb',
+                      borderWidth: 1,
+                      xPadding: 15,
+                      yPadding: 15,
+                      displayColors: false,
+                      caretPadding: 10,
+                      callbacks: {
+                        label: function(tooltipItem, chart) {
+                          var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                          return datasetLabel + ': ' + number_format(tooltipItem.yLabel,2,',','.') + "%";
+                        }
+                      }
                     }
                   }
-                }
-              }
-            });
+                });
+                }else if(nrrs > 1){
+                var ctx = document.getElementById("myBarChartHipertensao");
+                var myBarChartHipertensao = new Chart(ctx, {
+                  type: 'bar',
+                  data: {
+                    labels: ["1º Quadrim.", "2º Quadrim.", "3º Quadrim."],
+                    datasets: [{
+                      label: "Proporção",
+                      backgroundColor: [
+                        '<?php if($hi1 < 20) { echo "#d10e0e"; }elseif($hi1 < 35){ echo "#e6b20b"; }elseif($hi1 < 50){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>', 
+                        '<?php if($hi2 < 20) { echo "#d10e0e"; }elseif($hi2 < 35){ echo "#e6b20b"; }elseif($hi2 < 50){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>',
+                        '<?php if($hi3 < 20) { echo "#d10e0e"; }elseif($hi3 < 35){ echo "#e6b20b"; }elseif($hi3 < 50){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>'],
+                      hoverBackgroundColor: [
+                        '<?php if($hi1 < 20) { echo "#ba0a0a"; }elseif($hi1 < 35){ echo "#d2a208"; }elseif($hi1 < 50){ echo "#15b436"; }else{ echo "#325cd4"; } ?>', 
+                        '<?php if($hi2 < 20) { echo "#ba0a0a"; }elseif($hi2 < 35){ echo "#d2a208"; }elseif($hi2 < 50){ echo "#15b436"; }else{ echo "#325cd4"; } ?>',
+                        '<?php if($hi3 < 20) { echo "#ba0a0a"; }elseif($hi3 < 35){ echo "#d2a208"; }elseif($hi3 < 50){ echo "#15b436"; }else{ echo "#325cd4"; } ?>'],
+                      borderColor: "#5c5f68",
+                      data: [<?php echo $hi1; ?>,<?php echo $hi2; ?>,<?php echo $hi3; ?>]
+                    }]
+                  },
+                  options: {
+                    maintainAspectRatio: false,
+                    layout: {
+                      padding: {
+                        left: 10,
+                        right: 25,
+                        top: 25,
+                        bottom: 0
+                      }
+                    },
+                    scales: {
+                      xAxes: [{
+                        time: {
+                          unit: 'month'
+                        },
+                        gridLines: {
+                          display: false,
+                          drawBorder: false
+                        },
+                        ticks: {
+                          maxTicksLimit: 6
+                        },
+                        maxBarThickness: 40
+                      }],
+                      yAxes: [{
+                        ticks: {
+                          min: 0,
+                          max: 100,
+                          maxTicksLimit: 10,
+                          padding: 10,
+                          // Include a dollar sign in the ticks
+                          callback: function(value, index, values) {
+                            return number_format(value) + "%";
+                          }
+                        },
+                        gridLines: {
+                          color: "rgb(234, 236, 244)",
+                          zeroLineColor: "rgb(234, 236, 244)",
+                          drawBorder: false,
+                          borderDash: [2],
+                          zeroLineBorderDash: [2]
+                        }
+                      }]
+                    },
+                    legend: {
+                      display: false
+                    },
+                    tooltips: {
+                      titleMarginBottom: 10,
+                      titleFontColor: '#6e707e',
+                      titleFontSize: 14,
+                      backgroundColor: "rgb(255,255,255)",
+                      bodyFontColor: "#858796",
+                      borderColor: '#dddfeb',
+                      borderWidth: 1,
+                      xPadding: 15,
+                      yPadding: 15,
+                      displayColors: false,
+                      caretPadding: 10,
+                      callbacks: {
+                        label: function(tooltipItem, chart) {
+                          var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                          return datasetLabel + ': ' + number_format(tooltipItem.yLabel,2,',','.') + "%";
+                        }
+                      }
+                    }
+                  }
+                });
+            }
             
             // myBarChartDiabetes
-            var ctx = document.getElementById("myBarChartDiabetes");
-            var myBarChartDiabetes = new Chart(ctx, {
-              type: 'bar',
-              data: {
-                labels: ["1º Quadrim.", "2º Quadrim.", "3º Quadrim."],
-                datasets: [{
-                  label: "Proporção",
-                  backgroundColor: [
-                    '<?php if($diab1 < 20) { echo "#d10e0e"; }elseif($diab1 < 35){ echo "#e6b20b"; }elseif($diab1 < 50){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>', 
-                    '<?php if($diab2 < 20) { echo "#d10e0e"; }elseif($diab2 < 35){ echo "#e6b20b"; }elseif($diab2 < 50){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>',
-                    '<?php if($diab3 < 20) { echo "#d10e0e"; }elseif($diab3 < 35){ echo "#e6b20b"; }elseif($diab3 < 50){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>'],
-                  hoverBackgroundColor: [
-                    '<?php if($diab1 < 20) { echo "#ba0a0a"; }elseif($diab1 < 35){ echo "#d2a208"; }elseif($diab1 < 50){ echo "#15b436"; }else{ echo "#325cd4"; } ?>', 
-                    '<?php if($diab2 < 20) { echo "#ba0a0a"; }elseif($diab2 < 35){ echo "#d2a208"; }elseif($diab2 < 50){ echo "#15b436"; }else{ echo "#325cd4"; } ?>',
-                    '<?php if($diab3 < 20) { echo "#ba0a0a"; }elseif($diab3 < 35){ echo "#d2a208"; }elseif($diab3 < 50){ echo "#15b436"; }else{ echo "#325cd4"; } ?>'],
-                  borderColor: "#5c5f68",
-                  data: [<?php echo $diab1; ?>,<?php echo $diab2; ?>,<?php echo $diab3; ?>]
-                }]
-              },
-              options: {
-                maintainAspectRatio: false,
-                layout: {
-                  padding: {
-                    left: 10,
-                    right: 25,
-                    top: 25,
-                    bottom: 0
-                  }
-                },
-                scales: {
-                  xAxes: [{
-                    time: {
-                      unit: 'month'
-                    },
-                    gridLines: {
-                      display: false,
-                      drawBorder: false
-                    },
-                    ticks: {
-                      maxTicksLimit: 6
-                    },
-                    maxBarThickness: 40
-                  }],
-                  yAxes: [{
-                    ticks: {
-                      min: 0,
-                      max: 100,
-                      maxTicksLimit: 10,
-                      padding: 10,
-                      // Include a dollar sign in the ticks
-                      callback: function(value, index, values) {
-                        return number_format(value) + "%";
+            if(nrrs === 1 && nrrsant > 0){
+                var ctx = document.getElementById("myBarChartDiabetes");
+                var myBarChartDiabetes = new Chart(ctx, {
+                  type: 'bar',
+                  data: {
+                    labels: [anoant, anoAtual, ""],
+                    datasets: [{
+                      label: "Proporção",
+                      backgroundColor: [
+                        '<?php if($diab1 < 20) { echo "#d10e0e"; }elseif($diab1 < 35){ echo "#e6b20b"; }elseif($diab1 < 50){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>', 
+                        '<?php if($diab2 < 20) { echo "#d10e0e"; }elseif($diab2 < 35){ echo "#e6b20b"; }elseif($diab2 < 50){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>',
+                        '<?php if($diab3 < 20) { echo "#d10e0e"; }elseif($diab3 < 35){ echo "#e6b20b"; }elseif($diab3 < 50){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>'],
+                      hoverBackgroundColor: [
+                        '<?php if($diab1 < 20) { echo "#ba0a0a"; }elseif($diab1 < 35){ echo "#d2a208"; }elseif($diab1 < 50){ echo "#15b436"; }else{ echo "#325cd4"; } ?>', 
+                        '<?php if($diab2 < 20) { echo "#ba0a0a"; }elseif($diab2 < 35){ echo "#d2a208"; }elseif($diab2 < 50){ echo "#15b436"; }else{ echo "#325cd4"; } ?>',
+                        '<?php if($diab3 < 20) { echo "#ba0a0a"; }elseif($diab3 < 35){ echo "#d2a208"; }elseif($diab3 < 50){ echo "#15b436"; }else{ echo "#325cd4"; } ?>'],
+                      borderColor: "#5c5f68",
+                      data: [<?php echo $diab1; ?>,<?php echo $diab2; ?>,<?php echo $diab3; ?>]
+                    }]
+                  },
+                  options: {
+                    maintainAspectRatio: false,
+                    layout: {
+                      padding: {
+                        left: 10,
+                        right: 25,
+                        top: 25,
+                        bottom: 0
                       }
                     },
-                    gridLines: {
-                      color: "rgb(234, 236, 244)",
-                      zeroLineColor: "rgb(234, 236, 244)",
-                      drawBorder: false,
-                      borderDash: [2],
-                      zeroLineBorderDash: [2]
-                    }
-                  }]
-                },
-                legend: {
-                  display: false
-                },
-                tooltips: {
-                  titleMarginBottom: 10,
-                  titleFontColor: '#6e707e',
-                  titleFontSize: 14,
-                  backgroundColor: "rgb(255,255,255)",
-                  bodyFontColor: "#858796",
-                  borderColor: '#dddfeb',
-                  borderWidth: 1,
-                  xPadding: 15,
-                  yPadding: 15,
-                  displayColors: false,
-                  caretPadding: 10,
-                  callbacks: {
-                    label: function(tooltipItem, chart) {
-                      var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-                      return datasetLabel + ': ' + number_format(tooltipItem.yLabel,2,',','.') + "%";
+                    scales: {
+                      xAxes: [{
+                        time: {
+                          unit: 'month'
+                        },
+                        gridLines: {
+                          display: false,
+                          drawBorder: false
+                        },
+                        ticks: {
+                          maxTicksLimit: 6
+                        },
+                        maxBarThickness: 40
+                      }],
+                      yAxes: [{
+                        ticks: {
+                          min: 0,
+                          max: 100,
+                          maxTicksLimit: 10,
+                          padding: 10,
+                          // Include a dollar sign in the ticks
+                          callback: function(value, index, values) {
+                            return number_format(value) + "%";
+                          }
+                        },
+                        gridLines: {
+                          color: "rgb(234, 236, 244)",
+                          zeroLineColor: "rgb(234, 236, 244)",
+                          drawBorder: false,
+                          borderDash: [2],
+                          zeroLineBorderDash: [2]
+                        }
+                      }]
+                    },
+                    legend: {
+                      display: false
+                    },
+                    tooltips: {
+                      titleMarginBottom: 10,
+                      titleFontColor: '#6e707e',
+                      titleFontSize: 14,
+                      backgroundColor: "rgb(255,255,255)",
+                      bodyFontColor: "#858796",
+                      borderColor: '#dddfeb',
+                      borderWidth: 1,
+                      xPadding: 15,
+                      yPadding: 15,
+                      displayColors: false,
+                      caretPadding: 10,
+                      callbacks: {
+                        label: function(tooltipItem, chart) {
+                          var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                          return datasetLabel + ': ' + number_format(tooltipItem.yLabel,2,',','.') + "%";
+                        }
+                      }
                     }
                   }
-                }
-              }
-            });
+                });
+            }else if(nrrs > 1){
+                var ctx = document.getElementById("myBarChartDiabetes");
+                var myBarChartDiabetes = new Chart(ctx, {
+                  type: 'bar',
+                  data: {
+                    labels: ["1º Quadrim.", "2º Quadrim.", "3º Quadrim."],
+                    datasets: [{
+                      label: "Proporção",
+                      backgroundColor: [
+                        '<?php if($diab1 < 20) { echo "#d10e0e"; }elseif($diab1 < 35){ echo "#e6b20b"; }elseif($diab1 < 50){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>', 
+                        '<?php if($diab2 < 20) { echo "#d10e0e"; }elseif($diab2 < 35){ echo "#e6b20b"; }elseif($diab2 < 50){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>',
+                        '<?php if($diab3 < 20) { echo "#d10e0e"; }elseif($diab3 < 35){ echo "#e6b20b"; }elseif($diab3 < 50){ echo "#35cf55"; }else{ echo "#5479e4"; } ?>'],
+                      hoverBackgroundColor: [
+                        '<?php if($diab1 < 20) { echo "#ba0a0a"; }elseif($diab1 < 35){ echo "#d2a208"; }elseif($diab1 < 50){ echo "#15b436"; }else{ echo "#325cd4"; } ?>', 
+                        '<?php if($diab2 < 20) { echo "#ba0a0a"; }elseif($diab2 < 35){ echo "#d2a208"; }elseif($diab2 < 50){ echo "#15b436"; }else{ echo "#325cd4"; } ?>',
+                        '<?php if($diab3 < 20) { echo "#ba0a0a"; }elseif($diab3 < 35){ echo "#d2a208"; }elseif($diab3 < 50){ echo "#15b436"; }else{ echo "#325cd4"; } ?>'],
+                      borderColor: "#5c5f68",
+                      data: [<?php echo $diab1; ?>,<?php echo $diab2; ?>,<?php echo $diab3; ?>]
+                    }]
+                  },
+                  options: {
+                    maintainAspectRatio: false,
+                    layout: {
+                      padding: {
+                        left: 10,
+                        right: 25,
+                        top: 25,
+                        bottom: 0
+                      }
+                    },
+                    scales: {
+                      xAxes: [{
+                        time: {
+                          unit: 'month'
+                        },
+                        gridLines: {
+                          display: false,
+                          drawBorder: false
+                        },
+                        ticks: {
+                          maxTicksLimit: 6
+                        },
+                        maxBarThickness: 40
+                      }],
+                      yAxes: [{
+                        ticks: {
+                          min: 0,
+                          max: 100,
+                          maxTicksLimit: 10,
+                          padding: 10,
+                          // Include a dollar sign in the ticks
+                          callback: function(value, index, values) {
+                            return number_format(value) + "%";
+                          }
+                        },
+                        gridLines: {
+                          color: "rgb(234, 236, 244)",
+                          zeroLineColor: "rgb(234, 236, 244)",
+                          drawBorder: false,
+                          borderDash: [2],
+                          zeroLineBorderDash: [2]
+                        }
+                      }]
+                    },
+                    legend: {
+                      display: false
+                    },
+                    tooltips: {
+                      titleMarginBottom: 10,
+                      titleFontColor: '#6e707e',
+                      titleFontSize: 14,
+                      backgroundColor: "rgb(255,255,255)",
+                      bodyFontColor: "#858796",
+                      borderColor: '#dddfeb',
+                      borderWidth: 1,
+                      xPadding: 15,
+                      yPadding: 15,
+                      displayColors: false,
+                      caretPadding: 10,
+                      callbacks: {
+                        label: function(tooltipItem, chart) {
+                          var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                          return datasetLabel + ': ' + number_format(tooltipItem.yLabel,2,',','.') + "%";
+                        }
+                      }
+                    }
+                  }
+                });
+            }
         </script>
         <script>
             $(".btn_sub").click(function () {

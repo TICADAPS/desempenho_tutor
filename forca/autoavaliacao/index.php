@@ -44,8 +44,8 @@ $ano = 2024;
 $ciclo = 3;
 $ctap = 0;
 $sql = "select distinct m.nome, m.admissao, m.cargo, m.tipologia, m.uf, m.municipio, m.datacadastro, m.cpf, m.ibge, m.cnes,
- m.ine, ivs.descricao as ivs from medico m left join ivs on m.fkivs = ivs.idivs inner join aperfeicoamentoprofissional a on 
-m.cpf = a.cpf and m.ibge = a.ibge and m.cnes = a.cnes and m.ine = a.ine where a.ano = '$ano' and a.ciclo = '$ciclo' order by m.nome";
+ m.ine, ivs.descricao as ivs from medico m left join ivs on m.fkivs = ivs.idivs inner join competencias_profissionais cp on 
+m.cpf = cp.cpf and m.ibge = cp.ibge and m.cnes = cp.cnes and m.ine = cp.ine where cp.ano = '$ano' and cp.ciclo = '$ciclo' order by m.nome";
 $query = mysqli_query($conn, $sql);
 $nrrs = mysqli_num_rows($query);
 $rs = mysqli_fetch_array($query);
@@ -59,7 +59,7 @@ $contt = 0;
 <!DOCTYPE html>
 <html lang="pt-br">
     <head>
-        <title>AGSUS - Aperfeiçoamento Profissional</title>
+        <title>AGSUS - Competências Profissionais</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=no">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -186,7 +186,7 @@ $contt = 0;
                     <img src="../../img_agsus/Logo_400x200.png" class="img-fluid" alt="logoAdaps" width="250" title="Logo Adaps">
                 </div>
                 <div class="col-12 col-md-9 mt-5 ">
-                    <h4 class="mb-4 font-weight-bold text-center">Unidade de Serviços em Saúde &nbsp;|&nbsp; Aperfeiçoamento Profissional</h4>
+                    <h4 class="mb-4 font-weight-bold text-center">Unidade de Serviços em Saúde &nbsp;|&nbsp; Competências Profissionais</h4>
                     <h5 class="mb-4 text-primary text-center">Ano: <?= $ano ?> &nbsp;-&nbsp; <?= $ciclo ?>º Ciclo</h5>
                 </div>
             </div>
@@ -212,7 +212,7 @@ $contt = 0;
                                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">Relatórios</a>
                                     <div class="dropdown-menu">
                                         <?php if($perfil === '3' && $nivel === '1'){ ?>
-                                        <!--<a class="dropdown-item" href="../relatorios/relatorio_geral_igad.php">Relatório Geral IGAD - 1º ciclo de 2024</a>-->
+                                        <a class="dropdown-item" href="relatorios/relatorioGeral.php">Relatório Geral IGAD - 1º ciclo de 2024</a>
                                         <?php } ?>
                                     </div>
                                 </li>
@@ -251,7 +251,7 @@ $contt = 0;
                     <div class="row p-3">
                         <div class="col-md-12 mt-2">
                             <fieldset class="form-group border pr-2 pl-2">
-                                    <legend class="w-auto pr-2 pl-2"><h5>Aperfeiçoamento Profissional - Tutores</h5></legend>
+                                    <legend class="w-auto pr-2 pl-2"><h5>Competências Profissionais - Tutores</h5></legend>
                                 <div class="mb-3 table-responsive text-nowrap table-overflow2">
                                     <table id="dtBasicExample" class="table table-hover table-bordered table-striped rounded">
                                         <thead class="bg-gradient-dark text-white">
@@ -270,7 +270,7 @@ $contt = 0;
                                                 <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">INE</td>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody id="tbcp">
                                             <?php
                                             if ($rscpf === true) {
                                                 if ($nrrs > 0) {

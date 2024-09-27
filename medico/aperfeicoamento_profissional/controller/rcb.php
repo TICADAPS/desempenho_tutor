@@ -23,11 +23,9 @@ $rdInov = $_POST['rdInov'];
 //var_dump($cpf,$ibgeO,$cnes,$ine,$ano,$ciclo);
 
 //barreira para não permitir mais de um cadastro por ciclo
-$sqlALD = "select * from aperfeicoamentoprofissional where cpf='$cpf' and ibge='$ibgeO' and cnes='$cnes' and ine='$ine' and ano='$ano' and ciclo='$ciclo'";
-$qALD = mysqli_query($conn, $sqlALD) or die(mysqli_error($conn));
-$nrALD = mysqli_num_rows($qALD);
+$aperfprof = (new \Source\Models\Aperfeicoamentoprofissional())->findCpfIbgeCnesIne($cpf, $ibgeO, $cnes, $ine, $ano, $ciclo);
 //var_dump($nrALD);
-if($nrALD === 0){
+if($aperfprof !== null){
     //validação dos campos obrigatórios
     if(!isset($_POST['rdativ']) || $_POST['rdativ'] === ''){
         $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;Marque a assertiva no item Atividade de Longa Duração.</strong></small></p>";
@@ -365,9 +363,19 @@ if($nrALD === 0){
             exit();
         }
     }
-    $aperfprof = new \Source\Models\Aperfeicoamentoprofissional();
-    $aperfprof->bootstrap($cpf, $ibgeO, $cnes, $ine, $ano, $ciclo, $dthrcadastro, $rdativ);
-    $rsaperfprof = $aperfprof->save();
+    $idaperfprof = null;
+    foreach ($aperfprof as $ap){
+        $idaperfprof = $ap->idap;
+        
+    }
+    if($idaperfprof !== null){
+        $ap2 = (new Source\Models\Aperfeicoamentoprofissional())->findById($idaperfprof);
+        if($ap2 !== null){
+            $ap2->dthrcadastro = $dthrcadastro;
+            $ap2->flagativlongduracao = $rdativ;
+            $rsaperfprof = $ap2->save();
+        }
+    }
 //    var_dump($rsaperfprof);
     if($rsaperfprof === null){
         $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;Erro no gravação dos dados 1.</strong></small></p>";
@@ -375,7 +383,6 @@ if($nrALD === 0){
                     URL=\"../index.php\"'>";
         exit();
     }
-    $idaperfprof = $rsaperfprof->id;
 //    var_dump($idaperfprof);
     if($rdQual === '1'){
         for($x = 0; $x < $ctQCli; $x++){

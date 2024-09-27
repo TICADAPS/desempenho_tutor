@@ -8,13 +8,13 @@ use Source\Core\Model;
  * Class UserModel
  * @package Source\Models
  */
-class Aperfeicoamentoprofissional extends Model {
+class Competencias_profissionais extends Model {
 
     /** @var array $safe no update or create */
     protected static $safe = ["id", "created_at", "updated_at"];
 
     /** @var string $entity database table */
-    protected static $entity = "aperfeicoamentoprofissional";
+    protected static $entity = "competencias_profissionais";
 
     /** @var array $required table fileds */
     protected static $required = [
@@ -33,7 +33,7 @@ class Aperfeicoamentoprofissional extends Model {
             string $ine,
             string $ano,
             string $ciclo
-    ): ?Aperfeicoamentoprofissional {
+    ): ?Competencias_profissionais {
         $this->cpf = $cpf;
         $this->ibge = $ibge;
         $this->cnes = $cnes;
@@ -44,10 +44,10 @@ class Aperfeicoamentoprofissional extends Model {
         return $this;
     }
 
-    public function load(int $id, string $columns = "*"): ?Aperfeicoamentoprofissional {
+    public function load(int $id, string $columns = "*"): ?Competencias_profissionais {
         $load = $this->read("SELECT {$columns} FROM " . self::$entity . " WHERE id = :id", "id={$id}");
         if ($this->fail() || !$load->rowCount()) {
-            $this->message = "Aperfeicoamentoprofissional não encontrado para o id informado";
+            $this->message = "Competencias_profissionais não encontrado para o id informado";
             return null;
         }
         return $load->fetchObject(__CLASS__);
@@ -59,7 +59,7 @@ class Aperfeicoamentoprofissional extends Model {
      * @param string $columns
      * @return null|User
      */
-    public function find(string $terms, string $params, string $columns = "*"): ?Aperfeicoamentoprofissional {
+    public function find(string $terms, string $params, string $columns = "*"): ?Competencias_profissionais {
         $find = $this->read("SELECT {$columns} FROM " . self::$entity . " WHERE {$terms}", $params);
         if ($this->fail() || !$find->rowCount()) {
             return null;
@@ -80,7 +80,7 @@ class Aperfeicoamentoprofissional extends Model {
      * @param string $columns
      * @return null|User
      */
-    public function findById(int $id, string $columns = "*"): ?Aperfeicoamentoprofissional {
+    public function findById(int $id, string $columns = "*"): ?Competencias_profissionais {
         return $this->find("id = :id", "id={$id}", $columns);
     }
     
@@ -95,7 +95,7 @@ class Aperfeicoamentoprofissional extends Model {
     }
 
      /** Save debito */
-    public function save(): ?Aperfeicoamentoprofissional {
+    public function save(): ?Competencias_profissionais {
         if (empty($this->id)) {
             $id = $this->create(self::$entity, $this->safe());
             if ($this->fail()) {
@@ -121,7 +121,7 @@ class Aperfeicoamentoprofissional extends Model {
     /**
      * @return null|User
      */
-//    public function destroy(): ?Aperfeicoamentoprofissional {
+//    public function destroy(): ?Competencias_profissionais {
 //        if (!empty($this->id)) {
 //            $id = $this->id;
 //            $id = (int)$id;            
@@ -133,7 +133,7 @@ class Aperfeicoamentoprofissional extends Model {
 //            return null;
 //        }
 //
-//        $this->message = "Aperfeicoamentoprofissional removido com sucesso";
+//        $this->message = "Competencias_profissionais removido com sucesso";
 //        $this->data = null;
 //        return $this;
 //    }

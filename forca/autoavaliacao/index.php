@@ -43,18 +43,18 @@ date_default_timezone_set('America/Sao_Paulo');
 $ano = 2024;
 $ciclo = 3;
 $ctap = 0;
-$sql = "select distinct m.nome, m.admissao, m.cargo, m.tipologia, m.uf, m.municipio, m.datacadastro, m.cpf, m.ibge, m.cnes,
- m.ine, ivs.descricao as ivs from medico m left join ivs on m.fkivs = ivs.idivs inner join competencias_profissionais cp on 
-m.cpf = cp.cpf and m.ibge = cp.ibge and m.cnes = cp.cnes and m.ine = cp.ine where cp.ano = '$ano' and cp.ciclo = '$ciclo' order by m.nome";
-$query = mysqli_query($conn, $sql);
-$nrrs = mysqli_num_rows($query);
-$rs = mysqli_fetch_array($query);
+//$sql = "select distinct m.nome, m.admissao, m.cargo, m.tipologia, m.uf, m.municipio, m.datacadastro, m.cpf, m.ibge, m.cnes,
+// m.ine, ivs.descricao as ivs from medico m left join ivs on m.fkivs = ivs.idivs inner join competencias_profissionais cp on 
+//m.cpf = cp.cpf and m.ibge = cp.ibge and m.cnes = cp.cnes and m.ine = cp.ine where cp.ano = '$ano' and cp.ciclo = '$ciclo' order by m.nome";
+//$query = mysqli_query($conn, $sql);
+//$nrrs = mysqli_num_rows($query);
+//$rs = mysqli_fetch_array($query);
 //var_dump($rs);
-$rscpf = false;
-if ($nrrs > 0) {
-    $rscpf = true;
-}
-$contt = 0;
+//$rscpf = false;
+//if ($nrrs > 0) {
+//    $rscpf = true;
+//}
+//$contt = 0;
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -246,6 +246,8 @@ $contt = 0;
                     ?>
                 </div>
             </div>
+            <input type="hidden" value="<?= $ano ?>" id="ano">
+            <input type="hidden" value="<?= $ciclo ?>" id="ciclo">
             <div class="row p-2">
                 <div class="col-md-12 shadow rounded pr-2 pl-2 mb-1">
                     <div class="row p-3">
@@ -256,9 +258,8 @@ $contt = 0;
                                     <table id="dtBasicExample" class="table table-hover table-bordered table-striped rounded">
                                         <thead class="bg-gradient-dark text-white">
                                             <tr class="bg-gradient-dark text-light font-weight-bold">
-                                                <?php if($perfil === '3' && $nivel === '1'){ ?>
                                                 <td class="bg-gradient-dark text-light align-middle text-center" style="width: 10%;position: sticky; top: 0px;" title="Detalhamento"><i class="fas fa-info-circle"></i></td>
-                                                <?php } ?>
+                                                <td class="bg-gradient-dark text-light align-middle" style="width: 40%; height: 70px;position: sticky; top: 0px;">Envio de E-Mail</td>
                                                 <td class="bg-gradient-dark text-light align-middle" style="width: 40%; height: 70px;position: sticky; top: 0px;">TUTOR</td>
                                                 <td class="bg-gradient-dark text-light align-middle" style="width: 5%;position: sticky; top: 0px;">CPF</td>
                                                 <td class="bg-gradient-dark text-light align-middle" style="width: 5%;position: sticky; top: 0px;">TIPOLOGIA</td>
@@ -270,98 +271,19 @@ $contt = 0;
                                                 <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">INE</td>
                                             </tr>
                                         </thead>
-                                        <tbody id="tbcp">
-                                            <?php
-                                            if ($rscpf === true) {
-                                                if ($nrrs > 0) {
-                                                    do {
-                                                        $contt++;
-                                                        $nome = $rs['nome'];
-                                                        $cpftratado = $rs['cpf'];
-                                                        $cpftratado = str_replace("-", "", $cpftratado);
-                                                        $cpftratado = str_replace(".", "", $cpftratado);
-                                                        $cpftratado = str_replace(".", "", $cpftratado);
-                                                        $cpf = mask($cpftratado, "###.###.###-##");
-                                                        $ibge = $rs['ibge'];
-                                                        $admissao = $rs['admissao'];
-                                                        $cargo = $rs['cargo'];
-                                                        $tipologia = $rs['tipologia'];
-                                                        $uf = $rs['uf'];
-                                                        $municipio = $rs['municipio'];
-                                                        $cnes = $rs['cnes'];
-                                                        $ine = $rs['ine'];
-                                                        $ivs = strtoupper($rs['ivs']);
-                                                        $datacadastro = vemdata($rs['datacadastro']);
-                                            ?>
-                                                <tr>
-                                                <?php if($perfil === '3' && $nivel === '1'){ 
-                                                    //barreira para não permitir mais de um cadastro por ciclo
-                                                    $sqlALD = "select * from aperfeicoamentoprofissional where cpf='$cpftratado' and ibge='$ibge' and cnes='$cnes' and ine='$ine' and ano='$ano' and ciclo='$ciclo'";
-                                                    $qALD = mysqli_query($conn, $sqlALD) or die(mysqli_error($conn));
-                                                    $nrALD = mysqli_num_rows($qALD);
-                                                    $rsALD = mysqli_fetch_array($qALD);
-//                                                    var_dump($nrALD);
-                                                    $flagup = '';
-                                                    if($nrALD > 0){
-                                                        do{
-                                                            $flagup = $rsALD['flagup'];
-                                                            $flagterminou = $rsALD['flagterminou'];
-                                                            $flagretorno = $rsALD['flagretorno'];
-                                                            $flagatvld = $rsALD['flagativlongduracao'];
-                                                            if($flagup === null){
-                                                                $flagup = '';
-                                                            }
-                                                        }while($rsALD = mysqli_fetch_array($qALD));
-                                                    if($flagatvld !== null){
-                                                        $ctap++;
-                                                        if($flagterminou !== null && $flagterminou === '1'){
-                                                ?>
-                                                    <td><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center"><i class="fas fa-check text-success"></i></a></td>
-                                                <?php    
-                                                        }elseif($flagup === ''){
-                                                ?>  
-                                                    <td><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center"><i class="fas fa-info-circle text-primary"></i></a></td>
-                                                <?php }elseif($flagup === '0'){
-                                                           if($flagretorno === '1'){ ?>
-                                                    <td><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center"><i class="fas fa-info-circle text-danger"></i></a></td>        
-                                                <?php       }else{ ?>
-                                                    <td><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center"><i class="fas fa-info-circle text-warning"></i></a></td> 
-                                                <?php }}else{ ?>
-                                                    <td><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center"><i class="fas fa-check text-success"></i></a></td> 
-                                                <?php }}else{ ?>
-                                                    <td></td>
-                                                <?php }
-                                                    }else{ ?>
-                                                <td></td>
-                                                <?php }} ?>
-                                                <td><?= $nome ?></td>
-                                                <td><?= $cpf ?></td>
-                                                <td><?= $tipologia ?></td>
-                                                <td><?= $ivs ?></td>
-                                                <td><?= $municipio ?></td>
-                                                <td><?= $uf ?></td>
-                                                <td><?= $ibge ?></td>
-                                                <td><?= $cnes ?></td>
-                                                <td><?= $ine ?></td>
-                                            </tr>
-                                            <?php 
-                                                }while($rs = mysqli_fetch_array($query)); 
-                                              }
-                                            }
-                                            ?>
-                                        </tbody>
+                                        <tbody id="tbcp"></tbody>
                                     </table>
                                 </div>
                             </fieldset>
                             <div class="row">
-                                <div class="col-sm-12">
+<!--                                <div class="col-sm-12">
                                     <label class="">Tutores: </label>
                                     <label class="text-info"><?= $contt ?></label>
                                 </div>
                                 <div class="col-sm-12">
                                     <label class="">Formulários enviados: </label>
                                     <label class="text-info"><?= $ctap ?></label>
-                                </div>
+                                </div>-->
                             </div>
                         </div>
                     </div>
@@ -389,7 +311,14 @@ $contt = 0;
         <script src="../../js/demo/chart-bar-prenatal-sifilis.js"></script>
         <script src="../../js/demo/chart-bar-citopatologico.js"></script>
         <script src="../../js/demo/chart-bar-hipertensao.js"></script>
+        <script src="tabelacp.js"></script>
         <script>
+            $(document).ready(function () {
+                let ano = $('#ano').val();
+                let ciclo = $('#ciclo').val();
+                tabelaAcp(ano,ciclo);
+            });
+            
             $(function () {
               $('.dropdown-toggle').dropdown();
             }); 

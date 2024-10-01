@@ -1,6 +1,7 @@
 
 function tabelaAcp(a,c){ 
     let tbcp = document.querySelector('#tbcp');
+    tbcp.innerHTML = '';
     let html = '';
     fetch('http://localhost:83/desempenho_tutor/recursos_online/api/v1/getcompprof/index.php?a='+a+'&c='+c)
     .then(response => {
@@ -21,45 +22,62 @@ function tabelaAcp(a,c){
                 html += '<td colspan="82" class="bg-warning text-dark"><i class="fas fa-chevron-circle-right"></i>&nbsp; Não existem tutores para o '+c+'º ciclo.</td>';
                 html += '</tr>';
             }else{
-                dados.results.forEach(user => {
-                    let cpf = `${user.cpf}`;
+                dados.results.forEach(dado => {
+                    let cpf = `${dado.cpf}`;
                     cpf = formataCPF(cpf);
                     let ivs = '';
-                    if(`${user.ivs}` !== null){
-                        ivs = `${user.ivs}`;
+                    if(`${dado.ivs}` !== null){
+                        ivs = `${dado.ivs}`;
                     }
                     html += '<tr>';
                     // verifica se já enviou ou não o formulário
-                    let flagenvio = `${user.flagenvio}`;
+                    let flagenvio = `${dado.flagenvio}`;
                     if(flagenvio === '1'){
-                        html += `<td><a class="btn btn-light" href="detalhes/index.php?id=${user.id}" target="_blank" title="Mais detalhes..."><i class="fas fa-info-circle"></i></a></td>`;
+                        html += `<td class="text-center"><a class="btn btn-light" href="detalhes/index.php?id=${dado.id}" target="_blank" title="Mais detalhes..."><i class="fas fa-info-circle"></i></a></td>`;
                     }else{
-                        html += `<td></td>`;
+                        let flagenvemail = `${dado.flagenvemail}`;
+                        if(flagenvemail !== '1'){
+                            html += `<td class="text-center"><button type="button" onclick="funcBtEB();" class="btn btn-outline-warning text-dark" data-toggle="modal" data-target="#modalEmail${dado.id}"><i class="fas fa-mail-bulk"></i>&nbsp; Enviar E-Mail</button></td>`;
+                        }else{
+                            let dthrenvemail = `${dado.dthrenvemail}`;
+                            let dtenv = dthrenvemail.substring(0,9);
+                            let hrenv = dthrenvemail.substring(10,14);
+                            html += `<td class="text-center">E-Mail enviado - ${dtenv} às ${hrenv}.</td>`;
+                        }
                     }
-                    html += `<td><button type="button" class="btn btn-outline-primary"  data-bs-toggle="modal" data-bs-target="#modalEmail${user.id}"><i class="fas fa-mail-bulk"></i>&nbsp; Enviar E-Mail</button></td>`;
-                    html += `<td>${user.nome}</td>`;
+                    html += `<td>${dado.nome}</td>`;
                     html += '<td>'+cpf+'</td>';
-                    html += `<td>${user.tipologia}</td>`;
+                    html += `<td>${dado.tipologia}</td>`;
                     html += '<td>'+ivs+'</td>';
-                    html += `<td>${user.municipio}</td>`;
-                    html += `<td>${user.uf}</td>`;
-                    html += `<td>${user.ibge}</td>`;
-                    html += `<td>${user.cnes}</td>`;
-                    html += `<td>${user.ine}</td>`;
+                    html += `<td>${dado.municipio}</td>`;
+                    html += `<td>${dado.uf}</td>`;
+                    html += `<td>${dado.ibge}</td>`;
+                    html += `<td>${dado.cnes}</td>`;
+                    html += `<td>${dado.ine}</td>`;
                     //modal de envio de e-mail padrão para atrasos
-                    html += `<div class="modal fade" id="modalEmail${user.id}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">`;
+                    html += `<div class="modal fade modalEmail" id="modalEmail${dado.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">`;
                     html += '    <div class="modal-dialog">';
                     html += '     <div class="modal-content">';
-                    html += '       <div class="modal-header">';
-                    html += '         <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>';
-                    html += '         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>';
+                    html += '       <div class="modal-header bg-warning">';
+                    html += '         <h5 class="modal-title text-dark" id="exampleModalLabel"><i class="fas fa-mail-bulk"></i>&nbsp; Alerta de tempo limite</h5>';
+                    html += '         <button type="button" class="close" data-dismiss="modal" aria-label="Close">';
+                    html += '           <span aria-hidden="true">&times;</span>';
+                    html += '         </button>';
                     html += '       </div>';
                     html += '       <div class="modal-body">';
-                    html += '         ...';
+                    html += '         Deseja alertar o tutor para a realização da autoavaliação?';
+                    html += '         <div class="loadingEmail mt-3">';
+                    html += '          <p class="text-center"><img src="../../img/carregando.gif" width="40" height="40" /></p>';
+                    html += '         </div>';
                     html += '       </div>';
                     html += '       <div class="modal-footer">';
-                    html += '         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>';
-                    html += '         <button type="button" class="btn btn-primary">Understood</button>';
+                    html += `       <form id="envEmailForm${dado.id}">`;
+                    html += `         <input type="hidden" name="idemail" value="${dado.id}">`;
+                    html += `         <input type="hidden" name="nomeemail" value="${dado.nome}">`;
+                    html += `         <input type="hidden" name="cpfemail" value="${cpf}">`;
+                    html += '         <button type="button" class="btn btn-secondary" data-dismiss="modal">FECHAR</button>';
+                    html += `         <button type="submit" onclick="funcBtEnvEB(${dado.id});" class="btn btn-primary">ENVIAR</button>`;
+                    html += '       </form>';
                     html += '       </div>';
                     html += '     </div>';
                     html += '   </div>';

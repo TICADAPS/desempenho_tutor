@@ -258,8 +258,7 @@ $ctap = 0;
                                     <table id="dtBasicExample" class="table table-hover table-bordered table-striped rounded">
                                         <thead class="bg-gradient-dark text-white">
                                             <tr class="bg-gradient-dark text-light font-weight-bold">
-                                                <td class="bg-gradient-dark text-light align-middle text-center" style="width: 10%;position: sticky; top: 0px;" title="Detalhamento"><i class="fas fa-info-circle"></i></td>
-                                                <td class="bg-gradient-dark text-light align-middle" style="width: 40%; height: 70px;position: sticky; top: 0px;">Envio de E-Mail</td>
+                                                <td class="bg-gradient-dark text-light align-middle text-center" style="width: 10%;position: sticky; top: 0px;" title="Detalhamento"><i class="fas fa-info-circle"></i>&nbsp; | &nbsp;<i class="fas fa-mail-bulk"></i></td>
                                                 <td class="bg-gradient-dark text-light align-middle" style="width: 40%; height: 70px;position: sticky; top: 0px;">TUTOR</td>
                                                 <td class="bg-gradient-dark text-light align-middle" style="width: 5%;position: sticky; top: 0px;">CPF</td>
                                                 <td class="bg-gradient-dark text-light align-middle" style="width: 5%;position: sticky; top: 0px;">TIPOLOGIA</td>
@@ -312,6 +311,7 @@ $ctap = 0;
         <script src="../../js/demo/chart-bar-citopatologico.js"></script>
         <script src="../../js/demo/chart-bar-hipertensao.js"></script>
         <script src="tabelacp.js"></script>
+        <script src="envEmail.js"></script>
         <script>
             $(document).ready(function () {
                 let ano = $('#ano').val();
@@ -336,6 +336,21 @@ $ctap = 0;
                 document.getElementById("loading").style.display = "none";
                 document.getElementById("conteudo").style.display = "inline";
             }, 1000);
+            
+            function funcBtEB(){
+                $('.modalEmail').on('show.bs.modal', function() {
+                    $('.loadingEmail').hide();
+                });
+            }
+            function funcBtEnvEB(a){
+                //console.log("clicou");
+                envEmailForm(a);
+                $('.loadingEmail').show();
+                var i = setInterval(function () {
+                    clearInterval(i);
+                    $('.loadingEmail').hide();
+                }, 3000);
+            }
         </script>
     </body>
 </html>

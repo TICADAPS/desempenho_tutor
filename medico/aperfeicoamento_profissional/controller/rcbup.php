@@ -20,11 +20,10 @@ $rdativ = $_POST['rdativ'];
 $rdQual = $_POST['rdQual'];
 $rdGes = $_POST['rdGes'];
 $rdInov = $_POST['rdInov'];
-//var_dump($cpf,$ibgeO,$cnes,$ine,$ano,$ciclo);
-
+//var_dump($_POST);
 //barreira para não permitir mais de um cadastro por ciclo
 $aperfprof = (new \Source\Models\Aperfeicoamentoprofissional())->findCpfIbgeCnesIne($cpf, $ibgeO, $cnes, $ine, $ano, $ciclo);
-//var_dump($nrALD);
+//var_dump($aperfprof);
 if($aperfprof !== null){
     //validação dos campos obrigatórios
     if(!isset($_POST['rdativ']) || $_POST['rdativ'] === ''){
@@ -51,12 +50,12 @@ if($aperfprof !== null){
                 URL=\"../index.php\"'>";
         exit();
     }
-    if($_POST['rdativ'] === '0' && $_POST['rdQual'] === '0' && $_POST['rdGes'] === '0' && $_POST['rdInov'] === '0'){
-        $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;Ao menos uma atividade deve ser preenchida!</strong></small></p>";
-        echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
-                URL=\"../index.php\"'>";
-        exit();
-    }
+//    if($_POST['rdativ'] === '0' && $_POST['rdQual'] === '0' && $_POST['rdGes'] === '0' && $_POST['rdInov'] === '0'){
+//        $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;Ao menos uma atividade deve ser preenchida!</strong></small></p>";
+//        echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
+//                URL=\"../index.php\"'>";
+//        exit();
+//    }
     $rdQual = $_POST['rdQual'];
     $rdGes = $_POST['rdGes'];
     $rdInov = $_POST['rdInov'];
@@ -364,26 +363,48 @@ if($aperfprof !== null){
         }
     }
     $idaperfprof = null;
+//    var_dump($aperfprof);
     foreach ($aperfprof as $ap){
         $idaperfprof = $ap->id;
     }
+//    var_dump($idaperfprof);
     if($idaperfprof !== null){
         $ap2 = (new Source\Models\Aperfeicoamentoprofissional())->findById($idaperfprof);
+//        var_dump($ap2);
         if($ap2 !== null){
             $ap2->dthrcadastro = $dthrcadastro;
             $ap2->flagativlongduracao = $rdativ;
+            $ap2->flagup = '1';
+            $ap2->flagparecer = null;
+            $ap2->parecer = null;
+            $ap2->pareceruser = null;
+            $ap2->parecerdthr = null;
+            $ap2->flagretorno = '1';
             $rsaperfprof = $ap2->save();
         }
     }
 //    var_dump($rsaperfprof);
     if($rsaperfprof === null){
-        $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;Erro no gravação dos dados.</strong></small></p>";
+        $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;Erro no gravação dos dados 1.</strong></small></p>";
         echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
                     URL=\"../index.php\"'>";
         exit();
     }
-//    var_dump($idaperfprof);
+    
     if($rdQual === '1'){
+        $QCup = (new Source\Models\Medico_qualifclinica())->findJQCUp($idaperfprof);
+        if ($QCup !== null) {
+            foreach ($QCup as $qc) {
+                $idqc = $qc->id;
+            }
+            if ($idqc !== null) {
+                $QCup2 = (new Source\Models\Medico_qualifclinica())->findById($idqc);
+                if ($QCup2 !== null) {
+                    $QCup2->flagup = '1';
+                    $QCup2->save();
+                }
+            }
+        }
         for($x = 0; $x < $ctQCli; $x++){
             $sQCi = $slQualiClinica[$x];
             $cQCi = $cargahrQualiClinica[$x];
@@ -396,10 +417,15 @@ if($aperfprof !== null){
                 $rsmQC = $mQC->save();
 //                var_dump($mQC,$rsmQC);
                 if($rsmQC === null){
-                    $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;Erro no gravação dos dados.</strong></small></p>";
+                    $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;Erro no gravação dos dados 2.</strong></small></p>";
                     echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
                             URL=\"../index.php\"'>";
                     exit();
+                }
+                $ap = (new \Source\Models\Aperfeicoamentoprofissional())->findById($idaperfprof);
+                if($ap !== null){
+                    $ap->flagretorno = 1;
+                    $ap->save();
                 }
             }else{
                 $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;Preenchimento obrigatório para todos os campos ativados 1.</strong></small></p>";
@@ -410,6 +436,19 @@ if($aperfprof !== null){
         }
     }
     if($rdGes === '1'){
+        $GEup = (new Source\Models\Medico_gesenspesext())->findJGepeUp($idaperfprof);
+        if ($GEup !== null) {
+            foreach ($GEup as $ge) {
+                $idge = $ge->id;
+            }
+            if ($idge !== null) {
+                $GEup2 = (new Source\Models\Medico_gesenspesext())->findById($idge);
+                if ($GEup2 !== null) {
+                    $GEup2->flagup = '1';
+                    $GEup2->save();
+                }
+            }
+        }
         for($x = 0; $x < $ctGEPE; $x++){
             $sGEi = $slGesEnsPesExt[$x];
             $cGEi = $cargahrGesEnsPesExt[$x];
@@ -421,10 +460,15 @@ if($aperfprof !== null){
                 $mGE->bootstrap($sGEi, $idaperfprof, $tGEi, $cGEi, $aGEi, $dthrcadastro);
                 $rsmGE = $mGE->save();
                 if($rsmGE === null){
-                    $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;Erro no gravação dos dados.</strong></small></p>";
+                    $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;Erro no gravação dos dados 3.</strong></small></p>";
                     echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
                             URL=\"../index.php\"'>";
                     exit();
+                }
+                $ap = (new \Source\Models\Aperfeicoamentoprofissional())->findById($idaperfprof);
+                if($ap !== null){
+                    $ap->flagretorno = 1;
+                    $ap->save();
                 }
             }else{
                 $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;Preenchimento obrigatório para todos os campos ativados 2.</strong></small></p>";
@@ -436,6 +480,19 @@ if($aperfprof !== null){
     }
     //var_dump($ctIT);
     if($rdInov === '1'){
+        $ITup = (new Source\Models\Medico_inovtecnologica)->findJItUp($idaperfprof);
+        if ($ITup !== null) {
+            foreach ($ITup as $it) {
+                $idit = $it->id;
+            }
+            if ($idge !== null) {
+                $ITup2 = (new Source\Models\Medico_gesenspesext())->findById($idit);
+                if ($ITup2 !== null) {
+                    $ITup2->flagup = '1';
+                    $ITup2->save();
+                }
+            }
+        }
         for($x = 0; $x < $ctIT; $x++){
             $sITi = $slInovTec[$x];
             $cITi = $cargahrInovTec[$x];
@@ -449,10 +506,15 @@ if($aperfprof !== null){
 //                var_dump($mIT);
                 $rsmIT = $mIT->save();
                 if($rsmIT === null){
-                    $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;Erro no gravação dos dados.</strong></small></p>";
+                    $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;Erro no gravação dos dados 4.</strong></small></p>";
                     echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
                             URL=\"../index.php\"'>";
                     exit();
+                }
+                $ap = (new \Source\Models\Aperfeicoamentoprofissional())->findById($idaperfprof);
+                if($ap !== null){
+                    $ap->flagretorno = 1;
+                    $ap->save();
                 }
             }else{
                 $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;Preenchimento obrigatório para todos os campos ativados 3.</strong></small></p>";
@@ -467,7 +529,7 @@ if($aperfprof !== null){
         URL=\"../index.php\"'>";
     exit();
 }else{
-    $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;Já consta um cadastro preenchido em nossa base de dados.</strong></small></p>";
+    $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;Não consta um cadastro preenchido em nossa base de dados.</strong></small></p>";
     echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
         URL=\"../index.php\"'>";
     exit();

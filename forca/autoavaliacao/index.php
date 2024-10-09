@@ -180,7 +180,7 @@ $ctap = 0;
     </head>
 
     <body>
-        <div class="container-fluid p-3">
+        <div class="container-fluid">
             <div class="row">
                 <div class="col-12 col-md-3">
                     <img src="../../img_agsus/Logo_400x200.png" class="img-fluid" alt="logoAdaps" width="250" title="Logo Adaps">
@@ -191,7 +191,7 @@ $ctap = 0;
                 </div>
             </div>
             <div class="row">
-                <div class="col-12 mb-2">
+                <div class="col-12 mb-1">
                     <nav class="navbar navbar-expand-lg navbar-light bg-light rounded">
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menuPrincipal" aria-controls="menuPrincipal" aria-expanded="false" aria-label="Menu collapse">
                             <span class="navbar-toggler-icon"></span>
@@ -201,30 +201,24 @@ $ctap = 0;
                         <div id="menuPrincipal" class="collapse navbar-collapse pr-2 pl-3">
                             <ul class="navbar-nav">
                                 <li class="nav-item">
-                                    <a href="../index.php" class="nav-link">Inicio </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="">|</a>
+                                    <a href="../index.php" class="nav-link">&nbsp;Inicio </a>
                                 </li>
                                 <!-- Navbar dropdown -->
                                 <li class="nav-item dropdown">
                                     <!--<a class="nav-link dropdown-toggle" href="../relatorios/relatorio_geral_igad.php">Relatório Geral IGAD - 1º ciclo de 2023</a>-->
-                                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">Relatórios</a>
+                                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">&nbsp;Relatórios</a>
                                     <div class="dropdown-menu">
                                         <?php if($perfil === '3' && $nivel === '1'){ ?>
-                                        <a class="dropdown-item" href="relatorios/relatorioGeral.php">Relatório Geral IGAD - 1º ciclo de 2024</a>
+                                        <a class="dropdown-item" href="relatorios/relatorioGeralCP.php?a=<?= $ano ?>&c=<?= $ciclo ?>">Relatório Geral: Competências Profissionais - <?= $ciclo ?>º ciclo de <?= $ano ?></a>
                                         <?php } ?>
                                     </div>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="">|</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="../derruba_session.php"><i class="fas fa-sign-out-alt pt-1"></i></a>
+                                    <a class="nav-link" href="../derruba_session.php">&nbsp;&nbsp;<i class="fas fa-sign-out-alt pt-1"></i></a>
                                 </li>
                                 <li class="nav-item">
                                     <div id="loading">
-                                        &nbsp;<img class="float-right" src="../../img/carregando.gif" width="40" height="40" />
+                                        &nbsp;&nbsp;<img class="float-right" src="../../img/carregando.gif" width="40" height="40" />
                                     </div>
                                 </li>
                             </ul>
@@ -232,18 +226,9 @@ $ctap = 0;
                     </nav> 
                 </div>
             </div>
-            <div class="row p-2">
-                <div class="col-12">
-                    <?php 
-                        if ($_SESSION['pgmsg'] === '2') {
-                            if ($_SESSION['msg'] !== null && $_SESSION['msg'] !== '') {
-                                echo $_SESSION['msg'];
-                            }
-                            $_SESSION['pgmsg'] = '1';
-                        } else {
-                            $_SESSION['msg'] = '';
-                        }
-                    ?>
+            <div class="row">
+                <div class="col-12 p-2">
+                    <div id="msg"></div>
                 </div>
             </div>
             <input type="hidden" value="<?= $ano ?>" id="ano">
@@ -253,7 +238,7 @@ $ctap = 0;
                     <div class="row p-3">
                         <div class="col-md-12 mt-2">
                             <fieldset class="form-group border pr-2 pl-2">
-                                    <legend class="w-auto pr-2 pl-2"><h5>Competências Profissionais - Tutores</h5></legend>
+                                <legend class="w-auto pr-2 pl-2 text-primary"><h5>Tutores inscritos no <?= $ciclo ?>º ciclo - Competências Profissionais</h5></legend>
                                 <div class="mb-3 table-responsive text-nowrap table-overflow2">
                                     <table id="dtBasicExample" class="table table-hover table-bordered table-striped rounded">
                                         <thead class="bg-gradient-dark text-white">
@@ -275,16 +260,43 @@ $ctap = 0;
                                 </div>
                             </fieldset>
                             <div class="row">
-<!--                                <div class="col-sm-12">
-                                    <label class="">Tutores: </label>
-                                    <label class="text-info"><?= $contt ?></label>
-                                </div>
                                 <div class="col-sm-12">
+                                    <label class="">Tutores: </label>
+                                    <label class="text-info" id="tutortotal"></label>
+                                </div>
+                                <div class="col-sm-6">
                                     <label class="">Formulários enviados: </label>
-                                    <label class="text-info"><?= $ctap ?></label>
-                                </div>-->
+                                    <label class="text-info" id="enviostotal"></label>
+                                </div>
+                                <div class="col-sm-3">
+                                    <button type="button" id="btenvemailall" onclick="funcBtEmailAll();" class="btn btn-outline-warning shadow-sm border-warning text-dark" data-toggle="modal" data-target="#modalEmailAll"><b><i class="fas fa-mail-bulk"></i>&nbsp; Enviar E-Mail aos pendentes</b></button>
+                                </div>
+                                <div class="col-sm-3">
+                                    <button type="button" id="btenvdemonstrativo" class="btn btn-outline-primary shadow-sm border-primary"><i class="fas fa-paper-plane"></i>&nbsp; Enviar para o demonstrativo</button>
+                                </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade modalEmailAll" id="modalEmailAll" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-warning">
+                        <h5 class="modal-title text-dark" id="exampleModalLabel"><i class="fas fa-mail-bulk"></i>&nbsp; Alerta de tempo limite</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Deseja alertar os tutor pendentes para a realização da autoavaliação?
+                    </div>
+                    <div class="modal-footer">
+                        <form id="envEmailForm">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">FECHAR</button>
+                            <button type="submit" onclick="funcBtEnvEmailAll();" class="btn btn-primary" data-dismiss="modal">ENVIAR</button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -306,14 +318,11 @@ $ctap = 0;
         <script src="../../vendor/chart.js/Chart.min.js"></script>
 
         <!-- Page level custom scripts -->
-        <script src="../../js/demo/chart-bar-prenatal-1q.js"></script>
-        <script src="../../js/demo/chart-bar-prenatal-sifilis.js"></script>
-        <script src="../../js/demo/chart-bar-citopatologico.js"></script>
-        <script src="../../js/demo/chart-bar-hipertensao.js"></script>
         <script src="tabelacp.js"></script>
         <script src="envEmail.js"></script>
         <script>
             $(document).ready(function () {
+                $("#msg").html('');
                 let ano = $('#ano').val();
                 let ciclo = $('#ciclo').val();
                 tabelaAcp(ano,ciclo);
@@ -334,22 +343,41 @@ $ctap = 0;
                 clearInterval(i);
                 // O código desejado é apenas isto:
                 document.getElementById("loading").style.display = "none";
-                document.getElementById("conteudo").style.display = "inline";
+//                document.getElementById("conteudo").style.display = "inline";
             }, 1000);
             
             function funcBtEB(){
-                $('.modalEmail').on('show.bs.modal', function() {
-                    $('.loadingEmail').hide();
-                });
+                
+            }
+            function funcBtEmailAll(){
             }
             function funcBtEnvEB(a){
+                document.getElementById("loading").style.display = "block";
                 //console.log("clicou");
                 envEmailForm(a);
-                $('.loadingEmail').show();
                 var i = setInterval(function () {
                     clearInterval(i);
-                    $('.loadingEmail').hide();
-                }, 3000);
+                    // O código desejado é apenas isto:
+                    document.getElementById("loading").style.display = "none";
+    //                document.getElementById("conteudo").style.display = "inline";
+                }, 6000);
+            }
+            function funcBtEnvEmailAll(){
+                document.getElementById("loading").style.display = "block";
+                let tutortotal = parseInt($('#tutortotal').html());
+                let enviostotal = parseInt($('#enviostotal').html());
+                let resultado = tutortotal - enviostotal;
+                let tempo = resultado * 5000;
+                console.log("tutortotal");
+                let ano = $('#ano').val();
+                let ciclo = $('#ciclo').val();
+                envEmailAll(ano,ciclo);
+                var i = setInterval(function () {
+                    clearInterval(i);
+                    // O código desejado é apenas isto:
+                    document.getElementById("loading").style.display = "none";
+    //                document.getElementById("conteudo").style.display = "inline";
+                }, tempo);
             }
         </script>
     </body>

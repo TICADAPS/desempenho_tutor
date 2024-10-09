@@ -116,8 +116,9 @@ if($rsm){
             $ap->dthremail = $dthoje;
             $ap->usuario = $user;
             
-            //Mudando a flagup para que o médico possa preencher e enviar a atualização das atividades
+            //Mudando a flagup e flagterminou para que o médico possa preencher e enviar a atualização das atividades
             if($upEnv === '0'){
+                $ap->flagterminou = '0';
                 if($ap->flagparecer === '0'){
                     $ap->flagup = '0';
                 }

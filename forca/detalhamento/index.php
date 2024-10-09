@@ -217,11 +217,11 @@ if($flagemail !== null && $flagemail !== '' && $flagemail === '1'){
                             </div>
                             <?php if($flagterminou !== '1'){ ?>
                             <div class="col-md-4" id="email50Mais">
-                                <div class="col-md-12"><b>Enviar E-Mail para o Médico - igual ou superior a 50 pontos.</b></div>
+                                <div class="col-md-12"><b>Enviar E-Mail (igual ou superior a 50 pontos).</b></div>
                                 <div class="col-md-12"><button type="button" class="shadow-sm border-light btn btn-info form-control" data-toggle="modal" data-target="#modalSup50"><i class="fas fa-mail-bulk"></i>&nbsp; Igual ou superior a 50 pontos</button></div>
                             </div>
                             <div class="col-md-4" id="emailAbaixo50">
-                                <div class="col-md-12"><b>Enviar E-Mail para o Médico - abaixo de 50 pontos</b></div>
+                                <div class="col-md-12"><b>Enviar E-Mail (abaixo de 50 pontos).</b></div>
                                 <div class="col-md-12"><button type="button" class="shadow-sm border-light btn btn-warning form-control" data-toggle="modal" data-target="#modalInf50"><i class="fas fa-mail-bulk"></i>&nbsp; Abaixo de 50 pontos</button></div>
                             </div>
                             <?php }else{ ?>
@@ -667,8 +667,13 @@ if($flagemail !== null && $flagemail !== '' && $flagemail === '1'){
                         <?php } ?>
                         <?php
                             }while ($rsqc = mysqli_fetch_array($qqc));
-                        }
-                        ?>
+                        }else{ ?>
+                            <div class="row mb-2">
+                                <div class="col-md-12 pl-5">
+                                    <label class="text-info"><i class="fas fa-hand-point-right"></i> &nbsp;Não houve entrega para esta atividade.
+                                </div>
+                            </div>
+                        <?php } ?>
                     </div>
                 </div>
             </div>
@@ -889,8 +894,13 @@ if($flagemail !== null && $flagemail !== '' && $flagemail === '1'){
                         <?php } ?>
                         <?php
                             }while ($rsgepe = mysqli_fetch_array($qgepe));
-                        }
-                        ?>
+                        }else{ ?>
+                            <div class="row mb-2">
+                                <div class="col-md-12 pl-5">
+                                    <label class="text-info"><i class="fas fa-hand-point-right"></i> &nbsp;Não houve entrega para esta atividade.
+                                </div>
+                            </div>
+                        <?php } ?>
                     </div>
                 </div>
             </div>
@@ -1101,8 +1111,13 @@ if($flagemail !== null && $flagemail !== '' && $flagemail === '1'){
                         <?php } ?>
                         <?php
                             }while ($rsit = mysqli_fetch_array($qit));
-                        }
-                        ?>
+                        }else{ ?>
+                            <div class="row mb-2">
+                                <div class="col-md-12 pl-5">
+                                    <label class="text-info"><i class="fas fa-hand-point-right"></i> &nbsp;Não houve entrega para esta atividade.
+                                </div>
+                            </div>
+                        <?php } ?>
                     </div>
                 </div>
             </div>

@@ -86,7 +86,7 @@ class Aperfeicoamentoprofissional extends Model {
     
     public function findCpfIbgeCnesIne($cpf,$ibge,$cnes,$ine,$ano,$ciclo): ?array
     {
-        $all = $this->read("SELECT * from " . self::$entity . " WHERE cpf = '$cpf' and ibge = '$ibge' and cnes = '$cnes' and ine = '$ine' and ano = '$ano' and ciclo '$ciclo'");
+        $all = $this->read("SELECT * from " . self::$entity . " WHERE cpf = '$cpf' and ibge = '$ibge' and cnes = '$cnes' and ine = '$ine' and ano = '$ano' and ciclo = '$ciclo'");
 
         if ($this->fail() ||!$all->rowCount()) {
             return null;

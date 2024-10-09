@@ -1,6 +1,7 @@
 <?php
 session_start();
 include_once './../../../conexao-agsus.php';
+include_once './../../../conexao_agsus_2.php';
 include_once __DIR__ .'/../../../vendor/autoload.php';
 if(!isset($_SESSION['msg'])){
     $_SESSION['msg'] = '';
@@ -41,7 +42,8 @@ $gepeid = $_POST['gepeid'];
 $gepech = floatval($_POST['ch']);
 date_default_timezone_set('America/Sao_Paulo');
 $dthoje = date('d/m/Y');
-$iduser = $_SESSION["idUser"];
+//$iduser = $_SESSION["idUser"];
+$iduser = '2765';
 $sqlu = "select * from usuarios where id_user = '$iduser'";
 $queryu = mysqli_query($conn2, $sqlu) or die(mysqli_error($conn2));
 $rsu = mysqli_fetch_array($queryu);
@@ -80,6 +82,7 @@ $dthoje = date('Y-m-d H:i:s');
 $gepe = (new Source\Models\Medico_gesenspesext())->findById($gepeid);
 //var_dump($gepe);
 if($gepe !== null){
+    $idaperfprof = $gepe->idaperfprof;
     $idg = (int)$gepe->idgesenspesext;
     $gepe->flagparecer = $gepeflagparecer;
     $gepe->parecer = $gepeparecer;
@@ -116,6 +119,13 @@ if($gepe !== null){
         echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
             URL=\"../index.php?ct=$cpf&ib=$ibge&c=$cnes&i=$ine&a=$ano&ci=$ciclo\"'>"; 
         exit();
+    }
+    //flagterminou null - no retorno ao médico indica que foi analisado mas ainda não foi habilitado para réplica
+    //a habilitação (caso pontuação seja menor que 50) se dá após o envio do e-mail
+    $ap = (new \Source\Models\Aperfeicoamentoprofissional())->findById($idaperfprof);
+    if($ap !== null){
+        $ap->flagterminou = null;
+        $ap->save();
     }
 }else{
     $_SESSION['msg'] = "<h6 class='bg-warning border rounded text-dark p-2'>&nbsp;<i class='fas fa-hand-point-right'></i>&nbsp; Cadastro de aperfeiçoamento profisional não encontrado.</h6>";

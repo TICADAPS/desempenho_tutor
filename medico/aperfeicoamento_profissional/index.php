@@ -9,18 +9,25 @@ if (!isset($_SESSION['msg'])) {
     $_SESSION['msg'] = "";
 }
 //var_dump($_SESSION['msg']);
-$cpf = $_SESSION['cpf'];
+//$cpf = $_SESSION['cpf'];
+$cpf = '00101831161';
 $cpftratado = $cpf;
 //var_dump($cpftratado);
 $cpf = substr_replace($cpftratado, "-", 9, 0);
 $cpf = substr_replace($cpf, ".", 6, 0);
 $cpf = substr_replace($cpf, ".", 3, 0);
-$medico = $_SESSION['nome'];
-$ibgeO = $_SESSION['ibgeO'];
-$cnes = $_SESSION['cnes'];
-$ine = $_SESSION['ine'];
-$ano = $_SESSION['ano'];
-$ciclo = $_SESSION['ciclo'];
+$medico = 'CAROLINA MILITAO SPAGNOL';
+$ibgeO = '352690';
+$cnes = '3797902';
+$ine = '1587021';
+$ano = '2024';
+$ciclo = '3';
+//$medico = $_SESSION['nome'];
+//$ibgeO = $_SESSION['ibgeO'];
+//$cnes = $_SESSION['cnes'];
+//$ine = $_SESSION['ine'];
+//$ano = $_SESSION['ano'];
+//$ciclo = $_SESSION['ciclo'];
 $sqlano = "select * from anoacicloavaliacao where ano = '$ano' and ciclo = '$ciclo' limit 1";
 $queryano = mysqli_query($conn, $sqlano) or die(mysqli_error($conn));
 $rsano1 = mysqli_fetch_array($queryano);
@@ -261,7 +268,7 @@ $rsit = mysqli_fetch_array($qit);
                                     </div>                    
                                     <?php }else{ 
                                     if ($rsano !== null) {
-                                        if ($nrrs2 > 0) {
+                                        if ($nrrs2 > 0 & $flagald !== null) {
                                             ?>
                                             <div class="row mb-1">
                                                 <div class="col-12">
@@ -290,7 +297,7 @@ $rsit = mysqli_fetch_array($qit);
                                         <?php } ?>
                                         <?php
 //                        var_dump($nrrs2);
-                                        if ($nrrs2 === 0 && $flaganociclo === '1') {
+                                        if ($nrrs2 > 0 && $flaganociclo === '1' && $flagald === null) {
                                             ?>
                                             <form method="post" enctype="multipart/form-data" action="controller/rcb.php">
                                                 <input type="hidden" value="<?= $cpftratado ?>" name="cpf">
@@ -332,7 +339,7 @@ $rsit = mysqli_fetch_array($qit);
                                                 </div>
                                                 <div class="row mb-1">
                                                     <div class="col-12">
-                                                        <div class="card border-0">
+                                                        <div class="card border-1">
                                                             <div class="card-header text-white" style="background-color: #0055A1;">
                                                                 <label><strong>Qualificação Clínica</strong></label>
                                                             </div>
@@ -615,6 +622,7 @@ $rsit = mysqli_fetch_array($qit);
                                             </form>
                                             <?php
                                         } else { ?>
+                                        <form method="post" enctype="multipart/form-data" action="controller/rcbup.php">
                                             <div class="row mb-1">
                                                 <div class="col-12">
                                                     <div class="card border-1 ">
@@ -728,89 +736,37 @@ $rsit = mysqli_fetch_array($qit);
                                                                             </div>
                                                                         </div>
                                                                         <?php if ($flagparecerap === '0' && $flagupap === '0' && $flagterminouap !== '1') { ?>
-                                                                            <form method="post" enctype="multipart/form-data" action="controller/rcbld.php">
-                                                                                <input type="hidden" value="<?= $idld ?>" name="idld">
-                                                                                <input type="hidden" value="<?= $cpftratado ?>" name="cpf">
-                                                                                <input type="hidden" value="<?= $ibgeO ?>" name="ibgeO">
-                                                                                <input type="hidden" value="<?= $cnes ?>" name="cnes">
-                                                                                <input type="hidden" value="<?= $ine ?>" name="ine">
-                                                                                <input type="hidden" value="<?= $ano ?>" name="ano">
-                                                                                <input type="hidden" value="<?= $ciclo ?>" name="ciclo">
-                                                                                <div class="row mb-1">
-                                                                                    <div class="col-12">
-                                                                                        <div class="card border-1">
-                                                                                            <div class="card-header text-white" style="background-color: #590d97;">
-                                                                                                <label><strong>Atividade de Longa Duração - Atualização/Correção</strong></label>
-                                                                                            </div>
-                                                                                            <div class="card-body">
-                                                                                                <div class="row mb-2">
-                                                                                                    <div class="col-md-12">
-                                                                                                        <div class="col-md-12"><b>Declaro que fui autorizado pela Agência para a realização de curso de longa duração?</b></div>
-                                                                                                        <div class="col-md-6">
-                                                                                                            <select class="form-control " id="rdativup" name="rdativ">
-                                                                                                                <option value="">[--SELECIONE--]</option>
-                                                                                                                <option value="1">SIM</option>
-                                                                                                                <option value="0">NÃO</option>
-                                                                                                            </select>
-                                                                                                        </div>
-                                                                                                    </div>
-                                                                                                    <div class="col-md-9 divLongDuracao mt-2">
-                                                                                                        <div class="col-md-12"><b>Informação</b></div>
-                                                                                                        <div class="col-md-12"><input type="text" value="Crédito de 50 pontos por estar realizando curso de longa duração." disabled="disabled" class="form-control" id="infoldup" /></div>
-                                                                                                    </div>
-                                                                                                    <div class="col-md-3 divLongDuracao mt-2">
-                                                                                                        <div class="col-md-12"><b>Pontuação Estimada</b></div>
-                                                                                                        <div class="col-md-12"><input type="text" class="form-control" disabled="disabled" id="pontoldup" /></div>
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                                <div class="row">
-                                                                                                    <div class="col-md-6 offset-md-3 mt-4">
-                                                                                                        <button type="button" class="shadow btn btn-outline-success form-control" data-toggle="modal" data-target="#modalLD<?= $idld ?>">ENVIAR ATIVIDADE CORRIGIDA</button>
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                                <!-- Modal -->
-                                                                                                <div class="modal fade" id="modalLD<?= $idld ?>" tabindex="-1" aria-labelledby="enviarModal" aria-hidden="true">
-                                                                                                    <div class="modal-dialog">
-                                                                                                        <div class="modal-content p-1 bg-light">
-                                                                                                            <div class="modal-header border-top border-left border-right"  style="background-color: #0055A1;">
-                                                                                                                <h5 class="modal-title text-white" id="exampleModalLabel">Confirmação de envio</h5>
-                                                                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                                                                    <span aria-hidden="true">&times;</span>
-                                                                                                                </button>
-                                                                                                            </div>
-                                                                                                            <div class="modal-body border-top border-left border-right">
-                                                                                                                <div class="row">
-                                                                                                                    <div class="col-md-12 p-3">
-                                                                                                                        <p class="text-primary">Confirma o envio do cadastro?</p>
-                                                                                                                    </div>
-                                                                                                                </div>
-                                                                                                            </div>
-                                                                                                            <div class="modal-footer border">
-                                                                                                                <button type="button" class="btn btn-secondary " data-dismiss="modal">NÃO</button> &nbsp; 
-                                                                                                                <button type="submit" name="enviaCadastro" class="btn btn-success">&nbsp; SIM &nbsp;</button>
-                                                                                                            </div>
-                                                                                                        </div>
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            <?php } } else { ?>
+                                                                            <input type='hidden' id="rdativ" name="rdativ" value="<?= $flagald ?>">
+                                                                           <?php } } else { ?>
                                                                             <div class="row mt-3">
-                                                                                <div class="col-md-12">
+                                                                                <div class="col-md-12 mt-2">
                                                                                     <h6 class="text-info pl-3"><i class="fas fa-hand-point-right"></i> Análise em andamento...</h6>   
                                                                                 </div>
                                                                             </div>
                                                                             <?php }
-                                                                        } while ($rsld = mysqli_fetch_array($query2));
+                                                                        } while ($rsld = mysqli_fetch_array($query2)); 
                                                                     } else {
                                                                         ?>
-                                                                    <div class="row mb-3 mt-2">
-                                                                        <div class="col-md-12">
-                                                                            <p class="text-info font-weight-bold text-center">*** Nenhuma atividade inserida ***</p>
-                                                                        </div>
-                                                                    </div>          
+                                                                                    <div class="row mb-2">
+                                                                                        <div class="col-md-12">
+                                                                                            <div class="col-md-12"><b>Declaro que fui autorizado pela Agência para a realização de curso de longa duração?</b></div>
+                                                                                            <div class="col-md-6">
+                                                                                                <select class="form-control " id="rdativ" name="rdativ">
+                                                                                                    <option value="">[--SELECIONE--]</option>
+                                                                                                    <option value="1">SIM</option>
+                                                                                                    <option value="0">NÃO</option>
+                                                                                                </select>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="col-md-9 divLongDuracao mt-2">
+                                                                                            <div class="col-md-12"><b>Informação</b></div>
+                                                                                            <div class="col-md-12"><input type="text" value="Crédito de 50 pontos por estar realizando curso de longa duração." disabled="disabled" class="form-control" id="infoldup" /></div>
+                                                                                        </div>
+                                                                                        <div class="col-md-3 divLongDuracao mt-2">
+                                                                                            <div class="col-md-12"><b>Pontuação Estimada</b></div>
+                                                                                            <div class="col-md-12"><input type="text" class="form-control" disabled="disabled" id="pontoldup" /></div>
+                                                                                        </div>
+                                                                                    </div>        
                                                                     <?php } ?>
                                                         </div>
                                                     </div>
@@ -966,27 +922,30 @@ $rsit = mysqli_fetch_array($qit);
                                                                                 </div>
                                                                             </div>
                                                                             <?php if ($qcflagparecer === '0' && $flagupqc === '0' && $flagterminouap !== '1') { ?>
-                                                                                <form method="post" enctype="multipart/form-data" action="controller/rcbqc.php">
-                                                                                    <input type="hidden" value="<?= $qcid ?>" name="qcid">
-                                                                                    <input type="hidden" value="<?= $idap ?>" name="idap">
-                                                                                    <input type="hidden" value="<?= $cpftratado ?>" name="cpf">
-                                                                                    <input type="hidden" value="<?= $ibgeO ?>" name="ibgeO">
-                                                                                    <input type="hidden" value="<?= $cnes ?>" name="cnes">
-                                                                                    <input type="hidden" value="<?= $ine ?>" name="ine">
-                                                                                    <input type="hidden" value="<?= $ano ?>" name="ano">
-                                                                                    <input type="hidden" value="<?= $ciclo ?>" name="ciclo">
                                                                                     <div class="row mb-1">
                                                                                         <div class="col-12">
                                                                                             <div class="card border-1">
-                                                                                                <div class="card-header text-white" style="background-color: #590d97;">
+                                                                                                <div class="card-header text-white" style="background-color: #0055A1;">
                                                                                                     <label><strong>Qualificação Clínica - Atualização/Correção</strong></label>
                                                                                                 </div>
                                                                                                 <div class="card-body">
                                                                                                     <div class="row mb-2">
-                                                                                                        <div class="col-md-8">
+                                                                                                        <div class="col-md-12">
+                                                                                                            <div class="col-md-12"><b>Possui atividade a declarar neste item?</b></div>
+                                                                                                            <div class="col-md-3">
+                                                                                                                <select class="form-control " id="rdQual" name="rdQual">
+                                                                                                                    <option value="">[--SELECIONE--]</option>
+                                                                                                                    <option value="1">SIM</option>
+                                                                                                                    <option value="0">NÃO</option>
+                                                                                                                </select>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    <div class="row mb-2 divQualiClinica">
+                                                                                                        <div class="col-md-9">
                                                                                                             <div class="col-md-12"><b>Atividade</b></div>
                                                                                                             <div class="col-md-12">
-                                                                                                                <select class="form-control" id="slQualiClinicaup<?= $auxqc ?>" name="slQualiClinica" onchange="changeQualiClinicaup(<?= $auxqc ?>);">
+                                                                                                                <select class="form-control" id="slQualiClinica" name="slQualiClinica">
                                                                                                                     <option value="">[--SELECIONE--]</option>
                                                                                                                     <?php
                                                                                                                     $sqlqualifcli = "select idqualifclinica as idq, descricao as descq from qualifclinica";
@@ -1005,17 +964,17 @@ $rsit = mysqli_fetch_array($qit);
                                                                                                                 </select>
                                                                                                             </div>
                                                                                                         </div>
-                                                                                                        <div class="col-md-4">
-                                                                                                            <div class="col-md-12" id="qcup<?= $auxqc ?>"><b>Carga Horária</b></div>
-                                                                                                            <div class="col-md-12"><input type="number" class="form-control" min="1" id="cargahrQualiClinicaup<?= $auxqc ?>" name="cargahrQualiClinica" onchange="changeChQualiClinicaup(<?= $auxqc ?>);"/></div>
+                                                                                                        <div class="col-md-3">
+                                                                                                            <div class="col-md-12" id="qcch"><b>Carga Horária</b></div>
+                                                                                                            <div class="col-md-12"><input type="number" class="form-control" min="1" id="cargahrQualiClinica" name="cargahrQualiClinica" /></div>
                                                                                                         </div>
-                                                                                                        <div class="col-md-8">
+                                                                                                        <div class="col-md-9">
                                                                                                             <div class="col-md-12"><b>Informação</b></div>
-                                                                                                            <div class="col-md-12"><input type="text" disabled="disabled" class="form-control" id="infoqcup<?= $auxqc ?>" /></div>
+                                                                                                            <div class="col-md-12"><input type="text" disabled="disabled" class="form-control" id="infoqc" /></div>
                                                                                                         </div>
-                                                                                                        <div class="col-md-4">
+                                                                                                        <div class="col-md-3">
                                                                                                             <div class="col-md-12"><b>Pontuação Estimada</b></div>
-                                                                                                            <div class="col-md-12"><input type="text" class="form-control" disabled="disabled" id="pontoqcup<?= $auxqc ?>" /></div>
+                                                                                                            <div class="col-md-12"><input type="text" class="form-control" disabled="disabled" id="pontoqc" /></div>
                                                                                                         </div>
                                                                                                         <div class="col-md-6">
                                                                                                             <div class="col-md-12"><b>Título da atividade</b></div>
@@ -1026,44 +985,30 @@ $rsit = mysqli_fetch_array($qit);
                                                                                                             <div class="col-md-12"><input type="file" class="form-control" id="anexoQualiClinica" name="anexoQualiClinica" /></div>
                                                                                                         </div>
                                                                                                     </div>
-                                                                                                    <div class="row">
-                                                                                                        <div class="col-md-6 offset-md-3 mt-4">
-                                                                                                            <button type="button" class="shadow btn btn-outline-success form-control" data-toggle="modal" data-target="#modalQC<?= $qcid ?>">ENVIAR ATIVIDADE CORRIGIDA</button>
+                                                                                                    <div class="row mb-2 divQualiClinica">
+                                                                                                        <div class="col-md-3">
+                                                                                                            <div class="col-md-12"><b>Quantidade de novas atividades</b></div>
+                                                                                                            <div class="col-md-12"><input type="number" class="form-control" min="1" id="qtdatvqc" name="qtdatvqc" /></div>
+                                                                                                        </div>
+                                                                                                        <div class="col-md-3">
+                                                                                                            <div class="col-md-12">&nbsp;</div>    
+                                                                                                            <div class="col-md-12"><button type="button" class="btn btn-primary" id="btnQualiClinica" ><i class="fas fa-plus-circle"></i> ADD ATIVIDADES</button></div>
                                                                                                         </div>
                                                                                                     </div>
-                                                                                                    <!-- Modal -->
-                                                                                                    <div class="modal fade" id="modalQC<?= $qcid ?>" tabindex="-1" aria-labelledby="enviarModal" aria-hidden="true">
-                                                                                                        <div class="modal-dialog">
-                                                                                                            <div class="modal-content p-1 bg-light">
-                                                                                                                <div class="modal-header border-top border-left border-right"  style="background-color: #0055A1;">
-                                                                                                                    <h5 class="modal-title text-white" id="exampleModalLabel">Confirmação de envio</h5>
-                                                                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                                                                        <span aria-hidden="true">&times;</span>
-                                                                                                                    </button>
-                                                                                                                </div>
-                                                                                                                <div class="modal-body border-top border-left border-right">
-                                                                                                                    <div class="row">
-                                                                                                                        <div class="col-md-12 p-3">
-                                                                                                                            <p class="text-primary">Confirma o envio do cadastro?</p>
-                                                                                                                        </div>
-                                                                                                                    </div>
-                                                                                                                </div>
-                                                                                                                <div class="modal-footer border">
-                                                                                                                    <button type="button" class="btn btn-secondary " data-dismiss="modal">NÃO</button> &nbsp; 
-                                                                                                                    <button type="submit" name="enviaCadastro" class="btn btn-success">&nbsp; SIM &nbsp;</button>
-                                                                                                                </div>
-                                                                                                            </div>
+                                                                                                    <div class="row mb-2 divQualiClinica">
+                                                                                                        <div class="col-md-12 pl-5">
+                                                                                                            <label class="text-info"><small><i class="fas fa-hand-point-up"></i> &nbsp;Digite o número de atividades a serem preenchidas.</small>
                                                                                                         </div>
                                                                                                     </div>
+                                                                                                    <div class="row mb-2 divQualiClinica" id="divQualiClinica1"></div>
                                                                                                 </div>
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
-                                                                                </form>
                                                                             <?php }
                                                                         } else { ?>
                                                                             <div class="row">
-                                                                                <div class="col-md-12">
+                                                                                <div class="col-md-12 mt-2">
                                                                                     <h6 class="text-info pl-3"><i class="fas fa-hand-point-right"></i> Análise em andamento...</h6>   
                                                                                 </div>
                                                                             </div>
@@ -1072,25 +1017,98 @@ $rsit = mysqli_fetch_array($qit);
                                                                     } while ($rsqc = mysqli_fetch_array($qqc));
                                                                 }
                                                             } else {
-//                var_dump($nrqc);
+                                                                if($flagterminouap === '0'){
                                                                 ?>
-                                                                <div class="row mb-3 mt-2">
-                                                                    <div class="col-md-12">
-                                                                        <p class="text-info font-weight-bold text-center">*** Nenhuma atividade inserida ***</p>
-                                                                    </div>
-                                                                </div> 
-                                            <?php } ?>
+                                                                                <div class="row mb-2">
+                                                                                    <div class="col-md-12">
+                                                                                        <div class="col-md-12"><b>Possui atividade a declarar neste item?</b></div>
+                                                                                        <div class="col-md-3">
+                                                                                            <select class="form-control " id="rdQual" name="rdQual">
+                                                                                                <option value="">[--SELECIONE--]</option>
+                                                                                                <option value="1">SIM</option>
+                                                                                                <option value="0">NÃO</option>
+                                                                                            </select>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row mb-2 divQualiClinica">
+                                                                                    <div class="col-md-9">
+                                                                                        <div class="col-md-12"><b>Atividade</b></div>
+                                                                                        <div class="col-md-12">
+                                                                                            <select class="form-control" id="slQualiClinica" name="slQualiClinica">
+                                                                                                <option value="">[--SELECIONE--]</option>
+                                                                                                <?php
+                                                                                                $sqlqualifcli = "select idqualifclinica as idq, descricao as descq from qualifclinica";
+                                                                                                $qqualifcli = mysqli_query($conn, $sqlqualifcli) or die(mysqli_error($conn));
+                                                                                                $rsqualifcli = mysqli_fetch_array($qqualifcli);
+                                                                                                if ($rsqualifcli !== null) {
+                                                                                                    do {
+                                                                                                        $idq = $rsqualifcli['idq'];
+                                                                                                        $descq = $rsqualifcli['descq'];
+                                                                                                        ?>
+                                                                                                        <option value="<?= $idq ?>"><?= $descq ?></option>
+                                                                                                        <?php
+                                                                                                    } while ($rsqualifcli = mysqli_fetch_array($qqualifcli));
+                                                                                                }
+                                                                                                ?>
+                                                                                            </select>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-md-3">
+                                                                                        <div class="col-md-12" id="qcch"><b>Carga Horária</b></div>
+                                                                                        <div class="col-md-12"><input type="number" class="form-control" min="1" id="cargahrQualiClinica" name="cargahrQualiClinica" /></div>
+                                                                                    </div>
+                                                                                    <div class="col-md-9">
+                                                                                        <div class="col-md-12"><b>Informação</b></div>
+                                                                                        <div class="col-md-12"><input type="text" disabled="disabled" class="form-control" id="infoqc" /></div>
+                                                                                    </div>
+                                                                                    <div class="col-md-3">
+                                                                                        <div class="col-md-12"><b>Pontuação Estimada</b></div>
+                                                                                        <div class="col-md-12"><input type="text" class="form-control" disabled="disabled" id="pontoqc" /></div>
+                                                                                    </div>
+                                                                                    <div class="col-md-6">
+                                                                                        <div class="col-md-12"><b>Título da atividade</b></div>
+                                                                                        <div class="col-md-12"><input type="text" class="form-control" id="tituloQualiClinica" name="tituloQualiClinica" /></div>
+                                                                                    </div>
+                                                                                    <div class="col-md-6">
+                                                                                        <div class="col-md-12"><b>Anexar documento</b><small class="text-danger">&nbsp;&nbsp;   * Favor juntar os documentos em um único arquivo PDF.</small></div>
+                                                                                        <div class="col-md-12"><input type="file" class="form-control" id="anexoQualiClinica" name="anexoQualiClinica" /></div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row mb-2 divQualiClinica">
+                                                                                    <div class="col-md-3">
+                                                                                        <div class="col-md-12"><b>Quantidade de novas atividades</b></div>
+                                                                                        <div class="col-md-12"><input type="number" class="form-control" min="1" id="qtdatvqc" name="qtdatvqc" /></div>
+                                                                                    </div>
+                                                                                    <div class="col-md-3">
+                                                                                        <div class="col-md-12">&nbsp;</div>    
+                                                                                        <div class="col-md-12"><button type="button" class="btn btn-primary" id="btnQualiClinica" ><i class="fas fa-plus-circle"></i> ADD ATIVIDADES</button></div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row mb-2 divQualiClinica">
+                                                                                    <div class="col-md-12 pl-5">
+                                                                                        <label class="text-info"><small><i class="fas fa-hand-point-up"></i> &nbsp;Digite o número de atividades a serem preenchidas.</small>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row mb-2 divQualiClinica" id="divQualiClinica1"></div>
+                                                            <?php }else{ ?>
+                                                            <div class="row mb-2">
+                                                                <div class="col-md-12 pl-5">
+                                                                    <label class="text-info"><i class="fas fa-hand-point-right"></i> &nbsp;Não houve entrega para esta atividade.
+                                                                </div>
+                                                            </div>
+                                                            <?php }} ?>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-        <?php
-        if ($nrgepe > 0) {
-            $fgepe = "SIM";
-        } else {
-            $fgepe = "NÃO";
-        }
-        ?>
+                                            <?php
+                                            if ($nrgepe > 0) {
+                                                $fgepe = "SIM";
+                                            } else {
+                                                $fgepe = "NÃO";
+                                            }
+                                            ?>
                                             <div class="row mb-1">
                                                 <div class="col-12">
                                                     <div class="card border-1 ">
@@ -1268,27 +1286,30 @@ $rsit = mysqli_fetch_array($qit);
                                                                                 </div>
                                                                             </div>
                                                                             <?php if ($gepeflagparecer === '0' && $flagupgepe === '0' && $flagterminouap !== '1') { ?>
-                                                                                <form method="post" enctype="multipart/form-data" action="controller/rcbgepe.php">
-                                                                                    <input type="hidden" name="gepeid" value="<?= $gepeid ?>">
-                                                                                    <input type="hidden" name="idap" value="<?= $idap ?>">
-                                                                                    <input type="hidden" value="<?= $cpftratado ?>" name="cpf">
-                                                                                    <input type="hidden" value="<?= $ibgeO ?>" name="ibgeO">
-                                                                                    <input type="hidden" value="<?= $cnes ?>" name="cnes">
-                                                                                    <input type="hidden" value="<?= $ine ?>" name="ine">
-                                                                                    <input type="hidden" value="<?= $ano ?>" name="ano">
-                                                                                    <input type="hidden" value="<?= $ciclo ?>" name="ciclo">
                                                                                     <div class="row mb-1">
                                                                                         <div class="col-12">
                                                                                             <div class="card border-1">
-                                                                                                <div class="card-header text-white" style="background-color: #590d97;">
+                                                                                                <div class="card-header text-white" style="background-color: #0055A1;">
                                                                                                     <label><strong>Gestão, Ensino, Pesquisa e Extensão - Atualização/Correção</strong></label>
                                                                                                 </div>
                                                                                                 <div class="card-body">
                                                                                                     <div class="row mb-2">
-                                                                                                        <div class="col-md-8">
+                                                                                                        <div class="col-md-12">
+                                                                                                            <div class="col-md-12"><b>Possui atividade a declarar neste item?</b></div>
+                                                                                                            <div class="col-md-3">
+                                                                                                                <select class="form-control" id="rdGes" name="rdGes">
+                                                                                                                    <option value="">[--SELECIONE--]</option>
+                                                                                                                    <option value="1">SIM</option>
+                                                                                                                    <option value="0">NÃO</option>
+                                                                                                                </select>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    <div class="row mb-2 divGesEnsPesExt">
+                                                                                                        <div class="col-md-9">
                                                                                                             <div class="col-md-12"><b>Atividade</b></div>
                                                                                                             <div class="col-md-12">
-                                                                                                                <select class="form-control" id="slGesEnsPesExtup<?= $auxgepe ?>" name="slGesEnsPesExt" onchange="changeGesEnsPesExtup(<?= $auxgepe ?>);">
+                                                                                                                <select class="form-control" id="slGesEnsPesExt" name="slGesEnsPesExt">
                                                                                                                     <option value="">[--SELECIONE--]</option>
                                                                                                                     <?php
                                                                                                                     $sqlgesenspesext = "select idgesenspesext as idg, descricao as descg from gesenspesext";
@@ -1307,17 +1328,17 @@ $rsit = mysqli_fetch_array($qit);
                                                                                                                 </select>
                                                                                                             </div>
                                                                                                         </div>
-                                                                                                        <div class="col-md-4">
-                                                                                                            <div class="col-md-12" id="gepechup<?= $auxgepe ?>"><b>Carga Horária</b></div>
-                                                                                                            <div class="col-md-12"><input type="number" class="form-control" min="1" id="cargahrGesEnsPesExtup<?= $auxgepe ?>" name="cargahrGesEnsPesExt" onchange="changecargahrGesEnsPesExtup(<?= $auxgepe ?>);" /></div>
+                                                                                                        <div class="col-md-3">
+                                                                                                            <div class="col-md-12" id="gepech"><b>Carga Horária</b></div>
+                                                                                                            <div class="col-md-12"><input type="number" class="form-control" min="1" id="cargahrGesEnsPesExt" name="cargahrGesEnsPesExt" /></div>
                                                                                                         </div>
-                                                                                                        <div class="col-md-8">
+                                                                                                        <div class="col-md-9">
                                                                                                             <div class="col-md-12"><b>Informação</b></div>
-                                                                                                            <div class="col-md-12"><input type="text" disabled="disabled" class="form-control" id="infogepeup<?= $auxgepe ?>" /></div>
+                                                                                                            <div class="col-md-12"><input type="text" disabled="disabled" class="form-control" id="infogepe" /></div>
                                                                                                         </div>
-                                                                                                        <div class="col-md-4">
+                                                                                                        <div class="col-md-3">
                                                                                                             <div class="col-md-12"><b>Pontuação Estimada</b></div>
-                                                                                                            <div class="col-md-12"><input type="text" class="form-control" disabled="disabled" id="pontogepeup<?= $auxgepe ?>" /></div>
+                                                                                                            <div class="col-md-12"><input type="text" class="form-control" disabled="disabled" id="pontogepe" /></div>
                                                                                                         </div>
                                                                                                         <div class="col-md-6">
                                                                                                             <div class="col-md-12"><b>Título da atividade</b></div>
@@ -1328,44 +1349,30 @@ $rsit = mysqli_fetch_array($qit);
                                                                                                             <div class="col-md-12"><input type="file" class="form-control" id="anexoGesEnsPesExt" name="anexoGesEnsPesExt" /></div>
                                                                                                         </div>
                                                                                                     </div>
-                                                                                                    <div class="row">
-                                                                                                        <div class="col-md-6 offset-md-3 mt-4">
-                                                                                                            <button type="button" class="shadow btn btn-outline-success form-control" data-toggle="modal" data-target="#modalGepe<?= $gepeid ?>">ENVIAR ATIVIDADE CORRIGIDA</button>
+                                                                                                    <div class="row mb-2 divGesEnsPesExt">
+                                                                                                        <div class="col-md-3">
+                                                                                                            <div class="col-md-12"><b>Quantidade de novas atividades</b></div>
+                                                                                                            <div class="col-md-12"><input type="number" class="form-control" min="1" id="qtdatvgepe" name="qtdatvgepe" /></div>
+                                                                                                        </div>
+                                                                                                        <div class="col-md-3">
+                                                                                                            <div class="col-md-12">&nbsp;</div>
+                                                                                                            <div class="col-md-12"><button type="button" class="btn btn-primary" id="btnGesEnsPesExt" ><i class="fas fa-plus-circle"></i> ADD ATIVIDADES</button></div>
                                                                                                         </div>
                                                                                                     </div>
-                                                                                                    <!-- Modal -->
-                                                                                                    <div class="modal fade" id="modalGepe<?= $gepeid ?>" tabindex="-1" aria-labelledby="enviarModal" aria-hidden="true">
-                                                                                                        <div class="modal-dialog">
-                                                                                                            <div class="modal-content p-1 bg-light">
-                                                                                                                <div class="modal-header border-top border-left border-right"  style="background-color: #0055A1;">
-                                                                                                                    <h5 class="modal-title text-white" id="exampleModalLabel">Confirmação de envio</h5>
-                                                                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                                                                        <span aria-hidden="true">&times;</span>
-                                                                                                                    </button>
-                                                                                                                </div>
-                                                                                                                <div class="modal-body border-top border-left border-right">
-                                                                                                                    <div class="row">
-                                                                                                                        <div class="col-md-12 p-3">
-                                                                                                                            <p class="text-primary">Confirma o envio do cadastro?</p>
-                                                                                                                        </div>
-                                                                                                                    </div>
-                                                                                                                </div>
-                                                                                                                <div class="modal-footer border">
-                                                                                                                    <button type="button" class="btn btn-secondary " data-dismiss="modal">NÃO</button> &nbsp; 
-                                                                                                                    <button type="submit" name="enviaCadastro" class="btn btn-success">&nbsp; SIM &nbsp;</button>
-                                                                                                                </div>
-                                                                                                            </div>
+                                                                                                    <div class="row mb-2 divGesEnsPesExt">
+                                                                                                        <div class="col-md-12 pl-5">
+                                                                                                            <label class="text-info"><small><i class="fas fa-hand-point-up"></i> &nbsp;Digite o número de atividades a serem preenchidas.</small>
                                                                                                         </div>
                                                                                                     </div>
+                                                                                                    <div class="row mb-2 divGesEnsPesExt" id="divGesEnsPesExt1"></div>
                                                                                                 </div>
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
-                                                                                </form>
                                                                             <?php }
                                                                         } else { ?>
                                                                             <div class="row">
-                                                                                <div class="col-md-12">
+                                                                                <div class="col-md-12 mt-2">
                                                                                     <h6 class="text-info pl-3"><i class="fas fa-hand-point-right"></i> Análise em andamento...</h6>   
                                                                                 </div>
                                                                             </div>
@@ -1373,15 +1380,88 @@ $rsit = mysqli_fetch_array($qit);
                                                                         }
                                                                     } while ($rsgepe = mysqli_fetch_array($qgepe));
                                                                 }
-                                                            } else {
+                                                            } else { 
+                                                                if($flagterminouap === '0'){
                                                                 ?>
-                                                                <div class="row mb-3 mt-2">
-                                                                    <div class="col-md-12">
-                                                                        <p class="text-info font-weight-bold text-center">*** Nenhuma atividade inserida ***</p>
-                                                                    </div>
-                                                                </div>          
-                                                                <?php }
-                                                            ?>
+                                                                                <div class="row mb-2">
+                                                                                    <div class="col-md-12">
+                                                                                        <div class="col-md-12"><b>Possui atividade a declarar neste item?</b></div>
+                                                                                        <div class="col-md-3">
+                                                                                            <select class="form-control" id="rdGes" name="rdGes">
+                                                                                                <option value="">[--SELECIONE--]</option>
+                                                                                                <option value="1">SIM</option>
+                                                                                                <option value="0">NÃO</option>
+                                                                                            </select>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row mb-2 divGesEnsPesExt">
+                                                                                    <div class="col-md-9">
+                                                                                        <div class="col-md-12"><b>Atividade</b></div>
+                                                                                        <div class="col-md-12">
+                                                                                            <select class="form-control" id="slGesEnsPesExt" name="slGesEnsPesExt">
+                                                                                                <option value="">[--SELECIONE--]</option>
+                                                                                                <?php
+                                                                                                $sqlgesenspesext = "select idgesenspesext as idg, descricao as descg from gesenspesext";
+                                                                                                $qgesenspesext = mysqli_query($conn, $sqlgesenspesext) or die(mysqli_error($conn));
+                                                                                                $rsgesenspesext = mysqli_fetch_array($qgesenspesext);
+                                                                                                if ($rsgesenspesext !== null) {
+                                                                                                    do {
+                                                                                                        $idg = $rsgesenspesext['idg'];
+                                                                                                        $descg = $rsgesenspesext['descg'];
+                                                                                                        ?>
+                                                                                                        <option value="<?= $idg ?>"><?= $descg ?></option>
+                                                                                                        <?php
+                                                                                                    } while ($rsgesenspesext = mysqli_fetch_array($qgesenspesext));
+                                                                                                }
+                                                                                                ?>
+                                                                                            </select>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-md-3">
+                                                                                        <div class="col-md-12" id="gepech"><b>Carga Horária</b></div>
+                                                                                        <div class="col-md-12"><input type="number" class="form-control" min="1" id="cargahrGesEnsPesExt" name="cargahrGesEnsPesExt" /></div>
+                                                                                    </div>
+                                                                                    <div class="col-md-9">
+                                                                                        <div class="col-md-12"><b>Informação</b></div>
+                                                                                        <div class="col-md-12"><input type="text" disabled="disabled" class="form-control" id="infogepe" /></div>
+                                                                                    </div>
+                                                                                    <div class="col-md-3">
+                                                                                        <div class="col-md-12"><b>Pontuação Estimada</b></div>
+                                                                                        <div class="col-md-12"><input type="text" class="form-control" disabled="disabled" id="pontogepe" /></div>
+                                                                                    </div>
+                                                                                    <div class="col-md-6">
+                                                                                        <div class="col-md-12"><b>Título da atividade</b></div>
+                                                                                        <div class="col-md-12"><input type="text" class="form-control" id="tituloGesEnsPesExt" name="tituloGesEnsPesExt" /></div>
+                                                                                    </div>
+                                                                                    <div class="col-md-6">
+                                                                                        <div class="col-md-12"><b>Anexar documento</b><small class="text-danger">&nbsp;&nbsp;   * Favor juntar os documentos em um único arquivo PDF.</small></div>
+                                                                                        <div class="col-md-12"><input type="file" class="form-control" id="anexoGesEnsPesExt" name="anexoGesEnsPesExt" /></div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row mb-2 divGesEnsPesExt">
+                                                                                    <div class="col-md-3">
+                                                                                        <div class="col-md-12"><b>Quantidade de novas atividades</b></div>
+                                                                                        <div class="col-md-12"><input type="number" class="form-control" min="1" id="qtdatvgepe" name="qtdatvgepe" /></div>
+                                                                                    </div>
+                                                                                    <div class="col-md-3">
+                                                                                        <div class="col-md-12">&nbsp;</div>
+                                                                                        <div class="col-md-12"><button type="button" class="btn btn-primary" id="btnGesEnsPesExt" ><i class="fas fa-plus-circle"></i> ADD ATIVIDADES</button></div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row mb-2 divGesEnsPesExt">
+                                                                                    <div class="col-md-12 pl-5">
+                                                                                        <label class="text-info"><small><i class="fas fa-hand-point-up"></i> &nbsp;Digite o número de atividades a serem preenchidas.</small>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row mb-2 divGesEnsPesExt" id="divGesEnsPesExt1"></div>       
+                                                            <?php }else{ ?>
+                                                            <div class="row mb-2">
+                                                                <div class="col-md-12 pl-5">
+                                                                    <label class="text-info"><i class="fas fa-hand-point-right"></i> &nbsp;Não houve entrega para esta atividade.
+                                                                </div>
+                                                            </div>
+                                                            <?php }} ?>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1538,56 +1618,59 @@ $rsit = mysqli_fetch_array($qit);
                                                                             </div>
                                                                         </div>
                                                                         <?php if ($itflagparecer === '0' && $flagupit === '0' && $flagterminouap !== '1') { ?>
-                                                                        <form method="post" enctype="multipart/form-data" action="controller/rcbit.php">
-                                                                            <input type="hidden" name="idap" value="<?= $idap ?>">
-                                                                            <input type="hidden" name="itid" value="<?= $itid ?>">
-                                                                            <input type="hidden" value="<?= $cpftratado ?>" name="cpf">
-                                                                            <input type="hidden" value="<?= $ibgeO ?>" name="ibgeO">
-                                                                            <input type="hidden" value="<?= $cnes ?>" name="cnes">
-                                                                            <input type="hidden" value="<?= $ine ?>" name="ine">
-                                                                            <input type="hidden" value="<?= $ano ?>" name="ano">
-                                                                            <input type="hidden" value="<?= $ciclo ?>" name="ciclo">
                                                                         <div class="row mb-1">
                                                                             <div class="col-12">
                                                                                 <div class="card border-1">
-                                                                                    <div class="card-header text-white" style="background-color: #590d97;">
+                                                                                    <div class="card-header text-white" style="background-color: #0055A1;">
                                                                                         <label><strong>Inovação Tecnológica - Atualização/Correção</strong></label>
                                                                                     </div>
                                                                                     <div class="card-body">
                                                                                         <div class="row mb-2">
-                                                                                            <div class="col-md-8">
-                                                                                                <div class="col-md-12"><b>Atividade</b></div>
-                                                                                                <div class="col-md-12">
-                                                                                                    <select class="form-control" id="slInovTecup<?= $auxit ?>" name="slInovTec" onchange="changeInovTecup(<?= $auxit ?>)">
-                                                                                                        <option value="">[--SELECIONE--]</option>
-                                                                                                    <?php
-                                                                                                    $sqlinovtecnologica = "select idinovtecnologica as idi, descricao as desci from inovtecnologica";
-                                                                                                    $qinovtecnologica = mysqli_query($conn, $sqlinovtecnologica) or die(mysqli_error($conn));
-                                                                                                    $rsinovtecnologica = mysqli_fetch_array($qinovtecnologica);
-                                                                                                    if ($rsinovtecnologica !== null) {
-                                                                                                        do {
-                                                                                                            $idi = $rsinovtecnologica['idi'];
-                                                                                                            $desci = $rsinovtecnologica['desci'];
-                                                                                                    ?>
-                                                                                                        <option value="<?= $idi ?>"><?= $desci ?></option>
-                                                                                                    <?php
-                                                                                                        } while ($rsinovtecnologica = mysqli_fetch_array($qinovtecnologica));
-                                                                                                    }
-                                                                                                    ?>
-                                                                                                    </select>
+                                                                                            <div class="col-md-12">
+                                                                                                <div class="col-md-12"><b>Possui atividade a declarar neste item?</b></div>
+                                                                                                    <div class="col-md-3">
+                                                                                                        <select class="form-control " id="rdInov" name="rdInov">
+                                                                                                            <option value="">[--SELECIONE--]</option>
+                                                                                                            <option value="1">SIM</option>
+                                                                                                            <option value="0">NÃO</option>
+                                                                                                        </select>
+                                                                                                    </div>
                                                                                                 </div>
                                                                                             </div>
-                                                                                            <div class="col-md-4">
+                                                                                        <div class="row mb-2 divInovTec">
+                                                                                            <div class="col-md-9">
+                                                                                                <div class="col-md-12"><b>Atividade</b></div>
+                                                                                                    <div class="col-md-12">
+                                                                                                        <select class="form-control" id="slInovTec" name="slInovTec">
+                                                                                                            <option value="">[--SELECIONE--]</option>
+                                                                                                            <?php
+                                                                                                            $sqlinovtecnologica = "select idinovtecnologica as idi, descricao as desci from inovtecnologica";
+                                                                                                            $qinovtecnologica = mysqli_query($conn, $sqlinovtecnologica) or die(mysqli_error($conn));
+                                                                                                            $rsinovtecnologica = mysqli_fetch_array($qinovtecnologica);
+                                                                                                            if ($rsinovtecnologica !== null) {
+                                                                                                                do {
+                                                                                                                    $idi = $rsinovtecnologica['idi'];
+                                                                                                                    $desci = $rsinovtecnologica['desci'];
+                                                                                                            ?>
+                                                                                                            <option value="<?= $idi ?>"><?= $desci ?></option>
+                                                                                                            <?php
+                                                                                                                } while ($rsinovtecnologica = mysqli_fetch_array($qinovtecnologica));
+                                                                                                            }
+                                                                                                            ?>
+                                                                                                        </select>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            <div class="col-md-3">
                                                                                                 <div class="col-md-12"><b>Carga Horária</b></div>
-                                                                                                <div class="col-md-12"><input type="number" class="form-control" min="1" id="cargahrInovTecup<?= $auxit ?>" name="cargahrInovTec" onchange="changeChInovTecup(<?= $auxit ?>)"/></div>
+                                                                                                <div class="col-md-12"><input type="number" class="form-control" min="1" id="cargahrInovTec" name="cargahrInovTec" /></div>
                                                                                             </div>
-                                                                                            <div class="col-md-8">
+                                                                                            <div class="col-md-9">
                                                                                                 <div class="col-md-12"><b>Informação</b></div>
-                                                                                                <div class="col-md-12"><input type="text" disabled="disabled" class="form-control" id="infoitup<?= $auxit ?>" /></div>
+                                                                                                <div class="col-md-12"><input type="text" disabled="disabled" class="form-control" id="infoit" /></div>
                                                                                             </div>
-                                                                                            <div class="col-md-4">
+                                                                                            <div class="col-md-3">
                                                                                                 <div class="col-md-12"><b>Pontuação Estimada</b></div>
-                                                                                                <div class="col-md-12"><input type="text" class="form-control" disabled="disabled" id="pontoitup<?= $auxit ?>" /></div>
+                                                                                                <div class="col-md-12"><input type="text" class="form-control" disabled="disabled" id="pontoit" /></div>
                                                                                             </div>
                                                                                             <div class="col-md-6">
                                                                                                 <div class="col-md-12"><b>Título da atividade</b></div>
@@ -1598,44 +1681,30 @@ $rsit = mysqli_fetch_array($qit);
                                                                                                 <div class="col-md-12"><input type="file" class="form-control" id="anexoInovTec" name="anexoInovTec" /></div>
                                                                                             </div>
                                                                                         </div>
-                                                                                        <div class="row">
-                                                                                            <div class="col-md-6 offset-md-3 mt-4">
-                                                                                                <button type="button" class="shadow btn btn-outline-success form-control" data-toggle="modal" data-target="#modalIT<?= $itid ?>">ENVIAR ATIVIDADE CORRIGIDA</button>
+                                                                                        <div class="row mb-2 divInovTec">
+                                                                                            <div class="col-md-3">
+                                                                                                <div class="col-md-12"><b>Quantidade de novas atividades</b></div>
+                                                                                                <div class="col-md-12"><input type="number" class="form-control" min="1" id="qtdatvit" name="qtdatvit" /></div>
+                                                                                            </div>
+                                                                                            <div class="col-md-3">
+                                                                                                <div class="col-md-12">&nbsp;</div>    
+                                                                                                <div class="col-md-12"><button type="button" class="btn btn-primary" id="btnInovTec" ><i class="fas fa-plus-circle"></i> ADD ATIVIDADES</button></div>
                                                                                             </div>
                                                                                         </div>
-                                                                                        <!-- Modal -->
-                                                                                        <div class="modal fade" id="modalIT<?= $itid ?>" tabindex="-1" aria-labelledby="enviarModal" aria-hidden="true">
-                                                                                            <div class="modal-dialog">
-                                                                                                <div class="modal-content p-1 bg-light">
-                                                                                                    <div class="modal-header border-top border-left border-right"  style="background-color: #0055A1;">
-                                                                                                        <h5 class="modal-title text-white" id="exampleModalLabel">Confirmação de envio</h5>
-                                                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                                                            <span aria-hidden="true">&times;</span>
-                                                                                                        </button>
-                                                                                                    </div>
-                                                                                                    <div class="modal-body border-top border-left border-right">
-                                                                                                        <div class="row">
-                                                                                                            <div class="col-md-12 p-3">
-                                                                                                                <p class="text-primary">Confirma o envio do cadastro?</p>
-                                                                                                            </div>
-                                                                                                        </div>
-                                                                                                    </div>
-                                                                                                    <div class="modal-footer border">
-                                                                                                        <button type="button" class="btn btn-secondary " data-dismiss="modal">NÃO</button> &nbsp; 
-                                                                                                        <button type="submit" name="enviaCadastro" class="btn btn-success">&nbsp; SIM &nbsp;</button>
-                                                                                                    </div>
-                                                                                                </div>
+                                                                                        <div class="row mb-2 divInovTec">
+                                                                                            <div class="col-md-12 pl-5">
+                                                                                                <label class="text-info"><small><i class="fas fa-hand-point-up"></i> &nbsp;Digite o número de atividades a serem preenchidas.</small>
                                                                                             </div>
                                                                                         </div>
+                                                                                        <div class="row mb-2 divInovTec" id="divInovTec1"></div>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                        </form>
                                                                         <?php }
                                                                         } else { ?>
                                                                         <div class="row">
-                                                                            <div class="col-md-12">
+                                                                            <div class="col-md-12 mt-2">
                                                                                 <h6 class="text-info pl-3"><i class="fas fa-hand-point-right"></i> Análise em andamento...</h6>   
                                                                             </div>
                                                                         </div>
@@ -1643,17 +1712,133 @@ $rsit = mysqli_fetch_array($qit);
                                                                         }
                                                                     } while ($rsit = mysqli_fetch_array($qit));
                                                                 }
-                                                            } else {
-                                                                ?>
-                                                                <div class="row mb-3 mt-2">
+                                                            } else { 
+                                                                if($flagterminouap === '0'){ ?>
+                                                                <div class="row mb-2">
                                                                     <div class="col-md-12">
-                                                                        <p class="text-info font-weight-bold text-center">*** Nenhuma atividade inserida ***</p>
+                                                                        <div class="col-md-12"><b>Possui atividade a declarar neste item?</b></div>
+                                                                            <div class="col-md-3">
+                                                                                <select class="form-control " id="rdInov" name="rdInov">
+                                                                                    <option value="">[--SELECIONE--]</option>
+                                                                                    <option value="1">SIM</option>
+                                                                                    <option value="0">NÃO</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
-                                                                </div>     
-                                                        <?php }
-                                                    } ?>
+                                                                <div class="row mb-2 divInovTec">
+                                                                    <div class="col-md-9">
+                                                                        <div class="col-md-12"><b>Atividade</b></div>
+                                                                            <div class="col-md-12">
+                                                                                <select class="form-control" id="slInovTec" name="slInovTec">
+                                                                                    <option value="">[--SELECIONE--]</option>
+                                                                                    <?php
+                                                                                    $sqlinovtecnologica = "select idinovtecnologica as idi, descricao as desci from inovtecnologica";
+                                                                                    $qinovtecnologica = mysqli_query($conn, $sqlinovtecnologica) or die(mysqli_error($conn));
+                                                                                    $rsinovtecnologica = mysqli_fetch_array($qinovtecnologica);
+                                                                                    if ($rsinovtecnologica !== null) {
+                                                                                        do {
+                                                                                            $idi = $rsinovtecnologica['idi'];
+                                                                                            $desci = $rsinovtecnologica['desci'];
+                                                                                    ?>
+                                                                                    <option value="<?= $idi ?>"><?= $desci ?></option>
+                                                                                    <?php
+                                                                                        } while ($rsinovtecnologica = mysqli_fetch_array($qinovtecnologica));
+                                                                                    }
+                                                                                    ?>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                    <div class="col-md-3">
+                                                                        <div class="col-md-12"><b>Carga Horária</b></div>
+                                                                        <div class="col-md-12"><input type="number" class="form-control" min="1" id="cargahrInovTec" name="cargahrInovTec" /></div>
+                                                                    </div>
+                                                                    <div class="col-md-9">
+                                                                        <div class="col-md-12"><b>Informação</b></div>
+                                                                        <div class="col-md-12"><input type="text" disabled="disabled" class="form-control" id="infoit" /></div>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <div class="col-md-12"><b>Pontuação Estimada</b></div>
+                                                                        <div class="col-md-12"><input type="text" class="form-control" disabled="disabled" id="pontoit" /></div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div class="col-md-12"><b>Título da atividade</b></div>
+                                                                        <div class="col-md-12"><input type="text" class="form-control" id="tituloInovTec" name="tituloInovTec" /></div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div class="col-md-12"><b>Anexar documento</b><small class="text-danger">&nbsp;&nbsp;   * Favor juntar os documentos em um único arquivo PDF.</small></div>
+                                                                        <div class="col-md-12"><input type="file" class="form-control" id="anexoInovTec" name="anexoInovTec" /></div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row mb-2 divInovTec">
+                                                                    <div class="col-md-3">
+                                                                        <div class="col-md-12"><b>Quantidade de novas atividades</b></div>
+                                                                        <div class="col-md-12"><input type="number" class="form-control" min="1" id="qtdatvit" name="qtdatvit" /></div>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <div class="col-md-12">&nbsp;</div>    
+                                                                        <div class="col-md-12"><button type="button" class="btn btn-primary" id="btnInovTec" ><i class="fas fa-plus-circle"></i> ADD ATIVIDADES</button></div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row mb-2 divInovTec">
+                                                                    <div class="col-md-12 pl-5">
+                                                                        <label class="text-info"><small><i class="fas fa-hand-point-up"></i> &nbsp;Digite o número de atividades a serem preenchidas.</small>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row mb-2 divInovTec" id="divInovTec1"></div> 
+                                                            <?php }else{ ?>
+                                                            <div class="row mb-2">
+                                                                <div class="col-md-12 pl-5">
+                                                                    <label class="text-info"><i class="fas fa-hand-point-right"></i> &nbsp;Não houve entrega para esta atividade.
+                                                                </div>
+                                                            </div>
+                                                            <?php }} ?>
+                                                    <?php } ?>
                                                     </div>
                                                 </div>
+                                                 
+                                                <?php
+                                                if($flagld === true || $flagqc === true || $flaggepe === true || $flagit === true){ 
+                                                    if($flagterminouap === '0'){
+                                                ?>
+                                                    <div class="row">
+                                                        <div class="col-md-6 offset-md-3 mt-4">
+                                                            <button type="button" onclick="revisaoup();" class="shadow btn btn-outline-success form-control" >ENVIAR ATIVIDADES</button>
+                                                        </div>
+                                                    </div>  
+                                                <?php }} ?>
+                                                    <!-- Modal -->
+                                                    <div class="modal fade" id="modalUp" tabindex="-1" aria-labelledby="modalUp" aria-hidden="true">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content p-1 bg-light">
+                                                                <div class="modal-header border-top border-left border-right"  style="background-color: #0055A1;">
+                                                                    <h5 class="modal-title text-white" id="exampleModalLabel">Confirmação de envio</h5>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body border-top border-left border-right">
+                                                                    <input type="hidden" value="<?= $idld ?>" name="idld">
+                                                                    <input type="hidden" value="<?= $cpftratado ?>" name="cpf">
+                                                                    <input type="hidden" value="<?= $ibgeO ?>" name="ibgeO">
+                                                                    <input type="hidden" value="<?= $cnes ?>" name="cnes">
+                                                                    <input type="hidden" value="<?= $ine ?>" name="ine">
+                                                                    <input type="hidden" value="<?= $ano ?>" name="ano">
+                                                                    <input type="hidden" value="<?= $ciclo ?>" name="ciclo">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12 p-3">
+                                                                            <p class="text-primary">Confirma o envio das atividades?</p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer border">
+                                                                    <button type="button" class="btn btn-secondary " data-dismiss="modal">NÃO</button> &nbsp; 
+                                                                    <button type="submit" name="enviaCadastro" class="btn btn-success">&nbsp; SIM &nbsp;</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                               </form>
                                             </div>
                                         </div>
                                     </div>
@@ -1709,6 +1894,7 @@ $rsit = mysqli_fetch_array($qit);
        $('.divGesEnsPesExt').hide();
        $('.divInovTec').hide();
        $('#enviarModal').modal('hide');
+       $('#modalUp').modal('hide');
        $('#modalptexp').modal('hide');
        let ptgeral = 0.00;
        if($('#ptld').val() !== null && $('#ptld').val() !== ''){
@@ -2066,6 +2252,178 @@ $rsit = mysqli_fetch_array($qit);
             $('#enviarModal').modal('hide');
         }
 //        console.log(analise);
+    }
+    function revisaoup(){
+        let rdativ = $('#rdativ').val();
+        let rdQual = $('#rdQual').val();
+        let rdGes = $('#rdGes').val();
+        let rdInov = $('#rdInov').val();
+        let analise = true;
+        if(rdativ === '0' && rdQual === '0' && rdGes === '0' && rdInov === '0'){
+            analise = false;
+            console.log(analise);
+            swal({
+                title: "Atenção!",
+                text: "Ao mennos uma atividade deve ser preenchida!",
+                icon: "warning",
+                button: "OK"
+            });
+            $('#rdativ').focus(); return;
+        }else{
+            analise = true;
+        }
+        if(rdativ === ''){
+            analise = false;
+            console.log(analise);
+            swal({
+                title: "Atenção!",
+                text: "Responda a pergunta no item Atividade de Longa Duração!",
+                icon: "warning",
+                button: "OK"
+            });
+//          alert('Responda a pergunta no item Atividade de Longa Duração');
+            $('#rdativ').focus(); return;
+        }else{
+            analise = true;
+        }
+        if(rdQual === ''){
+            analise = false;
+            console.log(analise);
+            swal({
+                title: "Atenção!",
+                text: "Responda a pergunta no item Qualificação Clínica!",
+                icon: "warning",
+                button: "OK"
+            });
+//            alert('Responda a pergunta no item Qualificação Clínica');
+            $('#rdQual').focus(); return;
+        }else{
+            if(rdQual === '1'){
+                let slQualiClinica = $('#slQualiClinica').val();
+                let cargahrQualiClinica = $('#cargahrQualiClinica').val();
+                let tituloQualiClinica = $('#tituloQualiClinica').val().trim();
+                let anexoQualiClinica = $('#anexoQualiClinica').val();
+//                console.log(anexoQualiClinica);
+                if(slQualiClinica === '' || cargahrQualiClinica === '' || tituloQualiClinica === '' || anexoQualiClinica === ''){
+                    analise = false;
+                    swal({
+                        title: "Atenção!",
+                        text: "Preencha os campos no item Qualificação Clínica!",
+                        icon: "warning",
+                        button: "OK"
+                    });
+    //                alert('Preencha os campos no item Qualificação Clínica');
+                    if(slQualiClinica === ''){
+                        $('#slQualiClinica').focus(); return;
+                    }
+                    if(cargahrQualiClinica === ''){
+                        $('#cargahrQualiClinica').focus(); return;
+                    }
+                    if(tituloQualiClinica === ''){
+                        $('#tituloQualiClinica').focus(); return;
+                    }
+                    if(anexoQualiClinica === ''){
+                        $('#anexoQualiClinica').focus(); return;
+                    }
+                }
+            }else{
+                analise = true;
+            }
+        }
+        if(rdGes === ''){
+            analise = false;
+            console.log(analise);
+            swal({
+                title: "Atenção!",
+                text: "Responda a pergunta no item Gestão, Ensino, Pesquisa e Extensão!",
+                icon: "warning",
+                button: "OK"
+            });
+//            alert('Responda a pergunta no item Gestão, Ensino, Pesquisa e Extensão');
+            $('#rdGes').focus(); return;
+        }else{
+            if(rdGes === '1'){
+                let slGesEnsPesExt = $('#slGesEnsPesExt').val();
+                let cargahrGesEnsPesExt = $('#cargahrGesEnsPesExt').val();
+                let tituloGesEnsPesExt = $('#tituloGesEnsPesExt').val().trim();
+                let anexoGesEnsPesExt = $('#anexoGesEnsPesExt').val();
+//                console.log(anexoQualiClinica);
+                if(slGesEnsPesExt === '' || cargahrGesEnsPesExt === '' || tituloGesEnsPesExt === '' || anexoGesEnsPesExt === ''){
+                    analise = false;
+                    swal({
+                        title: "Atenção!",
+                        text: "Preencha os campos no item Gestão, Ensino, Pesquisa e Extensão!",
+                        icon: "warning",
+                        button: "OK"
+                    });
+    //                alert('Preencha os campos no item Gestão, Ensino, Pesquisa e Extensão');
+                    if(slGesEnsPesExt === ''){
+                        $('#slGesEnsPesExt').focus(); return;
+                    }
+                    if(cargahrGesEnsPesExt === ''){
+                        $('#cargahrGesEnsPesExt').focus(); return;
+                    }
+                    if(tituloGesEnsPesExt === ''){
+                        $('#tituloGesEnsPesExt').focus(); return;
+                    }
+                    if(anexoGesEnsPesExt === ''){
+                        $('#anexoGesEnsPesExt').focus(); return;
+                    }
+                }else{
+                    analise = true;
+                }
+            }
+        }
+        if(rdInov === ''){
+            analise = false;
+            console.log(analise);
+            swal({
+                title: "Atenção!",
+                text: "Responda a pergunta no item Inovação Tecnológica!",
+                icon: "warning",
+                button: "OK"
+            });
+//            alert('Responda a pergunta no item Inovação Tecnológica');
+            $('#rdInov').focus(); return;
+        }else{
+            if(rdInov === '1'){
+                let slInovTec = $('#slInovTec').val();
+                let cargahrInovTec = $('#cargahrInovTec').val();
+                let tituloInovTec = $('#tituloInovTec').val().trim();
+                let anexoInovTec = $('#anexoInovTec').val();
+//                console.log(anexoQualiClinica);
+                if(slInovTec === '' || cargahrInovTec === '' || tituloInovTec === '' || anexoInovTec === ''){
+                    analise = false;
+                    swal({
+                        title: "Atenção!",
+                        text: "Preencha os campos no item Inovação Tecnológica!",
+                        icon: "warning",
+                        button: "OK"
+                    });
+    //                alert('Preencha os campos no item Inovação Tecnológica');
+                    if(slInovTec === ''){
+                        $('#slInovTec').focus(); return;
+                    }
+                    if(cargahrInovTec === ''){
+                        $('#cargahrInovTec').focus(); return;
+                    }
+                    if(tituloInovTec === ''){
+                        $('#tituloInovTec').focus(); return;
+                    }
+                    if(anexoInovTec === ''){
+                        $('#anexoInovTec').focus(); return;
+                    }
+                }else{
+                    analise = true;
+                }
+            }
+        }
+        if(analise === true){
+            $('#modalUp').modal('show');
+        }else{
+            $('#modalUp').modal('hide');
+        }
+        console.log(analise);
     }
     $("#slGesEnsPesExt").change(function(){
        let slgepe =  $("#slGesEnsPesExt").val();

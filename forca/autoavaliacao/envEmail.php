@@ -1,13 +1,17 @@
 <?php
-require __DIR__ . "/../../source/autoload.php";
+session_start();
+require __DIR__ . "/../../vendor/autoload.php";
 include '../../conexao_agsus_2.php';
-
-// Definir o tipo de conteúdo como JSON
-header('Content-Type: application/json');
-// Receber o JSON enviado pelo JavaScript através de fetch
-$data = json_decode(file_get_contents('php://input'), true);
+//var_dump($_POST);
+$id = isset($_POST['id']) ? $_POST['id'] : '';
+$nome = isset($_POST['nome']) ? $_POST['nome'] : '';
+$cpf = isset($_POST['cpf']) ? $_POST['cpf'] : '';
 // Verificar se os dados foram recebidos corretamente
-if (isset($data['id']) && isset($data['nome']) && isset($data['cpf'])) {
+if ($id !== '' && $nome !== '' && $cpf !== '') {
+    $id = $_POST['id'];
+    $nome = $_POST['nome'];
+    $cpf = $_POST['cpf'];
+    
     $sql = "select email from medico where CpfMedico = '$cpf' limit 1";
     $query = mysqli_query($conn2, $sql) or die(mysqli_error($conn2));
     $rs = mysqli_fetch_array($query);
@@ -32,12 +36,22 @@ if (isset($data['id']) && isset($data['nome']) && isset($data['cpf'])) {
             "");
     $email->attach("../../img/Logo_agsus.jpg", "AgSUS");
     if ($email->send()) {
-        $aptutor = (new \Source\Models\Aperfeicoamentoprofissional())->findById($id);
-        if($aptutor !== null){
-            $aptutor->flagenvemail = '1';
-            $aptutor->dthrenvemail = $dthrhoje;
-            $aptutor->save();
+        $cptutor = (new \Source\Models\Competencias_profissionais())->findById($id);
+//        var_dump($cptutor);
+        date_default_timezone_set('America/Sao_Paulo');
+        $dthrhoje = date('Y-m-d H:i:s');
+        if($cptutor !== null){
+            $cptutor->flagenvemail = '1';
+            $cptutor->dthrenvemail = $dthrhoje;
+            $cptutor->save();
         }
+        echo '';
+//        echo "<h6 class='p-2 rounded' style='background-color: #E2EDD9;'><i class='fas fa-chevron-circle-right'></i>&nbsp; E-Mail enviado com sucesso!</h6>";
+    }else{
+        echo "<h6 class='p-2 rounded bg-warning'><i class='fas fa-chevron-circle-right'></i>&nbsp; Erro: Falha na comunicação.</h6>";
     }
+}else{
+    // Resposta em caso de erro nos dados
+    echo "<h6 class='p-2 rounded bg-warning'><i class='fas fa-chevron-circle-right'></i>&nbsp; Erro: Dados inexistentes em nossa base.</h6>";
 }
-
+exit();

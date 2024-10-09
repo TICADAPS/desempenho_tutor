@@ -1,6 +1,7 @@
 <?php
 session_start();
 include_once './../../../conexao-agsus.php';
+include_once './../../../conexao_agsus_2.php';
 include_once __DIR__ .'/../../../vendor/autoload.php';
 if(!isset($_SESSION['msg'])){
     $_SESSION['msg'] = '';
@@ -34,7 +35,8 @@ $ano = $_POST['ano'];
 $ciclo = $_POST['ciclo'];
 date_default_timezone_set('America/Sao_Paulo');
 $dthoje = date('d/m/Y');
-$iduser = $_SESSION["idUser"];
+//$iduser = $_SESSION["idUser"];
+$iduser = '2765';
 $sqlu = "select * from usuarios where id_user = '$iduser'";
 $queryu = mysqli_query($conn2, $sqlu) or die(mysqli_error($conn2));
 $rsu = mysqli_fetch_array($queryu);
@@ -83,6 +85,7 @@ if($ap !== null){
     }else{
         $ap->pontuacao = 0.00;
     }
+    $ap->flagterminou = null;
 //    var_dump($ap);
     $rsap = $ap->save();
 //    var_dump($rsap);

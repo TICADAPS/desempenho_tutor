@@ -131,6 +131,10 @@ if($rsm){
                         if($qcUp !== null){
                             if($qcUp->flagparecer === '0'){
                                 $qcUp->flagup = '0';
+                                $qcUp->flagemail = '1';
+                                $rsqcUp = $qcUp->save();
+                            }else{
+                                $qcUp->flagemail = '1';
                                 $rsqcUp = $qcUp->save();
                             }
                         }
@@ -144,6 +148,10 @@ if($rsm){
                         if($gepeUp !== null){
                             if($gepeUp->flagparecer === '0'){
                                 $gepeUp->flagup = '0';
+                                $gepeUp->flagemail = '1';
+                                $gepeUp->save();
+                            }else{
+                                $gepeUp->flagemail = '1';
                                 $gepeUp->save();
                             }
                         }
@@ -157,6 +165,10 @@ if($rsm){
                         if($itUp !== null){
                             if($itUp->flagparecer === '0'){
                                 $itUp->flagup = '0';
+                                $itUp->flagemail = '1';
+                                $itUp->save();
+                            }else{
+                                $itUp->flagemail = '1';
                                 $itUp->save();
                             }
                         }
@@ -167,7 +179,7 @@ if($rsm){
                 $ap->flagterminou = '1';
                 $ap->save();
             }
-            $_SESSION['msg'] = "<h6 class='bg-success border rounded text-white p-2'>&nbsp;<i class='fas fa-hand-point-right'></i>&nbsp; E-Mail enviado com sucesso.</h6>";
+            $_SESSION['msg'] = "<h6 class='bg-light rounded text-success p-2'>&nbsp;<i class='fas fa-hand-point-right'></i>&nbsp; E-Mail enviado com sucesso.</h6>";
             echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
                     URL=\"../index.php?ct=$cpf&ib=$ibge&c=$cnes&i=$ine&a=$ano&ci=$ciclo\"'>";
             exit();

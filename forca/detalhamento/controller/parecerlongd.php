@@ -90,7 +90,7 @@ if($ap !== null){
     $rsap = $ap->save();
 //    var_dump($rsap);
     if($rsap !== null){
-        $_SESSION['msg'] = "<h6 class='bg-success border rounded text-white p-2'>&nbsp;<i class='fas fa-hand-point-right'></i>&nbsp; Análise do item Atividade de Longa Duração gravada.</h6>";
+        $_SESSION['msg'] = "<h6 class='bg-light rounded text-success p-2'>&nbsp;<i class='fas fa-hand-point-right'></i>&nbsp; Análise do item Atividade de Longa Duração gravada.</h6>";
         echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
             URL=\"../index.php?ct=$cpf&ib=$ibge&c=$cnes&i=$ine&a=$ano&ci=$ciclo\"'>"; 
         exit();

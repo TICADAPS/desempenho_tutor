@@ -54,7 +54,7 @@ if($rs){
     }while ($rs = mysqli_fetch_array($query));
 }
 $sql2 = "select m.nome, m.admissao, m.cargo, mun.Municipio, e.UF, ivs.descricao, ap.id, 
-    ap.dthrcadastro, ap.flagativlongduracao, ap.flagparecer as flagparecerap, ap.pontuacao,
+    ap.dthrcadastro, ap.flagativlongduracao, ap.flagparecer as flagparecerap, ap.pontuacao, ap.flagemail, 
     ap.parecer as parecerap, ap.pareceruser as pareceruserap, ap.parecerdthr as parecerdthrap, ap.flagup, ap.flagterminou 
     from medico m inner join aperfeicoamentoprofissional ap on m.cpf = ap.cpf and 
     m.ibge = ap.ibge and m.cnes = ap.cnes and m.ine = ap.ine 
@@ -89,6 +89,7 @@ if($rs2){
         }
         $parecerap = $rs2['parecerap'];
         $flagupap = $rs2['flagup'];
+        $flagemailap = $rs2['flagemail'];
         $flagterminouap = $rs2['flagterminou'];
         $pareceruserap = $rs2['pareceruserap'];
         $parecerdthrap = vemdata($rs2['parecerdthrap']);  
@@ -97,7 +98,7 @@ if($rs2){
 }
 //verifica se há parecer negativo para essa a atividade Qualificação Clínica
 $sqlqc = "select q.descricao as qcdesc, mq.id, mq.idqualifclinica, mq.titulo, mq.cargahr, mq.anexo, mq.dthrcadastro, 
-    mq.flagparecer, mq.parecer, mq.pareceruser, mq.parecerdthr, mq.pontuacao, mq.flagup 
+    mq.flagparecer, mq.parecer, mq.pareceruser, mq.parecerdthr, mq.pontuacao, mq.flagup, mq.flagemail as flagemailqc
     from aperfeicoamentoprofissional ap 
     inner join medico_qualifclinica mq on ap.id = mq.idaperfprof 
     inner join qualifclinica q on mq.idqualifclinica = q.idqualifclinica 
@@ -107,7 +108,7 @@ $nrqc = mysqli_num_rows($qqc);
 $rsqc = mysqli_fetch_array($qqc);
 //verifica se há parecer negativo para essa a atividade Gestão, Ensino, Pesquisa e Extensão
 $sqlgepe = "select g.descricao as gdesc, mg.id, mg.idgesenspesext, mg.titulo, mg.cargahr, mg.anexo, mg.dthrcadastro, 
-    mg.flagparecer, mg.parecer, mg.pareceruser, mg.parecerdthr,mg.pontuacao, mg.flagup 
+    mg.flagparecer, mg.parecer, mg.pareceruser, mg.parecerdthr,mg.pontuacao, mg.flagup, mg.flagemail as flagemailgepe
     from aperfeicoamentoprofissional ap 
     inner join medico_gesenspesext mg on ap.id = mg.idaperfprof 
     inner join gesenspesext g on mg.idgesenspesext = g.idgesenspesext  
@@ -117,7 +118,7 @@ $nrgepe = mysqli_num_rows($qgepe);
 $rsgepe = mysqli_fetch_array($qgepe);
 //verifica se há parecer negativo para essa a atividade Inovação Tecnológica
 $sqlit = "select i.descricao as idesc, mi.id, mi.idinovtecnologica, mi.titulo, mi.cargahr, mi.anexo, mi.dthrcadastro, 
-    mi.flagparecer, mi.parecer, mi.pareceruser, mi.parecerdthr, mi.pontuacao , mi.flagup 
+    mi.flagparecer, mi.parecer, mi.pareceruser, mi.parecerdthr, mi.pontuacao , mi.flagup, mi.flagemail as flagemailit
     from aperfeicoamentoprofissional ap 
     inner join medico_inovtecnologica mi on ap.id = mi.idaperfprof 
     inner join inovtecnologica i on mi.idinovtecnologica = i.idinovtecnologica  
@@ -326,7 +327,7 @@ $rsit = mysqli_fetch_array($qit);
                                                                     </div>
                                                                     <div class="col-md-9 divLongDuracao mt-2">
                                                                         <div class="col-md-12"><b>Informação</b></div>
-                                                                        <div class="col-md-12"><input type="text" value="Crédito de 50 pontos por estar realizando curso de longa duração." disabled="disabled" class="form-control" id="infold" /></div>
+                                                                        <div class="col-md-12"><label class="bg-light p-2 border rounded" id="infold">Crédito de 50 pontos por estar realizando curso de longa duração.</label></div>
                                                                     </div>
                                                                     <div class="col-md-3 divLongDuracao mt-2">
                                                                         <div class="col-md-12"><b>Pontuação Estimada</b></div>
@@ -735,8 +736,50 @@ $rsit = mysqli_fetch_array($qit);
                                                                                 </div>   
                                                                             </div>
                                                                         </div>
-                                                                        <?php if ($flagparecerap === '0' && $flagupap === '0' && $flagterminouap !== '1') { ?>
+                                                                        <?php if ($flagparecerap === '0' && $flagupap === '0' && $flagterminouap === '0') { ?>
                                                                             <input type='hidden' id="rdativ" name="rdativ" value="<?= $flagald ?>">
+                                                                            <div class="row">
+                                                                                <div class="col-md-12 mt-2">
+                                                                                    <div class="card card-body mb-2">
+                                                                                        <div class="row">
+                                                                                            <div class="col-md-3"><b>Deseja corrigir o lançamento anterior?</b></div>
+                                                                                            <div class="col-md-1 ml-4"><input type="radio" class="form-check-input" name="rdpergld" id="rdpergld1" value="1" checked="checked">NÃO</div>
+                                                                                            <div class="col-md-1 ml-4"><input type="radio" class="form-check-input" name="rdpergld" id="rdpergld2" value="2">SIM</div>
+                                                                                        </div>
+                                                                                        <div class="row mt-3 mb-1" id="correcao">
+                                                                                            <div class="col-12">
+                                                                                                <div class="card border-1 ">
+                                                                                                    <div class="card-header text-white" style="background-color: #0055A1;">
+                                                                                                        <label><strong>Atividade de Longa Duração</strong></label>
+                                                                                                    </div>
+                                                                                                    <div class="card-body">
+                                                                                                        <div class="row mb-2">
+                                                                                                            <div class="col-md-12">
+                                                                                                                <div class="col-md-12"><b>Declaro que fui autorizado pela Agência para a realização de curso de longa duração?</b></div>
+                                                                                                                <div class="col-md-6">
+                                                                                                                    <select class="form-control " id="rdativup" name="rdativup">
+                                                                                                                        <option value="">[--SELECIONE--]</option>
+                                                                                                                        <option value="1">SIM</option>
+                                                                                                                        <option value="0">NÃO</option>
+                                                                                                                    </select>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            <div class="col-md-9 divLongDuracao mt-2">
+                                                                                                                <div class="col-md-12"><b>Informação</b></div>
+                                                                                                                <div class="col-md-12"><label class="bg-light p-2 border rounded" id="infoldup">Crédito de 50 pontos por estar realizando curso de longa duração.</label></div>
+                                                                                                            </div>
+                                                                                                            <div class="col-md-3 divLongDuracao mt-2">
+                                                                                                                <div class="col-md-12"><b>Pontuação Estimada</b></div>
+                                                                                                                <div class="col-md-12"><input type="text" class="form-control" disabled="disabled" id="pontoldup" /></div>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
                                                                            <?php } } else { ?>
                                                                             <div class="row mt-3">
                                                                                 <div class="col-md-12 mt-2">
@@ -787,14 +830,15 @@ $rsit = mysqli_fetch_array($qit);
                                                         </div> 
                                                         <div class="card-body">
                                                             <?php
+                                                            $flagemailqc = '';
                                                             if ($nrqc > 0) {
                                                                 if ($rsqc) {
                                                                     $auxqc = 0;
                                                                     do {
                                                                         $flagupqc = $rsqc['flagup'];
-                                                                        if ($flagupqc !== null && $flagupqc === '1') {
-                                                                            continue;
-                                                                        }
+//                                                                        if ($flagupqc !== null && $flagupqc === '1') {
+//                                                                            continue;
+//                                                                        }
                                                                         $auxqc++;
                                                                         $qcid = $rsqc['id'];
                                                                         $qcidqualifclinica = $rsqc['idqualifclinica'];
@@ -820,6 +864,10 @@ $rsit = mysqli_fetch_array($qit);
                                                                         } else {
                                                                             $flagqc = false;
                                                                         }
+                                                                        $flagemailqc = $rsqc['flagemailqc'];
+                                                                        if($flagemailqc === null){
+                                                                            $flagemailqc = '';
+                                                                        }
                                                                         $qcpontuacao = $rsqc['pontuacao'];
                                                                         if ($qcpontuacao === null || $qcpontuacao === '') {
                                                                             $qcpontuacao = 0.00;
@@ -839,7 +887,7 @@ $rsit = mysqli_fetch_array($qit);
                                                                             <div class="row">
                                                                                 <div class="col-md-12 bg-dark text-white p-2 border text-center mt-4 mb-3 font-weight-bold small align-middle"><i class="fas fa-chevron-circle-right float-left mt-1"></i> &nbsp;Qualificação Clínica: Atividade <?= $auxqc ?>&nbsp; <i class="fas fa-chevron-circle-left float-right mt-1"></i></div>
                                                                             </div>
-                    <?php } ?>
+                                                                        <?php } ?>
                                                                         <div class="row mb-1">
                                                                             <div class="col-md-9">
                                                                                 <ul class="list-group">
@@ -921,7 +969,92 @@ $rsit = mysqli_fetch_array($qit);
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
-                                                                            <?php if ($qcflagparecer === '0' && $flagupqc === '0' && $flagterminouap !== '1') { ?>
+                                                                            <?php if($flagupqc !== '0' && $qcflagparecer === '1' && $flagterminouap === '0' && $flagemailqc === '1'){ ?>
+                                                                            <div class="row mb-1">
+                                                                                <div class="col-12">
+                                                                                    <div class="card border-1">
+                                                                                        <div class="card-header text-white" style="background-color: #0055A1;">
+                                                                                            <label><strong>Qualificação Clínica - Atualização/Correção</strong></label>
+                                                                                        </div>
+                                                                                        <div class="card-body">
+                                                                                            <div class="row mb-2">
+                                                                                                <div class="col-md-12">
+                                                                                                    <div class="col-md-12"><b>Possui atividade a declarar neste item?</b></div>
+                                                                                                    <div class="col-md-3">
+                                                                                                        <select class="form-control " id="rdQual" name="rdQual">
+                                                                                                            <option value="" disabled='disabled'>[--SELECIONE--]</option>
+                                                                                                            <option value="1">SIM</option>
+                                                                                                            <option value="0" selected='selected'>NÃO</option>
+                                                                                                        </select>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="row mb-2 divQualiClinica">
+                                                                                                <div class="col-md-9">
+                                                                                                    <div class="col-md-12"><b>Atividade</b></div>
+                                                                                                    <div class="col-md-12">
+                                                                                                        <select class="form-control" id="slQualiClinica" name="slQualiClinica">
+                                                                                                            <option value="">[--SELECIONE--]</option>
+                                                                                                        <?php
+                                                                                                        $sqlqualifcli = "select idqualifclinica as idq, descricao as descq from qualifclinica";
+                                                                                                        $qqualifcli = mysqli_query($conn, $sqlqualifcli) or die(mysqli_error($conn));
+                                                                                                        $rsqualifcli = mysqli_fetch_array($qqualifcli);
+                                                                                                        if ($rsqualifcli !== null) {
+                                                                                                            do {
+                                                                                                                $idq = $rsqualifcli['idq'];
+                                                                                                                $descq = $rsqualifcli['descq'];
+                                                                                                        ?>
+                                                                                                            <option value="<?= $idq ?>"><?= $descq ?></option>
+                                                                                                        <?php
+                                                                                                            } while ($rsqualifcli = mysqli_fetch_array($qqualifcli));
+                                                                                                        }
+                                                                                                        ?>
+                                                                                                        </select>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div class="col-md-3">
+                                                                                                    <div class="col-md-12" id="qcch"><b>Carga Horária</b></div>
+                                                                                                    <div class="col-md-12"><input type="number" class="form-control" min="1" id="cargahrQualiClinica" name="cargahrQualiClinica" /></div>
+                                                                                                </div>
+                                                                                                <div class="col-md-9">
+                                                                                                    <div class="col-md-12"><b>Informação</b></div>
+                                                                                                    <div class="col-md-12"><input type="text" disabled="disabled" class="form-control" id="infoqc" /></div>
+                                                                                                </div>
+                                                                                                <div class="col-md-3">
+                                                                                                    <div class="col-md-12"><b>Pontuação Estimada</b></div>
+                                                                                                    <div class="col-md-12"><input type="text" class="form-control" disabled="disabled" id="pontoqc" /></div>
+                                                                                                </div>
+                                                                                                <div class="col-md-6">
+                                                                                                    <div class="col-md-12"><b>Título da atividade</b></div>
+                                                                                                    <div class="col-md-12"><input type="text" class="form-control" id="tituloQualiClinica" name="tituloQualiClinica" /></div>
+                                                                                                </div>
+                                                                                                <div class="col-md-6">
+                                                                                                    <div class="col-md-12"><b>Anexar documento</b><small class="text-danger">&nbsp;&nbsp;   * Favor juntar os documentos em um único arquivo PDF.</small></div>
+                                                                                                    <div class="col-md-12"><input type="file" class="form-control" id="anexoQualiClinica" name="anexoQualiClinica" /></div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="row mb-2 divQualiClinica">
+                                                                                                <div class="col-md-3">
+                                                                                                    <div class="col-md-12"><b>Quantidade de novas atividades</b></div>
+                                                                                                    <div class="col-md-12"><input type="number" class="form-control" min="1" id="qtdatvqc" name="qtdatvqc" /></div>
+                                                                                                </div>
+                                                                                                <div class="col-md-3">
+                                                                                                    <div class="col-md-12">&nbsp;</div>    
+                                                                                                    <div class="col-md-12"><button type="button" class="btn btn-primary" id="btnQualiClinica" ><i class="fas fa-plus-circle"></i> ADD ATIVIDADES</button></div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="row mb-2 divQualiClinica">
+                                                                                                <div class="col-md-12 pl-5">
+                                                                                                    <label class="text-info"><small><i class="fas fa-hand-point-up"></i> &nbsp;Digite o número de atividades a serem preenchidas.</small>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="row mb-2 divQualiClinica" id="divQualiClinica1"></div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <?php } ?>
+                                                                            <?php if ($qcflagparecer === '0' && $flagupqc === '0' && $flagterminouap !== '1' && $flagemailqc === '1') { ?>
                                                                                     <div class="row mb-1">
                                                                                         <div class="col-12">
                                                                                             <div class="card border-1">
@@ -934,9 +1067,9 @@ $rsit = mysqli_fetch_array($qit);
                                                                                                             <div class="col-md-12"><b>Possui atividade a declarar neste item?</b></div>
                                                                                                             <div class="col-md-3">
                                                                                                                 <select class="form-control " id="rdQual" name="rdQual">
-                                                                                                                    <option value="">[--SELECIONE--]</option>
+                                                                                                                    <option value="" disabled='disabled'>[--SELECIONE--]</option>
                                                                                                                     <option value="1">SIM</option>
-                                                                                                                    <option value="0">NÃO</option>
+                                                                                                                    <option value="0" selected='selected'>NÃO</option>
                                                                                                                 </select>
                                                                                                             </div>
                                                                                                         </div>
@@ -1017,16 +1150,16 @@ $rsit = mysqli_fetch_array($qit);
                                                                     } while ($rsqc = mysqli_fetch_array($qqc));
                                                                 }
                                                             } else {
-                                                                if($flagterminouap === '0'){
+                                                                if($flagterminouap === '0' && $flagemailap === '1'){
                                                                 ?>
                                                                                 <div class="row mb-2">
                                                                                     <div class="col-md-12">
                                                                                         <div class="col-md-12"><b>Possui atividade a declarar neste item?</b></div>
                                                                                         <div class="col-md-3">
                                                                                             <select class="form-control " id="rdQual" name="rdQual">
-                                                                                                <option value="">[--SELECIONE--]</option>
+                                                                                                <option value="" disabled='disabled'>[--SELECIONE--]</option>
                                                                                                 <option value="1">SIM</option>
-                                                                                                <option value="0">NÃO</option>
+                                                                                                <option value="0" selected='selected'>NÃO</option>
                                                                                             </select>
                                                                                         </div>
                                                                                     </div>
@@ -1117,14 +1250,15 @@ $rsit = mysqli_fetch_array($qit);
                                                         </div>   
                                                         <div class="card-body">
                                                             <?php
+                                                            $flagemailgepe = '';
                                                             if ($nrgepe > 0) {
                                                                 if ($rsgepe) {
                                                                     $auxgepe = 0;
                                                                     do {
                                                                         $flagupgepe = $rsgepe['flagup'];
-                                                                        if ($flagupgepe !== null && $flagupgepe === '1') {
-                                                                            continue;
-                                                                        }
+//                                                                        if ($flagupgepe !== null && $flagupgepe === '1') {
+//                                                                            continue;
+//                                                                        }
                                                                         $auxgepe++;
                                                                         $gepeid = $rsgepe['id'];
                                                                         $gepeidgesenspesext = $rsgepe['idgesenspesext'];
@@ -1183,6 +1317,10 @@ $rsit = mysqli_fetch_array($qit);
                                                                             $flaggepe = true;
                                                                         } else {
                                                                             $flaggepe = false;
+                                                                        }
+                                                                        $flagemailgepe = $rsgepe['flagemailgepe'];
+                                                                        if($flagemailgepe === null){
+                                                                            $flagemailgepe = '';
                                                                         }
                                                                         $gepepontuacao = $rsgepe['pontuacao'];
                                                                         if ($gepepontuacao === null || $gepepontuacao === '') {
@@ -1285,7 +1423,92 @@ $rsit = mysqli_fetch_array($qit);
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
-                                                                            <?php if ($gepeflagparecer === '0' && $flagupgepe === '0' && $flagterminouap !== '1') { ?>
+                                                                            <?php if($flagupgepe !== '1' && $gepeflagparecer === '1' && $flagterminouap === '0' && $flagemailgepe === '1'){ ?>
+                                                                            <div class="row mb-1">
+                                                                                        <div class="col-12">
+                                                                                            <div class="card border-1">
+                                                                                                <div class="card-header text-white" style="background-color: #0055A1;">
+                                                                                                    <label><strong>Gestão, Ensino, Pesquisa e Extensão - Atualização/Correção</strong></label>
+                                                                                                </div>
+                                                                                                <div class="card-body">
+                                                                                                    <div class="row mb-2">
+                                                                                                        <div class="col-md-12">
+                                                                                                            <div class="col-md-12"><b>Possui atividade a declarar neste item?</b></div>
+                                                                                                            <div class="col-md-3">
+                                                                                                                <select class="form-control" id="rdGes" name="rdGes">
+                                                                                                                    <option value="" disabled='disabled'>[--SELECIONE--]</option>
+                                                                                                                    <option value="1">SIM</option>
+                                                                                                                    <option value="0" selected='selected'>NÃO</option>
+                                                                                                                </select>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    <div class="row mb-2 divGesEnsPesExt">
+                                                                                                        <div class="col-md-9">
+                                                                                                            <div class="col-md-12"><b>Atividade</b></div>
+                                                                                                            <div class="col-md-12">
+                                                                                                                <select class="form-control" id="slGesEnsPesExt" name="slGesEnsPesExt">
+                                                                                                                    <option value="">[--SELECIONE--]</option>
+                                                                                                                    <?php
+                                                                                                                    $sqlgesenspesext = "select idgesenspesext as idg, descricao as descg from gesenspesext";
+                                                                                                                    $qgesenspesext = mysqli_query($conn, $sqlgesenspesext) or die(mysqli_error($conn));
+                                                                                                                    $rsgesenspesext = mysqli_fetch_array($qgesenspesext);
+                                                                                                                    if ($rsgesenspesext !== null) {
+                                                                                                                        do {
+                                                                                                                            $idg = $rsgesenspesext['idg'];
+                                                                                                                            $descg = $rsgesenspesext['descg'];
+                                                                                                                            ?>
+                                                                                                                            <option value="<?= $idg ?>"><?= $descg ?></option>
+                                                                                                                            <?php
+                                                                                                                        } while ($rsgesenspesext = mysqli_fetch_array($qgesenspesext));
+                                                                                                                    }
+                                                                                                                    ?>
+                                                                                                                </select>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <div class="col-md-3">
+                                                                                                            <div class="col-md-12" id="gepech"><b>Carga Horária</b></div>
+                                                                                                            <div class="col-md-12"><input type="number" class="form-control" min="1" id="cargahrGesEnsPesExt" name="cargahrGesEnsPesExt" /></div>
+                                                                                                        </div>
+                                                                                                        <div class="col-md-9">
+                                                                                                            <div class="col-md-12"><b>Informação</b></div>
+                                                                                                            <div class="col-md-12"><input type="text" disabled="disabled" class="form-control" id="infogepe" /></div>
+                                                                                                        </div>
+                                                                                                        <div class="col-md-3">
+                                                                                                            <div class="col-md-12"><b>Pontuação Estimada</b></div>
+                                                                                                            <div class="col-md-12"><input type="text" class="form-control" disabled="disabled" id="pontogepe" /></div>
+                                                                                                        </div>
+                                                                                                        <div class="col-md-6">
+                                                                                                            <div class="col-md-12"><b>Título da atividade</b></div>
+                                                                                                            <div class="col-md-12"><input type="text" class="form-control" id="tituloGesEnsPesExt" name="tituloGesEnsPesExt" /></div>
+                                                                                                        </div>
+                                                                                                        <div class="col-md-6">
+                                                                                                            <div class="col-md-12"><b>Anexar documento</b><small class="text-danger">&nbsp;&nbsp;   * Favor juntar os documentos em um único arquivo PDF.</small></div>
+                                                                                                            <div class="col-md-12"><input type="file" class="form-control" id="anexoGesEnsPesExt" name="anexoGesEnsPesExt" /></div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    <div class="row mb-2 divGesEnsPesExt">
+                                                                                                        <div class="col-md-3">
+                                                                                                            <div class="col-md-12"><b>Quantidade de novas atividades</b></div>
+                                                                                                            <div class="col-md-12"><input type="number" class="form-control" min="1" id="qtdatvgepe" name="qtdatvgepe" /></div>
+                                                                                                        </div>
+                                                                                                        <div class="col-md-3">
+                                                                                                            <div class="col-md-12">&nbsp;</div>
+                                                                                                            <div class="col-md-12"><button type="button" class="btn btn-primary" id="btnGesEnsPesExt" ><i class="fas fa-plus-circle"></i> ADD ATIVIDADES</button></div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    <div class="row mb-2 divGesEnsPesExt">
+                                                                                                        <div class="col-md-12 pl-5">
+                                                                                                            <label class="text-info"><small><i class="fas fa-hand-point-up"></i> &nbsp;Digite o número de atividades a serem preenchidas.</small>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    <div class="row mb-2 divGesEnsPesExt" id="divGesEnsPesExt1"></div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                            <?php } ?>
+                                                                            <?php if ($gepeflagparecer === '0' && $flagupgepe === '0' && $flagterminouap !== '1' && $flagemailgepe === '1') { ?>
                                                                                     <div class="row mb-1">
                                                                                         <div class="col-12">
                                                                                             <div class="card border-1">
@@ -1298,9 +1521,9 @@ $rsit = mysqli_fetch_array($qit);
                                                                                                             <div class="col-md-12"><b>Possui atividade a declarar neste item?</b></div>
                                                                                                             <div class="col-md-3">
                                                                                                                 <select class="form-control" id="rdGes" name="rdGes">
-                                                                                                                    <option value="">[--SELECIONE--]</option>
+                                                                                                                    <option value="" disabled='disabled'>[--SELECIONE--]</option>
                                                                                                                     <option value="1">SIM</option>
-                                                                                                                    <option value="0">NÃO</option>
+                                                                                                                    <option value="0" selected='selected'>NÃO</option>
                                                                                                                 </select>
                                                                                                             </div>
                                                                                                         </div>
@@ -1381,16 +1604,16 @@ $rsit = mysqli_fetch_array($qit);
                                                                     } while ($rsgepe = mysqli_fetch_array($qgepe));
                                                                 }
                                                             } else { 
-                                                                if($flagterminouap === '0'){
+                                                                if($flagterminouap === '0' && $flagemailap === '1'){
                                                                 ?>
                                                                                 <div class="row mb-2">
                                                                                     <div class="col-md-12">
                                                                                         <div class="col-md-12"><b>Possui atividade a declarar neste item?</b></div>
                                                                                         <div class="col-md-3">
                                                                                             <select class="form-control" id="rdGes" name="rdGes">
-                                                                                                <option value="">[--SELECIONE--]</option>
+                                                                                                <option value="" disabled='disabled'>[--SELECIONE--]</option>
                                                                                                 <option value="1">SIM</option>
-                                                                                                <option value="0">NÃO</option>
+                                                                                                <option value="0" selected='selected'>NÃO</option>
                                                                                             </select>
                                                                                         </div>
                                                                                     </div>
@@ -1482,14 +1705,15 @@ $rsit = mysqli_fetch_array($qit);
                                                         <div class="card-body">
                                                             <?php
 //                                                          var_dump($nrit, $rsit);
+                                                            $flagemailit = '';
                                                             if ($nrit > 0) {
                                                                 if ($rsit) {
                                                                     $auxit = 0;
                                                                     do {
                                                                         $flagupit = $rsit['flagup'];
-                                                                        if ($flagupit !== null && $flagupit === '1') {
-                                                                            continue;
-                                                                        }
+//                                                                        if ($flagupit !== null && $flagupit === '1') {
+//                                                                            continue;
+//                                                                        }
                                                                         $auxit++;
                                                                         $itid = $rsit['id'];
                                                                         $itidinovtecnologica = $rsit['idinovtecnologica'];
@@ -1518,6 +1742,10 @@ $rsit = mysqli_fetch_array($qit);
                                                                             $flagit = false;
                                                                         }
                                                                         $itparecer = trim($rsit['parecer']);
+                                                                        $flagemailit = $rsit['flagemailit'];
+                                                                        if($flagemailit === null){
+                                                                            $flagemailit = '';
+                                                                        }
                                                                         $itpontuacao = $rsit['pontuacao'];
                                                                         if ($itpontuacao === null || $itpontuacao === '') {
                                                                             $itpontuacao = 0.00;
@@ -1617,7 +1845,9 @@ $rsit = mysqli_fetch_array($qit);
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                        <?php if ($itflagparecer === '0' && $flagupit === '0' && $flagterminouap !== '1') { ?>
+                                                            
+                                                                        <?php
+                                                                        if($flagupit !== '1' && $itflagparecer === '1' && $flagterminouap === '0' && $flagemailit === '1'){ ?>
                                                                         <div class="row mb-1">
                                                                             <div class="col-12">
                                                                                 <div class="card border-1">
@@ -1630,9 +1860,94 @@ $rsit = mysqli_fetch_array($qit);
                                                                                                 <div class="col-md-12"><b>Possui atividade a declarar neste item?</b></div>
                                                                                                     <div class="col-md-3">
                                                                                                         <select class="form-control " id="rdInov" name="rdInov">
-                                                                                                            <option value="">[--SELECIONE--]</option>
+                                                                                                            <option value="" disabled='disabled'>[--SELECIONE--]</option>
                                                                                                             <option value="1">SIM</option>
-                                                                                                            <option value="0">NÃO</option>
+                                                                                                            <option value="0" selected='selected'>NÃO</option>
+                                                                                                        </select>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        <div class="row mb-2 divInovTec">
+                                                                                            <div class="col-md-9">
+                                                                                                <div class="col-md-12"><b>Atividade</b></div>
+                                                                                                    <div class="col-md-12">
+                                                                                                        <select class="form-control" id="slInovTec" name="slInovTec">
+                                                                                                            <option value="">[--SELECIONE--]</option>
+                                                                                                            <?php
+                                                                                                            $sqlinovtecnologica = "select idinovtecnologica as idi, descricao as desci from inovtecnologica";
+                                                                                                            $qinovtecnologica = mysqli_query($conn, $sqlinovtecnologica) or die(mysqli_error($conn));
+                                                                                                            $rsinovtecnologica = mysqli_fetch_array($qinovtecnologica);
+                                                                                                            if ($rsinovtecnologica !== null) {
+                                                                                                                do {
+                                                                                                                    $idi = $rsinovtecnologica['idi'];
+                                                                                                                    $desci = $rsinovtecnologica['desci'];
+                                                                                                            ?>
+                                                                                                            <option value="<?= $idi ?>"><?= $desci ?></option>
+                                                                                                            <?php
+                                                                                                                } while ($rsinovtecnologica = mysqli_fetch_array($qinovtecnologica));
+                                                                                                            }
+                                                                                                            ?>
+                                                                                                        </select>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            <div class="col-md-3">
+                                                                                                <div class="col-md-12"><b>Carga Horária</b></div>
+                                                                                                <div class="col-md-12"><input type="number" class="form-control" min="1" id="cargahrInovTec" name="cargahrInovTec" /></div>
+                                                                                            </div>
+                                                                                            <div class="col-md-9">
+                                                                                                <div class="col-md-12"><b>Informação</b></div>
+                                                                                                <div class="col-md-12"><input type="text" disabled="disabled" class="form-control" id="infoit" /></div>
+                                                                                            </div>
+                                                                                            <div class="col-md-3">
+                                                                                                <div class="col-md-12"><b>Pontuação Estimada</b></div>
+                                                                                                <div class="col-md-12"><input type="text" class="form-control" disabled="disabled" id="pontoit" /></div>
+                                                                                            </div>
+                                                                                            <div class="col-md-6">
+                                                                                                <div class="col-md-12"><b>Título da atividade</b></div>
+                                                                                                <div class="col-md-12"><input type="text" class="form-control" id="tituloInovTec" name="tituloInovTec" /></div>
+                                                                                            </div>
+                                                                                            <div class="col-md-6">
+                                                                                                <div class="col-md-12"><b>Anexar documento</b><small class="text-danger">&nbsp;&nbsp;   * Favor juntar os documentos em um único arquivo PDF.</small></div>
+                                                                                                <div class="col-md-12"><input type="file" class="form-control" id="anexoInovTec" name="anexoInovTec" /></div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="row mb-2 divInovTec">
+                                                                                            <div class="col-md-3">
+                                                                                                <div class="col-md-12"><b>Quantidade de novas atividades</b></div>
+                                                                                                <div class="col-md-12"><input type="number" class="form-control" min="1" id="qtdatvit" name="qtdatvit" /></div>
+                                                                                            </div>
+                                                                                            <div class="col-md-3">
+                                                                                                <div class="col-md-12">&nbsp;</div>    
+                                                                                                <div class="col-md-12"><button type="button" class="btn btn-primary" id="btnInovTec" ><i class="fas fa-plus-circle"></i> ADD ATIVIDADES</button></div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="row mb-2 divInovTec">
+                                                                                            <div class="col-md-12 pl-5">
+                                                                                                <label class="text-info"><small><i class="fas fa-hand-point-up"></i> &nbsp;Digite o número de atividades a serem preenchidas.</small>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="row mb-2 divInovTec" id="divInovTec1"></div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <?php } ?>
+                                                                        <?php if ($itflagparecer === '0' && $flagupit === '0' && $flagterminouap !== '1' && $flagemailit === '1') { ?>
+                                                                        <div class="row mb-1">
+                                                                            <div class="col-12">
+                                                                                <div class="card border-1">
+                                                                                    <div class="card-header text-white" style="background-color: #0055A1;">
+                                                                                        <label><strong>Inovação Tecnológica - Atualização/Correção</strong></label>
+                                                                                    </div>
+                                                                                    <div class="card-body">
+                                                                                        <div class="row mb-2">
+                                                                                            <div class="col-md-12">
+                                                                                                <div class="col-md-12"><b>Possui atividade a declarar neste item?</b></div>
+                                                                                                    <div class="col-md-3">
+                                                                                                        <select class="form-control " id="rdInov" name="rdInov">
+                                                                                                            <option value="" disabled='disabled'>[--SELECIONE--]</option>
+                                                                                                            <option value="1">SIM</option>
+                                                                                                            <option value="0" selected='selected'>NÃO</option>
                                                                                                         </select>
                                                                                                     </div>
                                                                                                 </div>
@@ -1713,15 +2028,15 @@ $rsit = mysqli_fetch_array($qit);
                                                                     } while ($rsit = mysqli_fetch_array($qit));
                                                                 }
                                                             } else { 
-                                                                if($flagterminouap === '0'){ ?>
+                                                                if($flagterminouap === '0' && $flagemailap === '1'){ ?>
                                                                 <div class="row mb-2">
                                                                     <div class="col-md-12">
                                                                         <div class="col-md-12"><b>Possui atividade a declarar neste item?</b></div>
                                                                             <div class="col-md-3">
                                                                                 <select class="form-control " id="rdInov" name="rdInov">
-                                                                                    <option value="">[--SELECIONE--]</option>
+                                                                                    <option value="" disabled='disabled'>[--SELECIONE--]</option>
                                                                                     <option value="1">SIM</option>
-                                                                                    <option value="0">NÃO</option>
+                                                                                    <option value="0" selected='selected'>NÃO</option>
                                                                                 </select>
                                                                             </div>
                                                                         </div>
@@ -1893,6 +2208,7 @@ $rsit = mysqli_fetch_array($qit);
        $('.divQualiClinica').hide();
        $('.divGesEnsPesExt').hide();
        $('.divInovTec').hide();
+       $('#correcao').hide();
        $('#enviarModal').modal('hide');
        $('#modalUp').modal('hide');
        $('#modalptexp').modal('hide');
@@ -1928,6 +2244,13 @@ $rsit = mysqli_fetch_array($qit);
             }
             $('#ptexpec').html(ptgeralexptxt);
        }
+    });
+    //dar opção para corrigir (update) a Atividade de Longa Duração
+    $('#rdpergld2').click(function(){
+        $('#correcao').show(400);
+    });
+    $('#rdpergld1').click(function(){
+        $('#correcao').hide(300);
     });
     $('#rdativ').change(function(){
         let rdativ = $('#rdativ').val();
@@ -2259,19 +2582,19 @@ $rsit = mysqli_fetch_array($qit);
         let rdGes = $('#rdGes').val();
         let rdInov = $('#rdInov').val();
         let analise = true;
-        if(rdativ === '0' && rdQual === '0' && rdGes === '0' && rdInov === '0'){
-            analise = false;
-            console.log(analise);
-            swal({
-                title: "Atenção!",
-                text: "Ao mennos uma atividade deve ser preenchida!",
-                icon: "warning",
-                button: "OK"
-            });
-            $('#rdativ').focus(); return;
-        }else{
-            analise = true;
-        }
+//        if(rdativ === '0' && rdQual === '0' && rdGes === '0' && rdInov === '0'){
+//            analise = false;
+//            console.log(analise);
+//            swal({
+//                title: "Atenção!",
+//                text: "Ao mennos uma atividade deve ser preenchida!",
+//                icon: "warning",
+//                button: "OK"
+//            });
+//            $('#rdativ').focus(); return;
+//        }else{
+//            analise = true;
+//        }
         if(rdativ === ''){
             analise = false;
             console.log(analise);

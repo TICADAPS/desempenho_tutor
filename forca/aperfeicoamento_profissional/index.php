@@ -64,14 +64,15 @@ $contt = 0;
         <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=no">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        
+
         <!-- Custom fonts for this template-->
         <link rel="shortcut icon" href="../../img_agsus/iconAdaps.png"/>
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
         <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
         <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <!-- Custom styles for this template-->
@@ -84,56 +85,62 @@ $contt = 0;
         <script src="../../js/accessibility.js"></script>
         <script src="../../js/jquery.easypiechart.js"></script>
         <script src="../../js/jquery.easypiechart2.js"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        
         <style>
-        #container {
-            height: 400px;
-        }
+            #container {
+                height: 400px;
+            }
 
-        .highcharts-figure,
-        .highcharts-data-table table {
-            min-width: 310px;
-            max-width: 800px;
-            margin: 1em auto;
-        }
+            .highcharts-figure,
+            .highcharts-data-table table {
+                min-width: 310px;
+                max-width: 800px;
+                margin: 1em auto;
+            }
 
-        .highcharts-data-table table {
-            font-family: Verdana, sans-serif;
-            border-collapse: collapse;
-            border: 1px solid #ebebeb;
-            margin: 10px auto;
-            text-align: center;
-            width: 100%;
-            max-width: 500px;
-        }
+            .highcharts-data-table table {
+                font-family: Verdana, sans-serif;
+                border-collapse: collapse;
+                border: 1px solid #ebebeb;
+                margin: 10px auto;
+                text-align: center;
+                width: 100%;
+                max-width: 500px;
+            }
 
-        .highcharts-data-table caption {
-            padding: 1em 0;
-            font-size: 1.2em;
-            color: #555;
-        }
+            .highcharts-data-table caption {
+                padding: 1em 0;
+                font-size: 1.2em;
+                color: #555;
+            }
 
-        .highcharts-data-table th {
-            font-weight: 600;
-            padding: 0.5em;
-        }
+            .highcharts-data-table th {
+                font-weight: 600;
+                padding: 0.5em;
+            }
 
-        .highcharts-data-table td,
-        .highcharts-data-table th,
-        .highcharts-data-table caption {
-            padding: 0.5em;
-        }
+            .highcharts-data-table td,
+            .highcharts-data-table th,
+            .highcharts-data-table caption {
+                padding: 0.5em;
+            }
 
-        .highcharts-data-table thead tr,
-        .highcharts-data-table tr:nth-child(even) {
-            background: #f8f8f8;
-        }
+            .highcharts-data-table thead tr,
+            .highcharts-data-table tr:nth-child(even) {
+                background: #f8f8f8;
+            }
 
-        .highcharts-data-table tr:hover {
-            background: #f1f7ff;
-        }
+            .highcharts-data-table tr:hover {
+                background: #f1f7ff;
+            }
         </style>
         <style>
-            ul {margin-left: -18px;}
+            ul {
+                margin-left: -18px;
+            }
             .tooltip-inner {
                 background-color: #0f547cad;
             }
@@ -149,7 +156,7 @@ $contt = 0;
             .tooltip.bs-tooltip-top .arrow:before {
                 border-top-color: #0f547cad !important;
             }
-            
+
             .box .chart{
                 position: relative;
                 width: 110px;
@@ -164,7 +171,7 @@ $contt = 0;
                 top: 0;
                 left: 0;
             }
-            
+
             .table-overflow {
                 max-height:550px;
                 overflow-y:auto;
@@ -175,6 +182,23 @@ $contt = 0;
             }
             .table-hover tbody tr:hover td {
                 background: #f0f8ff;
+            }
+            /* Estilizando o tooltip */
+            .tooltip-inner {
+                background-color: #ffffff !important; /* Fundo branco */
+                color: #1432FF !important; /* Texto preto */
+                border: 1px solid #dddddd; /* Borda cinza clara */
+            }
+
+            /* Remover ou ajustar a sombra do tooltip */
+            .tooltip.bs-tooltip-top .arrow::before,
+            .tooltip.bs-tooltip-bottom .arrow::before,
+            .tooltip.bs-tooltip-left .arrow::before,
+            .tooltip.bs-tooltip-right .arrow::before {
+                border-top-color: #ffffff !important; /* Cor branca na seta */
+                border-bottom-color: #ffffff !important; /* Para setas que apontam para cima/baixo */
+                border-left-color: #ffffff !important; /* Para setas que apontam para a direita/esquerda */
+                border-right-color: #ffffff !important;
             }
         </style>
     </head>
@@ -211,8 +235,8 @@ $contt = 0;
                                     <!--<a class="nav-link dropdown-toggle" href="../relatorios/relatorio_geral_igad.php">Relatório Geral IGAD - 1º ciclo de 2023</a>-->
                                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">Relatórios</a>
                                     <div class="dropdown-menu">
-                                        <?php if($perfil === '3' && $nivel === '1'){ ?>
-                                        <!--<a class="dropdown-item" href="../relatorios/relatorio_geral_igad.php">Relatório Geral IGAD - 1º ciclo de 2024</a>-->
+                                        <?php if ($perfil === '3' && $nivel === '1') { ?>
+                                            <!--<a class="dropdown-item" href="../relatorios/relatorio_geral_igad.php">Relatório Geral IGAD - 1º ciclo de 2024</a>-->
                                         <?php } ?>
                                     </div>
                                 </li>
@@ -234,15 +258,15 @@ $contt = 0;
             </div>
             <div class="row p-2">
                 <div class="col-12">
-                    <?php 
-                        if ($_SESSION['pgmsg'] === '2') {
-                            if ($_SESSION['msg'] !== null && $_SESSION['msg'] !== '') {
-                                echo $_SESSION['msg'];
-                            }
-                            $_SESSION['pgmsg'] = '1';
-                        } else {
-                            $_SESSION['msg'] = '';
+                    <?php
+                    if ($_SESSION['pgmsg'] === '2') {
+                        if ($_SESSION['msg'] !== null && $_SESSION['msg'] !== '') {
+                            echo $_SESSION['msg'];
                         }
+                        $_SESSION['pgmsg'] = '1';
+                    } else {
+                        $_SESSION['msg'] = '';
+                    }
                     ?>
                 </div>
             </div>
@@ -251,13 +275,13 @@ $contt = 0;
                     <div class="row p-3">
                         <div class="col-md-12 mt-2">
                             <fieldset class="form-group border pr-2 pl-2">
-                                    <legend class="w-auto pr-2 pl-2"><h5>Aperfeiçoamento Profissional - Tutores</h5></legend>
+                                <legend class="w-auto pr-2 pl-2"><h5>Aperfeiçoamento Profissional - Tutores</h5></legend>
                                 <div class="mb-3 table-responsive text-nowrap table-overflow2">
                                     <table id="dtBasicExample" class="table table-hover table-bordered table-striped rounded">
                                         <thead class="bg-gradient-dark text-white">
                                             <tr class="bg-gradient-dark text-light font-weight-bold">
-                                                <?php if($perfil === '3' && $nivel === '1'){ ?>
-                                                <td class="bg-gradient-dark text-light align-middle text-center" style="width: 10%;position: sticky; top: 0px;" title="Detalhamento"><i class="fas fa-info-circle"></i></td>
+                                                <?php if ($perfil === '3' && $nivel === '1') { ?>
+                                                    <td class="bg-gradient-dark text-light align-middle text-center" style="width: 10%;position: sticky; top: 0px;" title="Detalhamento"><i class="fas fa-info-circle"></i></td>
                                                 <?php } ?>
                                                 <td class="bg-gradient-dark text-light align-middle" style="width: 40%; height: 70px;position: sticky; top: 0px;">TUTOR</td>
                                                 <td class="bg-gradient-dark text-light align-middle" style="width: 5%;position: sticky; top: 0px;">CPF</td>
@@ -292,63 +316,83 @@ $contt = 0;
                                                         $ine = $rs['ine'];
                                                         $ivs = strtoupper($rs['ivs']);
                                                         $datacadastro = vemdata($rs['datacadastro']);
-                                            ?>
-                                                <tr>
-                                                <?php if($perfil === '3' && $nivel === '1'){ 
-                                                    //barreira para não permitir mais de um cadastro por ciclo
-                                                    $sqlALD = "select * from aperfeicoamentoprofissional where cpf='$cpftratado' and ibge='$ibge' and cnes='$cnes' and ine='$ine' and ano='$ano' and ciclo='$ciclo'";
-                                                    $qALD = mysqli_query($conn, $sqlALD) or die(mysqli_error($conn));
-                                                    $nrALD = mysqli_num_rows($qALD);
-                                                    $rsALD = mysqli_fetch_array($qALD);
+                                                        ?>
+                                                        <tr>
+                                                            <?php
+                                                            if ($perfil === '3' && $nivel === '1') {
+                                                                //barreira para não permitir mais de um cadastro por ciclo
+                                                                $sqlALD = "select * from aperfeicoamentoprofissional where cpf='$cpftratado' and ibge='$ibge' and cnes='$cnes' and ine='$ine' and ano='$ano' and ciclo='$ciclo'";
+                                                                $qALD = mysqli_query($conn, $sqlALD) or die(mysqli_error($conn));
+                                                                $nrALD = mysqli_num_rows($qALD);
+                                                                $rsALD = mysqli_fetch_array($qALD);
 //                                                    var_dump($nrALD);
-                                                    $flagup = '';
-                                                    if($nrALD > 0){
-                                                        do{
-                                                            $flagup = $rsALD['flagup'];
-                                                            $flagterminou = $rsALD['flagterminou'];
-                                                            $flagretorno = $rsALD['flagretorno'];
-                                                            $flagatvld = $rsALD['flagativlongduracao'];
-                                                            if($flagup === null){
-                                                                $flagup = '';
-                                                            }
-                                                        }while($rsALD = mysqli_fetch_array($qALD));
-                                                    if($flagatvld !== null){
-                                                        $ctap++;
-                                                        if($flagterminou !== null && $flagterminou === '1'){
-                                                ?>
-                                                    <td><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center"><i class="fas fa-check text-success"></i></a></td>
-                                                <?php    
-                                                        }elseif($flagup === ''){
-                                                ?>  
-                                                    <td><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center"><i class="fas fa-info-circle text-primary"></i></a></td>
-                                                <?php }elseif($flagup === '0'){
-                                                           if($flagretorno === '1'){ ?>
-                                                    <td><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center"><i class="fas fa-info-circle text-danger"></i></a></td>        
-                                                <?php       }else{ ?>
-                                                    <td><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center"><i class="fas fa-info-circle text-warning"></i></a></td> 
-                                                <?php }}else{ ?>
-                                                    <td><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center"><i class="fas fa-check text-success"></i></a></td> 
-                                                <?php }}else{ ?>
-                                                    <td></td>
-                                                <?php }
-                                                    }else{ ?>
-                                                <td></td>
-                                                <?php }} ?>
-                                                <td><?= $nome ?></td>
-                                                <td><?= $cpf ?></td>
-                                                <td><?= $tipologia ?></td>
-                                                <td><?= $ivs ?></td>
-                                                <td><?= $municipio ?></td>
-                                                <td><?= $uf ?></td>
-                                                <td><?= $ibge ?></td>
-                                                <td><?= $cnes ?></td>
-                                                <td><?= $ine ?></td>
-                                            </tr>
-                                            <?php 
-                                                }while($rs = mysqli_fetch_array($query)); 
-                                              }
-                                            }
-                                            ?>
+                                                                $flagup = $flagparecer = $flagemail = '';
+                                                                if ($nrALD > 0) {
+                                                                    do {
+                                                                        $flagparecer = $rsALD['flagparecer'];
+                                                                        $flagemail = $rsALD['flagemail'];
+                                                                        $flagup = $rsALD['flagup'];
+                                                                        $flagterminou = $rsALD['flagterminou'];
+                                                                        $flagretorno = $rsALD['flagretorno'];
+                                                                        $flagatvld = $rsALD['flagativlongduracao'];
+                                                                        if ($flagup === null) {
+                                                                            $flagup = '';
+                                                                        }
+                                                                        if ($flagparecer === null) {
+                                                                            $flagparecer = '';
+                                                                        }
+                                                                        if ($flagemail === null) {
+                                                                            $flagemail = '';
+                                                                        }
+                                                                    } while ($rsALD = mysqli_fetch_array($qALD));
+                                                                    if ($flagatvld !== null) {
+                                                                        $ctap++;
+                                                                        if ($flagterminou !== null && $flagterminou === '1') {
+                                                                            ?>
+                                                                            <td><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center" data-toggle="tooltip" title="bbbbbb" target="_blank"><i class="fas fa-check text-success" ></i></a></td>
+                                                                            <?php
+                                                                        } elseif ($flagup === '') {
+                                                                                if($flagparecer !== ''){
+                                                                                    if($flagemail !== ''){
+                                                                            ?>  
+                                                                            <td><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center" title="Análise feita e E-Mail enviado." data-toggle="tooltip" target="_blank"><i class="fas fa-info-circle text-warning"></i></a></td>
+                                                                                    <?php }else{ ?>
+                                                                            <td><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center" data-toggle="tooltip" title="Análise feita. Falta enviar E-mail." target="_blank"><i class="fas fa-info-circle text-primary"></i></a></td>
+                                                                                <?php }}else{ ?>
+                                                                            <td><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center" data-toggle="tooltip" title="Formulário recebido, mas não avaliado." target="_blank"><i class="fas fa-info-circle text-dark"></i></a></td>
+                                                                        <?php }} elseif ($flagup === '0') {
+                                                                            if ($flagretorno === '1') {
+                                                                                ?>
+                                                                                <td><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center" data-toggle="tooltip" title="Réplica analisada e E-Mail enviado." target="_blank"><i class="fab fa-r-project text-warning"></i></a></td>        
+                                                                            <?php } else { ?>
+                                                                                <td><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center" data-toggle="tooltip" title="Análise feita e E-Mail enviado." target="_blank"><i class="fas fa-info-circle text-warning"></i></a></td> 
+                                                                            <?php }
+                                                                        } else { ?>
+                                                                            <td><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center" data-toggle="tooltip" title="Réplica recebida, mas não avalidada." target="_blank"><i class="fab fa-r-project text-dark"></i></a></td> 
+                                                                        <?php }
+                                                                    } else { ?>
+                                                                        <td></td>
+                    <?php }
+                } else {
+                    ?>
+                                                                    <td></td>
+                <?php }
+            } ?>
+                                                            <td><?= $nome ?></td>
+                                                            <td><?= $cpf ?></td>
+                                                            <td><?= $tipologia ?></td>
+                                                            <td><?= $ivs ?></td>
+                                                            <td><?= $municipio ?></td>
+                                                            <td><?= $uf ?></td>
+                                                            <td><?= $ibge ?></td>
+                                                            <td><?= $cnes ?></td>
+                                                            <td><?= $ine ?></td>
+                                                        </tr>
+            <?php
+        } while ($rs = mysqli_fetch_array($query));
+    }
+}
+?>
                                         </tbody>
                                     </table>
                                 </div>
@@ -368,7 +412,24 @@ $contt = 0;
                 </div>
             </div>
         </div>
-        <?php include '../../includes/footer.php'; ?>
+        <div class="row mt-4 px-3">
+            <div class="col-12">
+                <i class="fas fa-info-circle text-dark"></i> <label class="text-info">&nbsp; Formulário recebido, mas não avaliado.</label>
+            </div>
+            <div class="col-12">
+                <i class="fas fa-info-circle text-primary"></i><label class="text-info">&nbsp; Análise feita. Falta enviar E-mail.</label>
+            </div>
+            <div class="col-12">
+                <i class="fas fa-info-circle text-warning"></i><label class="text-info">&nbsp; Análise feita e E-Mail enviado.</label>
+            </div>
+            <div class="col-12">
+                <i class="fab fa-r-project text-warning"></i><label class="text-info">&nbsp; Réplica analisada e E-Mail enviado.</label>
+            </div>
+            <div class="col-12">
+                <i class="fab fa-r-project text-dark"></i><label class="text-info">&nbsp; Réplica recebida, mas não avalidada.</label>
+            </div>
+        </div>
+<?php include '../../includes/footer.php'; ?>
         <!-- Bootstrap core JavaScript-->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
@@ -390,13 +451,18 @@ $contt = 0;
         <script src="../../js/demo/chart-bar-citopatologico.js"></script>
         <script src="../../js/demo/chart-bar-hipertensao.js"></script>
         <script>
+            $(document).ready(function () {
+                $('[data-toggle="tooltip"]').tooltip();
+            });
+        </script>
+        <script>
             $(function () {
-              $('.dropdown-toggle').dropdown();
-            }); 
+                $('.dropdown-toggle').dropdown();
+            });
             $(document).on('click', '.dropdown-toggle ', function (e) {
                 e.stopPropagation();
-              });
-              
+            });
+
             $(document).ready(function () {
                 //console.log("clicou");
                 document.getElementById("loading").style.display = "block";

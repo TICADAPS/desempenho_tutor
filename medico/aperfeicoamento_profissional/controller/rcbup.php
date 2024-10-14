@@ -16,49 +16,41 @@ $cnes = $_POST['cnes'];
 $ine = $_POST['ine'];
 $ano = $_POST['ano'];
 $ciclo = $_POST['ciclo'];
-$rdativ = $_POST['rdativ'];
-$rdQual = $_POST['rdQual'];
-$rdGes = $_POST['rdGes'];
-$rdInov = $_POST['rdInov'];
+$rdativ = $rdpergld = '';
+if(isset($_POST['rdativ'])){
+    $rdativ = $_POST['rdativ'];
+}
+if(isset($_POST['rdpergld'])){
+    $rdpergld = $_POST['rdpergld'];
+}
 //var_dump($_POST);
+
 //barreira para não permitir mais de um cadastro por ciclo
 $aperfprof = (new \Source\Models\Aperfeicoamentoprofissional())->findCpfIbgeCnesIne($cpf, $ibgeO, $cnes, $ine, $ano, $ciclo);
 //var_dump($aperfprof);
 if($aperfprof !== null){
     //validação dos campos obrigatórios
-    if(!isset($_POST['rdativ']) || $_POST['rdativ'] === ''){
-        $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;Marque a assertiva no item Atividade de Longa Duração.</strong></small></p>";
-        echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
-                URL=\"../index.php\"'>";
-        exit();
+    if($rdpergld === '2'){
+        if(!isset($_POST['rdativup']) || $_POST['rdativup'] === ''){
+            $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;Marque a assertiva no item Atividade de Longa Duração.</strong></small></p>";
+            echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
+                    URL=\"../index.php\"'>";
+            exit();
+        }
     }
-    if(!isset($_POST['rdQual']) || $_POST['rdQual'] === ''){
-        $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;Marque a assertiva no item Qualificação Clínica.</strong></small></p>";
-        echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
-                URL=\"../index.php\"'>";
-        exit();
+    if($rdpergld === '2'){
+        $rdativ = $_POST['rdativup'];
     }
-    if(!isset($_POST['rdGes']) || $_POST['rdGes'] === ''){
-        $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;Marque a assertiva no item Gestão, Ensino, Pesquisa e Extensão.</strong></small></p>";
-        echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
-                URL=\"../index.php\"'>";
-        exit();
+    $rdQual = $rdGes = $rdInov = '';
+    if(isset($_POST['rdQual'])&& $_POST['rdQual'] !== null){
+        $rdQual = $_POST['rdQual'];
     }
-    if(!isset($_POST['rdInov']) || $_POST['rdInov'] === ''){
-        $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;Marque a assertiva no item Inovação Tecnológica.</strong></small></p>";
-        echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
-                URL=\"../index.php\"'>";
-        exit();
+    if(isset($_POST['rdGes']) && $_POST['rdGes'] !== null){
+        $rdGes = $_POST['rdGes'];
     }
-//    if($_POST['rdativ'] === '0' && $_POST['rdQual'] === '0' && $_POST['rdGes'] === '0' && $_POST['rdInov'] === '0'){
-//        $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;Ao menos uma atividade deve ser preenchida!</strong></small></p>";
-//        echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
-//                URL=\"../index.php\"'>";
-//        exit();
-//    }
-    $rdQual = $_POST['rdQual'];
-    $rdGes = $_POST['rdGes'];
-    $rdInov = $_POST['rdInov'];
+    if(isset($_POST['rdInov']) && $_POST['rdInov'] !== null){
+        $rdInov = $_POST['rdInov'];
+    }
     //var_dump($_POST, $_FILES);
     //arrays dos dados do formulário - imprevisibilidade da quantidade de dados
     $slq = $slg = $sli = 0;
@@ -372,25 +364,21 @@ if($aperfprof !== null){
         $ap2 = (new Source\Models\Aperfeicoamentoprofissional())->findById($idaperfprof);
 //        var_dump($ap2);
         if($ap2 !== null){
-            $ap2->dthrcadastro = $dthrcadastro;
-            $ap2->flagativlongduracao = $rdativ;
-            $ap2->flagup = '1';
-            $ap2->flagparecer = null;
-            $ap2->parecer = null;
-            $ap2->pareceruser = null;
-            $ap2->parecerdthr = null;
-            $ap2->flagretorno = '1';
-            $rsaperfprof = $ap2->save();
+            if($rdativ !== null){
+                $ap2->dthrcadastro = $dthrcadastro;
+                $ap2->flagativlongduracao = $rdativ;
+                $ap2->flagup = '1';
+                $ap2->flagparecer = null;
+                $ap2->parecer = null;
+                $ap2->pareceruser = null;
+                $ap2->parecerdthr = null;
+                $ap2->flagretorno = '1';
+    //            var_dump($ap2);
+                $rsaperfprof = $ap2->save();
+    //            var_dump($rsaperfprof);
+            }
         }
     }
-//    var_dump($rsaperfprof);
-    if($rsaperfprof === null){
-        $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;Erro no gravação dos dados 1.</strong></small></p>";
-        echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
-                    URL=\"../index.php\"'>";
-        exit();
-    }
-    
     if($rdQual === '1'){
         $QCup = (new Source\Models\Medico_qualifclinica())->findJQCUp($idaperfprof);
         if ($QCup !== null) {
@@ -401,6 +389,7 @@ if($aperfprof !== null){
                 $QCup2 = (new Source\Models\Medico_qualifclinica())->findById($idqc);
                 if ($QCup2 !== null) {
                     $QCup2->flagup = '1';
+                    $QCup2->flagemail = '0';
                     $QCup2->save();
                 }
             }
@@ -434,6 +423,23 @@ if($aperfprof !== null){
                 exit();
             }
         }
+    }else{
+        $apprf = (new \Source\Models\Aperfeicoamentoprofissional())->findById($idaperfprof);
+        if($apprf !== null){
+            $apprf->flagemail = '0';
+            $apprf->save();
+        }
+        $QCup = (new Source\Models\Medico_qualifclinica())->findJQCUp($idaperfprof);
+        if ($QCup !== null) {
+            foreach ($QCup as $qc) {
+                $idqc = $qc->id;
+                $QCup2 = (new Source\Models\Medico_qualifclinica())->findById($idqc);
+                if ($QCup2 !== null) {
+                    $QCup2->flagemail = '0';
+                    $QCup2->save();
+                }
+            }
+        }
     }
     if($rdGes === '1'){
         $GEup = (new Source\Models\Medico_gesenspesext())->findJGepeUp($idaperfprof);
@@ -445,6 +451,7 @@ if($aperfprof !== null){
                 $GEup2 = (new Source\Models\Medico_gesenspesext())->findById($idge);
                 if ($GEup2 !== null) {
                     $GEup2->flagup = '1';
+                    $GEup2->flagemail = '0';
                     $GEup2->save();
                 }
             }
@@ -477,6 +484,23 @@ if($aperfprof !== null){
                 exit();
             }
         }
+    }else{
+        $apprf = (new \Source\Models\Aperfeicoamentoprofissional())->findById($idaperfprof);
+        if($apprf !== null){
+            $apprf->flagemail = '0';
+            $apprf->save();
+        }
+        $GEup = (new Source\Models\Medico_gesenspesext())->findJGepeUp($idaperfprof);
+        if ($GEup !== null) {
+            foreach ($GEup as $ge) {
+                $idge = $ge->id;
+                $GEup2 = (new Source\Models\Medico_gesenspesext())->findById($idge);
+                if ($GEup2 !== null) {
+                    $GEup2->flagemail = '0';
+                    $GEup2->save();
+                }
+            }
+        }
     }
     //var_dump($ctIT);
     if($rdInov === '1'){
@@ -489,6 +513,7 @@ if($aperfprof !== null){
                 $ITup2 = (new Source\Models\Medico_gesenspesext())->findById($idit);
                 if ($ITup2 !== null) {
                     $ITup2->flagup = '1';
+                    $ITup2->flagemail = '0';
                     $ITup2->save();
                 }
             }
@@ -521,6 +546,23 @@ if($aperfprof !== null){
                 echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
                         URL=\"../index.php\"'>";
                 exit();
+            }
+        }
+    }else{
+        $apprf = (new \Source\Models\Aperfeicoamentoprofissional())->findById($idaperfprof);
+        if($apprf !== null){
+            $apprf->flagemail = '0';
+            $apprf->save();
+        }
+        $ITup = (new Source\Models\Medico_inovtecnologica)->findJItUp($idaperfprof);
+        if ($ITup !== null) {
+            foreach ($ITup as $it) {
+                $idit = $it->id;
+                $ITup2 = (new Source\Models\Medico_gesenspesext())->findById($idit);
+                if ($ITup2 !== null) {
+                    $ITup2->flagemail = '0';
+                    $ITup2->save();
+                }
             }
         }
     }

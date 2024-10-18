@@ -55,16 +55,16 @@ $_SESSION['nome'] = $medico;
 $_SESSION['ibgeO'] = $ibgeO;
 $_SESSION['cnes'] = $cnes;
 $_SESSION['ine'] = $ine;
-$sqlano = "select ano from anoacicloavaliacao group by ano";
+$sqlano = "select ano from anocicloavaliacao group by ano";
 $queryano = mysqli_query($conn, $sqlano) or die(mysqli_error($conn));
 $rsano = mysqli_fetch_array($queryano);
-$sqlano2 = "select ano from anoacicloavaliacao group by ano";
+$sqlano2 = "select ano from anocicloavaliacao group by ano";
 $queryano2 = mysqli_query($conn, $sqlano2) or die(mysqli_error($conn));
 $rsano2 = mysqli_fetch_array($queryano2);
-$sqlano3 = "select ano from anoacicloavaliacao group by ano";
+$sqlano3 = "select ano from anocicloavaliacao group by ano";
 $queryano3 = mysqli_query($conn, $sqlano3) or die(mysqli_error($conn));
 $rsano3 = mysqli_fetch_array($queryano3);
-$sqlano4 = "select ano from anoacicloavaliacao group by ano";
+$sqlano4 = "select ano from anocicloavaliacao group by ano";
 $queryano4 = mysqli_query($conn, $sqlano4) or die(mysqli_error($conn));
 $rsano4 = mysqli_fetch_array($queryano4);
 ?>
@@ -115,17 +115,22 @@ $rsano4 = mysqli_fetch_array($queryano4);
             <div class="col-12 shadow rounded pt-3 pb-3 mb-5">
                 <div class="p-3">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <button type="button" class="btn btn-light rounded" data-toggle="modal" data-target="#modalQA">
                                 <img src="./../img/desempenho2.jpg" class="img-fluid rounded" width="50%">
                             </button>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <button type="button" class="btn btn-light rounded" data-toggle="modal" data-target="#modalAP">
                                 <img src="./../img/aperfeicoamento.png" class="img-fluid rounded" width="50%">
                             </button>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
+                            <button type="button" class="btn btn-light rounded" data-toggle="modal" data-target="#modalCP">
+                                <img src="./../img/autoavaliacao.png" class="img-fluid rounded" width="50%">
+                            </button>
+                        </div>
+                        <div class="col-md-3">
                             <button type="button" class="btn btn-light rounded" data-toggle="modal" data-target="#modalDem">
                                 <img src="./../img/demostrativo.png" class="img-fluid rounded" width="50%">
                             </button>
@@ -226,6 +231,68 @@ $rsano4 = mysqli_fetch_array($queryano4);
                                                         <div class="col-12"><b>Escolha o ciclo:</b></div>
                                                         <div class="col-12">
                                                             <select class="form-control" name="ciclo" id="cicloap">
+                                                                <option value="">[--SELECIONE--]</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </blockquote>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">FECHAR</button>
+                                    <button type="submit" class="btn btn-primary">ENTRAR <i class="fas fa-arrow-right"></i></button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal -->
+                <div class="modal fade" id="modalCP" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form method="post" enctype="multipart/form-data" action="./controller/transfdadoscp.php">
+                                <div class="modal-header" style="background-color: #E0E4E9;">
+                                    <h5 class="modal-title text-primary" id="exampleModalLabel">Aperfeiçoamento Profissional &nbsp;<img src="./../img/autoavaliacao.png" class="img-fluid rounded-circle" width="10%;"></h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="card ">
+                                        <div class="card-body">
+                                            <blockquote class="blockquote mb-3">
+                                                <input type="hidden" value="<?= $cpftratado ?>" name="cpf">
+                                                <input type="hidden" value="<?= $medico ?>" name="nome">
+                                                <input type="hidden" value="<?= $ibgeO ?>" name="ibgeO">
+                                                <input type="hidden" value="<?= $cnes ?>" name="cnes">
+                                                <input type="hidden" value="<?= $ine ?>" name="ine">
+                                                <p>Texto explicativo - conteúdo com opção de escolha do ano e do ciclo.</p>
+                                                <div class="row mt-2">
+                                                    <div class="col-md-12">
+                                                        <div class="col-12"><b>Escolha o ano:</b></div>
+                                                        <div class="col-12">
+                                                            <select class="form-control" name="ano" id="anoav">
+                                                                <option value="">[--SELECIONE--]</option>
+                                                                <?php
+                                                                if ($rsano3) {
+                                                                    do {
+                                                                        $ano3 = $rsano3['ano'];
+                                                                        ?>
+                                                                        <option><?= $ano3 ?></option>
+                                                                        <?php
+                                                                    } while ($rsano3 = mysqli_fetch_array($queryano3));
+                                                                }
+                                                                ?>
+                                                            </select>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="col-12"><b>Escolha o ciclo:</b></div>
+                                                        <div class="col-12">
+                                                            <select class="form-control" name="ciclo" id="cicloav">
                                                                 <option value="">[--SELECIONE--]</option>
                                                             </select>
                                                         </div>

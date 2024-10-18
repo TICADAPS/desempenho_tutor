@@ -172,22 +172,60 @@ function addciclo5(a){
         .then(dados => {
             //console.log(dados);
             if (dados.status === 'success') {
-                let cicloaf = document.querySelector("#cicloc");
-                removerTodasAsOptions(cicloaf);
+                let cicloab = document.querySelector("#cicloab");
+                removerTodasAsOptions(cicloab);
                 var option1 = document.createElement('option');
                     option1.value = "";
                     option1.textContent = "[--SELECIONE--]";
-                cicloaf.appendChild(option1); 
-                console.log(cicloaf);
+                cicloab.appendChild(option1); 
+                console.log(cicloab);
                 let html = '';
                 dados.results.forEach(d => {
                     var option = document.createElement('option');
                     option.value = d.ciclo;
                     option.textContent = d.ciclo+"º ciclo";
-                    cicloaf.appendChild(option);
+                    cicloab.appendChild(option);
                 });
-                cicloaf.innerHTML += html;
-                console.log(cicloaf);
+                cicloab.innerHTML += html;
+                console.log(cicloab);
+            } else {
+                throw Error('erro');
+            }
+        })
+        .catch(err => {
+            console.log('Erro: '+err);
+        });
+}
+function addciclo6(a){ 
+    console.log(a);
+    fetch('http://localhost:83/desempenho_tutor/recursos_online/api/v1/getciclo/index.php?a='+a)
+        .then(response => {
+            console.log(response);
+            if (response.status === 200) {
+                return response.json();
+            } else {
+                throw Error('erro');
+            }
+        })
+        .then(dados => {
+            //console.log(dados);
+            if (dados.status === 'success') {
+                let cicloab = document.querySelector("#cicloc");
+                removerTodasAsOptions(cicloab);
+                var option1 = document.createElement('option');
+                    option1.value = "";
+                    option1.textContent = "[--SELECIONE--]";
+                cicloab.appendChild(option1); 
+                console.log(cicloab);
+                let html = '';
+                dados.results.forEach(d => {
+                    var option = document.createElement('option');
+                    option.value = d.ciclo;
+                    option.textContent = d.ciclo+"º ciclo";
+                    cicloab.appendChild(option);
+                });
+                cicloab.innerHTML += html;
+                console.log(cicloab);
             } else {
                 throw Error('erro');
             }

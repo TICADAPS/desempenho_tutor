@@ -45,10 +45,10 @@ if($rsu){
         $usuario = $rsu['nome_user'];
     }while($rsu = mysqli_fetch_array($queryu));
 }
-$sqlano = "select * from anoacicloavaliacao group by ano";
+$sqlano = "select * from anocicloavaliacao group by ano";
 $queryano = mysqli_query($conn, $sqlano) or die(mysqli_error($conn));
 $rsano = mysqli_fetch_array($queryano);
-$sql = "select * from anoacicloavaliacao";
+$sql = "select * from anocicloavaliacao";
 $query = mysqli_query($conn, $sql) or die(mysqli_error($conn));
 $rs = mysqli_fetch_array($query);
 ?>
@@ -99,26 +99,16 @@ $rs = mysqli_fetch_array($query);
                     <label><small>Bem-vindo, <?= $usuario ?>, Brasília-DF, <?= $dthoje ?>.</small></label>
                 </div>
             </div>
-            <div class="row  ">
-                <div class="col-12">
-                    <?php
-                    if ($_SESSION['msg'] !== "") {
-                        echo $_SESSION['msg'];
-                    }
-                    $_SESSION['msg'] = "";
-                    ?>
-                </div>
-            </div>
             <div class="col-12 shadow rounded pt-3 pb-3 mb-4">
                 <div class="p-3">
                     <div class="row">
-                        <div class="col-md-12 mb-2">
+                        <div class="col-md-4 mb-2">
                             <div class="card ">
-                                <div class="card-header bg-primary text-white"><h5>Tempo limite de contestação</h5></div>
+                                <div class="card-header text-white" style="background-color: #1B48AB;"><h5>Tempo limite de contestação</h5></div>
                                 <div class="card-body">
                                     <form method="post" action="../controller/ldt.php">
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-12">
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="col-12"><b>Escolha o ano:</b></div>
@@ -152,10 +142,18 @@ $rs = mysqli_fetch_array($query);
                                                         <input type="date" class="form-control" name="dtlimite" id="dtlimite">
                                                     </div>
                                                 </div>
-                                                <div class="col-md-12 mb-3">
+                                                <div class="col-md-12">
                                                     <div class="col-12">
-                                                        <button type="button" class="btn btn-success form-control mt-4" data-toggle="modal" data-target="#modalDtlimite">SALVAR &nbsp;<i class="fas fa-save"></i></button>
+                                                        <button type="button" class="btn btn-info form-control shadow-sm border-white mt-4" data-toggle="modal" data-target="#modalDtlimite">SALVAR &nbsp;<i class="fas fa-save"></i></button>
                                                     </div>
+                                                </div>
+                                                <div class="col-md-12 mb-3 mt-2">
+                                                    <?php
+                                                    if ($_SESSION['msg'] !== "") {
+                                                        echo $_SESSION['msg'];
+                                                    }
+                                                    $_SESSION['msg'] = "";
+                                                    ?>
                                                 </div>
                                             </div>
                                         </div>
@@ -180,107 +178,106 @@ $rs = mysqli_fetch_array($query);
                                                 </div>
                                             </div>
                                         </div>
-                                        <!-- FIM do Modal modalDtlimite -->
-                                        <div class="col-md-6 table-overflow">
-                                            <table class="table table-striped table-hover table-sm table-responsive rounded">
-                                                <thead class="thead-dark">
-                                                  <tr>
-                                                      <th colspan="7" class="text-center" style="position: sticky; top: 0;">LISTA DAS CONTESTAÇÕES CADASTRADAS (ATIVAS E INATIVAS)</th>
-                                                  </tr>
-                                                  <tr>
-                                                    <th style="position: sticky; top: 48;">ANO</th>
-                                                    <th style="position: sticky; top: 48;">CICLO</th>
-                                                    <th style="position: sticky; top: 48;">DATA INÍCIO</th>
-                                                    <th style="position: sticky; top: 48;">DATA FIM</th>
-                                                    <th style="position: sticky; top: 48;">DATA LIMITE CONTESTAÇÃO</th>
-                                                    <th style="position: sticky; top: 48;">SITUAÇÃO</th>
-                                                    <th style="position: sticky; top: 48;">INATIVAR</th>
-                                                  </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php
-                                                    if($rs){
-//                                                        var_dump($rs);
-                                                        do{
-                                                            $ano = $rs['ano'];
-                                                            $ciclo = $rs['ciclo'];
-                                                            $dtinicio = vemdata($rs['dtinicio']);
-                                                            $dtfim = vemdata($rs['dtfim']);
-                                                            $dtlimit = vemdata($rs['dtlimitecontestacao']);
-                                                            if($dtlimit === '//' ){
-                                                                $dtlimit = '';
-                                                            }
-                                                            $flagdtlim = $rs['flagdtlimitecontestacao'];
-                                                            if($flagdtlim === null){
-                                                                $flagdtlim = '0';
-                                                            }
-                                                            $id = $rs['id'];
-                                                    ?>
-                                                    <tr>
-                                                        <td><?= $ano ?></td>
-                                                        <td><?= $ciclo ?></td>
-                                                        <td><?= $dtinicio ?></td>
-                                                        <td><?= $dtfim ?></td>
-                                                        <td><?= $dtlimit ?></td>
-                                                        <?php
-                                                        if($flagdtlim === '1'){
-                                                        ?>
-                                                        <td>ATIVO</td>
-                                                        <?php }else{ ?>
-                                                        <td>INATIVO</td>
-                                                        <?php } ?>
-                                                        <?php
-                                                        if($flagdtlim === '1'){
-                                                        ?>
-                                                        <td><center>
-                                                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalDtlimiteParar<?= $id ?>">
-                                                                <i class="fas fa-times-circle"></i>  
-                                                            </button></center>
-                                                        </td>
-                                                        <?php }else{ ?>
-                                                        <td></td>
-                                                        <?php } ?>
-                                                    </tr>
-                                                    <!-- Modal modalDtlimiteParar -->
-                                                    <div class="modal fade" id="modalDtlimiteParar<?= $id ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                        <div class="modal-dialog" role="document">
-                                                            <div class="modal-content">
-                                                                <form method="post" action="../controller/ldt.php">
-                                                                <div class="modal-header bg-light">
-                                                                   <h5 class="modal-title text-dark" id="exampleModalLabel">Data Limite de Contestação &nbsp;&nbsp;<img src="../../img/time_limit.png" width="8%"></h5>
-                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                        <span aria-hidden="true">&times;</span>
-                                                                    </button>
-                                                                </div>
-                                                                <div class="modal-body">
-                                                                    <p>Deseja inativar a data limite da contestação?</p>
-                                                                </div>
-                                                                <input type="hidden" name="idcontest" value="<?= $id ?>">
-                                                                <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">FECHAR</button>
-                                                                    <input type="submit" name="btparar" value='INATIVAR' class="btn btn-primary">
-                                                                </div>
-                                                                </form>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                        <!-- FIM do Modal modalDtlimite -->
-                                                    <?php
-                                                        }while($rs = mysqli_fetch_array($query));
-                                                    }
-                                                    ?>
-                                                </tbody>
-                                            </table>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <!-- FIM do Modal modalDtlimite -->
+                        <div class="col-md-8 mt-2 overflow">
+                            <fieldset class="form-group border pr-2 pl-2 rounded">
+                                <legend class="w-auto pr-2 pl-2"><h6>LISTAGEM DOS CICLOS</h6></legend>
+                                <table class="table table-striped table-hover table-sm table-bordered rounded">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th style="position: sticky; top: 48;">ANO</th>
+                                            <th style="position: sticky; top: 48;">CICLO</th>
+                                            <th style="position: sticky; top: 48;">DATA INÍCIO</th>
+                                            <th style="position: sticky; top: 48;">DATA FIM</th>
+                                            <th style="position: sticky; top: 48;">DATA LIMITE CONTESTAÇÃO</th>
+                                            <th style="position: sticky; top: 48;">SITUAÇÃO</th>
+                                            <th style="position: sticky; top: 48;">INATIVAR</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <?php
+                                    if($rs){
+//                                     var_dump($rs);
+                                        do{
+                                            $ano = $rs['ano'];
+                                            $ciclo = $rs['ciclo'];
+                                            $dtinicio = vemdata($rs['dtinicio']);
+                                            $dtfim = vemdata($rs['dtfim']);
+                                            $dtlimit = vemdata($rs['dtlimitecontestacao']);
+                                            if($dtlimit === '//' ){
+                                                $dtlimit = '';
+                                            }
+                                            $flagdtlim = $rs['flagdtlimitecontestacao'];
+                                            if($flagdtlim === null){
+                                                $flagdtlim = '0';
+                                            }
+                                            $id = $rs['id'];
+                                    ?>
+                                        <tr>
+                                            <td><?= $ano ?></td>
+                                            <td><?= $ciclo ?></td>
+                                            <td><?= $dtinicio ?></td>
+                                            <td><?= $dtfim ?></td>
+                                            <td><?= $dtlimit ?></td>
+                                    <?php
+                                        if($flagdtlim === '1'){
+                                    ?>
+                                            <td>ATIVO</td>
+                                    <?php }else{ ?>
+                                            <td>INATIVO</td>
+                                    <?php } ?>
+                                    <?php
+                                        if($flagdtlim === '1'){
+                                    ?>
+                                            <td><center>
+                                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalDtlimiteParar<?= $id ?>">
+                                                    <i class="fas fa-times-circle"></i>  
+                                                </button></center>
+                                            </td>
+                                    <?php }else{ ?>
+                                            <td></td>
+                                    <?php } ?>
+                                        </tr>
+                                        <!-- Modal modalDtlimiteParar -->
+                                        <div class="modal fade" id="modalDtlimiteParar<?= $id ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <form method="post" action="../controller/ldt.php">
+                                                    <div class="modal-header bg-light">
+                                                        <h5 class="modal-title text-dark" id="exampleModalLabel">Data Limite de Contestação &nbsp;&nbsp;<img src="../../img/time_limit.png" width="8%"></h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>Deseja inativar a data limite da contestação?</p>
+                                                    </div>
+                                                    <input type="hidden" name="idcontest" value="<?= $id ?>">
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">FECHAR</button>
+                                                            <input type="submit" name="btparar" value='INATIVAR' class="btn btn-primary">
+                                                    </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- FIM do Modal modalDtlimite -->
+                                    <?php
+                                        }while($rs = mysqli_fetch_array($query));
+                                    }
+                                    ?>
+                                    </tbody>
+                                </table>
+                            </fieldset>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
         <?php include '../../includes/footer.php' ?>
         <script src="../js_agsus/jquery-3.1.1.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
@@ -294,7 +291,7 @@ $rs = mysqli_fetch_array($query);
         });
         $("#anoc").change(function () {
             let ano = $("#anoc").val();
-            addciclo5(ano);
+            addciclo6(ano);
         });
         </script>
     </body>

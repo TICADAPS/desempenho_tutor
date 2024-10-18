@@ -12,36 +12,34 @@ if (!isset($_SESSION['pgmsg'])) {
     $_SESSION['pgmsg'] = "1";
 }
 
-//if (!isset($_SESSION['cpf'])) {
-//   header("Location: ../derruba_session.php"); exit();
-//}
-//$cpf = $_SESSION['cpf'];
-//if (!isset($_SESSION['idUser'])) {
-//    header("Location: ../derruba_session.php");
-//    exit();
-//}
-//if (!isset($_SESSION['perfil'])) {
-//    header("Location: ../derruba_session.php");
-//    exit();
-//}
-//if (!isset($_SESSION['nivel'])) {
-//    header("Location: ../derruba_session.php");
-//    exit();
-//}
-//if($_SESSION['perfil'] !== '2' && $_SESSION['perfil'] !== '3' && $_SESSION['perfil'] !== '6' && $_SESSION['perfil'] !== '7' && $_SESSION['perfil'] !== '8'){
-//    header("Location: ../derruba_session.php");
-//    exit();
-//}
-//$perfil = $_SESSION['perfil'];
-//$nivel = $_SESSION['nivel'];
+if (!isset($_SESSION['cpf'])) {
+   header("Location: ../derruba_session.php"); exit();
+}
+$cpf = $_SESSION['cpf'];
+if (!isset($_SESSION['idUser'])) {
+    header("Location: ../derruba_session.php");
+    exit();
+}
+if (!isset($_SESSION['perfil'])) {
+    header("Location: ../derruba_session.php");
+    exit();
+}
+if (!isset($_SESSION['nivel'])) {
+    header("Location: ../derruba_session.php");
+    exit();
+}
+if($_SESSION['perfil'] !== '2' && $_SESSION['perfil'] !== '3' && $_SESSION['perfil'] !== '6' && $_SESSION['perfil'] !== '7' && $_SESSION['perfil'] !== '8'){
+    header("Location: ../derruba_session.php");
+    exit();
+}
+$perfil = $_SESSION['perfil'];
+$nivel = $_SESSION['nivel'];
 
-$perfil = '3';
-$nivel = '1';
+//$perfil = '3';
+//$nivel = '1';
 date_default_timezone_set('America/Sao_Paulo');
-//$ano = $_SESSION['ano'];
-//$ciclo = $_SESSION['ciclo'];
-$ano = 2024;
-$ciclo = 3;
+$ano = $_SESSION['ano'];
+$ciclo = $_SESSION['ciclo'];
 $ctap = 0;
 $sql = "select distinct m.nome, m.admissao, m.cargo, m.tipologia, m.uf, m.municipio, m.datacadastro, m.cpf, m.ibge, m.cnes,
  m.ine, ivs.descricao as ivs from medico m left join ivs on m.fkivs = ivs.idivs inner join aperfeicoamentoprofissional a on 
@@ -50,10 +48,6 @@ $query = mysqli_query($conn, $sql);
 $nrrs = mysqli_num_rows($query);
 $rs = mysqli_fetch_array($query);
 //var_dump($rs);
-$rscpf = false;
-if ($nrrs > 0) {
-    $rscpf = true;
-}
 $contt = 0;
 ?>
 <!DOCTYPE html>
@@ -88,8 +82,12 @@ $contt = 0;
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-        
+
         <style>
+            /* Reduzindo o tamanho da fonte em 20% */
+            body {
+              font-size: 85%;
+            }
             #container {
                 height: 400px;
             }
@@ -236,7 +234,7 @@ $contt = 0;
                                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">Relatórios</a>
                                     <div class="dropdown-menu">
                                         <?php if ($perfil === '3' && $nivel === '1') { ?>
-                                            <!--<a class="dropdown-item" href="../relatorios/relatorio_geral_igad.php">Relatório Geral IGAD - 1º ciclo de 2024</a>-->
+                                            <a class="dropdown-item" href="../../relatorios/relatorioGeralAP.php?a=<?= $ano ?>&c=<?= $ciclo ?>">Relatório Aperfeiçoamento Profissional Ano <?= $ano ?> - <?= $ciclo ?>º Ciclo</a>
                                         <?php } ?>
                                     </div>
                                 </li>
@@ -283,7 +281,7 @@ $contt = 0;
                                                 <?php if ($perfil === '3' && $nivel === '1') { ?>
                                                     <td class="bg-gradient-dark text-light align-middle text-center" style="width: 10%;position: sticky; top: 0px;" title="Detalhamento"><i class="fas fa-info-circle"></i></td>
                                                 <?php } ?>
-                                                <td class="bg-gradient-dark text-light align-middle" style="width: 40%; height: 70px;position: sticky; top: 0px;">TUTOR</td>
+                                                <td class="bg-gradient-dark text-light align-middle" style="width: 40%; position: sticky; top: 0px;">TUTOR</td>
                                                 <td class="bg-gradient-dark text-light align-middle" style="width: 5%;position: sticky; top: 0px;">CPF</td>
                                                 <td class="bg-gradient-dark text-light align-middle" style="width: 5%;position: sticky; top: 0px;">TIPOLOGIA</td>
                                                 <td class="bg-gradient-dark text-light align-middle" style="width: 5%;position: sticky; top: 0px;">IVS</td>
@@ -296,7 +294,6 @@ $contt = 0;
                                         </thead>
                                         <tbody>
                                             <?php
-                                            if ($rscpf === true) {
                                                 if ($nrrs > 0) {
                                                     do {
                                                         $contt++;
@@ -329,11 +326,15 @@ $contt = 0;
                                                                 $flagup = $flagparecer = $flagemail = '';
                                                                 if ($nrALD > 0) {
                                                                     do {
+                                                                        $idap = $rsALD['id'];
                                                                         $flagparecer = $rsALD['flagparecer'];
                                                                         $flagemail = $rsALD['flagemail'];
                                                                         $flagup = $rsALD['flagup'];
+//                                                                        var_dump ("Flagemail: ".$flagemail);
+//                                                                        var_dump ("Flagup: ".$flagup);
                                                                         $flagterminou = $rsALD['flagterminou'];
                                                                         $flagretorno = $rsALD['flagretorno'];
+//                                                                        var_dump ("Flagretorno: ".$flagretorno);
                                                                         $flagatvld = $rsALD['flagativlongduracao'];
                                                                         if ($flagup === null) {
                                                                             $flagup = '';
@@ -349,35 +350,85 @@ $contt = 0;
                                                                         $ctap++;
                                                                         if ($flagterminou !== null && $flagterminou === '1') {
                                                                             ?>
-                                                                            <td><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center" data-toggle="tooltip" title="bbbbbb" target="_blank"><i class="fas fa-check text-success" ></i></a></td>
+                                                                        <td class=" text-center"><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center" data-toggle="tooltip" title="Processo finalizado." target="_blank"><i class="fas fa-check text-success" ></i></a></td>
                                                                             <?php
                                                                         } elseif ($flagup === '') {
-                                                                                if($flagparecer !== ''){
-                                                                                    if($flagemail !== ''){
-                                                                            ?>  
-                                                                            <td><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center" title="Análise feita e E-Mail enviado." data-toggle="tooltip" target="_blank"><i class="fas fa-info-circle text-warning"></i></a></td>
-                                                                                    <?php }else{ ?>
-                                                                            <td><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center" data-toggle="tooltip" title="Análise feita. Falta enviar E-mail." target="_blank"><i class="fas fa-info-circle text-primary"></i></a></td>
-                                                                                <?php }}else{ ?>
-                                                                            <td><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center" data-toggle="tooltip" title="Formulário recebido, mas não avaliado." target="_blank"><i class="fas fa-info-circle text-dark"></i></a></td>
-                                                                        <?php }} elseif ($flagup === '0') {
+                                                                            if ($flagparecer !== '') {
+                                                                                if ($flagemail !== '') {
+                                                                                    ?>  
+                                                                                    <td class="text-center"><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center" title="Análise feita e E-Mail enviado." data-toggle="tooltip" target="_blank"><i class="fas fa-info-circle text-warning"></i></a></td>
+                                                                                <?php } else { ?>
+                                                                                    <td class="text-center"><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center" data-toggle="tooltip" title="Análise feita. Falta enviar E-mail." target="_blank"><i class="fas fa-info-circle text-primary"></i></a></td>
+                                                                                <?php }
+                                                                            } else { ?>
+                                                                                <td class="text-center"><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center" data-toggle="tooltip" title="Formulário recebido, mas não avaliado." target="_blank"><i class="fas fa-info-circle text-dark"></i></a></td>
+                                                                            <?php
+                                                                            }
+                                                                        } elseif ($flagup === '0') {
                                                                             if ($flagretorno === '1') {
                                                                                 ?>
-                                                                                <td><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center" data-toggle="tooltip" title="Réplica analisada e E-Mail enviado." target="_blank"><i class="fab fa-r-project text-warning"></i></a></td>        
+                                                                                <td class="text-center"><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center" data-toggle="tooltip" title="Réplica analisada e E-Mail enviado." target="_blank"><i class="fab fa-r-project text-warning"></i></a></td>        
                                                                             <?php } else { ?>
-                                                                                <td><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center" data-toggle="tooltip" title="Análise feita e E-Mail enviado." target="_blank"><i class="fas fa-info-circle text-warning"></i></a></td> 
-                                                                            <?php }
-                                                                        } else { ?>
-                                                                            <td><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center" data-toggle="tooltip" title="Réplica recebida, mas não avalidada." target="_blank"><i class="fab fa-r-project text-dark"></i></a></td> 
-                                                                        <?php }
-                                                                    } else { ?>
-                                                                        <td></td>
-                    <?php }
-                } else {
-                    ?>
-                                                                    <td></td>
-                <?php }
-            } ?>
+                                                                                <td class="text-center"><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center" data-toggle="tooltip" title="Análise feita e E-Mail enviado." target="_blank"><i class="fas fa-info-circle text-warning"></i></a></td> 
+                                                                            <?php
+                                                                            }
+                                                                        } else {
+                                                                            if ($flagretorno === '1') {
+                                                                                $boolparecerqc = $boolparecergepe = $boolparecerit = false;
+                                                                                $mitup = (new Source\Models\Medico_inovtecnologica())->findJItUp($idap);
+                                                                                if ($mitup !== null) {
+                                                                                    foreach ($mitup as $mi) {
+                                                                                        if ($mi->pareceruser !== null) {
+                                                                                            $boolparecerit = true;
+                                                                                        } else {
+                                                                                            $boolparecerit = false;
+                                                                                            break;
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                                $mgepeup = (new Source\Models\Medico_gesenspesext())->findJGepeUp($idap);
+                                                                                if ($mgepeup !== null) {
+                                                                                    foreach ($mgepeup as $mg) {
+                                                                                        if ($mg->pareceruser !== null) {
+                                                                                            $boolparecergepe = true;
+                                                                                        } else {
+                                                                                            $boolparecergepe = false;
+                                                                                            break;
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                                $mqcup = (new Source\Models\Medico_qualifclinica())->findJQCUp($idap);
+                                                                                if ($mqcup !== null) {
+                                                                                    foreach ($mqcup as $mq) {
+                                                                                        if ($mq->pareceruser !== null) {
+                                                                                            $boolparecerqc = true;
+                                                                                        } else {
+                                                                                            $boolparecerqc = false;
+                                                                                            break;
+                                                                                        }
+                                                                                    }
+                                                                                }
+//                                                                                var_dump ($boolparecerqc,$boolparecergepe,$boolparecerit);
+                                                                                if ($flagemail === '0') {
+                                                                                    if ($boolparecerqc === false || $boolparecergepe === false || $boolparecerit === false) {
+                                                                                        ?>
+                                                                                        <td class="text-center"><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center" data-toggle="tooltip" title="Réplica recebida, mas não avalidada." target="_blank"><i class="fab fa-r-project text-dark"></i></a></td> 
+                                                                                    <?php } else { ?>
+                                                                                        <td class="text-center"><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center" data-toggle="tooltip" title="Réplica analisada. Falta enviar E-mail." target="_blank"><i class="fab fa-r-project text-primary"></i></a></td>
+                                                                                    <?php }
+                                                                                } else { ?>
+                                                                                    <td class="text-center"><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center" data-toggle="tooltip" title="Réplica analisada. E-mail enviado." target="_blank"><i class="fab fa-r-project text-warning"></i></a></td>   
+                                                                                <?php }
+                                                                            } else { ?>
+                                                                                <td></td>
+                                                                                <?php }
+                                                                            }
+                                                                        } else {
+                                                                            ?>
+                                                                        <td></td>     
+                                                                    <?php }
+                                                                }
+                                                            } ?>
                                                             <td><?= $nome ?></td>
                                                             <td><?= $cpf ?></td>
                                                             <td><?= $tipologia ?></td>
@@ -388,11 +439,11 @@ $contt = 0;
                                                             <td><?= $cnes ?></td>
                                                             <td><?= $ine ?></td>
                                                         </tr>
-            <?php
-        } while ($rs = mysqli_fetch_array($query));
-    }
-}
-?>
+                                                    <?php
+                                                } while ($rs = mysqli_fetch_array($query));
+                                            }else{ ?>
+                                                        <tr><td colspan="10" class="bg-warning text-dark"><i class="fas fa-chevron-circle-right"></i>&nbsp; Não existem tutores para o <?= $ciclo ?>º ciclo.</td></tr>
+                                            <?php } ?>
                                         </tbody>
                                     </table>
                                 </div>
@@ -423,10 +474,16 @@ $contt = 0;
                 <i class="fas fa-info-circle text-warning"></i><label class="text-info">&nbsp; Análise feita e E-Mail enviado.</label>
             </div>
             <div class="col-12">
+                <i class="fab fa-r-project text-dark"></i><label class="text-info">&nbsp; Réplica recebida, mas não avaliada.</label>
+            </div>
+            <div class="col-12">
+                <i class="fab fa-r-project text-primary"></i><label class="text-info">&nbsp; Réplica analisada. Falta enviar E-mail.</label>
+            </div>
+            <div class="col-12">
                 <i class="fab fa-r-project text-warning"></i><label class="text-info">&nbsp; Réplica analisada e E-Mail enviado.</label>
             </div>
             <div class="col-12">
-                <i class="fab fa-r-project text-dark"></i><label class="text-info">&nbsp; Réplica recebida, mas não avalidada.</label>
+                <i class="fas fa-check text-success" ></i><label class="text-info">&nbsp; Análise finalizada.</label>
             </div>
         </div>
 <?php include '../../includes/footer.php'; ?>

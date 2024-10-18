@@ -4,32 +4,33 @@ include '../conexao_agsus_2.php';
 include '../conexao-agsus.php';
 include '../Controller_agsus/maskCpf.php';
 include '../Controller_agsus/fdatas.php';
-if (!isset($_SESSION['cpf'])) {
-   header("Location: ../derruba_session.php"); exit();
-}
-$cpf = $_SESSION['cpf'];
-if (!isset($_SESSION['idUser'])) {
-    header("Location: ../derruba_session.php");
-    exit();
-}
-if (!isset($_SESSION['perfil'])) {
-    header("Location: ../derruba_session.php");
-    exit();
-}
-if (!isset($_SESSION['nivel'])) {
-    header("Location: ../derruba_session.php");
-    exit();
-}
-if($_SESSION['perfil'] !== '2' && $_SESSION['perfil'] !== '3' && $_SESSION['perfil'] !== '6' && $_SESSION['perfil'] !== '7' && $_SESSION['perfil'] !== '8'){
-    header("Location: ../derruba_session.php");
-    exit();
-}
-$perfil = $_SESSION['perfil'];
-$nivel = $_SESSION['nivel'];
-//$perfil = '3';
-//$nivel = '1';
+//if (!isset($_SESSION['cpf'])) {
+//   header("Location: ../derruba_session.php"); exit();
+//}
+//$cpf = $_SESSION['cpf'];
+//if (!isset($_SESSION['idUser'])) {
+//    header("Location: ../derruba_session.php");
+//    exit();
+//}
+//if (!isset($_SESSION['perfil'])) {
+//    header("Location: ../derruba_session.php");
+//    exit();
+//}
+//if (!isset($_SESSION['nivel'])) {
+//    header("Location: ../derruba_session.php");
+//    exit();
+//}
+//if($_SESSION['perfil'] !== '2' && $_SESSION['perfil'] !== '3' && $_SESSION['perfil'] !== '6' && $_SESSION['perfil'] !== '7' && $_SESSION['perfil'] !== '8'){
+//    header("Location: ../derruba_session.php");
+//    exit();
+//}
+//$perfil = $_SESSION['perfil'];
+//$nivel = $_SESSION['nivel'];
+$perfil = '3';
+$nivel = '1';
 $_SESSION['perfil'] = $perfil;
 $_SESSION['nivel'] = $nivel;
+$_SESSION['idUser'] = 2765;
 if (!isset($_SESSION['msg'])) {
     $_SESSION['msg'] = "";
 }
@@ -66,16 +67,16 @@ if($rsu){
         $usuario = $rsu['nome_user'];
     }while($rsu = mysqli_fetch_array($queryu));
 }
-$sqlano = "select ano from anoacicloavaliacao group by ano";
+$sqlano = "select ano from anocicloavaliacao group by ano";
 $queryano = mysqli_query($conn, $sqlano) or die(mysqli_error($conn));
 $rsano = mysqli_fetch_array($queryano);
-$sqlano2 = "select ano from anoacicloavaliacao group by ano";
+$sqlano2 = "select ano from anocicloavaliacao group by ano";
 $queryano2 = mysqli_query($conn, $sqlano2) or die(mysqli_error($conn));
 $rsano2 = mysqli_fetch_array($queryano2);
-$sqlano3 = "select ano from anoacicloavaliacao group by ano";
+$sqlano3 = "select ano from anocicloavaliacao group by ano";
 $queryano3 = mysqli_query($conn, $sqlano3) or die(mysqli_error($conn));
 $rsano3 = mysqli_fetch_array($queryano3);
-$sqlano4 = "select ano from anoacicloavaliacao group by ano";
+$sqlano4 = "select ano from anocicloavaliacao group by ano";
 $queryano4 = mysqli_query($conn, $sqlano4) or die(mysqli_error($conn));
 $rsano4 = mysqli_fetch_array($queryano4);
 ?>
@@ -109,6 +110,7 @@ $rsano4 = mysqli_fetch_array($queryano4);
                         <div id="menuPrincipal" class="collapse navbar-collapse">
                             <ul class="navbar-nav p-1">
                                 <li class="text-secondary pl-2 pr-2"><a href="" class="btn">Início</a></li>
+                                <li class="text-secondary pl-2 pr-2"><a href="" class="btn"> | </a></li>
                                 <li class="text-secondary pl-2 pr-2"><a href="derruba_session.php" class="btn"><i class="fas fa-sign-out-alt"></i></a></li>
 
                             </ul>
@@ -152,14 +154,9 @@ $rsano4 = mysqli_fetch_array($queryano4);
                     </div>
                     <div class="row mt-4">
                         <div class="col-md-4">
-                            <button type="button" class="btn btn-light rounded" data-toggle="modal" data-target="#modalAC">
+                            <a type="button" class="btn btn-light rounded" href="abertura_ciclo/">
                                 <img src="./../img/abertura_ciclo.png" class="img-fluid rounded" width="50%">
-                            </button>
-                        </div>
-                        <div class="col-md-4">
-                            <button type="button" class="btn btn-light rounded" data-toggle="modal" data-target="#modalFC">
-                                <img src="./../img/fechamento_ciclo.png" class="img-fluid rounded" width="50%">
-                            </button>
+                            </a>
                         </div>
                         <div class="col-md-4">
                             <a class="btn btn-light rounded" href="limiteContestacao/">
@@ -343,219 +340,6 @@ $rsano4 = mysqli_fetch_array($queryano4);
                         </form>
                     </div>
                 </div>
-                <!-- Modal -->
-                <div class="modal fade" id="modalAC" tabindex="-1" aria-labelledby="modalAC" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <form method="post" enctype="multipart/form-data" action="./controller/lafc.php">
-                            <div class="modal-content">
-                                <div class="modal-header" style="background-color: #E0E4E9;">
-                                    <h5 class="modal-title text-primary" id="exampleModalLabel">Abertura de Ciclo &nbsp;<img src="./../img/abertura_ciclo.png" class="img-fluid rounded-circle" width="10%"></h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="card ">
-                                        <div class="card-body">
-                                            <blockquote class="blockquote mb-3">
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <div class="col-12"><b>Escolha o ano:</b></div>
-                                                        <div class="col-12">
-                                                            <select class="form-control" name="ano" id="anoab">
-                                                                <option value="">[--SELECIONE--]</option>
-                                                                <option>2024</option>
-                                                                <option>2025</option>
-                                                                <option>2026</option>
-                                                                <option>2027</option>
-                                                                <option>2028</option>
-                                                                <option>2029</option>
-                                                                <option>2030</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-12">
-                                                        <div class="col-12"><b>Escolha o ciclo:</b></div>
-                                                        <div class="col-12">
-                                                            <select class="form-control" name="ciclo" id="cicloab">
-                                                                <option value="">[--SELECIONE--]</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </blockquote>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">FECHAR</button>
-                                    <button type="submit" class="btn btn-primary">ENTRAR <i class="fas fa-arrow-right"></i></button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <!-- Modal -->
-                <div class="modal fade" id="modalFC" tabindex="-1" aria-labelledby="modalFC" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <form method="post" enctype="multipart/form-data" action="./controller/lafc.php">
-                            <div class="modal-content">
-                                <div class="modal-header" style="background-color: #E0E4E9;">
-                                    <h5 class="modal-title text-primary" id="exampleModalLabel">Fechamento de Ciclo &nbsp;<img src="./../img/fechamento_ciclo.png" class="img-fluid rounded-circle" width="10%"></h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="card ">
-                                        <div class="card-body">
-                                            <blockquote class="blockquote mb-3">
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <div class="col-12"><b>Escolha o ano:</b></div>
-                                                        <div class="col-12">
-                                                            <select class="form-control" name="ano" id="anoaf">
-                                                                <option value="">[--SELECIONE--]</option>
-                                                                <option>2024</option>
-                                                                <option>2025</option>
-                                                                <option>2026</option>
-                                                                <option>2027</option>
-                                                                <option>2028</option>
-                                                                <option>2029</option>
-                                                                <option>2030</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-12">
-                                                        <div class="col-12"><b>Escolha o ciclo:</b></div>
-                                                        <div class="col-12">
-                                                            <select class="form-control" name="ciclo" id="cicloaf">
-                                                                <option value="">[--SELECIONE--]</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </blockquote>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">FECHAR</button>
-                                    <button type="submit" class="btn btn-primary">ENTRAR <i class="fas fa-arrow-right"></i></button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <!-- Modal -->
-<!--                <div class="modal fade" id="modalTLC" tabindex="-1" aria-labelledby="modalTLC" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <form method="post" enctype="multipart/form-data" action="./controller/ldt.php">
-                            <div class="modal-content">
-                                <div class="modal-header" style="background-color: #E0E4E9;">
-                                    <h5 class="modal-title text-primary" id="exampleModalLabel">Tempo Limite de Contestação &nbsp;<img src="./../img/fechamento_ciclo.png" class="img-fluid rounded-circle" width="10%"></h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="card ">
-                                        <div class="card-body">
-                                            <blockquote class="blockquote mb-3">
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <div class="col-12"><b>Escolha o ano:</b></div>
-                                                        <div class="col-12">
-                                                            <select class="form-control" name="ano" id="anoav">
-                                                                <option value="">[--SELECIONE--]</option>
-                                                                <option>2024</option>
-                                                                <option>2025</option>
-                                                                <option>2026</option>
-                                                                <option>2027</option>
-                                                                <option>2028</option>
-                                                                <option>2029</option>
-                                                                <option>2030</option>
-                                                            </select>
-                                                        </div>
-
-                                                    </div>
-                                                    <div class="col-md-12">
-                                                        <div class="col-12"><b>Escolha o ciclo:</b></div>
-                                                        <div class="col-12">
-                                                            <select class="form-control" name="ciclo" id="cicloav">
-                                                                <option value="">[--SELECIONE--]</option>
-                                                                <option value="1">1º Ciclo</option>
-                                                                <option value="2">2º Ciclo</option>
-                                                                <option value="3">3º Ciclo</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-12">
-                                                        <div class="col-12"><b>Data limite:</b></div>
-                                                        <div class="col-12">
-                                                            <input type="date" class="form-control" name="dtlimite" id="dtlimite">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-12">
-                                                        <div class="col-12">
-                                                            <button type="button" class="btn btn-outline-primary form-control mt-4" data-toggle="modal" data-target="#modalDtlimite">SALVAR &nbsp;<i class="fas fa-save"></i></button>
-                                                            <button type="button" class="btn btn-outline-danger form-control mt-2" data-toggle="modal" data-target="#modalDtlimiteParar">INATIVAR &nbsp;<i class="far fa-stop-circle"></i></button>
-                                                        </div>
-                                                    </div>
-                                                     Modal modalDtlimite 
-                                                    <div class="modal fade" id="modalDtlimite" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                        <div class="modal-dialog" role="document">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header bg-warning">
-                                                                    <h5 class="modal-title text-dark" id="exampleModalLabel">Data Limite de Contestação &nbsp;&nbsp;<img src="./../img/time_limit.png" width="8%"></h5>
-                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                        <span aria-hidden="true">&times;</span>
-                                                                    </button>
-                                                                </div>
-                                                                <div class="modal-body">
-                                                                    <p>Deseja salvar a data limite de contestação?</p>
-                                                                </div>
-                                                                <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">FECHAR</button>
-                                                                    <input type="submit" name="btsalvar" value='SALVAR' class="btn btn-primary">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                     FIM do Modal modalDtlimite 
-                                                     Modal modalDtlimiteParar 
-                                                    <div class="modal fade" id="modalDtlimiteParar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                        <div class="modal-dialog" role="document">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header bg-light">
-                                                                    <h5 class="modal-title text-dark" id="exampleModalLabel">Data Limite de Contestação &nbsp;&nbsp;<img src="./../img/time_limit.png" width="8%"></h5>
-                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                        <span aria-hidden="true">&times;</span>
-                                                                    </button>
-                                                                </div>
-                                                                <div class="modal-body">
-                                                                    <p>Deseja inativar a data limite da contestação?</p>
-                                                                </div>
-                                                                <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">FECHAR</button>
-                                                                    <input type="submit" name="btparar" value='INATIVAR' class="btn btn-primary">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                     FIM do Modal modalDtlimite 
-                                            </blockquote>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">FECHAR</button>
-                                    <button type="submit" class="btn btn-primary">ENTRAR <i class="fas fa-arrow-right"></i></button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>-->
             </div>
         </div>
 

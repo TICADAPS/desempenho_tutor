@@ -17,7 +17,7 @@ $cpftratado = str_replace(".", "", $cpftratado);
 $sql = "select * from medico m inner join desempenho d on m.cpf = d.cpf and m.ibge = d.ibge"
         . " inner join periodo p on p.idperiodo = d.idperiodo "
         . " left join ivs on idivs = fkivs "
-        . " where m.cpf = '$cpftratado' and ano = '$anoAtual';";
+        . " where m.cpf = '$cpftratado' and d.ano = '$anoAtual' and (d.flaginativo is null or d.flaginativo <> 1);";
 $query = mysqli_query($conn, $sql);
 $nrrs = mysqli_num_rows($query);
 $rs = mysqli_fetch_array($query);

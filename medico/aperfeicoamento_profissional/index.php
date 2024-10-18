@@ -8,27 +8,47 @@ include '../../Controller_agsus/fdatas.php';
 if (!isset($_SESSION['msg'])) {
     $_SESSION['msg'] = "";
 }
+if (!isset($_SESSION['cpf'])) {
+   header("Location: controller/derruba_session.php"); exit();
+}
 //var_dump($_SESSION['msg']);
-//$cpf = $_SESSION['cpf'];
-$cpf = '00101831161';
-$cpftratado = $cpf;
-//var_dump($cpftratado);
-$cpf = substr_replace($cpftratado, "-", 9, 0);
-$cpf = substr_replace($cpf, ".", 6, 0);
-$cpf = substr_replace($cpf, ".", 3, 0);
-$medico = 'CAROLINA MILITAO SPAGNOL';
-$ibgeO = '352690';
-$cnes = '3797902';
-$ine = '1587021';
-$ano = '2024';
-$ciclo = '3';
-//$medico = $_SESSION['nome'];
-//$ibgeO = $_SESSION['ibgeO'];
-//$cnes = $_SESSION['cnes'];
-//$ine = $_SESSION['ine'];
-//$ano = $_SESSION['ano'];
-//$ciclo = $_SESSION['ciclo'];
-$sqlano = "select * from anoacicloavaliacao where ano = '$ano' and ciclo = '$ciclo' limit 1";
+$_SESSION['cpf'] = '060.829.174-99';
+$_SESSION['ano'] = '2024';
+$_SESSION['ciclo'] = '3';
+$cpft = $_SESSION['cpf'];
+$ano = $_SESSION['ano'];
+$ciclo = $_SESSION['ciclo'];
+$cpf = str_replace(".", "", $cpft);
+$cpf = str_replace(".", "", $cpf);
+$cpf = str_replace(".", "", $cpf);
+$cpf = str_replace("-", "", $cpf);
+//var_dump($cpf);
+date_default_timezone_set('America/Sao_Paulo');
+$dthoje = date('d/m/Y');
+$sqlu = "select * from medico where cpf = '$cpf' limit 1";
+$queryu = mysqli_query($conn, $sqlu) or die(mysqli_error($conn));
+$nrrsu = mysqli_num_rows($queryu);
+$rsu = mysqli_fetch_array($queryu);
+$medico = $ibge = $cnes = $ine = '';
+if($nrrsu > 0){
+    do{
+        $medico = $rsu['nome'];
+        $ibge = $rsu['ibge'];
+        $cnes = $rsu['cnes'];
+        $ine = $rsu['ine'];
+    }while($rsu = mysqli_fetch_array($queryu));
+}
+$sqlu2 = "select * from medico where CpfMedico = '$cpft' limit 1";
+$queryu2 = mysqli_query($conn2, $sqlu2) or die(mysqli_error($conn2));
+$nrrsu2 = mysqli_num_rows($queryu2);
+$rsu2 = mysqli_fetch_array($queryu2);
+$medico = '';
+if($nrrsu2 > 0){
+    do{
+        $medico = $rsu2['NomeMedico'];
+    }while($rsu2 = mysqli_fetch_array($queryu2));
+}
+$sqlano = "select * from anocicloavaliacao where ano = '$ano' and ciclo = '$ciclo' limit 1";
 $queryano = mysqli_query($conn, $sqlano) or die(mysqli_error($conn));
 $rsano1 = mysqli_fetch_array($queryano);
 $rsano = $rsano1;
@@ -43,7 +63,7 @@ $pontuacaoap = $qcp = $gepep = $itp = 0;
 $pontexpap = $qcpexp = $gepepexp = $itpexp = 0;
 $_SESSION['nome'] = $medico;
 $sql = "select * from municipio m inner join estado e on m.Estado_cod_uf = e.cod_uf "
-        . "and m.cod_munc = '$ibgeO'";
+        . "and m.cod_munc = '$ibge'";
 $query = mysqli_query($conn2, $sql) or die(mysqli_error($conn2));
 $rs = mysqli_fetch_array($query);
 $municipioO = $ufO = "";
@@ -60,17 +80,18 @@ $sql2 = "select m.nome, m.admissao, m.cargo, mun.Municipio, e.UF, ivs.descricao,
     m.ibge = ap.ibge and m.cnes = ap.cnes and m.ine = ap.ine 
     inner join municipio mun on mun.cod_munc = m.ibge 
     inner join estado e on mun.Estado_cod_uf = e.cod_uf 
-    inner join ivs on ivs.idivs = m.fkivs 
-    where m.cpf = '$cpftratado' and m.ibge = '$ibgeO' and m.cnes = '$cnes' and m.ine = '$ine'  
+    left join ivs on ivs.idivs = m.fkivs 
+    where m.cpf = '$cpf' and m.ibge = '$ibge' and m.cnes = '$cnes' and m.ine = '$ine'  
     and ap.ano = '$ano' and ap.ciclo='$ciclo';";
 $query2 = mysqli_query($conn, $sql2) or die(mysqli_error($conn));
 $nrrs2 = mysqli_num_rows($query2);
 $rs2 = mysqli_fetch_array($query2);
 $rsld = $rs2;
-//var_dump($rsld);
+//var_dump($rsld, $cpft,$cpf);
 $flagld = $flagqc = $flaggepe = $flagit = false;
 $flagterminouap = '';
 $idap = null;
+//var_dump($rs2);
 if($rs2){
     do{
         $idap = $rs2['id'];
@@ -79,6 +100,7 @@ if($rs2){
         $cargo = $rs2['cargo'];
         $ivs = $rs2['descricao'];
         $flagald = $rs2['flagativlongduracao'];
+//        var_dump ($flagald);
         $flagparecerap = $rs2['flagparecerap'];
         //verifica se há parecer negativo para essa a atividade de Longa Duração
         if($flagparecerap === '0'){
@@ -231,7 +253,7 @@ $rsit = mysqli_fetch_array($qit);
                                                         </div>
                                                         <div class="col-md-4">
                                                             <ul class="list-group">
-                                                                <li class="list-group-item bg-light"><b>CPF: </b><?= $cpf ?></li>
+                                                                <li class="list-group-item bg-light"><b>CPF: </b><?= $cpft ?></li>
                                                             </ul>
                                                         </div>
                                                     </div>
@@ -261,15 +283,15 @@ $rsit = mysqli_fetch_array($qit);
                                     <div class="row mb-3 mt-2">
                                         <div class="col-md-12">
                                             <div class="card border-1 ">
-                                                <div class="card-body bg-warning">
-                                                    <h5 class="text-dark font-weight-bold text-center"><i class="fas fa-hand-point-right"></i>&nbsp; O ciclo não está aberto &nbsp;<i class="fas fa-hand-point-left"></i></h5>
+                                                <div class="card-body" style="border: 1px solid #4BA439;">
+                                                    <h5 class="text-center" style="color: #4BA439;"><i class="fas fa-hand-point-right"></i>&nbsp; Prezado médico Tutor, o <?= $ciclo ?>º ciclo do ano <?= $ano ?> não está aberto para esta atividade. &nbsp;<i class="fas fa-hand-point-left"></i></h5>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>                    
                                     <?php }else{ 
                                     if ($rsano !== null) {
-                                        if ($nrrs2 > 0 & $flagald !== null) {
+                                        if ($nrrs2 > 0 && $flagald !== null) {
                                             ?>
                                             <div class="row mb-1">
                                                 <div class="col-12">
@@ -301,8 +323,8 @@ $rsit = mysqli_fetch_array($qit);
                                         if ($nrrs2 > 0 && $flaganociclo === '1' && $flagald === null) {
                                             ?>
                                             <form method="post" enctype="multipart/form-data" action="controller/rcb.php">
-                                                <input type="hidden" value="<?= $cpftratado ?>" name="cpf">
-                                                <input type="hidden" value="<?= $ibgeO ?>" name="ibgeO">
+                                                <input type="hidden" value="<?= $cpf ?>" name="cpf">
+                                                <input type="hidden" value="<?= $ibge ?>" name="ibgeO">
                                                 <input type="hidden" value="<?= $cnes ?>" name="cnes">
                                                 <input type="hidden" value="<?= $ine ?>" name="ine">
                                                 <input type="hidden" value="<?= $ano ?>" name="ano">
@@ -589,11 +611,11 @@ $rsit = mysqli_fetch_array($qit);
                                                 </div>
                                                 <div class="row mb-1">
                                                     <div class="col-md-6 mt-4">
-                                                        <button type="button" class="shadow btn btn-warning form-control" data-toggle="modal" data-target="#modalptexp" onclick="montantePontos();">PONTUAÇÃO ESTIMADA</button>
+                                                        <button type="button" class="shadow-sm border-white btn btn-warning form-control" data-toggle="modal" data-target="#modalptexp" onclick="montantePontos();">PONTUAÇÃO ESTIMADA</button>
                                                     </div>
                                                     <div class="col-md-6 mt-4">
                                                         <!--<input type="submit" class="btn btn-success p-2 form-control" name="enviaCadastro" value="ENVIAR FORMULÁRIO" />-->
-                                                        <button type="button" onclick="revisao();" class="shadow btn btn-success form-control" >ENVIAR FORMULÁRIO</button>
+                                                        <button type="button" onclick="revisao();" class="shadow-sm border-white btn btn-success form-control" >ENVIAR FORMULÁRIO</button>
                                                     </div>
                                                 </div>
                                                 <!-- Modal -->
@@ -2114,11 +2136,11 @@ $rsit = mysqli_fetch_array($qit);
                                                  
                                                 <?php
                                                 if($flagld === true || $flagqc === true || $flaggepe === true || $flagit === true){ 
-                                                    if($flagterminouap === '0'){
+                                                    if($flagterminouap === '0' && $flagemailap === '1'){
                                                 ?>
                                                     <div class="row">
                                                         <div class="col-md-6 offset-md-3 mt-4">
-                                                            <button type="button" onclick="revisaoup();" class="shadow btn btn-outline-success form-control" >ENVIAR ATIVIDADES</button>
+                                                            <button type="button" onclick="revisaoup();" class="shadow-sm border-white btn btn-outline-success form-control" >ENVIAR ATIVIDADES</button>
                                                         </div>
                                                     </div>  
                                                 <?php }} ?>
@@ -2134,8 +2156,8 @@ $rsit = mysqli_fetch_array($qit);
                                                                 </div>
                                                                 <div class="modal-body border-top border-left border-right">
                                                                     <input type="hidden" value="<?= $idld ?>" name="idld">
-                                                                    <input type="hidden" value="<?= $cpftratado ?>" name="cpf">
-                                                                    <input type="hidden" value="<?= $ibgeO ?>" name="ibgeO">
+                                                                    <input type="hidden" value="<?= $cpf ?>" name="cpf">
+                                                                    <input type="hidden" value="<?= $ibge ?>" name="ibgeO">
                                                                     <input type="hidden" value="<?= $cnes ?>" name="cnes">
                                                                     <input type="hidden" value="<?= $ine ?>" name="ine">
                                                                     <input type="hidden" value="<?= $ano ?>" name="ano">

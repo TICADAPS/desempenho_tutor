@@ -27,7 +27,7 @@ $ciclo = $_REQUEST['cl'];
 //$ciclo = 1;
 $idperiodo = $_REQUEST['p'];
 //$idperiodo = 25;
-$sqlanocliclo = "select * from anoacicloavaliacao where ano = '$ano' and ciclo = '$ciclo'";
+$sqlanocliclo = "select * from anocicloavaliacao where ano = '$ano' and ciclo = '$ciclo'";
 $qanocliclo = mysqli_query($conn, $sqlanocliclo) or die(mysqli_errno($conn));
 $rsanocliclo = mysqli_fetch_array($qanocliclo);
 $descciclo = '';
@@ -1051,7 +1051,7 @@ if ($nrrsqa > 0) {
                                                                                 $nrrsc = mysqli_num_rows($queryc);
                                                                                 $rsc = mysqli_fetch_array($queryc);
                                                                                 if($nrrsc === 0){
-                                                                                    $sqdtlimite = "select * from anoacicloavaliacao where ano = '$ano' and ciclo = '$ciclo'";
+                                                                                    $sqdtlimite = "select * from anocicloavaliacao where ano = '$ano' and ciclo = '$ciclo'";
                                                                                     $qdtlim = mysqli_query($conn, $sqdtlimite) or die(mysqli_error($conn));
                                                                                     $rsdtlim = mysqli_fetch_array($qdtlim);
 //                                                                                    var_dump($rsdtlim);

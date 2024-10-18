@@ -93,6 +93,16 @@ class Aperfeicoamentoprofissional extends Model {
         }
         return $all->fetchAll(\PDO::FETCH_CLASS, __CLASS__);
     }
+    
+    public function findAnoCiclo($ano, $ciclo): ?array
+    {
+        $all = $this->read("SELECT * from " . self::$entity . " WHERE ano = '$ano' and ciclo = '$ciclo'");
+
+        if ($this->fail() ||!$all->rowCount()) {
+            return null;
+        }
+        return $all->fetchAll(\PDO::FETCH_CLASS, __CLASS__);
+    }
 
      /** Save debito */
     public function save(): ?Aperfeicoamentoprofissional {

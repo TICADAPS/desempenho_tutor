@@ -13,6 +13,6 @@ $mysql_options = [
 $ano = $_GET['a'];
 
 $db = new Database($mysql_options);
-$results = $db->execute_query("select ciclo from anoacicloavaliacao where ano = '$ano'");
+$results = $db->execute_query("select ciclo from anocicloavaliacao where ano = '$ano'");
 
 echo json_encode($results, 128);

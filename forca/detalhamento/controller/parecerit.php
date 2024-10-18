@@ -99,6 +99,13 @@ if($it !== null){
 //    var_dump($it);
     $rsit = $it->save();
 //    var_dump($rsit);
+    //flagterminou null - no retorno ao médico indica que foi analisado mas ainda não foi habilitado para réplica
+    //a habilitação (caso pontuação seja menor que 50) se dá após o envio do e-mail
+    $ap = (new \Source\Models\Aperfeicoamentoprofissional())->findById($idaperfprof);
+    if($ap !== null){
+        $ap->flagterminou = '0';
+        $ap->save();
+    }
     if($rsit !== null){
         $_SESSION['msg'] = "<h6 class='bg-light rounded text-success p-2'>&nbsp;<i class='fas fa-hand-point-right'></i>&nbsp; Análise do item Inovação Tecnológica gravada.</h6>";
         echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
@@ -109,13 +116,6 @@ if($it !== null){
         echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
             URL=\"../index.php?ct=$cpf&ib=$ibge&c=$cnes&i=$ine&a=$ano&ci=$ciclo\"'>"; 
         exit();
-    }
-    //flagterminou null - no retorno ao médico indica que foi analisado mas ainda não foi habilitado para réplica
-    //a habilitação (caso pontuação seja menor que 50) se dá após o envio do e-mail
-    $ap = (new \Source\Models\Aperfeicoamentoprofissional())->findById($idaperfprof);
-    if($ap !== null){
-        $ap->flagterminou = null;
-        $ap->save();
     }
 }else{
     $_SESSION['msg'] = "<h6 class='bg-warning border rounded text-dark p-2'>&nbsp;<i class='fas fa-hand-point-right'></i>&nbsp; Cadastro de aperfeiçoamento profisional não encontrado.</h6>";

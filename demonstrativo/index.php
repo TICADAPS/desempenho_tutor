@@ -380,14 +380,6 @@ if ($nrrsqa > 0) {
                                         <select name="a" class="form-control">
                                             <option value="" >[--SELECIONE--]</option>
                                             <option><?= $ano ?></option>
-                                            //<?php
-//                                            if ($rsano !== null) {
-//                                                foreach ($rsano->results as $ra) {
-//                                                    $ano = $ra->ano;
-//                                                }
-//                                                ?>
-                                                <!--<option><?= $ano ?></option>-->
-                                            <?php // } ?>
                                         </select>
                                     </div>
                                 </div>

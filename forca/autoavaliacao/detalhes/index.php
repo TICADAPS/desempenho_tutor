@@ -277,14 +277,14 @@ if($rs){
                                     <a href="../index.php" class="nav-link">&nbsp;Inicio </a>
                                 </li>
                                 <!-- Navbar dropdown -->
-                                <li class="nav-item dropdown">
+<!--                                <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">&nbsp;Relatórios</a>
                                     <div class="dropdown-menu">
                                         <?php if($perfil === '3' && $nivel === '1'){ ?>
                                         <a class="dropdown-item" href="relatorios/relatorioCP.php?id=<?= $id ?>">Planilha</a>
                                         <?php } ?>
                                     </div>
-                                </li>
+                                </li>-->
                                 <li class="nav-item">
                                     <a class="nav-link" href="../derruba_session.php">&nbsp;&nbsp;<i class="fas fa-sign-out-alt pt-1"></i></a>
                                 </li>

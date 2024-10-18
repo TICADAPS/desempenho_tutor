@@ -75,6 +75,19 @@ if($flagemail !== null && $flagemail !== '' && $flagemail === '1'){
     <link rel="shortcut icon" href="../../img_agsus/iconAdaps.png"/>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <style>
+        /* Reduzindo o tamanho da fonte em 20% */
+        body {
+            font-size: 90%;
+        }
+        /* Reduzindo o padding padrão em 20% */
+    .p-0, .pt-0, .pb-0, .pl-0, .pr-0 { padding: 0 !important; }
+    .p-1, .pt-1, .pb-1, .pl-1, .pr-1 { padding: calc(0.8 * 0.25rem) !important; }
+    .p-2, .pt-2, .pb-2, .pl-2, .pr-2 { padding: calc(0.8 * 0.5rem) !important; }
+    .p-3, .pt-3, .pb-3, .pl-3, .pr-3 { padding: calc(0.8 * 1rem) !important; }
+    .p-4, .pt-4, .pb-4, .pl-4, .pr-4 { padding: calc(0.8 * 1.5rem) !important; }
+    .p-5, .pt-5, .pb-5, .pl-5, .pr-5 { padding: calc(0.8 * 3rem) !important; }
+    </style>
 </head>
 <body>
     <div class="container-fluid mt-2">
@@ -103,18 +116,18 @@ if($flagemail !== null && $flagemail !== '' && $flagemail === '1'){
                                 <a class="nav-link" href="">|</a>
                             </li>
                             <!-- Navbar dropdown -->
-                            <li class="nav-item dropdown">
-                                <!--<a class="nav-link dropdown-toggle" href="../relatorios/relatorio_geral_igad.php">Relatório Geral IGAD - 1º ciclo de 2023</a>-->
+<!--                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="../relatorios/relatorio_geral_igad.php">Relatório Geral IGAD - 1º ciclo de 2023</a>
                                 <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">Relatórios</a>
                                 <div class="dropdown-menu">
                                     <?php if ($perfil === '3' && $nivel === '1') { ?>
-                                        <!--<a class="dropdown-item" href="../relatorios/relatorio_geral_igad.php">Relatório Geral IGAD - 1º ciclo de 2024</a>-->
+                                        <a class="dropdown-item" href="../relatorios/relatorio_geral_igad.php">Relatório Geral IGAD - 1º ciclo de 2024</a>
                                     <?php } ?>
                                 </div>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="">|</a>
-                            </li>
+                            </li>-->
                             <li class="nav-item">
                                 <a class="nav-link" href="../derruba_session.php"><i class="fas fa-sign-out-alt pt-1"></i></a>
                             </li>
@@ -226,15 +239,15 @@ if($flagemail !== null && $flagemail !== '' && $flagemail === '1'){
                             </div>
                             <?php }else{ ?>
                             <div class="col-md-4">
-                                <div class="col-md-12">&nbsp;</div>
+                                <!--<div class="col-md-12">&nbsp;</div>-->
                                 <div class="col-md-12 text-center">
-                                    <label class="text-danger h6"><i class="fas fa-chevron-circle-right float-left mt-1"></i>&nbsp;&nbsp; Análise Finalizada &nbsp;&nbsp;<i class="fas fa-chevron-circle-left float-right mt-1"></i></label>
+                                    <label class="text-danger h6 border shadow-sm p-4 rounded"><i class="fas fa-chevron-circle-right float-left mt-1"></i>&nbsp;&nbsp; Análise Finalizada &nbsp;&nbsp;<i class="fas fa-chevron-circle-left float-right mt-1"></i></label>
                                 </div>
                             </div>
                             <?php } ?>
                             <div class="col-md-4">
                                 <?php if($dthremail !== null && $dthremail !== ''){ ?>
-                                <div class="col-md-12 text-info"><br><b><i class="fas fa-mail-bulk"></i> &nbsp;<i><?= $dthremail ?></i>.</b></div>
+                                <div class="col-md-12 text-center text-info border shadow-sm p-4 rounded"><b><i class="fas fa-mail-bulk"></i> &nbsp;<i><?= $dthremail ?></i>.</b></div>
                                 <?php } ?>
                             </div>
                         </div>
@@ -421,7 +434,7 @@ if($flagemail !== null && $flagemail !== '' && $flagemail === '1'){
                                         </div>
                                         <div class="row mb-2 mt-4">
                                             <div class="col-md-8 offset-md-2">
-                                                <button type="button" class="shadow border-light btn btn-success" data-toggle="modal" data-target="#modalLongD">
+                                                <button type="button" class="shadow-sm border-light btn btn-success" data-toggle="modal" data-target="#modalLongD">
                                                     ENVIAR ANÁLISE SOBRE ATIVIDADE DE LONGA DURAÇÃO
                                                 </button>
                                             </div>
@@ -633,7 +646,7 @@ if($flagemail !== null && $flagemail !== '' && $flagemail === '1'){
                                         </div>
                                         <div class="row mb-2 mt-4">
                                             <div class="col-md-8 offset-md-2">
-                                                <button type="button" class="shadow border-light btn btn-success" data-toggle="modal" data-target="#modalQC<?= $auxqc ?>">
+                                                <button type="button" class="shadow-sm border-light btn btn-success" data-toggle="modal" data-target="#modalQC<?= $auxqc ?>">
                                                     ENVIAR ANÁLISE SOBRE ATIVIDADE DE QUALIFICAÇÃO CLÍNICA
                                                 </button>
                                             </div>
@@ -860,7 +873,7 @@ if($flagemail !== null && $flagemail !== '' && $flagemail === '1'){
                                         </div>
                                         <div class="row mb-2 mt-4">
                                             <div class="col-md-8 offset-md-2">
-                                                <button type="button" class="shadow border-light btn btn-success" data-toggle="modal" data-target="#modalgepe<?= $auxgepe ?>">
+                                                <button type="button" class="shadow-sm border-light btn btn-success" data-toggle="modal" data-target="#modalgepe<?= $auxgepe ?>">
                                                     ENVIAR ANÁLISE SOBRE ATIVIDADE DE GESTÃO, ENSINO, PESQUISA E EXTENSÃO
                                                 </button>
                                             </div>
@@ -1077,7 +1090,7 @@ if($flagemail !== null && $flagemail !== '' && $flagemail === '1'){
                                         </div>
                                         <div class="row mb-2 mt-4">
                                             <div class="col-md-8 offset-md-2">
-                                                <button type="button" class="shadow border-light btn btn-success" data-toggle="modal" data-target="#modalit<?= $auxit ?>">
+                                                <button type="button" class="shadow-sm border-light btn btn-success" data-toggle="modal" data-target="#modalit<?= $auxit ?>">
                                                     ENVIAR ANÁLISE SOBRE ATIVIDADE DE INOVAÇÃO TECNOLÓGICA
                                                 </button>
                                             </div>
@@ -1128,7 +1141,7 @@ if($flagemail !== null && $flagemail !== '' && $flagemail === '1'){
 <!--        <div class="row">
             <div class="col-md-4 offset-sm-4 mt-4">
                 <input type="submit" class="btn btn-success p-2 form-control" name="enviaCadastro" value="ENVIAR ANÁLISE" />
-                <button type="button" onclick="revisao();" class="shadow btn btn-success form-control" >ENVIAR ANÁLISE</button>
+                <button type="button" onclick="revisao();" class="shadow-sm btn btn-success form-control" >ENVIAR ANÁLISE</button>
             </div>
         </div>
          Modal 

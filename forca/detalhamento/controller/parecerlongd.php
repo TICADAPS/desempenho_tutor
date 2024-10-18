@@ -85,7 +85,7 @@ if($ap !== null){
     }else{
         $ap->pontuacao = 0.00;
     }
-    $ap->flagterminou = null;
+    $ap->flagterminou = '0';
 //    var_dump($ap);
     $rsap = $ap->save();
 //    var_dump($rsap);

@@ -2,7 +2,9 @@
 session_start();
 include './../conexao-agsus.php';
 include './../Controller_agsus/maskCpf.php';
-
+if (!isset($_SESSION['cpf'])) {
+   header("Location: controller/derruba_session.php"); exit();
+}
 $ine = $_REQUEST['i'];
 date_default_timezone_set('America/Sao_Paulo');
 $anoAtual = $_REQUEST['ano'];
@@ -17,7 +19,7 @@ $cpfm = str_replace("-", "", $cpfm);
 $sql = "select * from medico m inner join desempenho d on m.ine = d.ine and m.ibge = d.ibge"
         . " inner join periodo p on p.idperiodo = d.idperiodo "
         . " left join ivs on idivs = fkivs "
-        . " where m.ine = '$inetratado' and d.cpf = '$cpfm' and ano = '$anoAtual';";
+        . " where m.ine = '$inetratado' and d.cpf = '$cpfm' and d.ano = '$anoAtual' and (d.flaginativo is null or d.flaginativo <> 1);";
 $query = mysqli_query($conn, $sql);
 $nrrs = mysqli_num_rows($query);
 $rs = mysqli_fetch_array($query);

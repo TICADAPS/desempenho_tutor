@@ -3,25 +3,38 @@ session_start();
 require __DIR__ . "/../../source/autoload.php";
 include '../../conexao-agsus.php';
 
-$cpf = '001.018.311-61';
+if (!isset($_SESSION['msg'])) {
+    $_SESSION['msg'] = "";
+}
+if (!isset($_SESSION['cpf'])) {
+   header("Location: controller/derruba_session.php"); exit();
+}
+//var_dump($_SESSION['msg']);
+$cpf = $_SESSION['cpf'];
 $cpft = str_replace(".", "", $cpf);
 $cpft = str_replace(".", "", $cpft);
 $cpft = str_replace(".", "", $cpft);
 $cpft = str_replace("-", "", $cpft);
-$ibge = '352690';
-$cnes = '3797902';
-$ine = '1587021';
-$ano = '2024';
-$ciclo = '3';
-$sqlm = "select distinct nome from medico where cpf = '$cpft' limit 1";
-$qm = mysqli_query($conn, $sqlm) or die(mysqli_error($conn));
-$rs = mysqli_fetch_array($qm);
-$medico = '';
-if($rs){
+//var_dump($cpf);
+date_default_timezone_set('America/Sao_Paulo');
+$dthoje = date('d/m/Y');
+$sqlu = "select * from medico where cpf = '$cpft' limit 1";
+$queryu = mysqli_query($conn, $sqlu) or die(mysqli_error($conn));
+$nrrsu = mysqli_num_rows($queryu);
+$rsu = mysqli_fetch_array($queryu);
+$medico = $ibge = $cnes = $ine = '';
+if($nrrsu > 0){
     do{
-       $medico = $rs['nome']; 
-    } while($rs = mysqli_fetch_array($qm));
+        $medico = $rsu['nome'];
+        $ibge = $rsu['ibge'];
+        $cnes = $rsu['cnes'];
+        $ine = $rsu['ine'];
+    }while($rsu = mysqli_fetch_array($queryu));
 }
+$_SESSION['cpft'] = $cpft;
+$ciclo = $_SESSION['ciclo'];
+$ano = $_SESSION['ano'];
+$ac = (new \Source\Models\Anocicloavaliacao())->findAnoCicloAtivo($ano, $ciclo);
 $sqlmcp = "select cp.id from medico m inner join competencias_profissionais cp "
         . "on m.cpf = cp.cpf and m.ibge = cp.ibge and m.cnes = cp.cnes and m.ine = cp.ine "
         . " where m.cpf = '$cpft' and m.ibge = '$ibge' and m.cnes = '$cnes' and m.ine = '$ine' "
@@ -49,23 +62,37 @@ $uf = $estado->UF;
 </head>
 
 <body>
-    <div class="container">
-        <div class="row mt-2 mb-2">
-            <div class="col-12 shadow rounded  ">
-                <div class="p-3">
-                    <div class="card mb-2">
-                        <div class="card-body">
-                            <div class="row px-2">
-                                <div class="col-md-3 rounded p-3"><img src="../../img_agsus/Logo_400x200.png" class="img-fluid" alt="logoAdaps" title="Logo Adaps"></div>
-                                <div class="col-md-9">
-                                    <h3 class="mb-2 text-center">INSTRUMENTO - AVALIAÇÃO DE COMPETÊNCIAS</h3>
-                                    <h5 class="mb-2 text-center text-primary">ANO: <?= $ano ?>, <?= $ciclo ?>º CICLO.</h5>
-                                    <div class="mb-2"><p class="text-center">Este instrumento visa avaliar as competências técnicas e transversais
-                                        do Tutor Médico da AgSUS.</p></div>
-                                </div>
-                            </div>
-                        </div>
+    <div class="container-fluid mt-2 mb-3">
+        <div class="row">
+            <div class="col-12 col-md-4 mt-4 pl-5"><img src="../../img_agsus/Logo_400x200.png" class="img-fluid" alt="logoAdaps" width="250" title="Logo Adaps"></div>
+            <div class="col-12 col-md-8 mt-2">
+                <h3 class="mb-2 text-center">INSTRUMENTO - AVALIAÇÃO DE COMPETÊNCIAS</h3>
+                <h5 class="mb-2 text-center text-primary">ANO: <?= $ano ?>, <?= $ciclo ?>º CICLO.</h5>
+                <div class="mb-2"><p class="text-center">Este instrumento visa avaliar as competências técnicas e transversais
+                    do Tutor Médico da AgSUS.</p></div>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-12 mb-2">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light rounded">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menuPrincipal" aria-controls="menuPrincipal" aria-expanded="false" aria-label="Menu collapse">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div id="menuPrincipal" class="collapse navbar-collapse">
+                        <ul class="navbar-nav p-1">
+                            <li class="text-secondary pl-2 pr-2"><a href="../" class="btn">Início</a></li>
+                            <li class="text-secondary pl-2 pr-2"><a href="./derruba_session.php" class="btn"><i class="fas fa-sign-out-alt"></i></a></li>
+
+                        </ul>
                     </div>
+                </nav>
+            </div>
+        </div>
+        <div class="container-fluid mt-1">
+            <div class="row">
+                <div class="col-12 shadow rounded  ">
+                    <div class="row mb-2 mt-2">
+                        <div class="col-md-12 pt-2 pb-2">
                     <div class="card mb-2">
                         <div class="card-body">
                             <h4 class="mb-2 text-center">DADOS DO MÉDICO TUTOR</h4>
@@ -101,6 +128,15 @@ $uf = $estado->UF;
                         </div>
                     </div>
                     <?php
+                    if($ac === null){
+                    ?>  
+                    <div class="card mb-2">
+                        <div class="card-body rounded" style="border: 1px solid #4BA439;">
+                            <h5 class="m-2 text-center" style="color: #4BA439;"><i class="fas fa-hand-point-right"></i>&nbsp; Prezado médico Tutor, o <?= $ciclo ?>º ciclo do ano <?= $ano ?> não está aberto para esta atividade. &nbsp;<i class="fas fa-hand-point-left"></i></h5>
+                        </div>
+                    </div>
+                    <?php
+                    }else{
                     if ($nrrscp > 0) {
                         do {
                             $idcp = $rscp['id'];
@@ -1454,13 +1490,14 @@ $uf = $estado->UF;
                     <?php } else { ?>
                         <div class="card mb-2">
                             <div class="card-body rounded" style="border: 1px solid #4BA439;">
-                                <h5 class="m-2 text-center" style="color: #4BA439;">Prezado médico Tutor, não consta em nossa base de dados a sua participação neste ciclo.</h5>
+                                <h5 class="m-2 text-center" style="color: #4BA439;"><i class="fas fa-hand-point-right"></i>&nbsp; Prezado médico Tutor, não consta em nossa base de dados a sua participação neste ciclo. &nbsp;<i class="fas fa-hand-point-left"></i></h5>
                             </div>
                         </div>
-                    <?php } ?>
+                    <?php }} ?>
                 </div>
             </div>
         </div>
+    <?php include './footer.php' ?>
     </div>
     <script src="../../js_agsus/jquery-3.1.1.min.js"></script>
     <!-- Scripts do Bootstrap 5 -->

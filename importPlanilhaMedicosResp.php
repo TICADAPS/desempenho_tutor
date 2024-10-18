@@ -61,13 +61,6 @@ if (!empty($_FILES["arquivo"]["tmp_name"])) {
             $cnes = trim(utf8_encode($dados[7]));
             $ine = trim(utf8_encode($dados[8]));
             $ibge = trim(utf8_encode($dados[9]));
-            $prenatal_consultas = trim(utf8_encode($dados[10]));
-            $prenatal_sifilis_hiv= trim(utf8_encode($dados[11]));
-            $cobertura_citopatologico = trim(utf8_encode($dados[12]));
-            $hipertensao = trim(utf8_encode($dados[13]));
-            $diabetes = trim(utf8_encode($dados[14]));
-            $ano = trim(utf8_encode($dados[15]));
-            $periodo = trim(utf8_encode($dados[16]));
             
             $nome = strtoupper($nome);
             $nome = str_replace("'", "", $nome);
@@ -126,11 +119,6 @@ if (!empty($_FILES["arquivo"]["tmp_name"])) {
             $cnes = str_replace("'", "", $cnes);
             $ine = str_replace("'", "", $ine);
             $ibge = str_replace("'", "", $ibge);
-            $prenatal_consultas = str_replace("'", "", $prenatal_consultas);
-            $prenatal_sifilis_hiv = str_replace("'", "", $prenatal_sifilis_hiv);
-            $cobertura_citopatologico = str_replace("'", "", $cobertura_citopatologico);
-            $hipertensao = str_replace("'", "", $hipertensao);
-            $diabetes = str_replace("'", "", $diabetes);
 
             //formata a máscara do cpf (caso venha ou não com a máscara)
             $cpftratado = str_replace("-", "", $cpf);
@@ -160,7 +148,7 @@ if (!empty($_FILES["arquivo"]["tmp_name"])) {
             }
 //            echo "$a,$cpftratado,$nome,$admissao,$cargo,$tipologia,$uf,$municipio,$cnes,$ine,$ibge,
 //                    $prenatal_consultas,$prenatal_sifilis_hiv,$cobertura_citopatologico,
-//                    $hipertensao,$diabetes,$ano,$periodo,$datahoje<br>";
+//                    $hipertensao,$diabetes,2024,24,$datahoje<br>";
            
             $sql = "select * from medico where cpf = '$cpftratado' and ibge = '$ibge' and cnes = '$cnes' and ine = '$ine' limit 1";
             $query = mysqli_query($conn, $sql) or die(mysqli_error($conn));
@@ -170,15 +158,15 @@ if (!empty($_FILES["arquivo"]["tmp_name"])) {
                         . "values ('$cpftratado','$ibge','$cnes','$ine','$nome','$admissao','$cargo','$tipologia','$uf','$municipio','$datahoje')";
                 mysqli_query($conn, $sql2) or die(mysqli_error($conn));
             }
-            $sql4 = "select iddesempenho from desempenho where cpf = '$cpftratado' and ibge = '$ibge' and cnes = '$cnes' and ine = '$ine' and ano = '$ano' and idperiodo = '$periodo' limit 1";
+            $sql4 = "select iddesempenho from desempenho where cpf = '$cpftratado' and ibge = '$ibge' and cnes = '$cnes' and ine = '$ine' and ano = '2024' and idperiodo = '24' limit 1";
             $query3 = mysqli_query($conn, $sql4) or die(mysqli_error($conn));
             $nrrs3 = mysqli_num_rows($query3); 
-            if($nrrs3 == 0){
-                $sql2 = "insert into desempenho (ano,idperiodo,prenatal_consultas,prenatal_sifilis_hiv,cobertura_citopatologico,hipertensao,diabetes,cpf,ibge,cnes,ine,demonstrativo_ano,demonstrativo_ciclo) "
-                        . "values ('$ano','$periodo','$prenatal_consultas','$prenatal_sifilis_hiv','$cobertura_citopatologico','$hipertensao','$diabetes','$cpftratado','$ibge','$cnes','$ine','$ano','2')";
+            if($nrrs3 === 0){
+                $sql2 = "insert into desempenho (ano,idperiodo,cpf,ibge,cnes,ine,demonstrativo_ano,demonstrativo_ciclo) "
+                        . "values ('2024','24','$cpftratado','$ibge','$cnes','$ine','2024','3')";
                 mysqli_query($conn, $sql2) or die(mysqli_error($conn));
             }else{
-                echo "$cpftratado - $nome - $ibge - $cnes - $ine - Ano $ano e período $periodo cadastrado anteriormente<br>";
+                echo "$cpftratado - $nome - $ibge - $cnes - $ine - Ano 2024 e período 24 cadastrado anteriormente<br>";
             }
         }
     }

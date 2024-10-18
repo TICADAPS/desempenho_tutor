@@ -364,7 +364,7 @@ if($aperfprof !== null){
         $ap2 = (new Source\Models\Aperfeicoamentoprofissional())->findById($idaperfprof);
 //        var_dump($ap2);
         if($ap2 !== null){
-            if($rdativ !== null){
+            if($rdativ !== null && $rdpergld == '2'){
                 $ap2->dthrcadastro = $dthrcadastro;
                 $ap2->flagativlongduracao = $rdativ;
                 $ap2->flagup = '1';
@@ -376,6 +376,9 @@ if($aperfprof !== null){
     //            var_dump($ap2);
                 $rsaperfprof = $ap2->save();
     //            var_dump($rsaperfprof);
+            }else{
+                $ap2->flagup = '1';
+                $rsaperfprof = $ap2->save();
             }
         }
     }

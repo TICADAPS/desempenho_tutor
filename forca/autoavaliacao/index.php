@@ -12,49 +12,36 @@ if (!isset($_SESSION['pgmsg'])) {
     $_SESSION['pgmsg'] = "1";
 }
 
-//if (!isset($_SESSION['cpf'])) {
-//   header("Location: ../derruba_session.php"); exit();
-//}
-//$cpf = $_SESSION['cpf'];
-//if (!isset($_SESSION['idUser'])) {
-//    header("Location: ../derruba_session.php");
-//    exit();
-//}
-//if (!isset($_SESSION['perfil'])) {
-//    header("Location: ../derruba_session.php");
-//    exit();
-//}
-//if (!isset($_SESSION['nivel'])) {
-//    header("Location: ../derruba_session.php");
-//    exit();
-//}
-//if($_SESSION['perfil'] !== '2' && $_SESSION['perfil'] !== '3' && $_SESSION['perfil'] !== '6' && $_SESSION['perfil'] !== '7' && $_SESSION['perfil'] !== '8'){
-//    header("Location: ../derruba_session.php");
-//    exit();
-//}
-//$perfil = $_SESSION['perfil'];
-//$nivel = $_SESSION['nivel'];
+if (!isset($_SESSION['cpf'])) {
+   header("Location: ../derruba_session.php"); exit();
+}
+$cpf = $_SESSION['cpf'];
+if (!isset($_SESSION['idUser'])) {
+    header("Location: ../derruba_session.php");
+    exit();
+}
+if (!isset($_SESSION['perfil'])) {
+    header("Location: ../derruba_session.php");
+    exit();
+}
+if (!isset($_SESSION['nivel'])) {
+    header("Location: ../derruba_session.php");
+    exit();
+}
+if($_SESSION['perfil'] !== '2' && $_SESSION['perfil'] !== '3' && $_SESSION['perfil'] !== '6' && $_SESSION['perfil'] !== '7' && $_SESSION['perfil'] !== '8'){
+    header("Location: ../derruba_session.php");
+    exit();
+}
+$perfil = $_SESSION['perfil'];
+$nivel = $_SESSION['nivel'];
 
-$perfil = '3';
-$nivel = '1';
+//$perfil = '3';
+//$nivel = '1';
 date_default_timezone_set('America/Sao_Paulo');
-//$ano = $_SESSION['ano'];
-//$ciclo = $_SESSION['ciclo'];
-$ano = 2024;
-$ciclo = 3;
-$ctap = 0;
-//$sql = "select distinct m.nome, m.admissao, m.cargo, m.tipologia, m.uf, m.municipio, m.datacadastro, m.cpf, m.ibge, m.cnes,
-// m.ine, ivs.descricao as ivs from medico m left join ivs on m.fkivs = ivs.idivs inner join competencias_profissionais cp on 
-//m.cpf = cp.cpf and m.ibge = cp.ibge and m.cnes = cp.cnes and m.ine = cp.ine where cp.ano = '$ano' and cp.ciclo = '$ciclo' order by m.nome";
-//$query = mysqli_query($conn, $sql);
-//$nrrs = mysqli_num_rows($query);
-//$rs = mysqli_fetch_array($query);
-//var_dump($rs);
-//$rscpf = false;
-//if ($nrrs > 0) {
-//    $rscpf = true;
-//}
-//$contt = 0;
+$ano = $_SESSION['ano'];
+$ciclo = $_SESSION['ciclo'];
+//$ano = 2024;
+//$ciclo = 3;
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -85,6 +72,10 @@ $ctap = 0;
         <script src="../../js/jquery.easypiechart.js"></script>
         <script src="../../js/jquery.easypiechart2.js"></script>
         <style>
+        /* Reduzindo o tamanho da fonte em 20% */
+        body {
+          font-size: 85%;
+        }    
         #container {
             height: 400px;
         }
@@ -176,6 +167,23 @@ $ctap = 0;
             .table-hover tbody tr:hover td {
                 background: #f0f8ff;
             }
+            /* Estilizando o tooltip */
+            .tooltip-inner {
+                background-color: #ffffff !important; /* Fundo branco */
+                color: #1432FF !important; /* Texto preto */
+                border: 1px solid #dddddd; /* Borda cinza clara */
+            }
+
+            /* Remover ou ajustar a sombra do tooltip */
+            .tooltip.bs-tooltip-top .arrow::before,
+            .tooltip.bs-tooltip-bottom .arrow::before,
+            .tooltip.bs-tooltip-left .arrow::before,
+            .tooltip.bs-tooltip-right .arrow::before {
+                border-top-color: #ffffff !important; /* Cor branca na seta */
+                border-bottom-color: #ffffff !important; /* Para setas que apontam para cima/baixo */
+                border-left-color: #ffffff !important; /* Para setas que apontam para a direita/esquerda */
+                border-right-color: #ffffff !important;
+            }
         </style>
     </head>
 
@@ -203,15 +211,21 @@ $ctap = 0;
                                 <li class="nav-item">
                                     <a href="../index.php" class="nav-link">&nbsp;Inicio </a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="">|</a>
+                                </li>
                                 <!-- Navbar dropdown -->
                                 <li class="nav-item dropdown">
                                     <!--<a class="nav-link dropdown-toggle" href="../relatorios/relatorio_geral_igad.php">Relatório Geral IGAD - 1º ciclo de 2023</a>-->
                                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">&nbsp;Relatórios</a>
                                     <div class="dropdown-menu">
                                         <?php if($perfil === '3' && $nivel === '1'){ ?>
-                                        <a class="dropdown-item" href="relatorios/relatorioGeralCP.php?a=<?= $ano ?>&c=<?= $ciclo ?>">Relatório Geral: Competências Profissionais - <?= $ciclo ?>º ciclo de <?= $ano ?></a>
+                                        <a class="dropdown-item" href="../../relatorios/relatorioGeralCP.php?a=<?= $ano ?>&c=<?= $ciclo ?>">Relatório da autoavaliação Ano <?= $ano ?> - <?= $ciclo ?>º Ciclo</a>
                                         <?php } ?>
                                     </div>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="">|</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="../derruba_session.php">&nbsp;&nbsp;<i class="fas fa-sign-out-alt pt-1"></i></a>
@@ -243,16 +257,16 @@ $ctap = 0;
                                     <table id="dtBasicExample" class="table table-hover table-bordered table-striped rounded">
                                         <thead class="bg-gradient-dark text-white">
                                             <tr class="bg-gradient-dark text-light font-weight-bold">
-                                                <td class="bg-gradient-dark text-light align-middle text-center" style="width: 10%;position: sticky; top: 0px;" title="Detalhamento"><i class="fas fa-info-circle"></i>&nbsp; | &nbsp;<i class="fas fa-mail-bulk"></i></td>
-                                                <td class="bg-gradient-dark text-light align-middle" style="width: 40%; height: 70px;position: sticky; top: 0px;">TUTOR</td>
-                                                <td class="bg-gradient-dark text-light align-middle" style="width: 5%;position: sticky; top: 0px;">CPF</td>
-                                                <td class="bg-gradient-dark text-light align-middle" style="width: 5%;position: sticky; top: 0px;">TIPOLOGIA</td>
-                                                <td class="bg-gradient-dark text-light align-middle" style="width: 5%;position: sticky; top: 0px;">IVS</td>
-                                                <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">MUNICÍPIO</td>
-                                                <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">UF</td>
-                                                <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">IBGE</td>
-                                                <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">CNES</td>
-                                                <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;">INE</td>
+                                                <td class="bg-gradient-dark text-light align-middle text-center" style="position: sticky; top: 0px;" title="Detalhamento"><i class="fas fa-info-circle"></i>&nbsp; | &nbsp;<i class="fas fa-mail-bulk"></i></td>
+                                                <td class="bg-gradient-dark text-light align-middle" style="position: sticky; top: 0px;">TUTOR</td>
+                                                <td class="bg-gradient-dark text-light align-middle" style="position: sticky; top: 0px;">CPF</td>
+                                                <td class="bg-gradient-dark text-light align-middle" style="position: sticky; top: 0px;">TIPOLOGIA</td>
+                                                <td class="bg-gradient-dark text-light align-middle" style="position: sticky; top: 0px;">IVS</td>
+                                                <td class="bg-gradient-dark text-light align-middle" style="position: sticky; top: 0px;">MUNICÍPIO</td>
+                                                <td class="bg-gradient-dark text-light align-middle" style="position: sticky; top: 0px;">UF</td>
+                                                <td class="bg-gradient-dark text-light align-middle" style="position: sticky; top: 0px;">IBGE</td>
+                                                <td class="bg-gradient-dark text-light align-middle" style="position: sticky; top: 0px;">CNES</td>
+                                                <td class="bg-gradient-dark text-light align-middle" style="position: sticky; top: 0px;">INE</td>
                                             </tr>
                                         </thead>
                                         <tbody id="tbcp"></tbody>
@@ -279,7 +293,6 @@ $ctap = 0;
                     </div>
                 </div>
             </div>
-        </div>
         <div class="modal fade modalEmailAll" id="modalEmailAll" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">

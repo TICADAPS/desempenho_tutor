@@ -51,13 +51,8 @@ if(!isset($_SESSION['msg'])){
                             <h6 class="mt-2">8º CNES</h6>
                             <h6 class="mt-2">9º INE</h6>
                             <h6 class="mt-2">10º IBGE</h6>
-                            <h6 class="mt-2">11º prenatal_consultas</h6>
-                            <h6 class="mt-2">12º prenatal_sifilis_hiv</h6>
-                            <h6 class="mt-2">13º cobertura_citopatologico</h6>
-                            <h6 class="mt-2">14º hipertensao</h6>
-                            <h6 class="mt-2">15º diabetes</h6>
-                            <h6 class="mt-2">16º Ano</h6>
-                            <h6 class="mt-2">17º Período (quadrimestre)</h6>
+                            <h6 class="mt-2">11º Ano</h6>
+                            <h6 class="mt-2">12º Período (quadrimestre)</h6>
                             <input type="file" class="form-control form-control-lg mb-2" name="arquivo">
                             <input type="submit" class="form-control form-control-lg mb-2 bnt btn-success" name="enviar" value="Enviar">
                         </form>

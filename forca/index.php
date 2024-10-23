@@ -1,5 +1,6 @@
 <?php
 session_start();
+require __DIR__ . "/../source/autoload.php";
 include '../conexao_agsus_2.php';
 include '../conexao-agsus.php';
 include '../Controller_agsus/maskCpf.php';
@@ -108,11 +109,25 @@ $rsano4 = mysqli_fetch_array($queryano4);
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <div id="menuPrincipal" class="collapse navbar-collapse">
-                            <ul class="navbar-nav p-1">
-                                <li class="text-secondary pl-2 pr-2"><a href="" class="btn">Início</a></li>
-                                <li class="text-secondary pl-2 pr-2"><a href="" class="btn"> | </a></li>
-                                <li class="text-secondary pl-2 pr-2"><a href="derruba_session.php" class="btn"><i class="fas fa-sign-out-alt"></i></a></li>
-
+                            <ul class="navbar-nav p-1 w-100 d-flex">
+                                <li class="text-secondary"><a href="" class="btn">Início</a></li>
+                                <li class="text-secondary"><a href="derruba_session.php" class="btn"><i class="fas fa-sign-out-alt"></i></a></li>
+                                <?php
+                                $anocl = (new Source\Models\Anocicloavaliacao())->findTudo();
+                                if($anocl !== null){
+                                    $aa = $cc = '';
+                                    foreach ($anocl as $ac){
+                                        if($ac->flagativo === '1'){
+                                            $aa = $ac->ano;
+                                            $cc = $ac->ciclo;
+                                            break;
+                                        }
+                                    }
+                                    if($aa !== '' && $cc !== ''){ ?>
+                                <li class="text-info mx-auto"><a href="" class="btn text-info"><i class="fas fa-hand-point-right"></i>&nbsp;&nbsp; <?= $cc ?>º Ciclo de <?= $aa ?> ABERTO &nbsp;&nbsp;<i class="fas fa-hand-point-left"></i></a></li>
+                                <?php    }else{ ?>
+                                <li class="text-danger mx-auto"><a href="" class="btn text-danger"><i class="fas fa-hand-point-right"></i>&nbsp;&nbsp; CICLO FECHADO &nbsp;&nbsp;<i class="fas fa-hand-point-left"></i></a></li>
+                                <?php }} ?>
                             </ul>
                         </div>
                     </nav>

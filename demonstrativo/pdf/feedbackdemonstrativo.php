@@ -18,7 +18,7 @@ $ciclo = $_REQUEST['c'];
 $idperiodo = $_REQUEST['p'];
 //var_dump($_REQUEST);
 
-$sqlanocliclo = "select * from anoacicloavaliacao where ano = '$ano' and ciclo = '$ciclo'";
+$sqlanocliclo = "select * from anocicloavaliacao where ano = '$ano' and ciclo = '$ciclo'";
 $qanocliclo = mysqli_query($conn, $sqlanocliclo) or die(mysqli_errno($conn));
 $rsanocliclo = mysqli_fetch_array($qanocliclo);
 $descciclo = '';

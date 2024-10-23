@@ -21,7 +21,7 @@ $anomesdiaAtual = (int)$anomesdiaAtual;
 $ano = $_SESSION['ano'];
 $ciclo = $_SESSION['ciclo'];
 $idperiodo = $_SESSION['periodo'];
-$sqlanocliclo = "select * from anoacicloavaliacao where ano = '$ano' and ciclo = '$ciclo'";
+$sqlanocliclo = "select * from anocicloavaliacao where ano = '$ano' and ciclo = '$ciclo'";
 $qanocliclo = mysqli_query($conn, $sqlanocliclo) or die(mysqli_errno($conn));
 $rsanocliclo = mysqli_fetch_array($qanocliclo);
 $descciclo = '';
@@ -118,7 +118,7 @@ if ($nrrsqa > 0) {
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         
         <!-- Custom fonts for this template-->
-        <link rel="shortcut icon" href="../img_agsus/iconAgSUS.png"/>
+        <link rel="shortcut icon" href="../img_agsus/iconAdaps.png"/>
         <link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
@@ -1073,7 +1073,7 @@ if ($nrrsqa > 0) {
                                                                                 $nrrsc = mysqli_num_rows($queryc);
                                                                                 $rsc = mysqli_fetch_array($queryc);
                                                                                 if($nrrsc === 0){
-                                                                                    $sqdtlimite = "select * from anoacicloavaliacao where ano = '$ano' and ciclo = '$ciclo'";
+                                                                                    $sqdtlimite = "select * from anocicloavaliacao where ano = '$ano' and ciclo = '$ciclo'";
                                                                                     $qdtlim = mysqli_query($conn, $sqdtlimite) or die(mysqli_error($conn));
                                                                                     $rsdtlim = mysqli_fetch_array($qdtlim);
 //                                                                                    var_dump($rsdtlim);

@@ -24,7 +24,7 @@ $sql = "select m.nome, m.admissao, m.cargo, mun.Municipio, e.UF, ivs.descricao, 
     m.ibge = ap.ibge and m.cnes = ap.cnes and m.ine = ap.ine 
     inner join municipio mun on mun.cod_munc = m.ibge 
     inner join estado e on mun.Estado_cod_uf = e.cod_uf 
-    inner join ivs on ivs.idivs = m.fkivs 
+    left join ivs on ivs.idivs = m.fkivs 
     where m.cpf = '$cpf' and m.ibge = '$ibge' and m.cnes = '$cnes' and m.ine = '$ine' "
         . "and ap.ano = '$ano' and ap.ciclo='$ciclo'";
 $query = mysqli_query($conn, $sql) or die(mysqli_error($conn));

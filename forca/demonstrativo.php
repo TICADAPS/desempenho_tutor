@@ -124,7 +124,7 @@ if ($nrrsqa > 0) {
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         
         <!-- Custom fonts for this template-->
-        <link rel="shortcut icon" href="../img_agsus/iconAgSUS.png"/>
+        <link rel="shortcut icon" href="../img_agsus/iconAdaps.png"/>
         <link href="../../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">

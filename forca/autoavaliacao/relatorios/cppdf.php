@@ -136,7 +136,7 @@ $sql = "select m.nome, m.admissao, m.cargo, mun.Municipio, e.UF, ivs.descricao
     m.ibge = cp.ibge and m.cnes = cp.cnes and m.ine = cp.ine 
     inner join municipio mun on mun.cod_munc = m.ibge 
     inner join estado e on mun.Estado_cod_uf = e.cod_uf 
-    inner join ivs on ivs.idivs = m.fkivs 
+    left join ivs on ivs.idivs = m.fkivs 
     where m.cpf = '$cpf' and m.ibge = '$ibge' and m.cnes = '$cnes' and m.ine = '$ine' "
         . "and cp.ano = '$ano' and cp.ciclo='$ciclo'";
 $query = mysqli_query($conn, $sql) or die(mysqli_error($conn));

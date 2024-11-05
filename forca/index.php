@@ -5,33 +5,33 @@ include '../conexao_agsus_2.php';
 include '../conexao-agsus.php';
 include '../Controller_agsus/maskCpf.php';
 include '../Controller_agsus/fdatas.php';
-//if (!isset($_SESSION['cpf'])) {
-//   header("Location: ../derruba_session.php"); exit();
-//}
-//$cpf = $_SESSION['cpf'];
-//if (!isset($_SESSION['idUser'])) {
-//    header("Location: ../derruba_session.php");
-//    exit();
-//}
-//if (!isset($_SESSION['perfil'])) {
-//    header("Location: ../derruba_session.php");
-//    exit();
-//}
-//if (!isset($_SESSION['nivel'])) {
-//    header("Location: ../derruba_session.php");
-//    exit();
-//}
-//if($_SESSION['perfil'] !== '2' && $_SESSION['perfil'] !== '3' && $_SESSION['perfil'] !== '6' && $_SESSION['perfil'] !== '7' && $_SESSION['perfil'] !== '8'){
-//    header("Location: ../derruba_session.php");
-//    exit();
-//}
-//$perfil = $_SESSION['perfil'];
-//$nivel = $_SESSION['nivel'];
-$perfil = '3';
-$nivel = '1';
-$_SESSION['perfil'] = $perfil;
-$_SESSION['nivel'] = $nivel;
-$_SESSION['idUser'] = 2765;
+if (!isset($_SESSION['cpf'])) {
+   header("Location: ../derruba_session.php"); exit();
+}
+$cpf = $_SESSION['cpf'];
+if (!isset($_SESSION['idUser'])) {
+    header("Location: ../derruba_session.php");
+    exit();
+}
+if (!isset($_SESSION['perfil'])) {
+    header("Location: ../derruba_session.php");
+    exit();
+}
+if (!isset($_SESSION['nivel'])) {
+    header("Location: ../derruba_session.php");
+    exit();
+}
+if($_SESSION['perfil'] !== '1' && $_SESSION['perfil'] !== '2' && $_SESSION['perfil'] !== '3' && $_SESSION['perfil'] !== '6' && $_SESSION['perfil'] !== '7' && $_SESSION['perfil'] !== '8'){
+    header("Location: ../derruba_session.php");
+    exit();
+}
+$perfil = $_SESSION['perfil'];
+$nivel = $_SESSION['nivel'];
+//$perfil = '3';
+//$nivel = '1';
+//$_SESSION['perfil'] = $perfil;
+//$_SESSION['nivel'] = $nivel;
+//$_SESSION['idUser'] = 2765;
 if (!isset($_SESSION['msg'])) {
     $_SESSION['msg'] = "";
 }
@@ -82,7 +82,7 @@ $queryano4 = mysqli_query($conn, $sqlano4) or die(mysqli_error($conn));
 $rsano4 = mysqli_fetch_array($queryano4);
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
     <head>
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -156,6 +156,7 @@ $rsano4 = mysqli_fetch_array($queryano4);
                                 <img src="./../img/aperfeicoamento.png" class="img-fluid rounded" width="50%">
                             </button>
                         </div>
+                        <?php if($perfil === '3' && $nivel === '1'){ ?>
                         <div class="col-md-4">
                             <button type="button" class="btn btn-light rounded" data-toggle="modal" data-target="#modalCP">
                                 <img src="./../img/autoavaliacao.png" class="img-fluid rounded" width="50%">
@@ -166,7 +167,9 @@ $rsano4 = mysqli_fetch_array($queryano4);
                                 <img src="./../img/demostrativo.png" class="img-fluid rounded" width="50%">
                             </button>
                         </div>
+                        <?php } ?>
                     </div>
+                    <?php if($perfil === '3' && $nivel === '1'){ ?>
                     <div class="row mt-4">
                         <div class="col-md-4">
                             <a type="button" class="btn btn-light rounded" href="abertura_ciclo/">
@@ -179,6 +182,7 @@ $rsano4 = mysqli_fetch_array($queryano4);
                             </a>
                         </div>
                     </div>
+                    <?php } ?>
                 </div>
                 <!-- Modal -->
                 <div class="modal fade" id="modalAP" tabindex="-1" aria-labelledby="modalAP" aria-hidden="true">

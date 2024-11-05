@@ -28,7 +28,7 @@ if (!isset($_SESSION['nivel'])) {
     header("Location: ../derruba_session.php");
     exit();
 }
-if($_SESSION['perfil'] !== '2' && $_SESSION['perfil'] !== '3' && $_SESSION['perfil'] !== '6' && $_SESSION['perfil'] !== '7' && $_SESSION['perfil'] !== '8'){
+if($_SESSION['perfil'] !== '1' && $_SESSION['perfil'] !== '2' && $_SESSION['perfil'] !== '3' && $_SESSION['perfil'] !== '6' && $_SESSION['perfil'] !== '7' && $_SESSION['perfil'] !== '8'){
     header("Location: ../derruba_session.php");
     exit();
 }
@@ -219,7 +219,7 @@ $ciclo = $_SESSION['ciclo'];
                                     <!--<a class="nav-link dropdown-toggle" href="../relatorios/relatorio_geral_igad.php">Relatório Geral IGAD - 1º ciclo de 2023</a>-->
                                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">&nbsp;Relatórios</a>
                                     <div class="dropdown-menu">
-                                        <?php if($perfil === '3' && $nivel === '1'){ ?>
+                                        <?php if (($perfil === '3' && $nivel === '1') || ($perfil === '1' && $nivel === '2')) { ?>
                                         <a class="dropdown-item" href="../../relatorios/relatorioGeralCP.php?a=<?= $ano ?>&c=<?= $ciclo ?>">Relatório da autoavaliação Ano <?= $ano ?> - <?= $ciclo ?>º Ciclo</a>
                                         <?php } ?>
                                     </div>
@@ -278,6 +278,10 @@ $ciclo = $_SESSION['ciclo'];
                                     <label class="">Tutores: </label>
                                     <label class="text-info" id="tutortotal"></label>
                                 </div>
+                                <div class="col-sm-12">
+                                    <label class="">Tutores Inativos: </label>
+                                    <label class="text-info" id="tutorinativo"></label>
+                                </div>
                                 <div class="col-sm-6">
                                     <label class="">Formulários enviados: </label>
                                     <label class="text-info" id="enviostotal"></label>
@@ -285,9 +289,9 @@ $ciclo = $_SESSION['ciclo'];
                                 <div class="col-sm-3">
                                     <button type="button" id="btenvemailall" onclick="funcBtEmailAll();" class="btn btn-outline-warning shadow-sm border-warning text-dark" data-toggle="modal" data-target="#modalEmailAll"><b><i class="fas fa-mail-bulk"></i>&nbsp; Enviar E-Mail aos pendentes</b></button>
                                 </div>
-                                <div class="col-sm-3">
+                                <!--<div class="col-sm-3">
                                     <button type="button" id="btenvdemonstrativo" class="btn btn-outline-primary shadow-sm border-primary"><i class="fas fa-paper-plane"></i>&nbsp; Enviar para o demonstrativo</button>
-                                </div>
+                                </div>-->
                             </div>
                         </div>
                     </div>
@@ -359,11 +363,6 @@ $ciclo = $_SESSION['ciclo'];
 //                document.getElementById("conteudo").style.display = "inline";
             }, 1000);
             
-            function funcBtEB(){
-                
-            }
-            function funcBtEmailAll(){
-            }
             function funcBtEnvEB(a){
                 document.getElementById("loading").style.display = "block";
                 //console.log("clicou");

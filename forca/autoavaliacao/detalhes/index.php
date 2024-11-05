@@ -286,7 +286,7 @@ if($rs){
                                     </div>
                                 </li>-->
                                 <li class="nav-item">
-                                    <a class="nav-link" href="../derruba_session.php">&nbsp;&nbsp;<i class="fas fa-sign-out-alt pt-1"></i></a>
+                                    <a class="nav-link" href="../../derruba_session.php">&nbsp;&nbsp;<i class="fas fa-sign-out-alt pt-1"></i></a>
                                 </li>
                                 <li class="nav-item">
                                     <div id="loading">

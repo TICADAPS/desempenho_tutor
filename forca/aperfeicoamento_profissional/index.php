@@ -2,6 +2,7 @@
 session_start();
 require __DIR__ . "/../../source/autoload.php";
 include '../../conexao-agsus.php';
+include '../../conexao_agsus_2.php';
 include '../../Controller_agsus/maskCpf.php';
 include '../../Controller_agsus/fdatas.php';
 
@@ -28,27 +29,39 @@ if (!isset($_SESSION['nivel'])) {
     header("Location: ../derruba_session.php");
     exit();
 }
-if($_SESSION['perfil'] !== '2' && $_SESSION['perfil'] !== '3' && $_SESSION['perfil'] !== '6' && $_SESSION['perfil'] !== '7' && $_SESSION['perfil'] !== '8'){
+if($_SESSION['perfil'] !== '1' && $_SESSION['perfil'] !== '2' && $_SESSION['perfil'] !== '3' && $_SESSION['perfil'] !== '6' && $_SESSION['perfil'] !== '7' && $_SESSION['perfil'] !== '8'){
     header("Location: ../derruba_session.php");
     exit();
 }
+$iduser = $_SESSION["idUser"];
+$sqlu = "select * from usuarios where id_user = '$iduser'";
+$queryu = mysqli_query($conn2, $sqlu) or die(mysqli_error($conn2));
+$rsu = mysqli_fetch_array($queryu);
+$usuario = '';
+if($rsu){
+    do{
+        $usuario = $rsu['nome_user'];
+    }while($rsu = mysqli_fetch_array($queryu));
+}
 $perfil = $_SESSION['perfil'];
 $nivel = $_SESSION['nivel'];
-
-//$perfil = '3';
+//perfil = '3';
 //$nivel = '1';
 date_default_timezone_set('America/Sao_Paulo');
+$dthoje = date('d/m/Y');
 $ano = $_SESSION['ano'];
 $ciclo = $_SESSION['ciclo'];
+//$ano = 2024;
+//$ciclo = 3;
 $ctap = 0;
-$sql = "select distinct m.nome, m.admissao, m.cargo, m.tipologia, m.uf, m.municipio, m.datacadastro, m.cpf, m.ibge, m.cnes,
- m.ine, ivs.descricao as ivs from medico m left join ivs on m.fkivs = ivs.idivs inner join aperfeicoamentoprofissional a on 
+$sql = "select m.nome, m.admissao, m.cargo, m.tipologia, m.uf, m.municipio, m.datacadastro, m.cpf, m.ibge, m.cnes,
+ m.ine, ivs.descricao as ivs, a.flaginativo from medico m left join ivs on m.fkivs = ivs.idivs inner join aperfeicoamentoprofissional a on 
 m.cpf = a.cpf and m.ibge = a.ibge and m.cnes = a.cnes and m.ine = a.ine where a.ano = '$ano' and a.ciclo = '$ciclo' order by m.nome";
 $query = mysqli_query($conn, $sql);
 $nrrs = mysqli_num_rows($query);
 $rs = mysqli_fetch_array($query);
 //var_dump($rs);
-$contt = 0;
+$contt = $continat = 0;
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -233,7 +246,7 @@ $contt = 0;
                                     <!--<a class="nav-link dropdown-toggle" href="../relatorios/relatorio_geral_igad.php">Relatório Geral IGAD - 1º ciclo de 2023</a>-->
                                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">Relatórios</a>
                                     <div class="dropdown-menu">
-                                        <?php if ($perfil === '3' && $nivel === '1') { ?>
+                                        <?php if (($perfil === '3' && $nivel === '1') || ($perfil === '1' && $nivel === '2')) { ?>
                                             <a class="dropdown-item" href="../../relatorios/relatorioGeralAP.php?a=<?= $ano ?>&c=<?= $ciclo ?>">Relatório Aperfeiçoamento Profissional Ano <?= $ano ?> - <?= $ciclo ?>º Ciclo</a>
                                         <?php } ?>
                                     </div>
@@ -254,8 +267,8 @@ $contt = 0;
                     </nav> 
                 </div>
             </div>
-            <div class="row p-2">
-                <div class="col-12">
+            <div class="row">
+                <div class="col-6">
                     <?php
                     if ($_SESSION['pgmsg'] === '2') {
                         if ($_SESSION['msg'] !== null && $_SESSION['msg'] !== '') {
@@ -267,18 +280,21 @@ $contt = 0;
                     }
                     ?>
                 </div>
+                <div class="col-6 text-right">
+                    <label><small>Bem-vindo, <?= $usuario ?>, Brasília-DF, <?= $dthoje ?>.</small></label>
+                </div>
             </div>
             <div class="row p-2">
                 <div class="col-md-12 shadow rounded pr-2 pl-2 mb-1">
                     <div class="row p-3">
                         <div class="col-md-12 mt-2">
                             <fieldset class="form-group border pr-2 pl-2">
-                                <legend class="w-auto pr-2 pl-2"><h5>Aperfeiçoamento Profissional - Tutores</h5></legend>
+                                <legend class="w-auto pr-2 pl-2  text-primary"><h5>Tutores inscritos no <?= $ciclo ?>º ciclo - Aperfeiçoamento Profissional</h5></legend>
                                 <div class="mb-3 table-responsive text-nowrap table-overflow2">
                                     <table id="dtBasicExample" class="table table-hover table-bordered table-striped rounded">
                                         <thead class="bg-gradient-dark text-white">
                                             <tr class="bg-gradient-dark text-light font-weight-bold">
-                                                <?php if ($perfil === '3' && $nivel === '1') { ?>
+                                                <?php if (($perfil === '3' && $nivel === '1') || ($perfil === '1' && $nivel === '2')) { ?>
                                                     <td class="bg-gradient-dark text-light align-middle text-center" style="width: 10%;position: sticky; top: 0px;" title="Detalhamento"><i class="fas fa-info-circle"></i></td>
                                                 <?php } ?>
                                                 <td class="bg-gradient-dark text-light align-middle" style="width: 40%; position: sticky; top: 0px;">TUTOR</td>
@@ -313,10 +329,14 @@ $contt = 0;
                                                         $ine = $rs['ine'];
                                                         $ivs = strtoupper($rs['ivs']);
                                                         $datacadastro = vemdata($rs['datacadastro']);
+                                                        $flaginativo = '';
+                                                        if ($rs['flaginativo'] !== null){
+                                                            $flaginativo = $rs['flaginativo'];
+                                                        }
                                                         ?>
                                                         <tr>
                                                             <?php
-                                                            if ($perfil === '3' && $nivel === '1') {
+                                                            if (($perfil === '3' && $nivel === '1') || ($perfil === '1' && $nivel === '2')) {
                                                                 //barreira para não permitir mais de um cadastro por ciclo
                                                                 $sqlALD = "select * from aperfeicoamentoprofissional where cpf='$cpftratado' and ibge='$ibge' and cnes='$cnes' and ine='$ine' and ano='$ano' and ciclo='$ciclo'";
                                                                 $qALD = mysqli_query($conn, $sqlALD) or die(mysqli_error($conn));
@@ -324,6 +344,7 @@ $contt = 0;
                                                                 $rsALD = mysqli_fetch_array($qALD);
 //                                                    var_dump($nrALD);
                                                                 $flagup = $flagparecer = $flagemail = '';
+                                                               if($flaginativo !== '1'){
                                                                 if ($nrALD > 0) {
                                                                     do {
                                                                         $idap = $rsALD['id'];
@@ -428,6 +449,12 @@ $contt = 0;
                                                                         <td></td>     
                                                                     <?php }
                                                                 }
+                                                               }else{
+                                                                   $continat++;
+                                                            ?>
+                                                                        <td class="text-center text-danger">INATIVO</td>
+                                                           <?php             
+                                                               }
                                                             } ?>
                                                             <td><?= $nome ?></td>
                                                             <td><?= $cpf ?></td>
@@ -454,11 +481,44 @@ $contt = 0;
                                     <label class="text-info"><?= $contt ?></label>
                                 </div>
                                 <div class="col-sm-12">
+                                    <label class="">Tutores Inativos: </label>
+                                    <label class="text-info"><?= $continat ?></label>
+                                </div>
+                                <div class="col-sm-9">
                                     <label class="">Formulários enviados: </label>
                                     <label class="text-info"><?= $ctap ?></label>
                                 </div>
+                                <input type="hidden" id="tutortotal" value="<?= $contt ?>">
+                                <input type="hidden" id="tutorinativo" value="<?= $continat ?>">
+                                <input type="hidden" id="enviostotal" value="<?= $ctap ?>">
+                                <input type="hidden" id="ano" value="<?= $ano ?>">
+                                <input type="hidden" id="ciclo" value="<?= $ciclo ?>">
+                                <div class="col-sm-3">
+                                    <button type="button" id="btenvemailall" onclick="funcBtEmailAll();" class="btn btn-outline-warning shadow-sm border-warning text-dark" data-toggle="modal" data-target="#modalEmailAll"><b><i class="fas fa-mail-bulk"></i>&nbsp; Enviar E-Mail aos pendentes</b></button>
+                                </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade modalEmailAll" id="modalEmailAll" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-warning">
+                        <h5 class="modal-title text-dark" id="exampleModalLabel"><i class="fas fa-mail-bulk"></i>&nbsp; Alerta de tempo limite</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Deseja alertar os tutor pendentes para o cadastro do Aperfeiçoamento Profissional?
+                    </div>
+                    <div class="modal-footer">
+                        <form id="envEmailForm">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">FECHAR</button>
+                            <button type="submit" onclick="funcBtEnvEmailAll();" class="btn btn-primary" data-dismiss="modal">ENVIAR</button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -507,6 +567,7 @@ $contt = 0;
         <script src="../../js/demo/chart-bar-prenatal-sifilis.js"></script>
         <script src="../../js/demo/chart-bar-citopatologico.js"></script>
         <script src="../../js/demo/chart-bar-hipertensao.js"></script>
+        <script src="./envEmail.js"></script>
         <script>
             $(document).ready(function () {
                 $('[data-toggle="tooltip"]').tooltip();
@@ -530,6 +591,24 @@ $contt = 0;
                 document.getElementById("loading").style.display = "none";
                 document.getElementById("conteudo").style.display = "inline";
             }, 1000);
+            
+            function funcBtEnvEmailAll(){
+                document.getElementById("loading").style.display = "block";
+                let tutortotal = parseInt($('#tutortotal').val());
+                let enviostotal = parseInt($('#enviostotal').val());
+                let resultado = tutortotal - enviostotal;
+                let tempo = resultado * 5000;
+                console.log("tutortotal");
+                let ano = $('#ano').val();
+                let ciclo = $('#ciclo').val();
+                envEmailAll(ano,ciclo);
+                var i = setInterval(function () {
+                    clearInterval(i);
+                    // O código desejado é apenas isto:
+                    document.getElementById("loading").style.display = "none";
+    //                document.getElementById("conteudo").style.display = "inline";
+                }, tempo);
+            }
         </script>
     </body>
 </html>

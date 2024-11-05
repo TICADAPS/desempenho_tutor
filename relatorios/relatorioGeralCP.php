@@ -29,7 +29,7 @@ $ano = $_REQUEST['a'];
 $ciclo = $_REQUEST['c'];
 $sql = "select distinct m.nome, m.admissao, m.cargo, m.tipologia, m.uf, m.municipio, 
     m.datacadastro, m.cpf, m.ibge, m.cnes, m.ine, 
-    ivs.descricao as ivs, cp.dthrenvio, 
+    ivs.descricao as ivs, cp.dthrenvio, cp.flaginativo, 
     case 
         when cp.flagenvio = 1 then 'SIM' 
         else 'NÃO' 
@@ -83,6 +83,7 @@ if ($nrrs > 0) {
         $html .= '  <td>INE</td>';
         $html .= '  <td>DT/HR CADASTRO</td>';
         $html .= '  <td>ENTREGOU?</td>';
+        $html .= '  <td>OBSERVAÇÃO</td>';
         $html .= ' </tr>';
         $html .= '</thead>';
         $html .= '<tbody>';
@@ -109,6 +110,10 @@ if ($nrrs > 0) {
                     $municipio = $rs['municipio'];
                     $cnes = $rs['cnes'];
                     $ine = $rs['ine'];
+                    $flaginativo = '';
+                    if($rs['flaginativo'] !== null){
+                        $flaginativo = $rs['flaginativo'];
+                    }
                     $flagenvio = $rs['flagenvio'];
                     $ano = $ano;
                     $ciclo = $ciclo;
@@ -130,6 +135,11 @@ if ($nrrs > 0) {
         $html .= "  <td>$ine</td>";
         $html .= "  <td>$dthrenvio</td>";
         $html .= "  <td>$flagenvio</td>";
+        if($flaginativo === '1'){
+            $html .= "  <td>INATIVO</td>";
+        }else{
+            $html .= "  <td></td>";
+        }
         $html .= " </tr>";
                 }while($rs = mysqli_fetch_array($query));
             }

@@ -82,7 +82,7 @@ $sql2 = "select m.nome, m.admissao, m.cargo, mun.Municipio, e.UF, ivs.descricao,
     inner join estado e on mun.Estado_cod_uf = e.cod_uf 
     left join ivs on ivs.idivs = m.fkivs 
     where m.cpf = '$cpf' and m.ibge = '$ibge' and m.cnes = '$cnes' and m.ine = '$ine'  
-    and ap.ano = '$ano' and ap.ciclo='$ciclo';";
+    and ap.ano = '$ano' and ap.ciclo='$ciclo' and (ap.flaginativo is null or ap.flaginativo <> 1);";
 $query2 = mysqli_query($conn, $sql2) or die(mysqli_error($conn));
 $nrrs2 = mysqli_num_rows($query2);
 $rs2 = mysqli_fetch_array($query2);
@@ -188,7 +188,7 @@ $rsit = mysqli_fetch_array($qit);
                     <div id="menuPrincipal" class="collapse navbar-collapse">
                         <ul class="navbar-nav p-1">
                             <li class="text-secondary pl-2 pr-2"><a href="../" class="btn">Início</a></li>
-                            <li class="text-secondary pl-2 pr-2"><a href="./derruba_session.php" class="btn"><i class="fas fa-sign-out-alt"></i></a></li>
+                            <li class="text-secondary pl-2 pr-2"><a href="./../controller/derruba_session.php" class="btn"><i class="fas fa-sign-out-alt"></i></a></li>
 
                         </ul>
                     </div>

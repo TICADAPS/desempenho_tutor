@@ -1,7 +1,7 @@
 window.onload = () => {
     var codMunicipio = "";
     // buscar os dados dos estados
-    fetch('http://localhost/desempenho_tutor/recursos_online/api/v1/get_all_estados')
+    fetch('http://localhost:83/desempenho_tutor/recursos_online/api/v1/get_all_estados')
         .then(response => {
             console.log(response)
             if (response.status === 200) {
@@ -32,7 +32,7 @@ window.onload = () => {
         let id = select_estado.value;
 
         if (id !== 0) {
-            fetch('http://localhost/desempenho_tutor/recursos_online/api/v1/get_all_municipios/?id=' + id)
+            fetch('http://localhost:83/desempenho_tutor/recursos_online/api/v1/get_all_municipios/?id=' + id)
                 .then(response => {
                     if (response.status === 200) {
                         return response.json();
@@ -70,7 +70,7 @@ window.onload = () => {
                             codMunicipio = select.value;
 
                             if (codMunicipio !== 0) {
-                                fetch('http://localhost/desempenho_tutor/recursos_online/api/v1/get_all_medicos/?ibge=' + codMunicipio)
+                                fetch('http://localhost:83/desempenho_tutor/recursos_online/api/v1/get_all_medicos/?ibge=' + codMunicipio)
                                     .then(response => {
                                         //console.log(response)
                                         if (response.status === 200) {
@@ -110,7 +110,53 @@ window.onload = () => {
 
                                             select.addEventListener('change', function () {
                                                 var ineTutor = (select.value);
-                                                document.getElementById("btnAvaliacao").innerHTML = `<a class="btn btn-outline-primary mt-4" href="http://localhost/desempenho_tutor/gestor/qa.php?i=${ineTutor}"  target="_blank">Desempenho do médico tutor</a>`;
+                                                if (ineTutor !== 0) {
+                                                    fetch('http://localhost:83/desempenho_tutor/recursos_online/api/v1/get_anociclo/')
+                                                        .then(response => {
+                                                            //console.log(response)
+                                                            if (response.status === 200) {
+                                                                return response.json();
+                                                            } else {
+                                                                throw Error('erro');
+                                                            }
+                                                        })
+                                                        .then(data => {
+                                                            //console.log(data)
+                                                            let posts = data.results;
+                                                            let anociclo = document.querySelector("#anociclo");
+                                                            let no_anociclo = document.querySelector("#no_anociclo");
+                                                            anociclo.innerHTML = null;
+
+                                                            if (posts == 0) {
+                                                                anociclo.classList.add("d-none");
+                                                                no_anociclo.classList.remove("d-none");
+                                                            } else {
+                                                                let html = ' <h4 class="mt-5">Selecione o Ano avaliado</h4><hr>';
+                                                                html += `<select id="select_ano" class="form-select w-75">`;
+                                                                html += ` <option value="0">[--SELECIONE--]</option>`;
+                                                                posts.forEach(post => {
+                                                                    //console.log(post)
+                                                                    html += `<option value="${post.ano}">${post.ano}</option>`;
+                                                                    //html += ` `;
+                                                                })
+
+                                                                html += `</select>`;
+                                                                let post_div = document.createElement('div');
+                                                                post_div.innerHTML = html;
+                                                                anociclo.appendChild(post_div);
+                                                                anociclo.classList.remove("d-none");
+                                                                no_anociclo.classList.add("d-none");
+
+                                                                var selectano = document.getElementById('select_ano');
+
+                                                                selectano.addEventListener('change', function () {
+                                                                    var ano = (selectano.value);
+
+                                                                    document.getElementById("btnAvaliacao").innerHTML = `<a class="btn btn-outline-primary mt-4" href="http://localhost:83/desempenho_tutor/gestor/qa.php?i=${ineTutor}&a=${ano}"  target="_blank">Desempenho do médico tutor</a>`;
+                                                                });
+                                                            }
+                                                        });
+                                                }
                                             });
                                         }
                                     });

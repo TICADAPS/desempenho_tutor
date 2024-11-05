@@ -38,7 +38,7 @@ $ac = (new \Source\Models\Anocicloavaliacao())->findAnoCicloAtivo($ano, $ciclo);
 $sqlmcp = "select cp.id from medico m inner join competencias_profissionais cp "
         . "on m.cpf = cp.cpf and m.ibge = cp.ibge and m.cnes = cp.cnes and m.ine = cp.ine "
         . " where m.cpf = '$cpft' and m.ibge = '$ibge' and m.cnes = '$cnes' and m.ine = '$ine' "
-        . "and cp.ano = '$ano' and cp.ciclo = '$ciclo' limit 1";
+        . "and cp.ano = '$ano' and cp.ciclo = '$ciclo' and (cp.flaginativo is null or cp.flaginativo <> 1) limit 1";
 $qmcp = mysqli_query($conn, $sqlmcp) or die(mysqli_error($conn));
 $nrrscp = mysqli_num_rows($qmcp);
 $rscp = mysqli_fetch_array($qmcp);
@@ -81,7 +81,7 @@ $uf = $estado->UF;
                     <div id="menuPrincipal" class="collapse navbar-collapse">
                         <ul class="navbar-nav p-1">
                             <li class="text-secondary pl-2 pr-2"><a href="../" class="btn">Início</a></li>
-                            <li class="text-secondary pl-2 pr-2"><a href="./derruba_session.php" class="btn"><i class="fas fa-sign-out-alt"></i></a></li>
+                            <li class="text-secondary pl-2 pr-2"><a href="./../controller/derruba_session.php" class="btn"><i class="fas fa-sign-out-alt"></i></a></li>
 
                         </ul>
                     </div>

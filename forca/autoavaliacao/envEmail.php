@@ -2,6 +2,7 @@
 session_start();
 require __DIR__ . "/../../vendor/autoload.php";
 include '../../conexao_agsus_2.php';
+include '../../Controller_agsus/fdatas.php';
 //var_dump($_POST);
 $id = isset($_POST['id']) ? $_POST['id'] : '';
 $nome = isset($_POST['nome']) ? $_POST['nome'] : '';
@@ -21,10 +22,24 @@ if ($id !== '' && $nome !== '' && $cpf !== '') {
             $destinatario = $rs['email'];
         }while($rs = mysqli_fetch_array($query));
     }
+    $anociclo = (new \Source\Models\Anocicloavaliacao())->findTudo();
+    $dtfim = '';
+    if($anociclo !== null){
+        foreach ($anociclo as $a){
+            if($a->flagativo === '1'){
+                $dtfim = vemdata($a->dtfim);
+            }
+        }
+    }
     $assunto = "Competências profissionais - autoavaliação.";
-    $mensagemEmail = "*** ATENÇÃO: esta é uma mensagem eletônica automática, as respostas não serão lidas.<br><br>";
+    $mensagemEmail = "*** ATENÇÃO: esta é uma mensagem eletrônica automática, as respostas não serão lidas.<br><br>";
     $mensagemEmail .= "Prezado Tutor(a), Dr(a) $nome, <br><br>";
-    $mensagemEmail .= "TEXTO PADRÃO A SER ENVIADO<br><br>";
+    $mensagemEmail .= "Lembramos que o prazo final para preenchimento do instrumento que avalia as suas Competências "
+            . "Profissionais (autoavaliação) é até $dtfim. Esta avaliação é uma oportunidade excelente para reflexão "
+            . "sobre seu desenvolvimento e suas práticas, contribuindo para a melhoria contínua e a excelência na "
+            . "atuação na Atenção Primária a Saúde. Além disso, seu preenchimento é fundamental para fortalecer a "
+            . "qualidade do acompanhamento e a promoção de práticas assistenciais.<br>"
+            . "Recomendamos que não deixe para o último momento e aproveite o prazo para realizar uma análise cuidadosa.<br><br>";
     $mensagemEmail .= "-- <br>";
     $mensagemEmail .= "Atenciosamente, <br><br>";
     $email = (new \Source\Support\Email())->bootstrap(

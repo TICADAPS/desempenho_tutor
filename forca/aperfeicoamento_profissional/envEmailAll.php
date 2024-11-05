@@ -4,6 +4,7 @@ require __DIR__ . "/../../vendor/autoload.php";
 include '../../conexao-agsus.php';
 include '../../conexao_agsus_2.php';
 include '../../mask.php';
+include '../../Controller_agsus/fdatas.php';
 //var_dump($_POST);
 $ano = isset($_POST['ano']) ? $_POST['ano'] : '';
 $ciclo = isset($_POST['ciclo']) ? $_POST['ciclo'] : '';
@@ -12,7 +13,7 @@ $ciclo = isset($_POST['ciclo']) ? $_POST['ciclo'] : '';
 if ($ano !== '' && $ciclo !== '') {
     $ano = $_POST['ano'];
     $ciclo = $_POST['ciclo'];
-    $sqlm = "select id, cpf from competencias_profissionais where ano = '$ano' and ciclo = '$ciclo' and (flaginativo is null or flaginativo <> 1) and (flagenvio is null or flagenvio <> 1)";
+    $sqlm = "select id, cpf from aperfeicoamentoprofissional where ano = '$ano' and ciclo = '$ciclo' and (flaginativo is null or flaginativo <> 1) and (flagemailaviso is null or flagemailaviso <> 1)";
     $querym = mysqli_query($conn, $sqlm) or die(mysqli_error($conn));
     $rsm = mysqli_fetch_array($querym);
     if($rsm){
@@ -40,15 +41,15 @@ if ($ano !== '' && $ciclo !== '') {
                     }
                 }
             }
-            $assunto = "Competências profissionais - autoavaliação.";
+            $assunto = "Aperfeiçoamento Profissional - Comprovantes.";
             $mensagemEmail = "*** ATENÇÃO: esta é uma mensagem eletrônica automática, as respostas não serão lidas.<br><br>";
-            $mensagemEmail .= "Prezado Tutor(a), Dr(a) $nome, <br><br>";
-            $mensagemEmail .= "Lembramos que o prazo final para preenchimento do instrumento que avalia as suas Competências "
-                    . "Profissionais (autoavaliação) é até $dtfim. Esta avaliação é uma oportunidade excelente para reflexão "
-                    . "sobre seu desenvolvimento e suas práticas, contribuindo para a melhoria contínua e a excelência na "
-                    . "atuação na Atenção Primária a Saúde. Além disso, seu preenchimento é fundamental para fortalecer a "
-                    . "qualidade do acompanhamento e a promoção de práticas assistenciais.<br>"
-                    . "Recomendamos que não deixe para o último momento e aproveite o prazo para realizar uma análise cuidadosa.<br><br>";
+            $mensagemEmail .= "Prezado(a) Tutor(a), Dr(a) $nome, <br><br>";
+            $mensagemEmail .= "Lembramos que o prazo final para inserção dos comprovantes referentes ao aperfeiçoamento 
+                profissional é até $dtfim. A apresentação desses documentos é essencial para evidenciar seu 
+                compromisso com o desenvolvimento contínuo, algo indispensável para aprimorar suas competências e 
+                garantir uma atuação cada vez mais atualizada e alinhada às necessidades.<br>
+                Recomendamos que não deixe para o último momento e aproveite o prazo para organizar e registrar suas atividades.
+                <br><br>";
             $mensagemEmail .= "-- <br>";
             $mensagemEmail .= "Atenciosamente, <br><br>";
             $email = (new \Source\Support\Email())->bootstrap(
@@ -60,13 +61,13 @@ if ($ano !== '' && $ciclo !== '') {
                     "");
             $email->attach("../../img/Logo_agsus.jpg", "AgSUS");
             if ($email->send()) {
-                $cptutor = (new \Source\Models\Competencias_profissionais())->findById($id);
+                $cptutor = (new \Source\Models\Aperfeicoamentoprofissional())->findById($id);
         //        var_dump($cptutor);
                 date_default_timezone_set('America/Sao_Paulo');
                 $dthrhoje = date('Y-m-d H:i:s');
                 if($cptutor !== null){
-                    $cptutor->flagenvemail = '1';
-                    $cptutor->dthrenvemail = $dthrhoje;
+                    $cptutor->flagemailaviso = '1';
+                    $cptutor->emailaviso = $dthrhoje;
                     $cptutor->save();
                 }
                 echo "$id";

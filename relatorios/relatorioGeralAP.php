@@ -27,7 +27,7 @@ date_default_timezone_set('America/Sao_Paulo');
 $ctap = 0;
 $sql = "select distinct m.nome, m.admissao, m.cargo, m.tipologia, m.uf, m.municipio, 
     m.datacadastro, m.cpf, m.ibge, m.cnes, m.ine, 
-    ivs.descricao as ivs, ap.id, ap.pontuacao, ap.flagterminou, 
+    ivs.descricao as ivs, ap.id, ap.pontuacao, ap.flaginativo, ap.flagterminou, 
     case 
         when ap.flagterminou = 1 then 'SIM' 
         else 'NÃO' 
@@ -81,6 +81,7 @@ if ($nrrs > 0) {
         $html .= '  <td>INE</td>';
         $html .= '  <td>PONTUAÇÃO</td>';
         $html .= '  <td>PROCESSO FINALIZADO?</td>';
+        $html .= '  <td>OBSERVAÇÃO</td>';
         $html .= ' </tr>';
         $html .= '</thead>';
         $html .= '<tbody>';
@@ -109,6 +110,10 @@ if ($nrrs > 0) {
                     $municipio = $rs['municipio'];
                     $cnes = $rs['cnes'];
                     $ine = $rs['ine'];
+                    $flaginativo = '';
+                    if($rs['flaginativo'] !== null){
+                        $flaginativo = $rs['flaginativo'];
+                    }
                     $ptap = $rs['pontuacao'];
                     $soma += $ptap;
                     $flagterminou = $rs['flagterminou'];
@@ -171,6 +176,11 @@ if ($nrrs > 0) {
         $html .= "  <td>$ine</td>";
         $html .= "  <td>$soma</td>";
         $html .= "  <td>$flagterminou</td>";
+        if($flaginativo === '1'){
+            $html .= "  <td>INATIVO</td>";
+        }else{
+            $html .= "  <td></td>";
+        }
         $html .= " </tr>";
                 }while($rs = mysqli_fetch_array($query));
             }

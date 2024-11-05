@@ -3,13 +3,16 @@ function tabelaAcp(a,c){
     let tbcp = document.querySelector('#tbcp');
     tbcp.innerHTML = '';
     let tutortotal = document.querySelector('#tutortotal');
+    let tutorinativo = document.querySelector('#tutorinativo');
     console.log(tutortotal);
     tutortotal.innerHTML = '';
+    tutorinativo.innerHTML = '';
     let enviostotal = document.querySelector('#enviostotal');
     console.log(enviostotal);
     enviostotal.innerHTML = '';
     let html = '';
     let cttutor = 0;
+    let cttinativo = 0;
     let ctflagenv = 0;
     fetch('http://localhost:83/desempenho_tutor/recursos_online/api/v1/getcompprof/index.php?a='+a+'&c='+c)
     .then(response => {
@@ -38,9 +41,14 @@ function tabelaAcp(a,c){
                     if(`${dado.ivs}` !== null){
                         ivs = `${dado.ivs}`;
                     }
+                    let flaginativo = '';
+                    if(`${dado.flaginativo}` !== null){
+                        flaginativo = `${dado.flaginativo}`;
+                    }
                     html += `<tr id="tr${dado.id}">`;
                     // verifica se já enviou ou não o formulário
                     let flagenvio = `${dado.flagenvio}`;
+                    if(flaginativo !== '1'){
                     if(flagenvio === '1'){
                         ctflagenv++;
                         html += `<td class="text-center"><a class="btn btn-outline-success shadow-sm border-success" href="detalhes/index.php?id=${dado.id}" target="_blank" title="Mais detalhes..."><i class="fas fa-info-circle"></i></a></td>`;
@@ -54,6 +62,10 @@ function tabelaAcp(a,c){
                             let hrenv = dthrenvemail.substring(10,16);
                             html += `<td class="text-center text-info">E-Mail enviado:<br>${dtenv} | ${hrenv}</td>`;
                         }
+                    }
+                    }else{
+                        cttinativo++;
+                        html += '<td class="text-center text-danger">INATIVO</td>';
                     }
                     html += `<td>${dado.nome}</td>`;
                     html += '<td>'+cpf+'</td>';
@@ -94,6 +106,7 @@ function tabelaAcp(a,c){
             }
             tbcp.innerHTML = html;
             tutortotal.innerHTML = ""+cttutor;
+            tutorinativo.innerHTML = ""+cttinativo;
             enviostotal.innerHTML = ""+ctflagenv;
         } else {
             html += '<tr><td colspan="10">Não é possível carregar os dados do tutor</td></tr>';

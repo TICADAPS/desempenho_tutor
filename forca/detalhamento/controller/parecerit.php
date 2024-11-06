@@ -3,122 +3,78 @@ session_start();
 include_once './../../../conexao-agsus.php';
 include_once './../../../conexao_agsus_2.php';
 include_once __DIR__ .'/../../../vendor/autoload.php';
-if(!isset($_SESSION['msg'])){
-    $_SESSION['msg'] = '';
-}
-if(!isset($_POST['cpf']) || trim($_POST['cpf']) === ''){
-    echo "<script>alert('CPF não encontrado.')</script>";
-    header('location: ../../derruba_session.php');
-    exit();
-}
-if(!isset($_POST['ibge']) || trim($_POST['ibge']) === ''){
-    echo "<script>alert('Município não encontrado.')</script>";
-    header('location: ../../derruba_session.php');
-    exit();
-}
-if(!isset($_POST['cnes']) || trim($_POST['cnes']) === ''){
-    echo "<script>alert('CNES não encontrados.')</script>";
-    header('location: ../../derruba_session.php');
-    exit();
-}
-if(!isset($_POST['ine']) || trim($_POST['ine']) === ''){
-    echo "<script>alert('INE não encontrado.')</script>";
-    header('location: ../../derruba_session.php');
-    exit();
-}
-if(!isset($_POST['itid']) || trim($_POST['itid']) === ''){
-    echo "<script>alert('Inovação Tecnológica.')</script>";
-    header('location: ../../derruba_session.php');
-    exit();
-}
-$cpf = $_POST['cpf'];
-$ibge = $_POST['ibge'];
-$cnes = $_POST['cnes'];
-$ine = $_POST['ine'];
-$idap = $_POST['idap'];
-$ano = $_POST['ano'];
-$ciclo = $_POST['ciclo'];
-$itid = $_POST['itid'];
-$itch = floatval($_POST['ch']);
-date_default_timezone_set('America/Sao_Paulo');
-$dthoje = date('d/m/Y');
-$iduser = $_SESSION["idUser"];
-$sqlu = "select * from usuarios where id_user = '$iduser'";
-$queryu = mysqli_query($conn2, $sqlu) or die(mysqli_error($conn2));
-$rsu = mysqli_fetch_array($queryu);
-$user = '';
-if($rsu){
-    do{
-        $user = $rsu['nome_user'];
-    }while($rsu = mysqli_fetch_array($queryu));
-}
-//var_dump($_POST);
 
-if(!isset($_POST['itflagparecer']) || trim($_POST['itflagparecer']) === ''){
-    $_SESSION['msg'] = "<h6 class='bg-warning border rounded text-dark p-2'>&nbsp;<i class='fas fa-hand-point-right'></i>&nbsp; Preencher campo Resultado da análise no item Inovação Tecnológica.</h6>";
-    echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
-	URL=\"../index.php?ct=$cpf&ib=$ibge&c=$cnes&i=$ine&a=$ano&ci=$ciclo\"'>"; 
-    exit();
-}
+$cpf = isset($_POST['cpf']) ? $_POST['cpf'] : '';
+$ibge = isset($_POST['ibge']) ? $_POST['ibge'] : '';
+$cnes = isset($_POST['cnes']) ? $_POST['cnes'] : '';
+$ine = isset($_POST['ine']) ? $_POST['ine'] : '';
+$idap = isset($_POST['idap']) ? $_POST['idap'] : '';
+$ano = isset($_POST['ano']) ? $_POST['ano'] : '';
+$ciclo = isset($_POST['ciclo']) ? $_POST['ciclo'] : '';
+$itid = isset($_POST['itid']) ? $_POST['itid'] : '';
+$itch = isset($_POST['itch']) ? $_POST['itch'] : '';
+$itparecer = isset($_POST['itparecer']) ? trim($_POST['itparecer']) : '';
+$itflagparecer = isset($_POST['itflagparecer']) ? $_POST['itflagparecer'] : '';
+$iduser = isset($_POST['iduser']) ? $_POST['iduser'] : '';
 
-if($_POST['itflagparecer'] === '0' && trim($_POST['itparecer'])==='' || $_POST['itflagparecer'] === '0' && !isset($_POST['itparecer'])){
-    $_SESSION['msg'] = "<h6 class='bg-warning border rounded text-dark p-2'>&nbsp;<i class='fas fa-hand-point-right'></i>&nbsp; Preencher campo Análise no item Inovação Tecnológica.</h6>";
-    echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
-	URL=\"../index.php?ct=$cpf&ib=$ibge&c=$cnes&i=$ine&a=$ano&ci=$ciclo\"'>"; 
-    exit();
-}
-
-$itparecer = '';
-if(isset($_POST['itparecer'])){
-    $itparecer = trim($_POST['itparecer']);
-    $itparecer = str_replace("'", "", $itparecer);
-    $itparecer = str_replace("\"", "", $itparecer);
-}
-$itflagparecer = $_POST['itflagparecer'];
-date_default_timezone_set('America/Sao_Paulo');
-$dthoje = date('Y-m-d H:i:s');
-//var_dump($_POST);
-$it = (new Source\Models\Medico_inovtecnologica())->findById($itid);
-//var_dump($it);
-if($it !== null){
-    $idaperfprof = $it->idaperfprof;
-    $idt = $it->idinovtecnologica ;
-    $it->flagparecer = $itflagparecer;
-    $it->parecer = $itparecer;
-    $it->pareceruser = $user;
-    $it->parecerdthr = $dthoje;
-    if($itflagparecer === '1'){
-        switch ($idt){
-            case 1: $it->pontuacao = ($itch * 1.0); break; /* conforme manual */
-            case 2: $it->pontuacao = ($itch * 1.0); break; /* conforme manual */
+// Verificar se os dados foram recebidos corretamente
+if ($cpf !== '' && $ibge !== '' && $cnes !== '' && $ine !== '' && $idap !== '' && $ano !== ''
+    && $ciclo !== '' && $cnes !== '' && $itflagparecer !== '' && $itid !== '' && $itch !== '') {
+    
+    date_default_timezone_set('America/Sao_Paulo');
+    $dthoje = date('Y-m-d H:i:s');
+    $sqlu = "select * from usuarios where id_user = '$iduser'";
+    $queryu = mysqli_query($conn2, $sqlu) or die(mysqli_error($conn2));
+    $rsu = mysqli_fetch_array($queryu);
+    $user = '';
+    if($rsu){
+        do{
+            $user = $rsu['nome_user'];
+        }while($rsu = mysqli_fetch_array($queryu));
+    }
+    //var_dump($_POST);
+    if($itflagparecer !== ''){
+        $itflagparecer = str_replace("'", "", $itflagparecer);
+        $itflagparecer = str_replace("\"", "", $itflagparecer);
+    }
+    
+    $it = (new Source\Models\Medico_inovtecnologica())->findById($itid);
+    //var_dump($it);
+    if($it !== null){
+        $idaperfprof = $it->idaperfprof;
+        $idt = $it->idinovtecnologica ;
+        $it->flagparecer = $itflagparecer;
+        $it->parecer = $itparecer;
+        $it->pareceruser = $user;
+        $it->parecerdthr = $dthoje;
+        if($itflagparecer === '1'){
+            switch ($idt){
+                case 1: $it->pontuacao = ($itch * 1.0); break; /* conforme manual */
+                case 2: $it->pontuacao = ($itch * 1.0); break; /* conforme manual */
+            }
+        }else{
+            $it->pontuacao = 0.00;
+        }
+    //    var_dump($it);
+        $rsit = $it->save();
+    //    var_dump($rsit);
+        //flagterminou null - no retorno ao médico indica que foi analisado mas ainda não foi habilitado para réplica
+        //a habilitação (caso pontuação seja menor que 50) se dá após o envio do e-mail
+        $ap = (new \Source\Models\Aperfeicoamentoprofissional())->findById($idaperfprof);
+        if($ap !== null){
+            $ap->flagterminou = '0';
+            $ap->save();
+        }
+        if($rsit !== null){
+            echo "Análise do item Inovação Tecnológica gravada com sucesso!";
+        }else{
+            echo "Erro na atualização dos dados.";
         }
     }else{
-        $it->pontuacao = 0.00;
+        echo "Cadastro de aperfeiçoamento profisional não encontrado.";
     }
-//    var_dump($it);
-    $rsit = $it->save();
-//    var_dump($rsit);
-    //flagterminou null - no retorno ao médico indica que foi analisado mas ainda não foi habilitado para réplica
-    //a habilitação (caso pontuação seja menor que 50) se dá após o envio do e-mail
-    $ap = (new \Source\Models\Aperfeicoamentoprofissional())->findById($idaperfprof);
-    if($ap !== null){
-        $ap->flagterminou = '0';
-        $ap->save();
-    }
-    if($rsit !== null){
-        $_SESSION['msg'] = "<h6 class='bg-light rounded text-success p-2'>&nbsp;<i class='fas fa-hand-point-right'></i>&nbsp; Análise do item Inovação Tecnológica gravada.</h6>";
-        echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
-            URL=\"../index.php?ct=$cpf&ib=$ibge&c=$cnes&i=$ine&a=$ano&ci=$ciclo\"'>"; 
-        exit();
-    }else{
-        $_SESSION['msg'] = "<h6 class='bg-warning border rounded text-dark p-2'>&nbsp;<i class='fas fa-hand-point-right'></i>&nbsp; Erro na atualização dos dados.</h6>";
-        echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
-            URL=\"../index.php?ct=$cpf&ib=$ibge&c=$cnes&i=$ine&a=$ano&ci=$ciclo\"'>"; 
-        exit();
-    }
-}else{
-    $_SESSION['msg'] = "<h6 class='bg-warning border rounded text-dark p-2'>&nbsp;<i class='fas fa-hand-point-right'></i>&nbsp; Cadastro de aperfeiçoamento profisional não encontrado.</h6>";
-    echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
-	URL=\"../index.php?ct=$cpf&ib=$ibge&c=$cnes&i=$ine&a=$ano&ci=$ciclo\"'>"; 
-    exit();
+}else {
+    // Resposta em caso de erro nos dados
+    echo "Erro: É obrigatório o preenchimento dos campos.";
 }
+exit();

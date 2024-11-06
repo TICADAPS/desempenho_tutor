@@ -8,6 +8,7 @@ include '../../Controller_agsus/fdatas.php';
 if (!isset($_SESSION['msg'])) {
     $_SESSION['msg'] = "";
 }
+$iduser = $_SESSION["idUser"];
 $cpf = $_REQUEST['ct'];
 $cpfmask = mask($cpf, "###.###.###-##");
 $ibge = $_REQUEST['ib'];
@@ -357,7 +358,7 @@ if($flagemail !== null && $flagemail !== '' && $flagemail === '1'){
                         <?php
                         if($pareceruserap !== '' && $pareceruserap !== null){
                         ?>
-                        <div class="card border border">
+                        <div class="card border border" id="cardlongd">
                             <div class="card-header bg-light">
                                 <label><strong>Análise realizada</strong></label>
                             </div>
@@ -404,14 +405,15 @@ if($flagemail !== null && $flagemail !== '' && $flagemail === '1'){
                         </div>
                         <?php 
                         }else{ ?>
-                        <form method="post" action="controller/parecerlongd.php">
-                            <input type="hidden" value="<?= $cpf ?>" name="cpf">
-                            <input type="hidden" value="<?= $ibge ?>" name="ibge">
-                            <input type="hidden" value="<?= $cnes ?>" name="cnes">
-                            <input type="hidden" value="<?= $ine ?>" name="ine">
-                            <input type="hidden" value="<?= $idap ?>" name="idap">
-                            <input type="hidden" value="<?= $ano ?>" name="ano">
-                            <input type="hidden" value="<?= $ciclo ?>" name="ciclo">
+                            <form id="longdForm">
+                            <input type="hidden" value="<?= $cpf ?>" name="cpf" id="cpfpost">
+                            <input type="hidden" value="<?= $ibge ?>" name="ibge" id="ibgepost">
+                            <input type="hidden" value="<?= $cnes ?>" name="cnes" id="cnespost">
+                            <input type="hidden" value="<?= $ine ?>" name="ine" id="inepost">
+                            <input type="hidden" value="<?= $idap ?>" name="idap" id="idappost">
+                            <input type="hidden" value="<?= $ano ?>" name="ano" id="anopost">
+                            <input type="hidden" value="<?= $ciclo ?>" name="ciclo" id="ciclopost">
+                            <input type="hidden" value="<?= $iduser ?>" name="iduser" id="iduserpost">
                         <div class="row mb-4">
                             <div class="col-12">
                                 <div class="card border">
@@ -428,8 +430,8 @@ if($flagemail !== null && $flagemail !== '' && $flagemail === '1'){
                                             </div>
                                             <div class="col-md-3">
                                                 <div class="col-md-12"><b>Parecer</b></div>
-                                                <div class="col-md-12 mt-2"><input type="radio" class="" name="flagparecerap" id="flagparecerap" value="1">Aprovado</div>
-                                                <div class="col-md-12 mt-2"><input type="radio" class="" name="flagparecerap" id="flagparecerap" value="0">Não aprovado</div>
+                                                <div class="col-md-12 mt-2"><input type="radio" class="" name="flagparecerap" id="flagparecerap1" value="1">Aprovado</div>
+                                                <div class="col-md-12 mt-2"><input type="radio" class="" name="flagparecerap" id="flagparecerap2" value="0">Não aprovado</div>
                                             </div>
                                         </div>
                                         <div class="row mb-2 mt-4">
@@ -458,7 +460,7 @@ if($flagemail !== null && $flagemail !== '' && $flagemail === '1'){
                               </div>
                               <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCELAR</button>
-                                <button type="submit" class="btn btn-primary">ENVIAR</button>
+                                <button type="submit" class="btn btn-primary" id="btenvlongd" data-dismiss="modal">ENVIAR</button>
                               </div>
                             </div>
                           </div>
@@ -567,7 +569,7 @@ if($flagemail !== null && $flagemail !== '' && $flagemail === '1'){
                         <?php
                         if($qcpareceruser !== '' && $qcpareceruser !== null){
                         ?>
-                        <div class="card border border mb-4">
+                        <div class="card border border mb-4" id="cardqc<?= $auxqc ?>">
                             <div class="card-header bg-light" >
                                 <label><strong>Análise realizada</strong></label>
                             </div>
@@ -614,16 +616,17 @@ if($flagemail !== null && $flagemail !== '' && $flagemail === '1'){
                         </div>
                         <?php 
                         }else{ ?>
-                        <form method="post" action="controller/parecerqc.php">
-                            <input type="hidden" value="<?= $cpf ?>" name="cpf">
-                            <input type="hidden" value="<?= $ibge ?>" name="ibge">
-                            <input type="hidden" value="<?= $cnes ?>" name="cnes">
-                            <input type="hidden" value="<?= $ine ?>" name="ine">
-                            <input type="hidden" value="<?= $idap ?>" name="idap">
-                            <input type="hidden" value="<?= $ano ?>" name="ano">
-                            <input type="hidden" value="<?= $ciclo ?>" name="ciclo">
-                            <input type="hidden" value="<?= $qcid ?>" name="qcid">
-                            <input type="hidden" value="<?= $qccargahr ?>" name="ch">
+                        <form id="qaForm<?= $auxqc ?>">
+                            <input type="hidden" value="<?= $cpf ?>" name="cpf" id="cpfqa<?= $auxqc ?>"">
+                            <input type="hidden" value="<?= $ibge ?>" name="ibge" id="ibgeqa<?= $auxqc ?>"">
+                            <input type="hidden" value="<?= $cnes ?>" name="cnes" id="cnesqa<?= $auxqc ?>"">
+                            <input type="hidden" value="<?= $ine ?>" name="ine" id="ineqa<?= $auxqc ?>"">
+                            <input type="hidden" value="<?= $idap ?>" name="idap" id="idapqa<?= $auxqc ?>"">
+                            <input type="hidden" value="<?= $ano ?>" name="ano" id="anoqa<?= $auxqc ?>"">
+                            <input type="hidden" value="<?= $ciclo ?>" name="ciclo" id="cicloqa<?= $auxqc ?>"">
+                            <input type="hidden" value="<?= $qcid ?>" name="qcid" id="qcid<?= $auxqc ?>"">
+                            <input type="hidden" value="<?= $qccargahr ?>" name="qcch" id="qcch<?= $auxqc ?>"">
+                            <input type="hidden" value="<?= $iduser ?>" name="iduser" id="iduserqa<?= $auxqc ?>"">
                         <div class="row mb-4">
                             <div class="col-12">
                                 <div class="card border">
@@ -635,13 +638,13 @@ if($flagemail !== null && $flagemail !== '' && $flagemail === '1'){
                                             <div class="col-md-9">
                                                 <div class="col-md-12"><b>Descrição da Análise</b></div>
                                                 <div class="col-md-12">
-                                                    <textarea style="resize: none; height: 100px;" class="form-control" name="qcparecer" id="qcparecer"></textarea>
+                                                    <textarea style="resize: none; height: 100px;" class="form-control" name="qcparecer" id="qcparecerqa<?= $auxqc ?>"></textarea>
                                                 </div>
                                             </div>
                                             <div class="col-md-3">
                                                 <div class="col-md-12"><b>Parecer</b></div>
-                                                <div class="col-md-12 mt-2"><input type="radio" class="" name="qcflagparecer" id="qcflagparecer" value="1">Aprovado</div>
-                                                <div class="col-md-12 mt-2"><input type="radio" class="" name="qcflagparecer" id="qcflagparecer" value="0">Não aprovado</div>
+                                                <div class="col-md-12 mt-2"><input type="radio" class="" name="qcflagparecer" id="qcflagparecer1<?= $auxqc ?>" value="1">Aprovado</div>
+                                                <div class="col-md-12 mt-2"><input type="radio" class="" name="qcflagparecer" id="qcflagparecer2<?= $auxqc ?>" value="0">Não aprovado</div>
                                             </div>
                                         </div>
                                         <div class="row mb-2 mt-4">
@@ -670,7 +673,7 @@ if($flagemail !== null && $flagemail !== '' && $flagemail === '1'){
                               </div>
                               <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCELAR</button>
-                                <button type="submit" class="btn btn-primary">ENVIAR</button>
+                                <button type="submit" class="btn btn-primary" onclick="postparecerqa(<?= $auxqc ?>)" data-dismiss="modal">ENVIAR</button>
                               </div>
                             </div>
                           </div>
@@ -795,7 +798,7 @@ if($flagemail !== null && $flagemail !== '' && $flagemail === '1'){
                         <?php
                         if($gepepareceruser !== '' && $gepepareceruser !== null){
                         ?>
-                        <div class="card border border mb-4">
+                        <div class="card border border mb-4" id="cardgepe<?= $auxgepe ?>">
                             <div class="card-header bg-light" >
                                 <label><strong>Análise realizada</strong></label>
                             </div>
@@ -841,16 +844,17 @@ if($flagemail !== null && $flagemail !== '' && $flagemail === '1'){
                         </div>
                         <?php 
                         }else{ ?>
-                        <form method="post" action="controller/parecergepe.php">
-                            <input type="hidden" value="<?= $cpf ?>" name="cpf">
-                            <input type="hidden" value="<?= $ibge ?>" name="ibge">
-                            <input type="hidden" value="<?= $cnes ?>" name="cnes">
-                            <input type="hidden" value="<?= $ine ?>" name="ine">
-                            <input type="hidden" value="<?= $idap ?>" name="idap">
-                            <input type="hidden" value="<?= $ano ?>" name="ano">
-                            <input type="hidden" value="<?= $ciclo ?>" name="ciclo">
-                            <input type="hidden" value="<?= $gepeid ?>" name="gepeid">
-                            <input type="hidden" value="<?= $gepecargahr ?>" name="ch">
+                        <form id="gepeForm<?= $auxgepe ?>">
+                            <input type="hidden" value="<?= $cpf ?>" name="cpf" id="cpfgepe<?= $auxgepe ?>">
+                            <input type="hidden" value="<?= $ibge ?>" name="ibge" id="ibgegepe<?= $auxgepe ?>">
+                            <input type="hidden" value="<?= $cnes ?>" name="cnes" id="cnesgepe<?= $auxgepe ?>">
+                            <input type="hidden" value="<?= $ine ?>" name="ine" id="inegepe<?= $auxgepe ?>">
+                            <input type="hidden" value="<?= $idap ?>" name="idap" id="idapgepe<?= $auxgepe ?>">
+                            <input type="hidden" value="<?= $ano ?>" name="ano" id="anogepe<?= $auxgepe ?>">
+                            <input type="hidden" value="<?= $ciclo ?>" name="ciclo" id="ciclogepe<?= $auxgepe ?>">
+                            <input type="hidden" value="<?= $gepeid ?>" name="gepeid" id="gepeid<?= $auxgepe ?>">
+                            <input type="hidden" value="<?= $gepecargahr ?>" name="gepech" id="gepech<?= $auxgepe ?>">
+                            <input type="hidden" value="<?= $iduser ?>" name="idusergepe" id="idusergepe<?= $auxgepe ?>">
                         <div class="row mb-4">
                             <div class="col-12">
                                 <div class="card border">
@@ -862,13 +866,13 @@ if($flagemail !== null && $flagemail !== '' && $flagemail === '1'){
                                             <div class="col-md-9">
                                                 <div class="col-md-12"><b>Descrição da Análise</b></div>
                                                 <div class="col-md-12">
-                                                    <textarea style="resize: none; height: 100px;" class="form-control"  id="gepeparecer" name="gepeparecer"></textarea>
+                                                    <textarea style="resize: none; height: 100px;" class="form-control"  id="gepeparecer<?= $auxgepe ?>" name="gepeparecer"></textarea>
                                                 </div>
                                             </div>
                                             <div class="col-md-3">
                                                 <div class="col-md-12"><b>Parecer</b></div>
-                                                <div class="col-md-12 mt-2"><input type="radio" class="" name="gepeflagparecer" id="gepeflagparecer" value="1">Aprovado</div>
-                                                <div class="col-md-12 mt-2"><input type="radio" class="" name="gepeflagparecer" id="gepeflagparecer" value="0">Não aprovado</div>
+                                                <div class="col-md-12 mt-2"><input type="radio" class="" name="gepeflagparecer" id="gepeflagparecer1<?= $auxgepe ?>" value="1">Aprovado</div>
+                                                <div class="col-md-12 mt-2"><input type="radio" class="" name="gepeflagparecer" id="gepeflagparecer2<?= $auxgepe ?>" value="0">Não aprovado</div>
                                             </div>
                                         </div>
                                         <div class="row mb-2 mt-4">
@@ -897,7 +901,7 @@ if($flagemail !== null && $flagemail !== '' && $flagemail === '1'){
                               </div>
                               <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCELAR</button>
-                                <button type="submit" class="btn btn-primary">ENVIAR</button>
+                                <button type="submit" class="btn btn-primary" onclick="postparecergepe(<?= $auxgepe ?>)" data-dismiss="modal">ENVIAR</button>
                               </div>
                             </div>
                           </div>
@@ -1012,7 +1016,7 @@ if($flagemail !== null && $flagemail !== '' && $flagemail === '1'){
                         <?php
                         if($itpareceruser !== '' && $itpareceruser !== null){
                         ?>
-                        <div class="card border border mb-4">
+                        <div class="card border border mb-4" id="cardit<?= $auxit ?>">
                             <div class="card-header bg-light" >
                                 <label><strong>Análise realizada</strong></label>
                             </div>
@@ -1058,16 +1062,17 @@ if($flagemail !== null && $flagemail !== '' && $flagemail === '1'){
                         </div>
                         <?php 
                         }else{ ?>
-                        <form method="post" action="controller/parecerit.php">
-                            <input type="hidden" value="<?= $cpf ?>" name="cpf">
-                            <input type="hidden" value="<?= $ibge ?>" name="ibge">
-                            <input type="hidden" value="<?= $cnes ?>" name="cnes">
-                            <input type="hidden" value="<?= $ine ?>" name="ine">
-                            <input type="hidden" value="<?= $idap ?>" name="idap">
-                            <input type="hidden" value="<?= $ano ?>" name="ano">
-                            <input type="hidden" value="<?= $ciclo ?>" name="ciclo">
-                            <input type="hidden" value="<?= $itid ?>" name="itid">
-                            <input type="hidden" value="<?= $itcargahr ?>" name="ch">
+                        <form id="itForm<?= $auxit ?>">
+                            <input type="hidden" value="<?= $cpf ?>" name="cpf" id="cpfit<?= $auxit ?>">
+                            <input type="hidden" value="<?= $ibge ?>" name="ibge" id="ibgeit<?= $auxit ?>">
+                            <input type="hidden" value="<?= $cnes ?>" name="cnes" id="cnesit<?= $auxit ?>">
+                            <input type="hidden" value="<?= $ine ?>" name="ine" id="ineit<?= $auxit ?>">
+                            <input type="hidden" value="<?= $idap ?>" name="idap" id="idapit<?= $auxit ?>">
+                            <input type="hidden" value="<?= $ano ?>" name="ano" id="anoit<?= $auxit ?>">
+                            <input type="hidden" value="<?= $ciclo ?>" name="ciclo" id="cicloit<?= $auxit ?>">
+                            <input type="hidden" value="<?= $itid ?>" name="itid" id="itid<?= $auxit ?>">
+                            <input type="hidden" value="<?= $itcargahr ?>" name="itch" id="itch<?= $auxit ?>">
+                            <input type="hidden" value="<?= $iduser ?>" name="iduserit" id="iduserit<?= $auxit ?>">
                         <div class="row mb-4">
                             <div class="col-12">
                                 <div class="card border">
@@ -1079,13 +1084,13 @@ if($flagemail !== null && $flagemail !== '' && $flagemail === '1'){
                                             <div class="col-md-9">
                                                 <div class="col-md-12"><b>Descrição da Análise</b></div>
                                                 <div class="col-md-12">
-                                                    <textarea style="resize: none; height: 100px;" class="form-control"  id="itparecer" name="itparecer"></textarea>
+                                                    <textarea style="resize: none; height: 100px;" class="form-control"  id="itparecer<?= $auxit ?>" name="itparecer"></textarea>
                                                 </div>
                                             </div>
                                             <div class="col-md-3">
                                                 <div class="col-md-12"><b>Parecer</b></div>
-                                                <div class="col-md-12 mt-2"><input type="radio" class="" name="itflagparecer" id="itflagparecer" value="1">Aprovado</div>
-                                                <div class="col-md-12 mt-2"><input type="radio" class="" name="itflagparecer" id="itflagparecer" value="0">Não aprovado</div>
+                                                <div class="col-md-12 mt-2"><input type="radio" class="" name="itflagparecer" id="itflagparecer1<?= $auxit ?>" value="1">Aprovado</div>
+                                                <div class="col-md-12 mt-2"><input type="radio" class="" name="itflagparecer" id="itflagparecer2<?= $auxit ?>" value="0">Não aprovado</div>
                                             </div>
                                         </div>
                                         <div class="row mb-2 mt-4">
@@ -1099,7 +1104,7 @@ if($flagemail !== null && $flagemail !== '' && $flagemail === '1'){
                                 </div>
                             </div>
                         </div>
-                        <!-- Modal modalLongD -->
+                        <!-- Modal modalit -->
                         <div class="modal fade" id="modalit<?= $auxit ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                           <div class="modal-dialog">
                             <div class="modal-content">
@@ -1114,7 +1119,7 @@ if($flagemail !== null && $flagemail !== '' && $flagemail === '1'){
                               </div>
                               <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCELAR</button>
-                                <button type="submit" class="btn btn-primary">ENVIAR</button>
+                                <button type="submit" class="btn btn-primary" onclick="postparecerit(<?= $auxit ?>)" data-dismiss="modal">ENVIAR</button>
                               </div>
                             </div>
                           </div>
@@ -1197,7 +1202,9 @@ if($flagemail !== null && $flagemail !== '' && $flagemail === '1'){
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    <script src="addcamps.js"></script>
+    <!--<script src="addcamps.js"></script>-->
+    <script src="postparecer.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
     $(function () {
         $('.dropdown-toggle').dropdown();
@@ -1593,6 +1600,31 @@ if($flagemail !== null && $flagemail !== '' && $flagemail === '1'){
           loading2.style.display = 'none';
         }, 3000); // 3 segundos simulados de envio
     });
+    
+    //envio do parecer ativ longa duração
+    $('#btenvlongd').click(function(){
+       postparecerlongd(); 
+       location.reload();
+       $('#cardlongd').focus();
+    });
+    //envio do parecer ativ QA
+    function postparecerqa(a){ 
+       envqaform(a);
+       location.reload();
+       $('#cardqc'+a).focus();
+    }
+    //envio do parecer ativ GEPE
+    function postparecergepe(a){ 
+       envgepeform(a);
+       location.reload();
+       $('#cardgepe'+a).focus();
+    }
+    //envio do parecer ativ IT
+    function postparecerit(a){ 
+       envitform(a);
+       location.reload();
+       $('#cardit'+a).focus();
+    }
     </script>
 </body>
 

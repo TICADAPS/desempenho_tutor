@@ -13,27 +13,29 @@ if (!isset($_SESSION['pgmsg'])) {
     $_SESSION['pgmsg'] = "1";
 }
 
-if (!isset($_SESSION['cpf'])) {
-   header("Location: ../derruba_session.php"); exit();
-}
-$cpf = $_SESSION['cpf'];
-if (!isset($_SESSION['idUser'])) {
-    header("Location: ../derruba_session.php");
-    exit();
-}
-if (!isset($_SESSION['perfil'])) {
-    header("Location: ../derruba_session.php");
-    exit();
-}
-if (!isset($_SESSION['nivel'])) {
-    header("Location: ../derruba_session.php");
-    exit();
-}
-if($_SESSION['perfil'] !== '1' && $_SESSION['perfil'] !== '2' && $_SESSION['perfil'] !== '3' && $_SESSION['perfil'] !== '6' && $_SESSION['perfil'] !== '7' && $_SESSION['perfil'] !== '8'){
-    header("Location: ../derruba_session.php");
-    exit();
-}
-$iduser = $_SESSION["idUser"];
+//if (!isset($_SESSION['cpf'])) {
+//   header("Location: ../derruba_session.php"); exit();
+//}
+//$cpf = $_SESSION['cpf'];
+//if (!isset($_SESSION['idUser'])) {
+//    header("Location: ../derruba_session.php");
+//    exit();
+//}
+//if (!isset($_SESSION['perfil'])) {
+//    header("Location: ../derruba_session.php");
+//    exit();
+//}
+//if (!isset($_SESSION['nivel'])) {
+//    header("Location: ../derruba_session.php");
+//    exit();
+//}
+//if($_SESSION['perfil'] !== '1' && $_SESSION['perfil'] !== '2' && $_SESSION['perfil'] !== '3' && $_SESSION['perfil'] !== '6' && $_SESSION['perfil'] !== '7' && $_SESSION['perfil'] !== '8'){
+//    header("Location: ../derruba_session.php");
+//    exit();
+//}
+//$iduser = $_SESSION["idUser"];
+$iduser = 2765;
+$_SESSION["idUser"] = $iduser;
 $sqlu = "select * from usuarios where id_user = '$iduser'";
 $queryu = mysqli_query($conn2, $sqlu) or die(mysqli_error($conn2));
 $rsu = mysqli_fetch_array($queryu);
@@ -43,16 +45,16 @@ if($rsu){
         $usuario = $rsu['nome_user'];
     }while($rsu = mysqli_fetch_array($queryu));
 }
-$perfil = $_SESSION['perfil'];
-$nivel = $_SESSION['nivel'];
-//perfil = '3';
-//$nivel = '1';
+//$perfil = $_SESSION['perfil'];
+//$nivel = $_SESSION['nivel'];
+$perfil = '3';
+$nivel = '1';
 date_default_timezone_set('America/Sao_Paulo');
 $dthoje = date('d/m/Y');
-$ano = $_SESSION['ano'];
-$ciclo = $_SESSION['ciclo'];
-//$ano = 2024;
-//$ciclo = 3;
+//$ano = $_SESSION['ano'];
+//$ciclo = $_SESSION['ciclo'];
+$ano = 2024;
+$ciclo = 3;
 $ctap = 0;
 $sql = "select m.nome, m.admissao, m.cargo, m.tipologia, m.uf, m.municipio, m.datacadastro, m.cpf, m.ibge, m.cnes,
  m.ine, ivs.descricao as ivs, a.flaginativo from medico m left join ivs on m.fkivs = ivs.idivs inner join aperfeicoamentoprofissional a on 

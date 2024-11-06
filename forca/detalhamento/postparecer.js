@@ -44,7 +44,7 @@ function postparecerlongd(){
     dados.append('iduser', iduserpost);
 //    console.log(dados);
     // Envia os dados via AJAX usando fetch
-    fetch('controller/parecerlongd.php', {
+    fetch('https://agsusbrasil.org/desempenho_tutor/forca/detalhamento/controller/parecerlongd.php', {
         method: 'POST',
         body: dados
     })
@@ -120,7 +120,7 @@ function envqaform(a){
     dados.append('iduser', iduserqa);
     console.log(dados);
     // Envia os dados via AJAX usando fetch
-    fetch('controller/parecerqc.php', {
+    fetch('https://agsusbrasil.org/desempenho_tutor/forca/detalhamento/controller/parecerqc.php', {
         method: 'POST',
         body: dados
     })
@@ -196,7 +196,7 @@ function envgepeform(a){
     dados.append('iduser', idusergepe);
     console.log(dados);
     // Envia os dados via AJAX usando fetch
-    fetch('controller/parecergepe.php', {
+    fetch('https://agsusbrasil.org/desempenho_tutor/forca/detalhamento/controller/parecergepe.php', {
         method: 'POST',
         body: dados
     })
@@ -272,7 +272,7 @@ function envitform(a){
     dados.append('iduser', iduserit);
     console.log(dados);
     // Envia os dados via AJAX usando fetch
-    fetch('controller/parecerit.php', {
+    fetch('https://agsusbrasil.org/desempenho_tutor/forca/detalhamento/controller/parecerit.php', {
         method: 'POST',
         body: dados
     })

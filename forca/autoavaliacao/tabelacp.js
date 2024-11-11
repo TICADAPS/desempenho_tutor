@@ -4,11 +4,11 @@ function tabelaAcp(a,c){
     tbcp.innerHTML = '';
     let tutortotal = document.querySelector('#tutortotal');
     let tutorinativo = document.querySelector('#tutorinativo');
-    console.log(tutortotal);
+//    console.log(tutortotal);
     tutortotal.innerHTML = '';
     tutorinativo.innerHTML = '';
     let enviostotal = document.querySelector('#enviostotal');
-    console.log(enviostotal);
+//    console.log(enviostotal);
     enviostotal.innerHTML = '';
     let html = '';
     let cttutor = 0;

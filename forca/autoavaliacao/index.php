@@ -12,36 +12,36 @@ if (!isset($_SESSION['pgmsg'])) {
     $_SESSION['pgmsg'] = "1";
 }
 
-if (!isset($_SESSION['cpf'])) {
-   header("Location: ../derruba_session.php"); exit();
-}
-$cpf = $_SESSION['cpf'];
-if (!isset($_SESSION['idUser'])) {
-    header("Location: ../derruba_session.php");
-    exit();
-}
-if (!isset($_SESSION['perfil'])) {
-    header("Location: ../derruba_session.php");
-    exit();
-}
-if (!isset($_SESSION['nivel'])) {
-    header("Location: ../derruba_session.php");
-    exit();
-}
-if($_SESSION['perfil'] !== '1' && $_SESSION['perfil'] !== '2' && $_SESSION['perfil'] !== '3' && $_SESSION['perfil'] !== '6' && $_SESSION['perfil'] !== '7' && $_SESSION['perfil'] !== '8'){
-    header("Location: ../derruba_session.php");
-    exit();
-}
-$perfil = $_SESSION['perfil'];
-$nivel = $_SESSION['nivel'];
+//if (!isset($_SESSION['cpf'])) {
+//   header("Location: ../derruba_session.php"); exit();
+//}
+//$cpf = $_SESSION['cpf'];
+//if (!isset($_SESSION['idUser'])) {
+//    header("Location: ../derruba_session.php");
+//    exit();
+//}
+//if (!isset($_SESSION['perfil'])) {
+//    header("Location: ../derruba_session.php");
+//    exit();
+//}
+//if (!isset($_SESSION['nivel'])) {
+//    header("Location: ../derruba_session.php");
+//    exit();
+//}
+//if($_SESSION['perfil'] !== '1' && $_SESSION['perfil'] !== '2' && $_SESSION['perfil'] !== '3' && $_SESSION['perfil'] !== '6' && $_SESSION['perfil'] !== '7' && $_SESSION['perfil'] !== '8'){
+//    header("Location: ../derruba_session.php");
+//    exit();
+//}
+//$perfil = $_SESSION['perfil'];
+//$nivel = $_SESSION['nivel'];
 
-//$perfil = '3';
-//$nivel = '1';
+$perfil = '3';
+$nivel = '1';
 date_default_timezone_set('America/Sao_Paulo');
-$ano = $_SESSION['ano'];
-$ciclo = $_SESSION['ciclo'];
-//$ano = 2024;
-//$ciclo = 3;
+//$ano = $_SESSION['ano'];
+//$ciclo = $_SESSION['ciclo'];
+$ano = 2024;
+$ciclo = 3;
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -289,9 +289,9 @@ $ciclo = $_SESSION['ciclo'];
                                 <div class="col-sm-3">
                                     <button type="button" id="btenvemailall" onclick="funcBtEmailAll();" class="btn btn-outline-warning shadow-sm border-warning text-dark" data-toggle="modal" data-target="#modalEmailAll"><b><i class="fas fa-mail-bulk"></i>&nbsp; Enviar E-Mail aos pendentes</b></button>
                                 </div>
-                                <!--<div class="col-sm-3">
-                                    <button type="button" id="btenvdemonstrativo" class="btn btn-outline-primary shadow-sm border-primary"><i class="fas fa-paper-plane"></i>&nbsp; Enviar para o demonstrativo</button>
-                                </div>-->
+                                <div class="col-sm-3">
+                                    <button type="button" id="btenvdemonstrativo" class="btn btn-outline-primary shadow-sm border-primary" data-toggle="modal" data-target="#modalEnvDemonstrativo"><i class="fas fa-paper-plane"></i>&nbsp; Enviar para o demonstrativo</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -318,6 +318,29 @@ $ciclo = $_SESSION['ciclo'];
                 </div>
             </div>
         </div>
+        <!-- Início modalEnvDemonstrativo -->
+        <div class="modal fade" id="modalEnvDemonstrativo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-dark">
+                        <h5 class="modal-title text-white" id="exampleModalLabel"><i class="fas fa-mail-bulk"></i>&nbsp; Enviar para Demonstrativo</h5>
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Deseja enviar os dados para o Demonstrativo?
+                    </div>
+                    <div class="modal-footer">
+                        <form id="envEmailDemons">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">FECHAR</button>
+                            <button type="submit" onclick="funcBtEnvDemons();" class="btn btn-primary" data-dismiss="modal">ENVIAR</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Final modalEnvDemonstrativo -->
         <?php include '../../includes/footer.php'; ?>
         <!-- Bootstrap core JavaScript-->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
@@ -337,6 +360,7 @@ $ciclo = $_SESSION['ciclo'];
         <!-- Page level custom scripts -->
         <script src="tabelacp.js"></script>
         <script src="envEmail.js"></script>
+        <script src="envDemonstrativo.js"></script>
         <script>
             $(document).ready(function () {
                 $("#msg").html('');
@@ -380,7 +404,7 @@ $ciclo = $_SESSION['ciclo'];
                 let enviostotal = parseInt($('#enviostotal').html());
                 let resultado = tutortotal - enviostotal;
                 let tempo = resultado * 5000;
-                console.log("tutortotal");
+//                console.log("tutortotal");
                 let ano = $('#ano').val();
                 let ciclo = $('#ciclo').val();
                 envEmailAll(ano,ciclo);
@@ -390,6 +414,19 @@ $ciclo = $_SESSION['ciclo'];
                     document.getElementById("loading").style.display = "none";
     //                document.getElementById("conteudo").style.display = "inline";
                 }, tempo);
+            }
+            function funcBtEnvDemons(){
+                document.getElementById("loading").style.display = "block";
+                let ano = $('#ano').val();
+                let ciclo = $('#ciclo').val();
+                console.log(ano,ciclo);
+                envDemonstrativo(ano,ciclo);
+                var i = setInterval(function () {
+                    clearInterval(i);
+                    // O código desejado é apenas isto:
+                    document.getElementById("loading").style.display = "none";
+    //                document.getElementById("conteudo").style.display = "inline";
+                }, 1000);
             }
         </script>
     </body>

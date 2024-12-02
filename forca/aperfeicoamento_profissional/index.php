@@ -55,7 +55,7 @@ $dthoje = date('d/m/Y');
 //$ciclo = $_SESSION['ciclo'];
 $ano = 2024;
 $ciclo = 3;
-$ctap = 0;
+$ctap = $ctfim = 0;
 $sql = "select m.nome, m.admissao, m.cargo, m.tipologia, m.uf, m.municipio, m.datacadastro, m.cpf, m.ibge, m.cnes,
  m.ine, ivs.descricao as ivs, a.flaginativo from medico m left join ivs on m.fkivs = ivs.idivs inner join aperfeicoamentoprofissional a on 
 m.cpf = a.cpf and m.ibge = a.ibge and m.cnes = a.cnes and m.ine = a.ine where a.ano = '$ano' and a.ciclo = '$ciclo' order by m.nome";
@@ -270,7 +270,7 @@ $contt = $continat = 0;
                 </div>
             </div>
             <div class="row">
-                <div class="col-6">
+                <div class="col-8" id="msgtxt">
                     <?php
                     if ($_SESSION['pgmsg'] === '2') {
                         if ($_SESSION['msg'] !== null && $_SESSION['msg'] !== '') {
@@ -282,7 +282,7 @@ $contt = $continat = 0;
                     }
                     ?>
                 </div>
-                <div class="col-6 text-right">
+                <div class="col-4 text-right">
                     <label><small>Bem-vindo, <?= $usuario ?>, Brasília-DF, <?= $dthoje ?>.</small></label>
                 </div>
             </div>
@@ -296,9 +296,8 @@ $contt = $continat = 0;
                                     <table id="dtBasicExample" class="table table-hover table-bordered table-striped rounded">
                                         <thead class="bg-gradient-dark text-white">
                                             <tr class="bg-gradient-dark text-light font-weight-bold">
-                                                <?php if (($perfil === '3' && $nivel === '1') || ($perfil === '1' && $nivel === '2')) { ?>
-                                                    <td class="bg-gradient-dark text-light align-middle text-center" style="width: 10%;position: sticky; top: 0px;" title="Detalhamento"><i class="fas fa-info-circle"></i></td>
-                                                <?php } ?>
+                                                <td class="bg-gradient-dark text-light align-middle text-center" style="width: 10%;position: sticky; top: 0px;" title="Detalhamento"><i class="fas fa-info-circle"></i></td>
+                                                <td class="bg-gradient-dark text-light align-middle" style="width: 40%; position: sticky; top: 0px;"><i class="fas fa-mail-bulk"></i></td>
                                                 <td class="bg-gradient-dark text-light align-middle" style="width: 40%; position: sticky; top: 0px;">TUTOR</td>
                                                 <td class="bg-gradient-dark text-light align-middle" style="width: 5%;position: sticky; top: 0px;">CPF</td>
                                                 <td class="bg-gradient-dark text-light align-middle" style="width: 5%;position: sticky; top: 0px;">TIPOLOGIA</td>
@@ -338,7 +337,6 @@ $contt = $continat = 0;
                                                         ?>
                                                         <tr>
                                                             <?php
-                                                            if (($perfil === '3' && $nivel === '1') || ($perfil === '1' && $nivel === '2')) {
                                                                 //barreira para não permitir mais de um cadastro por ciclo
                                                                 $sqlALD = "select * from aperfeicoamentoprofissional where cpf='$cpftratado' and ibge='$ibge' and cnes='$cnes' and ine='$ine' and ano='$ano' and ciclo='$ciclo'";
                                                                 $qALD = mysqli_query($conn, $sqlALD) or die(mysqli_error($conn));
@@ -352,6 +350,8 @@ $contt = $continat = 0;
                                                                         $idap = $rsALD['id'];
                                                                         $flagparecer = $rsALD['flagparecer'];
                                                                         $flagemail = $rsALD['flagemail'];
+                                                                        $flagemailaviso = $rsALD['flagemailaviso'];
+                                                                        $emailaviso = $rsALD['emailaviso'];
                                                                         $flagup = $rsALD['flagup'];
 //                                                                        var_dump ("Flagemail: ".$flagemail);
 //                                                                        var_dump ("Flagup: ".$flagup);
@@ -368,31 +368,81 @@ $contt = $continat = 0;
                                                                         if ($flagemail === null) {
                                                                             $flagemail = '';
                                                                         }
+                                                                        if ($flagemailaviso === null) {
+                                                                            $flagemailaviso = '';
+                                                                        }
+                                                                        if ($emailaviso === null) {
+                                                                            $emailaviso = '';
+                                                                        }else{
+                                                                            $dateTime = new DateTime($emailaviso);
+                                                                            $emailaviso = $dateTime->format('d-m-Y \à\s H:i');
+                                                                        }
                                                                     } while ($rsALD = mysqli_fetch_array($qALD));
                                                                     if ($flagatvld !== null) {
                                                                         $ctap++;
                                                                         if ($flagterminou !== null && $flagterminou === '1') {
+                                                                        $ctfim++;
                                                                             ?>
-                                                                        <td class=" text-center"><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center" data-toggle="tooltip" title="Processo finalizado." target="_blank"><i class="fas fa-check text-success" ></i></a></td>
+                                                            
+                                                                        <td class=" text-center">
+                                                                            <?php 
+                                                                            if (($perfil === '3' && $nivel === '1') || ($perfil === '1' && $nivel === '2')) {
+                                                                            ?>
+                                                                            <a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center" data-toggle="tooltip" title="Processo finalizado." target="_blank">
+                                                                                <i class="fas fa-check text-success" ></i></a>
+                                                                            <?php }else{ ?>
+                                                                                <i class="fas fa-check text-success" ></i>
+                                                                            <?php } ?>
+                                                                        </td>
                                                                             <?php
                                                                         } elseif ($flagup === '') {
                                                                             if ($flagparecer !== '') {
                                                                                 if ($flagemail !== '') {
                                                                                     ?>  
+                                                                                <?php 
+                                                                                if (($perfil === '3' && $nivel === '1') || ($perfil === '1' && $nivel === '2')) {
+                                                                                ?>
                                                                                     <td class="text-center"><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center" title="Análise feita e E-Mail enviado." data-toggle="tooltip" target="_blank"><i class="fas fa-info-circle text-warning"></i></a></td>
+                                                                                <?php }else{ ?>
+                                                                                    <td class="text-center"><i class="fas fa-info-circle text-warning"></i></td>
+                                                                                <?php } ?>    
                                                                                 <?php } else { ?>
+                                                                                    <?php 
+                                                                                    if (($perfil === '3' && $nivel === '1') || ($perfil === '1' && $nivel === '2')) {
+                                                                                    ?>
                                                                                     <td class="text-center"><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center" data-toggle="tooltip" title="Análise feita. Falta enviar E-mail." target="_blank"><i class="fas fa-info-circle text-primary"></i></a></td>
+                                                                                    <?php }else{ ?>
+                                                                                    <td class="text-center"><i class="fas fa-info-circle text-primary"></i></td>
+                                                                                    <?php } ?>
                                                                                 <?php }
                                                                             } else { ?>
+                                                                                <?php 
+                                                                                if (($perfil === '3' && $nivel === '1') || ($perfil === '1' && $nivel === '2')) {
+                                                                                ?>
                                                                                 <td class="text-center"><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center" data-toggle="tooltip" title="Formulário recebido, mas não avaliado." target="_blank"><i class="fas fa-info-circle text-dark"></i></a></td>
+                                                                                <?php }else{ ?>
+                                                                                <td class="text-center"><i class="fas fa-info-circle text-dark"></i></td>
+                                                                                <?php } ?>
                                                                             <?php
                                                                             }
                                                                         } elseif ($flagup === '0') {
                                                                             if ($flagretorno === '1') {
                                                                                 ?>
-                                                                                <td class="text-center"><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center" data-toggle="tooltip" title="Réplica analisada e E-Mail enviado." target="_blank"><i class="fab fa-r-project text-warning"></i></a></td>        
+                                                                                <?php 
+                                                                                if (($perfil === '3' && $nivel === '1') || ($perfil === '1' && $nivel === '2')) {
+                                                                                ?>
+                                                                                <td class="text-center"><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center" data-toggle="tooltip" title="Réplica analisada e E-Mail enviado." target="_blank"><i class="fab fa-r-project text-warning"></i></a></td>    
+                                                                                <?php }else{ ?>
+                                                                                <td class="text-center"><i class="fab fa-r-project text-warning"></i></td>
+                                                                                <?php } ?>
                                                                             <?php } else { ?>
-                                                                                <td class="text-center"><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center" data-toggle="tooltip" title="Análise feita e E-Mail enviado." target="_blank"><i class="fas fa-info-circle text-warning"></i></a></td> 
+                                                                                <?php 
+                                                                                if (($perfil === '3' && $nivel === '1') || ($perfil === '1' && $nivel === '2')) {
+                                                                                ?>
+                                                                                <td class="text-center"><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center" data-toggle="tooltip" title="Análise feita e E-Mail enviado." target="_blank"><i class="fas fa-info-circle text-warning"></i></a></td>
+                                                                                <?php }else{ ?>
+                                                                                <td class="text-center"><i class="fas fa-info-circle text-warning"></i></td>
+                                                                                <?php } ?>
                                                                             <?php
                                                                             }
                                                                         } else {
@@ -435,12 +485,30 @@ $contt = $continat = 0;
                                                                                 if ($flagemail === '0') {
                                                                                     if ($boolparecerqc === false || $boolparecergepe === false || $boolparecerit === false) {
                                                                                         ?>
+                                                                                        <?php 
+                                                                                        if (($perfil === '3' && $nivel === '1') || ($perfil === '1' && $nivel === '2')) {
+                                                                                        ?>
                                                                                         <td class="text-center"><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center" data-toggle="tooltip" title="Réplica recebida, mas não avalidada." target="_blank"><i class="fab fa-r-project text-dark"></i></a></td> 
+                                                                                        <?php }else{ ?>
+                                                                                        <td class="text-center"><i class="fab fa-r-project text-dark"></i></td>
+                                                                                        <?php } ?>
                                                                                     <?php } else { ?>
+                                                                                        <?php 
+                                                                                        if (($perfil === '3' && $nivel === '1') || ($perfil === '1' && $nivel === '2')) {
+                                                                                        ?>
                                                                                         <td class="text-center"><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center" data-toggle="tooltip" title="Réplica analisada. Falta enviar E-mail." target="_blank"><i class="fab fa-r-project text-primary"></i></a></td>
+                                                                                        <?php }else{ ?>
+                                                                                        <td class="text-center"><i class="fab fa-r-project text-primary"></i></td>
+                                                                                        <?php } ?>
                                                                                     <?php }
                                                                                 } else { ?>
+                                                                                    <?php 
+                                                                                    if (($perfil === '3' && $nivel === '1') || ($perfil === '1' && $nivel === '2')) {
+                                                                                    ?>
                                                                                     <td class="text-center"><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center" data-toggle="tooltip" title="Réplica analisada. E-mail enviado." target="_blank"><i class="fab fa-r-project text-warning"></i></a></td>   
+                                                                                    <?php }else{ ?>
+                                                                                    <td class="text-center"><i class="fab fa-r-project text-warning"></i></td>
+                                                                                    <?php } ?>
                                                                                 <?php }
                                                                             } else { ?>
                                                                                 <td></td>
@@ -457,7 +525,27 @@ $contt = $continat = 0;
                                                                         <td class="text-center text-danger">INATIVO</td>
                                                            <?php             
                                                                }
-                                                            } ?>
+                                                          if($flaginativo !== '1'){
+                                                           if (($perfil === '3' && $nivel === '1') || ($perfil === '1' && $nivel === '2')) {
+                                                            if ($flagatvld === null && $flaginativo !== '1') { ?>
+                                                            <td class="text-center email<?= $idap ?>"><button type="button" class="btn btn-outline-warning shadow-sm border-warning text-dark" data-toggle="modal" data-target="#modalEmail<?= $idap ?>"><b><i class="fas fa-mail-bulk"></i>&nbsp; Enviar E-Mail</b></button>
+                                                            <?php
+                                                            if($flagemailaviso === '1'){
+                                                                echo "<br><label class='text-info mt-2'>E-Mail enviado:<br>$emailaviso</label>";
+                                                            }
+                                                            ?>
+                                                            </td>
+                                                            <?php }else{ ?>
+                                                            <td class="email<?= $idap ?>"></td>
+                                                            <?php } ?>
+                                                           <?php }else{
+                                                            if($flagemailaviso === '1'){ ?>
+                                                            <td class="text-center"><label class='text-info mt-2'>E-Mail enviado:<br><?= $emailaviso ?></label></td>
+                                                            <?php }else{?>
+                                                            <td class="text-center"></td>    
+                                                          <?php }}}else{ ?>
+                                                            <td class="text-center"></td> 
+                                                          <?php } ?>
                                                             <td><?= $nome ?></td>
                                                             <td><?= $cpf ?></td>
                                                             <td><?= $tipologia ?></td>
@@ -467,6 +555,30 @@ $contt = $continat = 0;
                                                             <td><?= $ibge ?></td>
                                                             <td><?= $cnes ?></td>
                                                             <td><?= $ine ?></td>
+                                                            <div class="modal fade modalEmail" id="modalEmail<?= $idap ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                            <div class="modal-dialog">
+                                                             <div class="modal-content">
+                                                               <div class="modal-header bg-warning">
+                                                                 <h5 class="modal-title text-dark" id="exampleModalLabel"><i class="fas fa-mail-bulk"></i>&nbsp; Alerta de tempo limite</h5>
+                                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                   <span aria-hidden="true">&times;</span>
+                                                                 </button>
+                                                               </div>
+                                                               <div class="modal-body">
+                                                                 Deseja alertar o tutor para o envio da(s) Atividade(s)?
+                                                               </div>
+                                                               <div class="modal-footer">
+                                                                   <form id="envEmailForm<?= $idap ?>">
+                                                                     <input type="hidden" id="idemail<?= $idap ?>" value="<?= $idap ?>">
+                                                                     <input type="hidden" id="nomeemail<?= $idap ?>" value="<?= $nome ?>">
+                                                                     <input type="hidden" id="cpfemail<?= $idap ?>" value="<?= $cpf ?>">
+                                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">FECHAR</button>
+                                                                     <button type="submit" onclick="funcBtEnvEB(<?= $idap ?>)" class="btn btn-primary" data-dismiss="modal">ENVIAR</button>
+                                                               </form>
+                                                               </div>
+                                                             </div>
+                                                               </div>
+                                                            </div>
                                                         </tr>
                                                     <?php
                                                 } while ($rs = mysqli_fetch_array($query));
@@ -479,8 +591,12 @@ $contt = $continat = 0;
                             </fieldset>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <label class="">Tutores: </label>
+                                    <label class="">Tutores vinculados: </label>
                                     <label class="text-info"><?= $contt ?></label>
+                                </div>
+                                <div class="col-sm-12">
+                                    <label class="">Tutores aptos no ciclo: </label>
+                                    <label class="text-info"><?= ($contt - $continat) ?></label>
                                 </div>
                                 <div class="col-sm-12">
                                     <label class="">Tutores Inativos: </label>
@@ -490,14 +606,23 @@ $contt = $continat = 0;
                                     <label class="">Formulários enviados: </label>
                                     <label class="text-info"><?= $ctap ?></label>
                                 </div>
+                                <div class="col-sm-9">
+                                    <label class="">Formulários analisados: </label>
+                                    <label class="text-info"><?= $ctfim ?></label>
+                                </div>
                                 <input type="hidden" id="tutortotal" value="<?= $contt ?>">
                                 <input type="hidden" id="tutorinativo" value="<?= $continat ?>">
                                 <input type="hidden" id="enviostotal" value="<?= $ctap ?>">
                                 <input type="hidden" id="ano" value="<?= $ano ?>">
                                 <input type="hidden" id="ciclo" value="<?= $ciclo ?>">
+                                <?php if($perfil === '3' && $nivel === '1'){ ?>
+                                <!--<div class="col-sm-3">
+                                    <button type="button" id="btenvemailall" class="btn btn-outline-warning shadow-sm border-warning text-dark" data-toggle="modal" data-target="#modalEmailAll"><b><i class="fas fa-mail-bulk"></i>&nbsp; Enviar E-Mail aos pendentes</b></button>
+                                </div>-->
                                 <div class="col-sm-3">
-                                    <button type="button" id="btenvemailall" onclick="funcBtEmailAll();" class="btn btn-outline-warning shadow-sm border-warning text-dark" data-toggle="modal" data-target="#modalEmailAll"><b><i class="fas fa-mail-bulk"></i>&nbsp; Enviar E-Mail aos pendentes</b></button>
+                                    <button type="button" id="btenvemailall" class="btn btn-outline-primary shadow-sm border-primary" data-toggle="modal" data-target="#modalEnvDemonstrativo"><b><i class="fas fa-paper-plane"></i>&nbsp; Enviar para o demonstrativo</b></button>
                                 </div>
+                                <?php } ?>
                             </div>
                         </div>
                     </div>
@@ -525,6 +650,29 @@ $contt = $continat = 0;
                 </div>
             </div>
         </div>
+        <!-- Início modalEnvDemonstrativo -->
+        <div class="modal fade" id="modalEnvDemonstrativo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-dark">
+                        <h5 class="modal-title text-white" id="exampleModalLabel"><i class="fas fa-mail-bulk"></i>&nbsp; Enviar para Demonstrativo</h5>
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Deseja enviar os dados para o Demonstrativo?
+                    </div>
+                    <div class="modal-footer">
+                        <form id="envEmailDemons">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">FECHAR</button>
+                            <button type="submit" onclick="funcBtEnvDemons();" class="btn btn-primary" data-dismiss="modal">ENVIAR</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Final modalEnvDemonstrativo -->
         <div class="row mt-4 px-3">
             <div class="col-12">
                 <i class="fas fa-info-circle text-dark"></i> <label class="text-info">&nbsp; Formulário recebido, mas não avaliado.</label>
@@ -570,6 +718,7 @@ $contt = $continat = 0;
         <script src="../../js/demo/chart-bar-citopatologico.js"></script>
         <script src="../../js/demo/chart-bar-hipertensao.js"></script>
         <script src="./envEmail.js"></script>
+        <script src="envDemonstrativo.js"></script>
         <script>
             $(document).ready(function () {
                 $('[data-toggle="tooltip"]').tooltip();
@@ -595,21 +744,51 @@ $contt = $continat = 0;
             }, 1000);
             
             function funcBtEnvEmailAll(){
-                document.getElementById("loading").style.display = "block";
+                //document.getElementById("loading").style.display = "block";
                 let tutortotal = parseInt($('#tutortotal').val());
                 let enviostotal = parseInt($('#enviostotal').val());
                 let resultado = tutortotal - enviostotal;
                 let tempo = resultado * 5000;
-                console.log("tutortotal");
+                console.log(tutortotal);
                 let ano = $('#ano').val();
                 let ciclo = $('#ciclo').val();
-                envEmailAll(ano,ciclo);
+                $('#msgtxt').html("<h6 class='text-success'><small>As mensagens eletrônicas estão sendo enviadas em segundo plano. Você pode continuar utilizando a aplicação normalmente.</small></h6>");
+                let resp = envEmailAll(ano,ciclo);
+                if(resp !== '0'){
+                    console.log(resp);
+                    let data = new Date();
+                    let databr = data.toLocaleDateString('pt-BR');
+                    console.log(databr);
+                    $('#email'+resp).html(databr);
+                }
+                var i = setInterval(function () {
+                    clearInterval(i);
+                    $('#msgtxt').html("<h6 class='text-success'><small>Mensagens eletrônicas enviadas com sucesso!</small></h6>");
+                }, tempo);
+            }
+            function funcBtEnvDemons(){
+                document.getElementById("loading").style.display = "block";
+                let ano = $('#ano').val();
+                let ciclo = $('#ciclo').val();
+                console.log(ano,ciclo);
+                envDemonstrativo(ano,ciclo);
                 var i = setInterval(function () {
                     clearInterval(i);
                     // O código desejado é apenas isto:
                     document.getElementById("loading").style.display = "none";
     //                document.getElementById("conteudo").style.display = "inline";
-                }, tempo);
+                }, 1000);
+            }
+            function funcBtEnvEB(a){
+                document.getElementById("loading").style.display = "block";
+                //console.log("clicou");
+                envEmailForm(a);
+                var i = setInterval(function () {
+                    clearInterval(i);
+                    // O código desejado é apenas isto:
+                    document.getElementById("loading").style.display = "none";
+    //                document.getElementById("conteudo").style.display = "inline";
+                }, 5000);
             }
         </script>
     </body>

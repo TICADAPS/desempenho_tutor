@@ -5,10 +5,6 @@ include './../Controller_agsus/maskCpf.php';
 if (!isset($_SESSION['cpf'])) {
    header("Location: ../derruba_session.php"); exit();
 }
-if($_SESSION['perfil'] !== '3'){
-    header("Location: ../derruba_session.php");
-    exit();
-}
 $cpf = $_REQUEST['c'];
 //$cpf = '054.040.031-97';
 date_default_timezone_set('America/Sao_Paulo');

@@ -83,6 +83,15 @@ class Medico_inovtecnologica extends Model {
         }
         return $all->fetchAll(\PDO::FETCH_CLASS, __CLASS__);
     }
+    public function findItIdap($idap): ?array
+    {
+        $all = $this->read("SELECT * from " . self::$entity . " WHERE idaperfprof = '$idap'");
+
+        if ($this->fail() ||!$all->rowCount()) {
+            return null;
+        }
+        return $all->fetchAll(\PDO::FETCH_CLASS, __CLASS__);
+    }
 
     /**
      * @param int $id

@@ -12,12 +12,12 @@ if (!isset($_SESSION['cpf'])) {
    header("Location: controller/derruba_session.php"); exit();
 }
 //var_dump($_SESSION['msg']);
-$_SESSION['cpf'] = '060.829.174-99';
-$_SESSION['ano'] = '2024';
-$_SESSION['ciclo'] = '3';
 $cpft = $_SESSION['cpf'];
 $ano = $_SESSION['ano'];
 $ciclo = $_SESSION['ciclo'];
+$ibge = $_SESSION['ibgeO'];
+$cnes = $_SESSION['cnes'];
+$ine = $_SESSION['ine'];
 $cpf = str_replace(".", "", $cpft);
 $cpf = str_replace(".", "", $cpf);
 $cpf = str_replace(".", "", $cpf);
@@ -29,15 +29,12 @@ $sqlu = "select * from medico where cpf = '$cpf' limit 1";
 $queryu = mysqli_query($conn, $sqlu) or die(mysqli_error($conn));
 $nrrsu = mysqli_num_rows($queryu);
 $rsu = mysqli_fetch_array($queryu);
-$medico = $ibge = $cnes = $ine = '';
 if($nrrsu > 0){
     do{
         $medico = $rsu['nome'];
-        $ibge = $rsu['ibge'];
-        $cnes = $rsu['cnes'];
-        $ine = $rsu['ine'];
     }while($rsu = mysqli_fetch_array($queryu));
 }
+//var_dump($cnes, $ine);
 $sqlu2 = "select * from medico where CpfMedico = '$cpft' limit 1";
 $queryu2 = mysqli_query($conn2, $sqlu2) or die(mysqli_error($conn2));
 $nrrsu2 = mysqli_num_rows($queryu2);
@@ -87,11 +84,10 @@ $query2 = mysqli_query($conn, $sql2) or die(mysqli_error($conn));
 $nrrs2 = mysqli_num_rows($query2);
 $rs2 = mysqli_fetch_array($query2);
 $rsld = $rs2;
-//var_dump($rsld, $cpft,$cpf);
+//var_dump($rsld,$rs2,$nrrs2);
 $flagld = $flagqc = $flaggepe = $flagit = false;
 $flagterminouap = '';
 $idap = null;
-//var_dump($rs2);
 if($rs2){
     do{
         $idap = $rs2['id'];
@@ -100,7 +96,6 @@ if($rs2){
         $cargo = $rs2['cargo'];
         $ivs = $rs2['descricao'];
         $flagald = $rs2['flagativlongduracao'];
-//        var_dump ($flagald);
         $flagparecerap = $rs2['flagparecerap'];
         //verifica se há parecer negativo para essa a atividade de Longa Duração
         if($flagparecerap === '0'){
@@ -610,12 +605,12 @@ $rsit = mysqli_fetch_array($qit);
                                                     </div>
                                                 </div>
                                                 <div class="row mb-1">
-                                                    <div class="col-md-6 mt-4">
-                                                        <button type="button" class="shadow-sm border-white btn btn-warning form-control" data-toggle="modal" data-target="#modalptexp" onclick="montantePontos();">PONTUAÇÃO ESTIMADA</button>
+                                                    <div class="col-md-4 mt-4">
+                                                        <button type="button" class="shadow-sm border-warning btn btn-light form-control" data-toggle="modal" data-target="#modalptexp" onclick="montantePontos();"><img src="./../../img/calc.png" width="24">&nbsp; PONTUAÇÃO ESTIMADA</button>
                                                     </div>
-                                                    <div class="col-md-6 mt-4">
+                                                    <div class="col-md-8 mt-4">
                                                         <!--<input type="submit" class="btn btn-success p-2 form-control" name="enviaCadastro" value="ENVIAR FORMULÁRIO" />-->
-                                                        <button type="button" onclick="revisao();" class="shadow-sm border-white btn btn-success form-control" >ENVIAR FORMULÁRIO</button>
+                                                        <button type="button" onclick="revisao();" class="shadow-sm border-white btn btn-success form-control" ><i class="fas fa-paper-plane"></i>&nbsp; <b>ENVIAR FORMULÁRIO</b></button>
                                                     </div>
                                                 </div>
                                                 <!-- Modal -->
@@ -644,7 +639,17 @@ $rsit = mysqli_fetch_array($qit);
                                                 </div>
                                             </form>
                                             <?php
-                                        } else { ?>
+                                        } elseif($nrrs2 === 0){ ?>
+                                        <div class="row mb-1">
+                                            <div class="col-12">
+                                                <div class="card border-1 " style="border: 1px solid red;">    
+                                                   <div class="card-body">
+                                                       <h6 class="text-danger text-center"><i class="fas fa-hand-point-right"></i>&nbsp; Não consta dados do bolsista referente a este Município, CNES e/ou INE neste ciclo.  &nbsp;<i class="fas fa-hand-point-left"></i></h6>
+                                                   </div>
+                                               </div>
+                                            </div>
+                                        </div>
+                                        <?php }else { ?>
                                         <form method="post" enctype="multipart/form-data" action="controller/rcbup.php">
                                             <div class="row mb-1">
                                                 <div class="col-12">

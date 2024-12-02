@@ -4,6 +4,7 @@ include '../conexao_agsus_2.php';
 include '../conexao-agsus.php';
 include '../Controller_agsus/maskCpf.php';
 include '../Controller_agsus/fdatas.php';
+require __DIR__ . "/../source/autoload.php";
 
 if (!isset($_SESSION['msg'])) {
     $_SESSION['msg'] = "";
@@ -37,24 +38,36 @@ $cpf = str_replace("-", "", $cpf);
 //var_dump($cpf);
 date_default_timezone_set('America/Sao_Paulo');
 $dthoje = date('d/m/Y');
-$sqlu = "select * from medico where cpf = '$cpf' limit 1";
+$sqlu = "select * from medico where cpf = '$cpf'";
 $queryu = mysqli_query($conn, $sqlu) or die(mysqli_error($conn));
-$nrrsu = mysqli_num_rows($queryu);
+$nrrsu = (int)mysqli_num_rows($queryu);
 $rsu = mysqli_fetch_array($queryu);
+//var_dump($rsu);
 $medico = '';
-if($nrrsu > 0){
+$ibgeOarray = $cnesarray = $inearray = array();
+$auxma = 0;
+if($nrrsu === 1){
     do{
         $medico = $rsu['nome'];
         $ibgeO = $rsu['ibge'];
         $cnes = $rsu['cnes'];
         $ine = $rsu['ine'];
     }while($rsu = mysqli_fetch_array($queryu));
+    $_SESSION['cpft'] = $cpf;
+    $_SESSION['nome'] = $medico;
+    $_SESSION['ibgeO'] = $ibgeO;
+    $_SESSION['cnes'] = $cnes;
+    $_SESSION['ine'] = $ine;
+}else{
+    do{
+        $medico = $rsu['nome'];
+        $ibgeOarray[$auxma] = $rsu['ibge'];
+        $cnesarray[$auxma] = $rsu['cnes'];
+        $inearray[$auxma] = $rsu['ine'];
+        $auxma++;
+    }while($rsu = mysqli_fetch_array($queryu));
 }
-$_SESSION['cpft'] = $cpf;
-$_SESSION['nome'] = $medico;
-$_SESSION['ibgeO'] = $ibgeO;
-$_SESSION['cnes'] = $cnes;
-$_SESSION['ine'] = $ine;
+//var_dump($ibgeOarray);
 $sqlano = "select ano from anocicloavaliacao group by ano";
 $queryano = mysqli_query($conn, $sqlano) or die(mysqli_error($conn));
 $rsano = mysqli_fetch_array($queryano);
@@ -111,7 +124,93 @@ $rsano4 = mysqli_fetch_array($queryano4);
                 <div class="col-12 text-right">
                     <label><small>Bem-vindo, <?= $medico ?>, Brasília-DF, <?= $dthoje ?>.</small></label>
                 </div>
+            </div>  
+        <?php if (!empty($ibgeOarray)) { ?>
+            <div class="col-12 shadow rounded pt-3 pb-3 mb-5">
+                <div class="p-3">
+                    <fielset><legend>Selecione as referências da equipe de trabalho</legend>
+                    <form method="post" action="">
+                      <div class="row">
+                          <div class="col-md-4">
+                                <h6>Escolha o IBGE de referência</h6>
+                                <select name="ibgearray" id="ibgearray" class="form-control">
+                                    <option value="">[--SELECIONE--]</option>
+                                <?php
+                                  if (count(array_unique($ibgeOarray)) === 1) {
+                                      $ibgeOarr = $ibgeOarray[0];
+                                      $munarr = (new Source\Models\Municipio())->findById($ibgeOarr);
+                                      //var_dump($munarr);
+                                ?>        
+                                    <option value="<?= $ibgeOarr ?>"><?= $munarr->Municipio ?></option>
+                                <?php    
+                                  }else{
+                                      foreach ($ibgeOarray as $ibgear){
+                                         $ibgeOarr = $ibgear; 
+                                         $munarr = (new Source\Models\Municipio())->findById($ibgeOarr);
+                                ?>
+                                    <option value="<?= $ibgeOarr ?>"><?= $munarr->Municipio ?></option>
+                                <?php        
+                                      }
+                                  }
+                                ?>
+                                </select>
+                          </div>
+                          <div class="col-md-4">
+                                <h6>Escolha o CNES de referência</h6>
+                                <select name="cnesarray" id="cnesarray" class="form-control">
+                                    <option value="">[--SELECIONE--]</option>
+                                <?php
+                                  if (count(array_unique($cnesarray)) === 1) {
+                                      $cnesarr = $cnesarray[0];
+                                ?>        
+                                    <option value="<?= $cnesarr ?>"><?= $cnesarr ?></option>
+                                <?php    
+                                  }else{
+                                      foreach ($cnesarray as $cnesa){
+                                         $cnesarr = $cnesa; 
+                                ?>
+                                    <option value="<?= $cnesarr ?>"><?= $cnesarr ?></option>
+                                <?php        
+                                      }
+                                  }
+                                ?>
+                                </select>
+                          </div>
+                          <div class="col-md-4">
+                                <h6>Escolha o INE de referência</h6>
+                                <select name="inearray" id="inearray" class="form-control">
+                                    <option value="">[--SELECIONE--]</option>
+                                <?php
+                                  if (count(array_unique($inearray)) === 1) {
+                                      $inearr = $inearray[0];
+                                ?>        
+                                    <option value="<?= $inearr ?>"><?= $inearr ?></option>
+                                <?php    
+                                  }else{
+                                      foreach ($inearray as $inea){
+                                         $inearr = $inea; 
+                                ?>
+                                    <option value="<?= $inearr ?>"><?= $inearr ?></option>
+                                <?php        
+                                      }
+                                  }
+                                ?>
+                                </select>
+                          </div>
+                          <div class="col-md-12 mt-2">
+                              <input type="submit" class="btn btn-secondary" name="btarray" value=" ENVIAR ">
+                          </div>
+                        </div>
+                    </form>
+                </fielset>
+              </div>
             </div>
+            <?php if(isset($_POST['btarray'])){
+            if($_POST['ibgearray'] !== '' && $_POST['cnesarray'] !== '' && $_POST['inearray'] !== ''){
+                $ibgeO = $_POST['ibgearray'];
+                $cnes = $_POST['cnesarray'];
+                $ine = $_POST['inearray'];
+            ?>
             <div class="col-12 shadow rounded pt-3 pb-3 mb-5">
                 <div class="p-3">
                     <div class="row">
@@ -382,7 +481,279 @@ $rsano4 = mysqli_fetch_array($queryano4);
                     </div>
                 </div>
             </div>
-            <?php }else{ ?>
+            <?php }} ?>
+        <?php }else{ ?>
+            <div class="col-12 shadow rounded pt-3 pb-3 mb-5">
+                <div class="p-3">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <button type="button" class="btn btn-light rounded" data-toggle="modal" data-target="#modalQA">
+                                <img src="./../img/desempenho2.jpg" class="img-fluid rounded" width="50%">
+                            </button>
+                        </div>
+                        <div class="col-md-3">
+                            <button type="button" class="btn btn-light rounded" data-toggle="modal" data-target="#modalAP">
+                                <img src="./../img/aperfeicoamento.png" class="img-fluid rounded" width="50%">
+                            </button>
+                        </div>
+                        <div class="col-md-3">
+                            <button type="button" class="btn btn-light rounded" data-toggle="modal" data-target="#modalCP">
+                                <img src="./../img/autoavaliacao.png" class="img-fluid rounded" width="50%">
+                            </button>
+                        </div>
+                        <div class="col-md-3">
+                            <button type="button" class="btn btn-light rounded" data-toggle="modal" data-target="#modalDem">
+                                <img src="./../img/demostrativo.png" class="img-fluid rounded" width="50%">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal -->
+                <div class="modal fade" id="modalQA" tabindex="-1" aria-labelledby="modalQA" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <form method="post" enctype="multipart/form-data" action="qa.php">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: #E0E4E9;">
+                                <h5 class="modal-title text-primary" id="exampleModalLabel">Qualidade Assistencial &nbsp;<img src="./../img/desempenho2.jpg" class="img-fluid rounded-circle" width="10%"></h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="card ">
+                                    <div class="card-body">
+                                        <blockquote class="blockquote mb-3">
+                                            <input type="hidden" value="<?= $ine ?>" name="i">
+                                            <p>Texto explicativo - conteúdo com opção de escolha do ano.</p>
+                                            <div class="row mt-3">
+                                                <div class="col-md-12">
+                                                    <div class="col-12"><b>Escolha o ano:</b></div>
+                                                    <div class="col-12">
+                                                        <select class="form-control" name="ano" id="ano">
+                                                            <option value="">[--SELECIONE--]</option>
+                                                            <?php
+                                                            if ($rsano) {
+                                                                do {
+                                                                    $ano = $rsano['ano'];
+                                                                    ?>
+                                                                    <option><?= $ano ?></option>
+                                                                    <?php
+                                                                } while ($rsano = mysqli_fetch_array($queryano));
+                                                            }
+                                                            ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </blockquote>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">FECHAR</button>
+                                <button type="submit" class="btn btn-primary">ENTRAR <i class="fas fa-arrow-right"></i></button>
+                            </div>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- Modal -->
+                <div class="modal fade" id="modalAP" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form method="post" enctype="multipart/form-data" action="./controller/transfdadosap.php">
+                                <div class="modal-header" style="background-color: #E0E4E9;">
+                                    <h5 class="modal-title text-primary" id="exampleModalLabel">Aperfeiçoamento Profissional &nbsp;<img src="./../img/aperfeicoamento.png" class="img-fluid rounded-circle" width="10%;"></h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="card ">
+                                        <div class="card-body">
+                                            <blockquote class="blockquote mb-3">
+                                                <input type="hidden" value="<?= $cpftratado ?>" name="cpf">
+                                                <input type="hidden" value="<?= $medico ?>" name="nome">
+                                                <input type="hidden" value="<?= $ibgeO ?>" name="ibgeO">
+                                                <input type="hidden" value="<?= $cnes ?>" name="cnes">
+                                                <input type="hidden" value="<?= $ine ?>" name="ine">
+                                                <p>Texto explicativo - conteúdo com opção de escolha do ano e do ciclo.</p>
+                                                <div class="row mt-2">
+                                                    <div class="col-md-12">
+                                                        <div class="col-12"><b>Escolha o ano:</b></div>
+                                                        <div class="col-12">
+                                                            <select class="form-control" name="ano" id="anoap">
+                                                                <option value="">[--SELECIONE--]</option>
+                                                                <?php
+                                                                if ($rsano2) {
+                                                                    do {
+                                                                        $ano2 = $rsano2['ano'];
+                                                                        ?>
+                                                                        <option><?= $ano2 ?></option>
+                                                                        <?php
+                                                                    } while ($rsano2 = mysqli_fetch_array($queryano2));
+                                                                }
+                                                                ?>
+                                                            </select>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="col-12"><b>Escolha o ciclo:</b></div>
+                                                        <div class="col-12">
+                                                            <select class="form-control" name="ciclo" id="cicloap">
+                                                                <option value="">[--SELECIONE--]</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </blockquote>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">FECHAR</button>
+                                    <button type="submit" class="btn btn-primary">ENTRAR <i class="fas fa-arrow-right"></i></button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal -->
+                <div class="modal fade" id="modalCP" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form method="post" enctype="multipart/form-data" action="./controller/transfdadoscp.php">
+                                <div class="modal-header" style="background-color: #E0E4E9;">
+                                    <h5 class="modal-title text-primary" id="exampleModalLabel">Aperfeiçoamento Profissional &nbsp;<img src="./../img/autoavaliacao.png" class="img-fluid rounded-circle" width="10%;"></h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="card ">
+                                        <div class="card-body">
+                                            <blockquote class="blockquote mb-3">
+                                                <input type="hidden" value="<?= $cpftratado ?>" name="cpf">
+                                                <input type="hidden" value="<?= $medico ?>" name="nome">
+                                                <input type="hidden" value="<?= $ibgeO ?>" name="ibgeO">
+                                                <input type="hidden" value="<?= $cnes ?>" name="cnes">
+                                                <input type="hidden" value="<?= $ine ?>" name="ine">
+                                                <p>Texto explicativo - conteúdo com opção de escolha do ano e do ciclo.</p>
+                                                <div class="row mt-2">
+                                                    <div class="col-md-12">
+                                                        <div class="col-12"><b>Escolha o ano:</b></div>
+                                                        <div class="col-12">
+                                                            <select class="form-control" name="ano" id="anoav">
+                                                                <option value="">[--SELECIONE--]</option>
+                                                                <?php
+                                                                if ($rsano3) {
+                                                                    do {
+                                                                        $ano3 = $rsano3['ano'];
+                                                                        ?>
+                                                                        <option><?= $ano3 ?></option>
+                                                                        <?php
+                                                                    } while ($rsano3 = mysqli_fetch_array($queryano3));
+                                                                }
+                                                                ?>
+                                                            </select>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="col-12"><b>Escolha o ciclo:</b></div>
+                                                        <div class="col-12">
+                                                            <select class="form-control" name="ciclo" id="cicloav">
+                                                                <option value="">[--SELECIONE--]</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </blockquote>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">FECHAR</button>
+                                    <button type="submit" class="btn btn-primary">ENTRAR <i class="fas fa-arrow-right"></i></button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal -->
+                <div class="modal fade" id="modalDem" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form method="post" enctype="multipart/form-data" action="./controller/transfdadosd.php">
+                                <div class="modal-header" style="background-color: #E0E4E9;">
+                                    <h5 class="modal-title text-primary" id="exampleModalLabel">Demonstrativo &nbsp;<img src="./../img/demostrativo.png" class="img-fluid rounded-circle" width="10%;"></h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="card ">
+                                        <div class="card-body">
+                                            <blockquote class="blockquote mb-3">
+                                                <input type="hidden" value="<?= $cpftratado ?>" name="cpf">
+                                                <input type="hidden" value="<?= $ibgeO ?>" name="ibgeO">
+                                                <input type="hidden" value="<?= $cnes ?>" name="cnes">
+                                                <input type="hidden" value="<?= $ine ?>" name="ine">
+                                                <p>Texto explicativo - conteúdo com opção de escolha do ano e do ciclo.</p>
+                                                <div class="row mt-2">
+                                                    <div class="col-md-12">
+                                                        <div class="col-12"><b>Escolha o ano:</b></div>
+                                                        <div class="col-12">
+                                                            <select class="form-control" name="ano" id="anod">
+                                                                <option value="">[--SELECIONE--]</option>
+                                                                <?php
+                                                                if ($rsano4) {
+                                                                    do {
+                                                                        $ano4 = $rsano4['ano'];
+                                                                        ?>
+                                                                        <option><?= $ano4 ?></option>
+                                                                        <?php
+                                                                    } while ($rsano4 = mysqli_fetch_array($queryano4));
+                                                                }
+                                                                ?>
+                                                            </select>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="col-12"><b>Escolha o ciclo:</b></div>
+                                                        <div class="col-12">
+                                                            <select class="form-control" name="ciclo" id="ciclod">
+                                                                <option value="">[--SELECIONE--]</option>
+                                                            </select>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="col-12"><b>Escolha o período:</b></div>
+                                                        <div class="col-12">
+                                                            <select class="form-control" name="periodo" id="periodod">
+                                                                <option value="">[--SELECIONE--]</option>
+                                                            </select>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </blockquote>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">FECHAR</button>
+                                    <button type="submit" class="btn btn-primary">ENTRAR <i class="fas fa-arrow-right"></i></button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?php }}else{ ?>
             <div class="col-12 shadow rounded pt-3 pb-3 mb-5">
                 <div class="p-3">
                     <div class="row">

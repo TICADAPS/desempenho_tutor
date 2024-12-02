@@ -297,9 +297,7 @@ $contt = $conta = $contb = 0;
                                                 <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;" title="Qualidade Tutoria">QT</td>
                                                 <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;" title="Competências Profissionais">CP</td>
                                                 <td class="bg-gradient-dark text-light align-middle" style="width: 10%;position: sticky; top: 0px;" title="Aperfeiçoamento Profissional">AP</td>
-                                                <?php if($perfil === '3' && $nivel === '1'){ ?>
                                                 <td class="bg-gradient-dark text-light align-middle text-center" style="width: 10%;position: sticky; top: 0px;"><i class="far fa-eye"></i></td>
-                                                <?php } ?>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -660,10 +658,7 @@ $contt = $conta = $contb = 0;
                                                 <td><?= $qnotatext ?></td>
                                                 <td><?= $cpossuitext ?></td>
                                                 <td><?= $anotatext ?></td>
-                                                <!--<td><?= $datacadastro ?></td>-->
-                                                <?php if($perfil === '3' && $nivel === '1'){ ?>
                                                 <td><a href="demonstrativo.php?c=<?= $cpftratado ?>&a=<?= $ano ?>&cl=<?= $ciclo ?>&p=<?= $idperiodo ?>" class="btn btn-light shadow-sm" title="Demonstrativo"><i class="far fa-eye"></i></a></td>
-                                                <?php } ?>
                                             </tr>
                                             <?php }while($rs = mysqli_fetch_array($query));
                                             }}?>

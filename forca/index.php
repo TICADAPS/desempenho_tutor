@@ -162,12 +162,12 @@ $rsano4 = mysqli_fetch_array($queryano4);
                                 <img src="./../img/autoavaliacao.png" class="img-fluid rounded" width="50%">
                             </button>
                         </div>
+                        <?php } ?>
                         <div class="col-md-4">
                             <button type="button" class="btn btn-light rounded" data-toggle="modal" data-target="#modalRAD">
                                 <img src="./../img/demostrativo.png" class="img-fluid rounded" width="50%">
                             </button>
                         </div>
-                        <?php } ?>
                     </div>
                     <?php if($perfil === '3' && $nivel === '1'){ ?>
                     <div class="row mt-4">

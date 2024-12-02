@@ -43,9 +43,7 @@ function envEmailAll(ano,ciclo){
         // Exibe o resultado no HTML
         let numeros = data.toString().split('');
         numeros.forEach(function(numero) {
-            if(numero !== 0){
-                campoEmail(numero);
-            }
+            console.log(numero);
         });
     })
     .catch(erro => {

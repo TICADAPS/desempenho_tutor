@@ -275,23 +275,29 @@ $ciclo = 3;
                             </fieldset>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <label class="">Tutores: </label>
+                                    <label class="">Tutores vinculados: </label>
                                     <label class="text-info" id="tutortotal"></label>
+                                </div>
+                                <div class="col-sm-12">
+                                    <label class="">Tutores aptos no ciclo: </label>
+                                    <label class="text-info" id="tutoresaptos"></label>
                                 </div>
                                 <div class="col-sm-12">
                                     <label class="">Tutores Inativos: </label>
                                     <label class="text-info" id="tutorinativo"></label>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-9">
                                     <label class="">Formulários enviados: </label>
                                     <label class="text-info" id="enviostotal"></label>
                                 </div>
-                                <div class="col-sm-3">
+                                <?php if($perfil === '3' && $nivel === '1'){ ?>
+                                <!--<div class="col-sm-3">
                                     <button type="button" id="btenvemailall" onclick="funcBtEmailAll();" class="btn btn-outline-warning shadow-sm border-warning text-dark" data-toggle="modal" data-target="#modalEmailAll"><b><i class="fas fa-mail-bulk"></i>&nbsp; Enviar E-Mail aos pendentes</b></button>
-                                </div>
+                                </div>-->
                                 <div class="col-sm-3">
-                                    <button type="button" id="btenvdemonstrativo" class="btn btn-outline-primary shadow-sm border-primary" data-toggle="modal" data-target="#modalEnvDemonstrativo"><i class="fas fa-paper-plane"></i>&nbsp; Enviar para o demonstrativo</button>
+                                    <button type="button" id="btenvdemonstrativo" class="btn btn-outline-primary shadow-sm border-primary" data-toggle="modal" data-target="#modalEnvDemonstrativo"><b><i class="fas fa-paper-plane"></i>&nbsp; Enviar para o demonstrativo</b></button>
                                 </div>
+                                <?php } ?>
                             </div>
                         </div>
                     </div>

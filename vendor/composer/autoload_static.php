@@ -34,7 +34,9 @@ class ComposerStaticInit3b890ca3a7e531f1dc53db81aaefc8de
             'Psr\\SimpleCache\\' => 16,
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Http\\Client\\' => 16,
+            'Predis\\' => 7,
             'PhpOffice\\PhpSpreadsheet\\' => 25,
+            'Pheanstalk\\' => 11,
             'PHPMailer\\PHPMailer\\' => 20,
         ),
         'M' => 
@@ -108,9 +110,17 @@ class ComposerStaticInit3b890ca3a7e531f1dc53db81aaefc8de
         array (
             0 => __DIR__ . '/..' . '/psr/http-client/src',
         ),
+        'Predis\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/predis/predis/src',
+        ),
         'PhpOffice\\PhpSpreadsheet\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpoffice/phpspreadsheet/src/PhpSpreadsheet',
+        ),
+        'Pheanstalk\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/pda/pheanstalk/src',
         ),
         'PHPMailer\\PHPMailer\\' => 
         array (

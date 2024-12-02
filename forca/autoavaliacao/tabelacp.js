@@ -4,8 +4,10 @@ function tabelaAcp(a,c){
     tbcp.innerHTML = '';
     let tutortotal = document.querySelector('#tutortotal');
     let tutorinativo = document.querySelector('#tutorinativo');
+    let tutoresaptos = document.querySelector('#tutoresaptos');
 //    console.log(tutortotal);
     tutortotal.innerHTML = '';
+    tutoresaptos.innerHTML = '';
     tutorinativo.innerHTML = '';
     let enviostotal = document.querySelector('#enviostotal');
 //    console.log(enviostotal);
@@ -107,6 +109,8 @@ function tabelaAcp(a,c){
             tbcp.innerHTML = html;
             tutortotal.innerHTML = ""+cttutor;
             tutorinativo.innerHTML = ""+cttinativo;
+            let tutapt = cttutor - cttinativo;
+            tutoresaptos.innerHTML = ""+tutapt;
             enviostotal.innerHTML = ""+ctflagenv;
         } else {
             html += '<tr><td colspan="10">Não é possível carregar os dados do tutor</td></tr>';

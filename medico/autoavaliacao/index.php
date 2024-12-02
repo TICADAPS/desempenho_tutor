@@ -15,6 +15,9 @@ $cpft = str_replace(".", "", $cpf);
 $cpft = str_replace(".", "", $cpft);
 $cpft = str_replace(".", "", $cpft);
 $cpft = str_replace("-", "", $cpft);
+$ibge = $_SESSION['ibgeO'];
+$cnes = $_SESSION['cnes'];
+$ine = $_SESSION['ine'];
 //var_dump($cpf);
 date_default_timezone_set('America/Sao_Paulo');
 $dthoje = date('d/m/Y');
@@ -22,13 +25,10 @@ $sqlu = "select * from medico where cpf = '$cpft' limit 1";
 $queryu = mysqli_query($conn, $sqlu) or die(mysqli_error($conn));
 $nrrsu = mysqli_num_rows($queryu);
 $rsu = mysqli_fetch_array($queryu);
-$medico = $ibge = $cnes = $ine = '';
+$medico = '';
 if($nrrsu > 0){
     do{
         $medico = $rsu['nome'];
-        $ibge = $rsu['ibge'];
-        $cnes = $rsu['cnes'];
-        $ine = $rsu['ine'];
     }while($rsu = mysqli_fetch_array($queryu));
 }
 $_SESSION['cpft'] = $cpft;
@@ -132,7 +132,7 @@ $uf = $estado->UF;
                     ?>  
                     <div class="card mb-2">
                         <div class="card-body rounded" style="border: 1px solid #4BA439;">
-                            <h5 class="m-2 text-center" style="color: #4BA439;"><i class="fas fa-hand-point-right"></i>&nbsp; Prezado médico Tutor, o <?= $ciclo ?>º ciclo do ano <?= $ano ?> não está aberto para esta atividade. &nbsp;<i class="fas fa-hand-point-left"></i></h5>
+                            <h5 class="m-2 text-center"><i class="fas fa-hand-point-right"></i>&nbsp; Prezado médico Tutor, o <?= $ciclo ?>º ciclo do ano <?= $ano ?> não está aberto para esta atividade. &nbsp;<i class="fas fa-hand-point-left"></i></h5>
                         </div>
                     </div>
                     <?php
@@ -1489,8 +1489,8 @@ $uf = $estado->UF;
                         </form>
                     <?php } else { ?>
                         <div class="card mb-2">
-                            <div class="card-body rounded" style="border: 1px solid #4BA439;">
-                                <h5 class="m-2 text-center" style="color: #4BA439;"><i class="fas fa-hand-point-right"></i>&nbsp; Prezado médico Tutor, não consta em nossa base de dados a sua participação neste ciclo. &nbsp;<i class="fas fa-hand-point-left"></i></h5>
+                            <div class="card-body rounded" style="border: 1px solid red;">
+                                <h6 class="m-2 text-center text-danger"><i class="fas fa-hand-point-right"></i>&nbsp; Prezado médico Tutor, não consta em nossa base de dados a sua participação neste ciclo, referente ao Município, CNES e/ou INE informados. &nbsp;<i class="fas fa-hand-point-left"></i></h6>
                             </div>
                         </div>
                     <?php }} ?>

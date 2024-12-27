@@ -64,7 +64,7 @@ define("CONF_MAIL_HOST", "smtp.gmail.com");
 define("CONF_MAIL_PORT", "587");
 define("CONF_MAIL_USER", "noreply@agenciasus.org.br");
 //define("CONF_MAIL_PASS", "@Senha10agsus@");
-define("CONF_MAIL_PASS", "rfmy eyfz puzj jkib");
+define("CONF_MAIL_PASS", "jwtx rysi zttg wdeo");
 define("CONF_MAIL_SENDER", ["name" => "AgSUS (no-reply)", "address" => "noreply@agenciasus.org.br"]);
 define("CONF_MAIL_OPTION_LANG", "br");
 define("CONF_MAIL_OPTION_HTML", true);

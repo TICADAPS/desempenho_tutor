@@ -450,40 +450,52 @@ $contt = $continat = 0;
                                                                                 $boolparecerqc = $boolparecergepe = $boolparecerit = false;
                                                                                 $mitup = (new Source\Models\Medico_inovtecnologica())->findJItUp($idap);
                                                                                 if ($mitup !== null) {
+                                                                                    $cttrue = 0;
+                                                                                    $boolparecerit = false;
                                                                                     foreach ($mitup as $mi) {
                                                                                         if ($mi->pareceruser !== null) {
-                                                                                            $boolparecerit = true;
-                                                                                        } else {
-                                                                                            $boolparecerit = false;
-                                                                                            break;
+                                                                                            $cttrue++;
+                                                                                        } else{
+                                                                                            $cttrue = 0; break;
                                                                                         }
+                                                                                    }
+                                                                                    if($cttrue > 0){
+                                                                                        $boolparecerit = true;
                                                                                     }
                                                                                 }
                                                                                 $mgepeup = (new Source\Models\Medico_gesenspesext())->findJGepeUp($idap);
                                                                                 if ($mgepeup !== null) {
+                                                                                    $cttrue = 0;
+                                                                                    $boolparecergepe = false;
                                                                                     foreach ($mgepeup as $mg) {
                                                                                         if ($mg->pareceruser !== null) {
-                                                                                            $boolparecergepe = true;
-                                                                                        } else {
-                                                                                            $boolparecergepe = false;
-                                                                                            break;
+                                                                                            $cttrue++;
+                                                                                        } else{
+                                                                                            $cttrue = 0; break;
                                                                                         }
+                                                                                    }
+                                                                                    if($cttrue > 0){
+                                                                                        $boolparecergepe = true;
                                                                                     }
                                                                                 }
                                                                                 $mqcup = (new Source\Models\Medico_qualifclinica())->findJQCUp($idap);
                                                                                 if ($mqcup !== null) {
+                                                                                    $cttrue = 0;
+                                                                                    $boolparecerqc = false;
                                                                                     foreach ($mqcup as $mq) {
                                                                                         if ($mq->pareceruser !== null) {
-                                                                                            $boolparecerqc = true;
-                                                                                        } else {
-                                                                                            $boolparecerqc = false;
-                                                                                            break;
+                                                                                            $cttrue++;
+                                                                                        }  else{
+                                                                                            $cttrue = 0; break;
                                                                                         }
+                                                                                    }
+                                                                                    if($cttrue > 0){
+                                                                                        $boolparecerqc = true;
                                                                                     }
                                                                                 }
 //                                                                                var_dump ($boolparecerqc,$boolparecergepe,$boolparecerit);
                                                                                 if ($flagemail === '0') {
-                                                                                    if ($boolparecerqc === false || $boolparecergepe === false || $boolparecerit === false) {
+                                                                                    if ($boolparecerqc === false && $boolparecergepe === false && $boolparecerit === false) {
                                                                                         ?>
                                                                                         <?php 
                                                                                         if (($perfil === '3' && $nivel === '1') || ($perfil === '1' && $nivel === '2')) {
@@ -510,10 +522,85 @@ $contt = $continat = 0;
                                                                                     <td class="text-center"><i class="fab fa-r-project text-warning"></i></td>
                                                                                     <?php } ?>
                                                                                 <?php }
-                                                                            } else { ?>
-                                                                                <td></td>
-                                                                                <?php }
+                                                                            } else { 
+                                                                                $boolparecerqc = $boolparecergepe = $boolparecerit = false;
+                                                                                $mitup = (new Source\Models\Medico_inovtecnologica())->findJItUp($idap);
+                                                                                if ($mitup !== null) {
+                                                                                    $cttrue = 0;
+                                                                                    $boolparecerit = false;
+                                                                                    foreach ($mitup as $mi) {
+                                                                                        if ($mi->pareceruser !== null) {
+                                                                                            $cttrue++;
+                                                                                        } else{
+                                                                                            $cttrue = 0; break;
+                                                                                        }
+                                                                                    }
+                                                                                    if($cttrue > 0){
+                                                                                        $boolparecerit = true;
+                                                                                    }
+                                                                                }
+                                                                                $mgepeup = (new Source\Models\Medico_gesenspesext())->findJGepeUp($idap);
+                                                                                if ($mgepeup !== null) {
+                                                                                    $cttrue = 0;
+                                                                                    $boolparecergepe = false;
+                                                                                    foreach ($mgepeup as $mg) {
+                                                                                        if ($mg->pareceruser !== null) {
+                                                                                            $cttrue++;
+                                                                                        } else{
+                                                                                            $cttrue = 0; break;
+                                                                                        }
+                                                                                    }
+                                                                                    if($cttrue > 0){
+                                                                                        $boolparecergepe = true;
+                                                                                    }
+                                                                                }
+                                                                                $mqcup = (new Source\Models\Medico_qualifclinica())->findJQCUp($idap);
+                                                                                if ($mqcup !== null) {
+                                                                                    $cttrue = 0;
+                                                                                    $boolparecerqc = false;
+                                                                                    foreach ($mqcup as $mq) {
+                                                                                        if ($mq->pareceruser !== null) {
+                                                                                            $cttrue++;
+                                                                                        } else{
+                                                                                            $cttrue = 0; break;
+                                                                                        }
+                                                                                    }
+                                                                                    if($cttrue > 0){
+                                                                                        $boolparecerqc = true;
+                                                                                    }
+                                                                                }
+                                                                                ?>
+<!--                                                                                <td class="text-center"><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center" data-toggle="tooltip" title="Réplica analisada. E-mail enviado." target="_blank"><i class="fab fa-r-project text-warning"></i></a></td>-->
+                                                                            <?php   if ($flagemail === '0') {
+                                                                                        if ($boolparecerqc === false && $boolparecergepe === false && $boolparecerit === false) {
+                                                                                            ?>
+                                                                                            <?php 
+                                                                                            if (($perfil === '3' && $nivel === '1') || ($perfil === '1' && $nivel === '2')) {
+                                                                                            ?>
+                                                                                            <td class="text-center"><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center" data-toggle="tooltip" title="Réplica recebida, mas não avalidada." target="_blank"><i class="fab fa-r-project text-dark"></i></a></td> 
+                                                                                            <?php }else{ ?>
+                                                                                            <td class="text-center"><i class="fab fa-r-project text-dark"></i></td>
+                                                                                            <?php } ?>
+                                                                                        <?php } else { ?>
+                                                                                            <?php 
+                                                                                            if (($perfil === '3' && $nivel === '1') || ($perfil === '1' && $nivel === '2')) {
+                                                                                            ?>
+                                                                                            <td class="text-center"><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center" data-toggle="tooltip" title="Réplica analisada. Falta enviar E-mail." target="_blank"><i class="fab fa-r-project text-primary"></i></a></td>
+                                                                                            <?php }else{ ?>
+                                                                                            <td class="text-center"><i class="fab fa-r-project text-primary"></i></td>
+                                                                                            <?php } ?>
+                                                                                        <?php }
+                                                                                    } else { ?>
+                                                                                        <?php 
+                                                                                        if (($perfil === '3' && $nivel === '1') || ($perfil === '1' && $nivel === '2')) {
+                                                                                        ?>
+                                                                                        <td class="text-center"><a href="../detalhamento/index.php?ct=<?= $cpftratado ?>&ib=<?= $ibge ?>&c=<?= $cnes ?>&i=<?= $ine ?>&a=<?= $ano ?>&ci=<?= $ciclo ?>" class="btn btn-light btn-sm shadow-sm text-center" data-toggle="tooltip" title="Réplica analisada. E-mail enviado." target="_blank"><i class="fab fa-r-project text-warning"></i></a></td>   
+                                                                                        <?php }else{ ?>
+                                                                                        <td class="text-center"><i class="fab fa-r-project text-warning"></i></td>
+                                                                                        <?php } 
+                                                                                    }
                                                                             }
+                                                                        }
                                                                         } else {
                                                                             ?>
                                                                         <td></td>     

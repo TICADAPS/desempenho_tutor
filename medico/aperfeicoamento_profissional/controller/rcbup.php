@@ -154,18 +154,20 @@ if($aperfprof !== null){
                     }
 
                     // checando o tamanho máximo do arquivo
-                    if ($_FILES["$f"]["size"] > 5000000) {
+                    if ($_FILES["$f"]["size"] > 50000000) {
                         $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;Arquivo acima do permitido (até 5.000MB).</strong></small></p>";
-                        echo $mensagem;
-                        $uploadOk = 0;
+                        echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
+                        URL=\"../index.php\"'>";
+                        exit();
                         $msgBool = false;
                     }
 
                     // Allow certain file formats
                     if ($arquivoFileType != "pdf") {
                         $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;A extensão do arquivo deve ser PDF.</strong></small></p>";
-                        echo $mensagem;
-                        $uploadOk = 0;
+                        echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
+                        URL=\"../index.php\"'>";
+                        exit();
                         $msgBool = false;
                     }
 
@@ -222,18 +224,20 @@ if($aperfprof !== null){
                     }
 
                     // checando o tamanho máximo do arquivo
-                    if ($_FILES["$f"]["size"] > 5000000) {
+                    if ($_FILES["$f"]["size"] > 50000000) {
                         $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;Arquivo acima do permitido (até 5.000MB).</strong></small></p>";
-                        echo $mensagem;
-                        $uploadOk = 0;
+                        echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
+                        URL=\"../index.php\"'>";
+                        exit();
                         $msgBool = false;
                     }
 
                     // Allow certain file formats
                     if ($arquivoFileType != "pdf") {
                         $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;A extensão do arquivo deve ser PDF.</strong></small></p>";
-                        echo $mensagem;
-                        $uploadOk = 0;
+                        echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
+                        URL=\"../index.php\"'>";
+                        exit();
                         $msgBool = false;
                     }
 
@@ -290,18 +294,20 @@ if($aperfprof !== null){
                     }
 
                     // checando o tamanho máximo do arquivo
-                    if ($_FILES["$f"]["size"] > 5000000) {
+                    if ($_FILES["$f"]["size"] > 50000000) {
                         $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;Arquivo acima do permitido (até 5.000MB).</strong></small></p>";
-                        echo $mensagem;
-                        $uploadOk = 0;
+                        echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
+                        URL=\"../index.php\"'>";
+                        exit();
                         $msgBool = false;
                     }
 
                     // Allow certain file formats
                     if ($arquivoFileType != "pdf") {
                         $_SESSION['msg'] = "<p style='background-color: #f3d567;' class='text-dark shadow-sm p-3  border rounded font-weight-bolder'><small><strong><i class='fas fa-hand-point-right'></i> &nbsp;A extensão do arquivo deve ser PDF.</strong></small></p>";
-                        echo $mensagem;
-                        $uploadOk = 0;
+                        echo "<META HTTP-EQUIV='REFRESH' CONTENT='0;
+                        URL=\"../index.php\"'>";
+                        exit();
                         $msgBool = false;
                     }
 

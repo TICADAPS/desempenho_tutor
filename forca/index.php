@@ -110,7 +110,7 @@ $rsano4 = mysqli_fetch_array($queryano4);
                         </button>
                         <div id="menuPrincipal" class="collapse navbar-collapse">
                             <ul class="navbar-nav p-1 w-100 d-flex">
-                                <li class="text-secondary"><a href="" class="btn">Início</a></li>
+                                <li class="text-secondary"><a href="https://agsusbrasil.org/sistema-integrado/painelAdmin.php" class="btn">Início</a></li>
                                 <li class="text-secondary"><a href="derruba_session.php" class="btn"><i class="fas fa-sign-out-alt"></i></a></li>
                                 <?php
                                 $anocl = (new Source\Models\Anocicloavaliacao())->findTudo();

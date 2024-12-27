@@ -2,6 +2,8 @@
 session_start();
 require __DIR__ . "/../../source/autoload.php";
 include '../../conexao-agsus.php';
+include '../../Controller_agsus/maskCpf.php';
+include '../../Controller_agsus/fdatas.php';
 
 if (!isset($_SESSION['msg'])) {
     $_SESSION['msg'] = "";
@@ -35,7 +37,7 @@ $_SESSION['cpft'] = $cpft;
 $ciclo = $_SESSION['ciclo'];
 $ano = $_SESSION['ano'];
 $ac = (new \Source\Models\Anocicloavaliacao())->findAnoCicloAtivo($ano, $ciclo);
-$sqlmcp = "select cp.id from medico m inner join competencias_profissionais cp "
+$sqlmcp = "select cp.id, cp.flagenvio from medico m inner join competencias_profissionais cp "
         . "on m.cpf = cp.cpf and m.ibge = cp.ibge and m.cnes = cp.cnes and m.ine = cp.ine "
         . " where m.cpf = '$cpft' and m.ibge = '$ibge' and m.cnes = '$cnes' and m.ine = '$ine' "
         . "and cp.ano = '$ano' and cp.ciclo = '$ciclo' and (cp.flaginativo is null or cp.flaginativo <> 1) limit 1";
@@ -58,7 +60,10 @@ $uf = $estado->UF;
     <link rel="shortcut icon" href="../../img_agsus/iconAdaps.png"/>
     <!-- Link para o CSS do Bootstrap 5 -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 
 <body>
@@ -94,8 +99,10 @@ $uf = $estado->UF;
                     <div class="row mb-2 mt-2">
                         <div class="col-md-12 pt-2 pb-2">
                     <div class="card mb-2">
+                        <div class="card-header text-white" style="background-color: #4BA439;">
+                            <b><h6 class="mb-2">DADOS DO MÉDICO TUTOR</h6></b>
+                        </div>
                         <div class="card-body">
-                            <h4 class="mb-2 text-center">DADOS DO MÉDICO TUTOR</h4>
                             <div class="row mb-2">
                                 <div class="col-md-8">
                                     <ul class="list-group">
@@ -140,8 +147,10 @@ $uf = $estado->UF;
                     if ($nrrscp > 0) {
                         do {
                             $idcp = $rscp['id'];
+                            $flagenvio = $rscp['flagenvio'];
                         } while ($rscp = mysqli_fetch_array($qmcp));
 //            var_dump($idcp);
+                        if($flagenvio !== '1'){
                         ?>
                         <form id="avaliacaoForm">
                             <input type="hidden" name="cpf" id="cpf" value="<?= $cpft ?>">
@@ -1487,7 +1496,650 @@ $uf = $estado->UF;
                                 </ul>
                             </nav>
                         </form>
-                    <?php } else { ?>
+                    <?php }else{ 
+                        $cp = (new Source\Models\Competencias_profissionais())->findById($idcp);
+                        //var_dump($cp);
+                        $ano=$ciclo=$cpf=$ibge=$cnes=$ine='';
+                        if($cp !== null){
+                            $ano = $cp->ano;
+                            $ciclo = $cp->ciclo;
+                            $cpf = $cp->cpf;
+                            $ibge = $cp->ibge;
+                            $cnes = $cp->cnes;
+                            $ine = $cp->ine;
+
+                            $p1_1 = $cp->p1_1;
+                            $p1_2 = $cp->p1_2;
+                            $p1_3 = $cp->p1_3;
+                            $p1_4 = $cp->p1_4;
+                            $p1_5 = $cp->p1_5;
+                            $p2_1 = $cp->p2_1;
+                            $p2_2 = $cp->p2_2;
+                            $p2_3 = $cp->p2_3;
+                            $p2_4 = $cp->p2_4;
+                            $p2_5 = $cp->p2_5;
+                            $p3_1 = $cp->p3_1;
+                            $p3_2 = $cp->p3_2;
+                            $p3_3 = $cp->p3_3;
+                            $p4_1 = $cp->p4_1;
+                            $p4_2 = $cp->p4_2;
+                            $p4_3 = $cp->p4_3;
+                            $p4_4 = $cp->p4_4;
+                            $p5_1 = $cp->p5_1;
+                            $p5_2 = $cp->p5_2;
+                            $p5_3 = $cp->p5_3;
+                            $p5_4 = $cp->p5_4;
+                            $p6_1 = $cp->p6_1;
+                            $p6_2 = $cp->p6_2;
+                            $p6_3 = $cp->p6_3;
+                            $p7_1 = $cp->p7_1;
+                            $p7_2 = $cp->p7_2;
+                            $p7_3 = $cp->p7_3;
+                            $p7_4 = $cp->p7_4;
+                            $p7_5 = $cp->p7_5;
+                            $p8_1 = $cp->p8_1;
+                            $p8_2 = $cp->p8_2;
+                            $p8_3 = $cp->p8_3;
+                            $p8_4 = $cp->p8_4;
+                            $p9_1 = $cp->p9_1;
+                            $p9_2 = $cp->p9_2;
+                            $p9_3 = $cp->p9_3;
+                            $p9_4 = $cp->p9_4;
+                            $r1_1 = $cp->r1_1;
+                            $r1_2 = $cp->r1_2;
+                            $r1_3 = $cp->r1_3;
+                            $r1_4 = $cp->r1_4;
+                            $r1_5 = $cp->r1_5;
+                            $r2_1 = $cp->r2_1;
+                            $r2_2 = $cp->r2_2;
+                            $r2_3 = $cp->r2_3;
+                            $r2_4 = $cp->r2_4;
+                            $r2_5 = $cp->r2_5;
+                            $r3_1 = $cp->r3_1;
+                            $r3_2 = $cp->r3_2;
+                            $r3_3 = $cp->r3_3;
+                            $r4_1 = $cp->r4_1;
+                            $r4_2 = $cp->r4_2;
+                            $r4_3 = $cp->r4_3;
+                            $r4_4 = $cp->r4_4;
+                            $r5_1 = $cp->r5_1;
+                            $r5_2 = $cp->r5_2;
+                            $r5_3 = $cp->r5_3;
+                            $r5_4 = $cp->r5_4;
+                            $r6_1 = $cp->r6_1;
+                            $r6_2 = $cp->r6_2;
+                            $r6_3 = $cp->r6_3;
+                            $r7_1 = $cp->r7_1;
+                            $r7_2 = $cp->r7_2;
+                            $r7_3 = $cp->r7_3;
+                            $r7_4 = $cp->r7_4;
+                            $r7_5 = $cp->r7_5;
+                            $r8_1 = $cp->r8_1;
+                            $r8_2 = $cp->r8_2;
+                            $r8_3 = $cp->r8_3;
+                            $r8_4 = $cp->r8_4;
+                            $r9_1 = $cp->r9_1;
+                            $r9_2 = $cp->r9_2;
+                            $r9_3 = $cp->r9_3;
+                            $r9_4 = $cp->r9_4;
+                            $dthrenvio = $cp->dthrenvio;
+                            $dthrenvemail = $cp->dthrenvemail;
+                            $flagenvemail = $cp->flagenvemail;
+                            $flagenvio = $cp->flagenvio;
+                        }
+                        if($flagenvio !== null && $flagenvio !== '' && $flagenvio === '1'){
+                            $dthrenvio = vemdata($dthrenvio).", às ". hora2($dthrenvio);
+                        }
+                        if($flagenvemail !== null && $flagenvemail !== '' && $flagenvemail === '1'){
+                            $dthrenvemail = "E-Mail enviado: ".vemdata($dthrenvemail).", às ". hora2($dthrenvemail);
+                        }
+                        $cpfmask = mask($cpf, "###.###.###-##");
+                        $sql = "select m.nome, m.admissao, m.cargo, mun.Municipio, e.UF, ivs.descricao 
+                            from medico m inner join competencias_profissionais cp on m.cpf = cp.cpf and 
+                            m.ibge = cp.ibge and m.cnes = cp.cnes and m.ine = cp.ine 
+                            inner join municipio mun on mun.cod_munc = m.ibge 
+                            inner join estado e on mun.Estado_cod_uf = e.cod_uf 
+                            left join ivs on ivs.idivs = m.fkivs 
+                            where m.cpf = '$cpf' and m.ibge = '$ibge' and m.cnes = '$cnes' and m.ine = '$ine' "
+                                . "and cp.ano = '$ano' and cp.ciclo='$ciclo'";
+                        $query = mysqli_query($conn, $sql) or die(mysqli_error($conn));
+                        $nrrs = mysqli_num_rows($query);
+                        $rs = mysqli_fetch_array($query);
+                        $municipioO = $ufO = $flagemail = $dthremail = "";
+                        if($rs){
+                            do{
+                                $medico = $rs['nome'];
+                                $admissao = $rs['admissao'];
+                                $cargo = $rs['cargo'];
+                                $municipioO = $rs['Municipio'];
+                                $ufO = $rs['UF'];
+                                $ivs = $rs['descricao'];
+                            }while ($rs = mysqli_fetch_array($query));
+                        }
+                    ?>
+                            <div class="card mb-2">
+                                <div class="card-header text-white" style="background-color: #4BA439;">
+                                    <b>Competências Profissionais - Autoavaliação registrada</b>&nbsp;<a href="relatorios/cppdf.php?id=<?= $idcp ?>" target="_blank" class="btn btn-light float-right"><i class="far fa-file-pdf text-danger"></i></a>
+                                </div>
+                                <div class="card-body">
+                                  <div class="row mb-1">
+                                      <div class="col-md-12">
+                                          <div id="p1" class="border p-2 bg-dark text-white" style="border-top-left-radius: 4px; border-top-right-radius: 4px;">1.0 - PROFISSIONALISMO</div>
+                                      </div>
+                                      <div class="col-md-12 mb-1">
+                                          <div id="p1_1" class="border p-2 bg-light" style="border-top-left-radius: 4px; border-top-right-radius: 4px;"><?= $p1_1 ?></div>
+                                          <?php
+                                          switch($r1_1){
+                                            case '1': $r1_1 = "1- Não atendo"; break;
+                                            case '2': $r1_1 = "2- Atendo parcialmente"; break;
+                                            case '3': $r1_1 = "3- Atendo satisfatoriamente"; break;
+                                            case '4': $r1_1 = "4- Atendo plenamente"; break;
+                                            case '5': $r1_1 = "5- Supero as expectativas"; break;
+                                          }
+                                          ?>
+                                          <div id="r1_1" class="border p-2" style="border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;"><i class="fas fa-arrow-circle-right text-info"></i>&nbsp; <?= $r1_1 ?></div>
+                                      </div>
+                                      <div class="col-md-12 mb-1">
+                                          <div id="p1_2" class="border p-2 bg-light" style="border-top-left-radius: 4px; border-top-right-radius: 4px;"><?= $p1_2 ?></div>
+                                          <?php
+                                          switch($r1_2){
+                                            case '1': $r1_2 = "1- Não atendo"; break;
+                                            case '2': $r1_2 = "2- Atendo parcialmente"; break;
+                                            case '3': $r1_2 = "3- Atendo satisfatoriamente"; break;
+                                            case '4': $r1_2 = "4- Atendo plenamente"; break;
+                                            case '5': $r1_2 = "5- Supero as expectativas"; break;
+                                          }
+                                          ?>
+                                          <div id="r1_2" class="border p-2" style="border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;"><i class="fas fa-arrow-circle-right text-info"></i>&nbsp; <?= $r1_2 ?></div>
+                                      </div>
+                                      <div class="col-md-12 mb-1">
+                                          <div id="p1_3" class="border p-2 bg-light" style="border-top-left-radius: 4px; border-top-right-radius: 4px;"><?= $p1_3 ?></div>
+                                          <?php
+                                          switch($r1_3){
+                                            case '1': $r1_3 = "1- Não atendo"; break;
+                                            case '2': $r1_3 = "2- Atendo parcialmente"; break;
+                                            case '3': $r1_3 = "3- Atendo satisfatoriamente"; break;
+                                            case '4': $r1_3 = "4- Atendo plenamente"; break;
+                                            case '5': $r1_3 = "5- Supero as expectativas"; break;
+                                          }
+                                          ?>
+                                          <div id="r1_3" class="border p-2" style="border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;"><i class="fas fa-arrow-circle-right text-info"></i>&nbsp; <?= $r1_3 ?></div>
+                                      </div>
+                                      <div class="col-md-12 mb-1">
+                                          <div id="p1_4" class="border p-2 bg-light" style="border-top-left-radius: 4px; border-top-right-radius: 4px;"><?= $p1_4 ?></div>
+                                          <?php
+                                          switch($r1_4){
+                                            case '1': $r1_4 = "1- Não atendo"; break;
+                                            case '2': $r1_4 = "2- Atendo parcialmente"; break;
+                                            case '3': $r1_4 = "3- Atendo satisfatoriamente"; break;
+                                            case '4': $r1_4 = "4- Atendo plenamente"; break;
+                                            case '5': $r1_4 = "5- Supero as expectativas"; break;
+                                          }
+                                          ?>
+                                          <div id="r1_4" class="border p-2" style="border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;"><i class="fas fa-arrow-circle-right text-info"></i>&nbsp; <?= $r1_4 ?></div>
+                                      </div>
+                                      <div class="col-md-12 mb-2">
+                                          <div id="p1_5" class="border p-2 bg-light" style="border-top-left-radius: 4px; border-top-right-radius: 4px;"><?= $p1_5 ?></div>
+                                          <?php
+                                          switch($r1_5){
+                                            case '1': $r1_5 = "1- Não atendo"; break;
+                                            case '2': $r1_5 = "2- Atendo parcialmente"; break;
+                                            case '3': $r1_5 = "3- Atendo satisfatoriamente"; break;
+                                            case '4': $r1_5 = "4- Atendo plenamente"; break;
+                                            case '5': $r1_5 = "5- Supero as expectativas"; break;
+                                          }
+                                          ?>
+                                          <div id="r1_5" class="border p-2" style="border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;"><i class="fas fa-arrow-circle-right text-info"></i>&nbsp; <?= $r1_5 ?></div>
+                                      </div>
+                                      <div class="col-md-12">
+                                          <div id="p2" class="border p-2 bg-dark text-white" style="border-top-left-radius: 4px; border-top-right-radius: 4px;">2.0 - COMUNICAÇÃO</div>
+                                      </div>
+                                      <div class="col-md-12 mb-1">
+                                          <div id="p2_1" class="border p-2 bg-light" style="border-top-left-radius: 4px; border-top-right-radius: 4px;"><?= $p2_1 ?></div>
+                                          <?php
+                                          switch($r2_1){
+                                            case '1': $r2_1 = "1- Não atendo"; break;
+                                            case '2': $r2_1 = "2- Atendo parcialmente"; break;
+                                            case '3': $r2_1 = "3- Atendo satisfatoriamente"; break;
+                                            case '4': $r2_1 = "4- Atendo plenamente"; break;
+                                            case '5': $r2_1 = "5- Supero as expectativas"; break;
+                                          }
+                                          ?>
+                                          <div id="r2_1" class="border p-2" style="border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;"><i class="fas fa-arrow-circle-right text-info"></i>&nbsp; <?= $r2_1 ?></div>
+                                      </div>
+                                      <div class="col-md-12 mb-1">
+                                          <div id="p2_2" class="border p-2 bg-light" style="border-top-left-radius: 4px; border-top-right-radius: 4px;"><?= $p2_2 ?></div>
+                                          <?php
+                                          switch($r2_2){
+                                            case '1': $r2_2 = "1- Não atendo"; break;
+                                            case '2': $r2_2 = "2- Atendo parcialmente"; break;
+                                            case '3': $r2_2 = "3- Atendo satisfatoriamente"; break;
+                                            case '4': $r2_2 = "4- Atendo plenamente"; break;
+                                            case '5': $r2_2 = "5- Supero as expectativas"; break;
+                                          }
+                                          ?>
+                                          <div id="r2_2" class="border p-2" style="border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;"><i class="fas fa-arrow-circle-right text-info"></i>&nbsp; <?= $r2_2 ?></div>
+                                      </div>
+                                      <div class="col-md-12 mb-1">
+                                          <div id="p2_3" class="border p-2 bg-light" style="border-top-left-radius: 4px; border-top-right-radius: 4px;"><?= $p2_3 ?></div>
+                                          <?php
+                                          switch($r2_3){
+                                            case '1': $r2_3 = "1- Não atendo"; break;
+                                            case '2': $r2_3 = "2- Atendo parcialmente"; break;
+                                            case '3': $r2_3 = "3- Atendo satisfatoriamente"; break;
+                                            case '4': $r2_3 = "4- Atendo plenamente"; break;
+                                            case '5': $r2_3 = "5- Supero as expectativas"; break;
+                                          }
+                                          ?>
+                                          <div id="r2_3" class="border p-2" style="border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;"><i class="fas fa-arrow-circle-right text-info"></i>&nbsp; <?= $r2_3 ?></div>
+                                      </div>
+                                      <div class="col-md-12 mb-1">
+                                          <div id="p2_4" class="border p-2 bg-light" style="border-top-left-radius: 4px; border-top-right-radius: 4px;"><?= $p2_4 ?></div>
+                                          <?php
+                                          switch($r2_4){
+                                            case '1': $r2_4 = "1- Não atendo"; break;
+                                            case '2': $r2_4 = "2- Atendo parcialmente"; break;
+                                            case '3': $r2_4 = "3- Atendo satisfatoriamente"; break;
+                                            case '4': $r2_4 = "4- Atendo plenamente"; break;
+                                            case '5': $r2_4 = "5- Supero as expectativas"; break;
+                                          }
+                                          ?>
+                                          <div id="r2_4" class="border p-2" style="border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;"><i class="fas fa-arrow-circle-right text-info"></i>&nbsp; <?= $r2_4 ?></div>
+                                      </div>
+                                      <div class="col-md-12 mb-2">
+                                          <div id="p2_5" class="border p-2 bg-light" style="border-top-left-radius: 4px; border-top-right-radius: 4px;"><?= $p2_5 ?></div>
+                                          <?php
+                                          switch($r2_5){
+                                            case '1': $r2_5 = "1- Não atendo"; break;
+                                            case '2': $r2_5 = "2- Atendo parcialmente"; break;
+                                            case '3': $r2_5 = "3- Atendo satisfatoriamente"; break;
+                                            case '4': $r2_5 = "4- Atendo plenamente"; break;
+                                            case '5': $r2_5 = "5- Supero as expectativas"; break;
+                                          }
+                                          ?>
+                                          <div id="r2_5" class="border p-2" style="border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;"><i class="fas fa-arrow-circle-right text-info"></i>&nbsp; <?= $r2_5 ?></div>
+                                      </div>
+                                      <div class="col-md-12">
+                                          <div id="p3" class="border p-2 bg-dark text-white" style="border-top-left-radius: 4px; border-top-right-radius: 4px;">3.0 - LIDERANÇA</div>
+                                      </div>
+                                      <div class="col-md-12 mb-1">
+                                          <div id="p3_1" class="border p-2 bg-light" style="border-top-left-radius: 4px; border-top-right-radius: 4px;"><?= $p3_1 ?></div>
+                                          <?php
+                                          switch($r3_1){
+                                            case '1': $r3_1 = "1- Não atendo"; break;
+                                            case '2': $r3_1 = "2- Atendo parcialmente"; break;
+                                            case '3': $r3_1 = "3- Atendo satisfatoriamente"; break;
+                                            case '4': $r3_1 = "4- Atendo plenamente"; break;
+                                            case '5': $r3_1 = "5- Supero as expectativas"; break;
+                                          }
+                                          ?>
+                                          <div id="r3_1" class="border p-2" style="border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;"><i class="fas fa-arrow-circle-right text-info"></i>&nbsp; <?= $r3_1 ?></div>
+                                      </div>
+                                      <div class="col-md-12 mb-1">
+                                          <div id="p2_2" class="border p-2 bg-light" style="border-top-left-radius: 4px; border-top-right-radius: 4px;"><?= $p3_2 ?></div>
+                                          <?php
+                                          switch($r3_2){
+                                            case '1': $r3_2 = "1- Não atendo"; break;
+                                            case '2': $r3_2 = "2- Atendo parcialmente"; break;
+                                            case '3': $r3_2 = "3- Atendo satisfatoriamente"; break;
+                                            case '4': $r3_2 = "4- Atendo plenamente"; break;
+                                            case '5': $r3_2 = "5- Supero as expectativas"; break;
+                                          }
+                                          ?>
+                                          <div id="r3_2" class="border p-2" style="border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;"><i class="fas fa-arrow-circle-right text-info"></i>&nbsp; <?= $r3_2 ?></div>
+                                      </div>
+                                      <div class="col-md-12 mb-2">
+                                          <div id="p3_3" class="border p-2 bg-light" style="border-top-left-radius: 4px; border-top-right-radius: 4px;"><?= $p3_3 ?></div>
+                                          <?php
+                                          switch($r3_3){
+                                            case '1': $r3_3 = "1- Não atendo"; break;
+                                            case '2': $r3_3 = "2- Atendo parcialmente"; break;
+                                            case '3': $r3_3 = "3- Atendo satisfatoriamente"; break;
+                                            case '4': $r3_3 = "4- Atendo plenamente"; break;
+                                            case '5': $r3_3 = "5- Supero as expectativas"; break;
+                                          }
+                                          ?>
+                                          <div id="r3_3" class="border p-2" style="border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;"><i class="fas fa-arrow-circle-right text-info"></i>&nbsp; <?= $r3_3 ?></div>
+                                      </div>
+                                      <div class="col-md-12">
+                                          <div id="p4" class="border p-2 bg-dark text-white" style="border-top-left-radius: 4px; border-top-right-radius: 4px;">4.0 - GOVERNANÇA CLÍNICA</div>
+                                      </div>
+                                      <div class="col-md-12 mb-1">
+                                          <div id="p4_1" class="border p-2 bg-light" style="border-top-left-radius: 4px; border-top-right-radius: 4px;"><?= $p4_1 ?></div>
+                                          <?php
+                                          switch($r4_1){
+                                            case '1': $r4_1 = "1- Não atendo"; break;
+                                            case '2': $r4_1 = "2- Atendo parcialmente"; break;
+                                            case '3': $r4_1 = "3- Atendo satisfatoriamente"; break;
+                                            case '4': $r4_1 = "4- Atendo plenamente"; break;
+                                            case '5': $r4_1 = "5- Supero as expectativas"; break;
+                                          }
+                                          ?>
+                                          <div id="r4_1" class="border p-2" style="border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;"><i class="fas fa-arrow-circle-right text-info"></i>&nbsp; <?= $r4_1 ?></div>
+                                      </div>
+                                      <div class="col-md-12 mb-1">
+                                          <div id="p4_2" class="border p-2 bg-light" style="border-top-left-radius: 4px; border-top-right-radius: 4px;"><?= $p4_2 ?></div>
+                                          <?php
+                                          switch($r4_2){
+                                            case '1': $r4_2 = "1- Não atendo"; break;
+                                            case '2': $r4_2 = "2- Atendo parcialmente"; break;
+                                            case '3': $r4_2 = "3- Atendo satisfatoriamente"; break;
+                                            case '4': $r4_2 = "4- Atendo plenamente"; break;
+                                            case '5': $r4_2 = "5- Supero as expectativas"; break;
+                                          }
+                                          ?>
+                                          <div id="r4_2" class="border p-2" style="border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;"><i class="fas fa-arrow-circle-right text-info"></i>&nbsp; <?= $r4_2 ?></div>
+                                      </div>
+                                      <div class="col-md-12 mb-1">
+                                          <div id="p4_3" class="border p-2 bg-light" style="border-top-left-radius: 4px; border-top-right-radius: 4px;"><?= $p4_3 ?></div>
+                                          <?php
+                                          switch($r4_3){
+                                            case '1': $r4_3 = "1- Não atendo"; break;
+                                            case '2': $r4_3 = "2- Atendo parcialmente"; break;
+                                            case '3': $r4_3 = "3- Atendo satisfatoriamente"; break;
+                                            case '4': $r4_3 = "4- Atendo plenamente"; break;
+                                            case '5': $r4_3 = "5- Supero as expectativas"; break;
+                                          }
+                                          ?>
+                                          <div id="r4_3" class="border p-2" style="border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;"><i class="fas fa-arrow-circle-right text-info"></i>&nbsp; <?= $r4_3 ?></div>
+                                      </div>
+                                      <div class="col-md-12 mb-2">
+                                          <div id="p4_4" class="border p-2 bg-light" style="border-top-left-radius: 4px; border-top-right-radius: 4px;"><?= $p4_4 ?></div>
+                                          <?php
+                                          switch($r4_4){
+                                            case '1': $r4_4 = "1- Não atendo"; break;
+                                            case '2': $r4_4 = "2- Atendo parcialmente"; break;
+                                            case '3': $r4_4 = "3- Atendo satisfatoriamente"; break;
+                                            case '4': $r4_4 = "4- Atendo plenamente"; break;
+                                            case '5': $r4_4 = "5- Supero as expectativas"; break;
+                                          }
+                                          ?>
+                                          <div id="r4_4" class="border p-2" style="border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;"><i class="fas fa-arrow-circle-right text-info"></i>&nbsp; <?= $r4_4 ?></div>
+                                      </div>
+                                      <div class="col-md-12">
+                                          <div id="p5" class="border p-2 bg-dark text-white" style="border-top-left-radius: 4px; border-top-right-radius: 4px;">5.0 - ADVOCACIA PELA SAÚDE</div>
+                                      </div>
+                                      <div class="col-md-12 mb-1">
+                                          <div id="p5_1" class="border p-2 bg-light" style="border-top-left-radius: 4px; border-top-right-radius: 4px;"><?= $p5_1 ?></div>
+                                          <?php
+                                          switch($r5_1){
+                                            case '1': $r5_1 = "1- Não atendo"; break;
+                                            case '2': $r5_1 = "2- Atendo parcialmente"; break;
+                                            case '3': $r5_1 = "3- Atendo satisfatoriamente"; break;
+                                            case '4': $r5_1 = "4- Atendo plenamente"; break;
+                                            case '5': $r5_1 = "5- Supero as expectativas"; break;
+                                          }
+                                          ?>
+                                          <div id="r5_1" class="border p-2" style="border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;"><i class="fas fa-arrow-circle-right text-info"></i>&nbsp; <?= $r5_1 ?></div>
+                                      </div>
+                                      <div class="col-md-12 mb-1">
+                                          <div id="p5_2" class="border p-2 bg-light" style="border-top-left-radius: 4px; border-top-right-radius: 4px;"><?= $p5_2 ?></div>
+                                          <?php
+                                          switch($r5_2){
+                                            case '1': $r5_2 = "1- Não atendo"; break;
+                                            case '2': $r5_2 = "2- Atendo parcialmente"; break;
+                                            case '3': $r5_2 = "3- Atendo satisfatoriamente"; break;
+                                            case '4': $r5_2 = "4- Atendo plenamente"; break;
+                                            case '5': $r5_2 = "5- Supero as expectativas"; break;
+                                          }
+                                          ?>
+                                          <div id="r5_2" class="border p-2" style="border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;"><i class="fas fa-arrow-circle-right text-info"></i>&nbsp; <?= $r5_2 ?></div>
+                                      </div>
+                                      <div class="col-md-12 mb-1">
+                                          <div id="p5_3" class="border p-2 bg-light" style="border-top-left-radius: 4px; border-top-right-radius: 4px;"><?= $p5_3 ?></div>
+                                          <?php
+                                          switch($r5_3){
+                                            case '1': $r5_3 = "1- Não atendo"; break;
+                                            case '2': $r5_3 = "2- Atendo parcialmente"; break;
+                                            case '3': $r5_3 = "3- Atendo satisfatoriamente"; break;
+                                            case '4': $r5_3 = "4- Atendo plenamente"; break;
+                                            case '5': $r5_3 = "5- Supero as expectativas"; break;
+                                          }
+                                          ?>
+                                          <div id="r5_3" class="border p-2" style="border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;"><i class="fas fa-arrow-circle-right text-info"></i>&nbsp; <?= $r5_3 ?></div>
+                                      </div>
+                                      <div class="col-md-12 mb-2">
+                                          <div id="p5_4" class="border p-2 bg-light" style="border-top-left-radius: 4px; border-top-right-radius: 4px;"><?= $p5_4 ?></div>
+                                          <?php
+                                          switch($r5_4){
+                                            case '1': $r5_4 = "1- Não atendo"; break;
+                                            case '2': $r5_4 = "2- Atendo parcialmente"; break;
+                                            case '3': $r5_4 = "3- Atendo satisfatoriamente"; break;
+                                            case '4': $r5_4 = "4- Atendo plenamente"; break;
+                                            case '5': $r5_4 = "5- Supero as expectativas"; break;
+                                          }
+                                          ?>
+                                          <div id="r4_4" class="border p-2" style="border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;"><i class="fas fa-arrow-circle-right text-info"></i>&nbsp; <?= $r4_4 ?></div>
+                                      </div>
+                                      <div class="col-md-12">
+                                          <div id="p6" class="border p-2 bg-dark text-white" style="border-top-left-radius: 4px; border-top-right-radius: 4px;">6.0 - DEDICAÇÃO ACADÊMICA</div>
+                                      </div>
+                                      <div class="col-md-12 mb-1">
+                                          <div id="p6_1" class="border p-2 bg-light" style="border-top-left-radius: 4px; border-top-right-radius: 4px;"><?= $p6_1 ?></div>
+                                          <?php
+                                          switch($r6_1){
+                                            case '1': $r6_1 = "1- Não atendo"; break;
+                                            case '2': $r6_1 = "2- Atendo parcialmente"; break;
+                                            case '3': $r6_1 = "3- Atendo satisfatoriamente"; break;
+                                            case '4': $r6_1 = "4- Atendo plenamente"; break;
+                                            case '5': $r6_1 = "5- Supero as expectativas"; break;
+                                          }
+                                          ?>
+                                          <div id="r6_1" class="border p-2" style="border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;"><i class="fas fa-arrow-circle-right text-info"></i>&nbsp; <?= $r6_1 ?></div>
+                                      </div>
+                                      <div class="col-md-12 mb-1">
+                                          <div id="p6_2" class="border p-2 bg-light" style="border-top-left-radius: 4px; border-top-right-radius: 4px;"><?= $p6_2 ?></div>
+                                          <?php
+                                          switch($r6_2){
+                                            case '1': $r6_2 = "1- Não atendo"; break;
+                                            case '2': $r6_2 = "2- Atendo parcialmente"; break;
+                                            case '3': $r6_2 = "3- Atendo satisfatoriamente"; break;
+                                            case '4': $r6_2 = "4- Atendo plenamente"; break;
+                                            case '5': $r6_2 = "5- Supero as expectativas"; break;
+                                          }
+                                          ?>
+                                          <div id="r6_2" class="border p-2" style="border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;"><i class="fas fa-arrow-circle-right text-info"></i>&nbsp; <?= $r6_2 ?></div>
+                                      </div>
+                                      <div class="col-md-12 mb-2">
+                                          <div id="p6_3" class="border p-2 bg-light" style="border-top-left-radius: 4px; border-top-right-radius: 4px;"><?= $p6_3 ?></div>
+                                          <?php
+                                          switch($r6_3){
+                                            case '1': $r6_3 = "1- Não atendo"; break;
+                                            case '2': $r6_3 = "2- Atendo parcialmente"; break;
+                                            case '3': $r6_3 = "3- Atendo satisfatoriamente"; break;
+                                            case '4': $r6_3 = "4- Atendo plenamente"; break;
+                                            case '5': $r6_3 = "5- Supero as expectativas"; break;
+                                          }
+                                          ?>
+                                          <div id="r6_3" class="border p-2" style="border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;"><i class="fas fa-arrow-circle-right text-info"></i>&nbsp; <?= $r6_3 ?></div>
+                                      </div>
+                                      <div class="col-md-12">
+                                          <div id="p7" class="border p-2 bg-dark text-white" style="border-top-left-radius: 4px; border-top-right-radius: 4px;">7.0 - COLABORAÇÃO</div>
+                                      </div>
+                                      <div class="col-md-12 mb-1">
+                                          <div id="p7_1" class="border p-2 bg-light" style="border-top-left-radius: 4px; border-top-right-radius: 4px;"><?= $p7_1 ?></div>
+                                          <?php
+                                          switch($r7_1){
+                                            case '1': $r7_1 = "1- Não atendo"; break;
+                                            case '2': $r7_1 = "2- Atendo parcialmente"; break;
+                                            case '3': $r7_1 = "3- Atendo satisfatoriamente"; break;
+                                            case '4': $r7_1 = "4- Atendo plenamente"; break;
+                                            case '5': $r7_1 = "5- Supero as expectativas"; break;
+                                          }
+                                          ?>
+                                          <div id="r7_1" class="border p-2" style="border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;"><i class="fas fa-arrow-circle-right text-info"></i>&nbsp; <?= $r7_1 ?></div>
+                                      </div>
+                                      <div class="col-md-12 mb-1">
+                                          <div id="p7_2" class="border p-2 bg-light" style="border-top-left-radius: 4px; border-top-right-radius: 4px;"><?= $p7_2 ?></div>
+                                          <?php
+                                          switch($r7_2){
+                                            case '1': $r7_2 = "1- Não atendo"; break;
+                                            case '2': $r7_2 = "2- Atendo parcialmente"; break;
+                                            case '3': $r7_2 = "3- Atendo satisfatoriamente"; break;
+                                            case '4': $r7_2 = "4- Atendo plenamente"; break;
+                                            case '5': $r7_2 = "5- Supero as expectativas"; break;
+                                          }
+                                          ?>
+                                          <div id="r7_2" class="border p-2" style="border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;"><i class="fas fa-arrow-circle-right text-info"></i>&nbsp; <?= $r7_2 ?></div>
+                                      </div>
+                                      <div class="col-md-12 mb-1">
+                                          <div id="p7_3" class="border p-2 bg-light" style="border-top-left-radius: 4px; border-top-right-radius: 4px;"><?= $p7_3 ?></div>
+                                          <?php
+                                          switch($r7_3){
+                                            case '1': $r7_3 = "1- Não atendo"; break;
+                                            case '2': $r7_3 = "2- Atendo parcialmente"; break;
+                                            case '3': $r7_3 = "3- Atendo satisfatoriamente"; break;
+                                            case '4': $r7_3 = "4- Atendo plenamente"; break;
+                                            case '5': $r7_3 = "5- Supero as expectativas"; break;
+                                          }
+                                          ?>
+                                          <div id="r7_3" class="border p-2" style="border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;"><i class="fas fa-arrow-circle-right text-info"></i>&nbsp; <?= $r7_3 ?></div>
+                                      </div>
+                                      <div class="col-md-12 mb-1">
+                                          <div id="p7_4" class="border p-2 bg-light" style="border-top-left-radius: 4px; border-top-right-radius: 4px;"><?= $p7_4 ?></div>
+                                          <?php
+                                          switch($r7_4){
+                                            case '1': $r7_4 = "1- Não atendo"; break;
+                                            case '2': $r7_4 = "2- Atendo parcialmente"; break;
+                                            case '3': $r7_4 = "3- Atendo satisfatoriamente"; break;
+                                            case '4': $r7_4 = "4- Atendo plenamente"; break;
+                                            case '5': $r7_4 = "5- Supero as expectativas"; break;
+                                          }
+                                          ?>
+                                          <div id="r7_4" class="border p-2" style="border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;"><i class="fas fa-arrow-circle-right text-info"></i>&nbsp; <?= $r7_4 ?></div>
+                                      </div>
+                                      <div class="col-md-12 mb-2">
+                                          <div id="p7_5" class="border p-2 bg-light" style="border-top-left-radius: 4px; border-top-right-radius: 4px;"><?= $p7_5 ?></div>
+                                          <?php
+                                          switch($r7_5){
+                                            case '1': $r7_5 = "1- Não atendo"; break;
+                                            case '2': $r7_5 = "2- Atendo parcialmente"; break;
+                                            case '3': $r7_5 = "3- Atendo satisfatoriamente"; break;
+                                            case '4': $r7_5 = "4- Atendo plenamente"; break;
+                                            case '5': $r7_5 = "5- Supero as expectativas"; break;
+                                          }
+                                          ?>
+                                          <div id="r7_5" class="border p-2" style="border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;"><i class="fas fa-arrow-circle-right text-info"></i>&nbsp; <?= $r7_5 ?></div>
+                                      </div>
+                                      <div class="col-md-12">
+                                          <div id="p8" class="border p-2 bg-dark text-white" style="border-top-left-radius: 4px; border-top-right-radius: 4px;">8.0 - CONDUTA ÉTICA E RESPEITOSA</div>
+                                      </div>
+                                      <div class="col-md-12 mb-1">
+                                          <div id="p8_1" class="border p-2 bg-light" style="border-top-left-radius: 4px; border-top-right-radius: 4px;"><?= $p8_1 ?></div>
+                                          <?php
+                                          switch($r8_1){
+                                            case '1': $r8_1 = "1- Não atendo"; break;
+                                            case '2': $r8_1 = "2- Atendo parcialmente"; break;
+                                            case '3': $r8_1 = "3- Atendo satisfatoriamente"; break;
+                                            case '4': $r8_1 = "4- Atendo plenamente"; break;
+                                            case '5': $r8_1 = "5- Supero as expectativas"; break;
+                                          }
+                                          ?>
+                                          <div id="r8_1" class="border p-2" style="border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;"><i class="fas fa-arrow-circle-right text-info"></i>&nbsp; <?= $r8_1 ?></div>
+                                      </div>
+                                      <div class="col-md-12 mb-1">
+                                          <div id="p8_2" class="border p-2 bg-light" style="border-top-left-radius: 4px; border-top-right-radius: 4px;"><?= $p8_2 ?></div>
+                                          <?php
+                                          switch($r8_2){
+                                            case '1': $r8_2 = "1- Não atendo"; break;
+                                            case '2': $r8_2 = "2- Atendo parcialmente"; break;
+                                            case '3': $r8_2 = "3- Atendo satisfatoriamente"; break;
+                                            case '4': $r8_2 = "4- Atendo plenamente"; break;
+                                            case '5': $r8_2 = "5- Supero as expectativas"; break;
+                                          }
+                                          ?>
+                                          <div id="r8_2" class="border p-2" style="border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;"><i class="fas fa-arrow-circle-right text-info"></i>&nbsp; <?= $r8_2 ?></div>
+                                      </div>
+                                      <div class="col-md-12 mb-1">
+                                          <div id="p8_3" class="border p-2 bg-light" style="border-top-left-radius: 4px; border-top-right-radius: 4px;"><?= $p8_3 ?></div>
+                                          <?php
+                                          switch($r8_3){
+                                            case '1': $r8_3 = "1- Não atendo"; break;
+                                            case '2': $r8_3 = "2- Atendo parcialmente"; break;
+                                            case '3': $r8_3 = "3- Atendo satisfatoriamente"; break;
+                                            case '4': $r8_3 = "4- Atendo plenamente"; break;
+                                            case '5': $r8_3 = "5- Supero as expectativas"; break;
+                                          }
+                                          ?>
+                                          <div id="r8_3" class="border p-2" style="border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;"><i class="fas fa-arrow-circle-right text-info"></i>&nbsp; <?= $r8_3 ?></div>
+                                      </div>
+                                      <div class="col-md-12 mb-1">
+                                          <div id="p8_4" class="border p-2 bg-light" style="border-top-left-radius: 4px; border-top-right-radius: 4px;"><?= $p8_4 ?></div>
+                                          <?php
+                                          switch($r8_4){
+                                            case '1': $r8_4 = "1- Não atendo"; break;
+                                            case '2': $r8_4 = "2- Atendo parcialmente"; break;
+                                            case '3': $r8_4 = "3- Atendo satisfatoriamente"; break;
+                                            case '4': $r8_4 = "4- Atendo plenamente"; break;
+                                            case '5': $r8_4 = "5- Supero as expectativas"; break;
+                                          }
+                                          ?>
+                                          <div id="r8_4" class="border p-2" style="border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;"><i class="fas fa-arrow-circle-right text-info"></i>&nbsp; <?= $r8_4 ?></div>
+                                      </div>
+                                      <div class="col-md-12">
+                                          <div id="p9" class="border p-2 bg-dark text-white" style="border-top-left-radius: 4px; border-top-right-radius: 4px;">9.0 - ADERÊNCIA AO MODELO DE ATENÇÃO</div>
+                                      </div>
+                                      <div class="col-md-12 mb-1">
+                                          <div id="p9_1" class="border p-2 bg-light" style="border-top-left-radius: 4px; border-top-right-radius: 4px;"><?= $p9_1 ?></div>
+                                          <?php
+                                          switch($r9_1){
+                                            case '1': $r9_1 = "1- Não atendo"; break;
+                                            case '2': $r9_1 = "2- Atendo parcialmente"; break;
+                                            case '3': $r9_1 = "3- Atendo satisfatoriamente"; break;
+                                            case '4': $r9_1 = "4- Atendo plenamente"; break;
+                                            case '5': $r9_1 = "5- Supero as expectativas"; break;
+                                          }
+                                          ?>
+                                          <div id="r9_1" class="border p-2" style="border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;"><i class="fas fa-arrow-circle-right text-info"></i>&nbsp; <?= $r9_1 ?></div>
+                                      </div>
+                                      <div class="col-md-12 mb-1">
+                                          <div id="p9_2" class="border p-2 bg-light" style="border-top-left-radius: 4px; border-top-right-radius: 4px;"><?= $p9_2 ?></div>
+                                          <?php
+                                          switch($r9_2){
+                                            case '1': $r9_2 = "1- Não atendo"; break;
+                                            case '2': $r9_2 = "2- Atendo parcialmente"; break;
+                                            case '3': $r9_2 = "3- Atendo satisfatoriamente"; break;
+                                            case '4': $r9_2 = "4- Atendo plenamente"; break;
+                                            case '5': $r9_2 = "5- Supero as expectativas"; break;
+                                          }
+                                          ?>
+                                          <div id="r9_2" class="border p-2" style="border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;"><i class="fas fa-arrow-circle-right text-info"></i>&nbsp; <?= $r9_2 ?></div>
+                                      </div>
+                                      <div class="col-md-12 mb-1">
+                                          <div id="p9_3" class="border p-2 bg-light" style="border-top-left-radius: 4px; border-top-right-radius: 4px;"><?= $p9_3 ?></div>
+                                          <?php
+                                          switch($r9_3){
+                                            case '1': $r9_3 = "1- Não atendo"; break;
+                                            case '2': $r9_3 = "2- Atendo parcialmente"; break;
+                                            case '3': $r9_3 = "3- Atendo satisfatoriamente"; break;
+                                            case '4': $r9_3 = "4- Atendo plenamente"; break;
+                                            case '5': $r9_3 = "5- Supero as expectativas"; break;
+                                          }
+                                          ?>
+                                          <div id="r9_3" class="border p-2" style="border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;"><i class="fas fa-arrow-circle-right text-info"></i>&nbsp; <?= $r9_3 ?></div>
+                                      </div>
+                                      <div class="col-md-12 mb-2">
+                                          <div id="p9_4" class="border p-2 bg-light" style="border-top-left-radius: 4px; border-top-right-radius: 4px;"><?= $p9_4 ?></div>
+                                          <?php
+                                          switch($r9_4){
+                                            case '1': $r9_4 = "1- Não atendo"; break;
+                                            case '2': $r9_4 = "2- Atendo parcialmente"; break;
+                                            case '3': $r9_4 = "3- Atendo satisfatoriamente"; break;
+                                            case '4': $r9_4 = "4- Atendo plenamente"; break;
+                                            case '5': $r9_4 = "5- Supero as expectativas"; break;
+                                          }
+                                          ?>
+                                          <div id="r9_4" class="border p-2" style="border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;"><i class="fas fa-arrow-circle-right text-info"></i>&nbsp; <?= $r9_4 ?></div>
+                                      </div>
+                                  </div>
+                                </div>
+                              </div>
+                            <div class="row">
+                                <div class="col-md-12 mt-2">
+                                    <a href="relatorios/cppdf.php?id=<?= $idcp ?>" target="_blank"  class="btn btn-light shadow-sm float-right"><i class="far fa-file-pdf text-danger"></i></a>
+                                </div>
+                            </div>
+                    <?php }} else { ?>
                         <div class="card mb-2">
                             <div class="card-body rounded" style="border: 1px solid red;">
                                 <h6 class="m-2 text-center text-danger"><i class="fas fa-hand-point-right"></i>&nbsp; Prezado médico Tutor, não consta em nossa base de dados a sua participação neste ciclo, referente ao Município, CNES e/ou INE informados. &nbsp;<i class="fas fa-hand-point-left"></i></h6>

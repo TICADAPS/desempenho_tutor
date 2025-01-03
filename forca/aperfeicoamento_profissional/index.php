@@ -804,7 +804,7 @@ $contt = $continat = 0;
         <script src="../../js/demo/chart-bar-prenatal-sifilis.js"></script>
         <script src="../../js/demo/chart-bar-citopatologico.js"></script>
         <script src="../../js/demo/chart-bar-hipertensao.js"></script>
-        <script src="./envEmail.js"></script>
+        <script src="envEmail.js"></script>
         <script src="envDemonstrativo.js"></script>
         <script>
             $(document).ready(function () {

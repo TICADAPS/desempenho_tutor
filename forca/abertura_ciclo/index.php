@@ -269,10 +269,19 @@ $perfil = '3';
                                             $anoall = $cicloall = $descricao = $dtinicio = $dtfim = $flagativo = '';
                                             $allac = (new Source\Models\Anocicloavaliacao())->findTudo();
                                             if($allac !== null){
+                                                $maiorciclo = 0;
+                                                foreach ($allac as $a){
+                                                    $cicloall = $a->ciclo;
+                                                    $cicloA = (int)$cicloall;
+                                                    if($maiorciclo < $cicloA){
+                                                        $maiorciclo = $cicloA;
+                                                    }
+                                                }
                                                 foreach ($allac as $ac){
                                                     $id = $ac->id;
                                                     $anoall = $ac->ano;
                                                     $cicloall = $ac->ciclo;
+                                                    $cicloA = (int)$cicloall;
                                                     $descricao = $ac->descricao;
                                                     $dtinicio = vemdata($ac->dtinicio);
                                                     $dtfim1 = $ac->dtfim;
@@ -300,34 +309,105 @@ $perfil = '3';
 
                                                 // Calculando a diferença entre as datas
                                                 $intervalo = $dtTime1->diff($dtTime2);
-
                                                 // Exibindo a diferença total em dias (sempre positivo)
-                                                $diffEmDias = abs($intervalo->days);
+                                                $diffEmDias = $intervalo->days;
+                                                if ($dtTime1 < $dtTime2) {
+                                                   $diffEmDias *= -1; // Inverte o sinal se a data final for anterior
+                                                }
                                                 if($diffEmDias >= 0){
                                                 ?>
-                                                <td class="text-center"><?php if($flagativo === 'NÃO'){ ?>
-                                                    <a class="btn btn-success shadow-sm border-white" href="abreciclo.php?id=<?= $id ?>">ABRIR</a>
-                                                <?php }elseif($flagativo === 'SIM'){ ?>
-                                                    <a class="btn btn-danger shadow-sm border-white" href="fechaciclo.php?id=<?= $id ?>">FECHAR</a>
-                                                <?php } ?>    
-                                                </td>
-                                                <?php }else{ ?>
-                                                <td></td>
+                                                <td class="text-center">
+                                                    <?php if($flagativo == 'NÃO'){ ?>
+                                                    <button type="button" class="btn btn-success shadow-sm border-white" data-toggle="modal" data-target="#modalAbrir<?= $id ?>">ABRIR</button>
+                                                <?php }elseif($flagativo == 'SIM'){ ?>   
+                                                    <button type="button" class="btn btn-danger shadow-sm border-white" data-toggle="modal" data-target="#modalFechar<?= $id ?>">FECHAR</button>
                                                 <?php } ?>
+                                                    </td>
                                                 <?php
-                                                //$anoaux e $cicloall !== '2' porque os ciclos anteriores ao 3º de 2024 não possuem dados em AP e CP. Para evitar mostrar 
+                                                //$anoaux >= 2024 e $cicloA > 2 porque os ciclos anteriores ao 3º de 2024 não possuem dados em AP e CP. 
                                                 //o botão de excluir Ciclo.
                                                 $anoaux = (int) $anoall;
                                                 $aperf = (new Source\Models\Aperfeicoamentoprofissional())->findAnoCiclo($anoall, $cicloall);
                                                 if($aperf === null && $anoaux >= 2024){
-                                                    if($cicloall !== '2'){
                                                 ?>
-                                                <td class="text-center"><a class="btn btn-light shadow-sm border-white" href="exclui.php?id=<?= $id ?>"><i class="fas fa-trash-alt text-danger"></i></a></td>
-                                                <?php }}else{ ?>
+                                                <td class="text-center"><button type="button" class="btn btn-light shadow-sm border-white" data-toggle="modal" data-target="#modalExclui<?= $id ?>"><i class="fas fa-trash-alt text-danger"></i></button></td>
+                                                <?php }else{ ?>
                                                 <td></td>
                                                 <?php } ?>
-                                            </tr>
-                                            <?php }} ?>
+                                                <!-- Modal modalAbrir -->
+                                                <div class="modal fade" id="modalAbrir<?= $id ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                  <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                      <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">FECHAMENTO DO CICLO</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                          <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                      </div>
+                                                      <div class="modal-body">
+                                                          <h6>Deseja ABRIR o <?= $cicloA ?>º ciclo?
+                                                      </div>
+                                                      <div class="modal-footer">
+                                                       <form method="get" action="abreciclo.php">
+                                                           <input type="hidden" value="<?= $id ?>" name="id">
+                                                           <button type="button" class="btn btn-secondary" data-dismiss="modal">NÃO</button>
+                                                           <button type="submit" class="btn btn-primary">FECHAR</button>
+                                                       </form>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                                <!-- Modal modalFechar -->
+                                                <div class="modal fade" id="modalFechar<?= $id ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                  <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                      <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">FECHAMENTO DO CICLO</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                          <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                      </div>
+                                                      <div class="modal-body">
+                                                          <h6>Deseja FECHAR o <?= $cicloA ?>º ciclo?
+                                                      </div>
+                                                      <div class="modal-footer">
+                                                       <form method="get" action="fechaciclo.php">
+                                                           <input type="hidden" value="<?= $id ?>" name="id">
+                                                           <button type="button" class="btn btn-secondary" data-dismiss="modal">NÃO</button>
+                                                           <button type="submit" class="btn btn-primary">FECHAR</button>
+                                                       </form>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                                <!-- Modal modalExclui -->
+                                                <div class="modal fade" id="modalExclui<?= $id ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                  <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                      <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">APAGAR/EXCLUIR CICLO</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                          <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                      </div>
+                                                      <div class="modal-body">
+                                                          <h6>Deseja excluir o <?= $cicloA ?>º ciclo?
+                                                      </div>
+                                                      <div class="modal-footer">
+                                                       <form method="get" action="exclui.php">
+                                                           <input type="hidden" value="<?= $id ?>" name="id">
+                                                           <button type="button" class="btn btn-secondary" data-dismiss="modal">NÃO</button>
+                                                           <button type="submit" class="btn btn-primary">EXCLUIR</button>
+                                                       </form>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                            <?php }else{ ?>
+                                            <td></td><td></td>
+                                            <?php } ?>
+                                           </tr>
+                                           <?php }} ?>
                                         </tbody>
                                     </table>
                                 </div>

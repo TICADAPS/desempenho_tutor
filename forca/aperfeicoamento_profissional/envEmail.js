@@ -20,8 +20,9 @@ function envEmailForm(a){
         // Exibe o resultado no HTML
         if(data !== ''){
             $('#msg').html(data).fadeIn();
+        }else{
+            campoEmail(a);
         }
-        campoEmail(a);
     })
     .catch(erro => {
         $('#msg').html(erro).fadeIn();

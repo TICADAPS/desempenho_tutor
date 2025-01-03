@@ -16,7 +16,7 @@ if ($id !== '' && $nome !== '' && $cpf !== '') {
     $destinatario = '';
     if($rs){
         do{
-            $destinatario = $rs['email'];
+            $destinatario = trim($rs['email']);
         }while($rs = mysqli_fetch_array($query));
     }
     $anociclo = (new \Source\Models\Anocicloavaliacao())->findTudo();

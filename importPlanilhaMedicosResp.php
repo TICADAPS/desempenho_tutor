@@ -46,7 +46,14 @@ if (!empty($_FILES["arquivo"]["tmp_name"])) {
         $a=0;
         $objeto = fopen($arquivo, 'r');
         while(($dados = fgetcsv($objeto, 10000,","))!==FALSE){
+<<<<<<< HEAD
             $a++;
+=======
+            ++$a;
+            if($a <= 1){
+                continue;
+            }
+>>>>>>> devRicardo
             //captura cada item separado por vírgula na sequência
             $cpf = trim(utf8_encode($dados[0]));
             $nome = trim(utf8_encode($dados[1]));
@@ -58,6 +65,7 @@ if (!empty($_FILES["arquivo"]["tmp_name"])) {
             $cnes = trim(utf8_encode($dados[7]));
             $ine = trim(utf8_encode($dados[8]));
             $ibge = trim(utf8_encode($dados[9]));
+<<<<<<< HEAD
             $prenatal_consultas = trim(utf8_encode($dados[10]));
             $prenatal_sifilis_hiv= trim(utf8_encode($dados[11]));
             $cobertura_citopatologico = trim(utf8_encode($dados[12]));
@@ -65,6 +73,8 @@ if (!empty($_FILES["arquivo"]["tmp_name"])) {
             $diabetes = trim(utf8_encode($dados[14]));
             $ano = trim(utf8_encode($dados[15]));
             $periodo = trim(utf8_encode($dados[16]));
+=======
+>>>>>>> devRicardo
             
             $nome = strtoupper($nome);
             $nome = str_replace("'", "", $nome);
@@ -77,6 +87,55 @@ if (!empty($_FILES["arquivo"]["tmp_name"])) {
             $nome = str_replace("Ü", "U", $nome);
             $nome = str_replace("/", "", $nome);
             $nome = str_replace("-", "", $nome);
+<<<<<<< HEAD
+=======
+            
+            $cpf = str_replace("'", "", $cpf);
+            $admissao = str_replace("'", "", $admissao);
+            $cargo = strtoupper($cargo);
+            $cargo = str_replace("'", "", $cargo);
+            $cargo = str_replace("'", "", $cargo);
+            $cargo = str_replace("Á", "A", $cargo);
+            $cargo = str_replace("É", "E", $cargo);
+            $cargo = str_replace("Í", "I", $cargo);
+            $cargo = str_replace("Ó", "O", $cargo);
+            $cargo = str_replace("Ú", "U", $cargo);
+            $cargo = str_replace("Ç", "C", $cargo);
+            $cargo = str_replace("Ü", "U", $cargo);
+            $cargo = str_replace("/", "", $cargo);
+            $cargo = str_replace("-", "", $cargo);
+            
+            $municipio = str_replace("'", "", $municipio);
+            $municipio = strtoupper($municipio);
+            $municipio = str_replace("Á", "A", $municipio);
+            $municipio = str_replace("É", "E", $municipio);
+            $municipio = str_replace("Í", "I", $municipio);
+            $municipio = str_replace("Ó", "O", $municipio);
+            $municipio = str_replace("Ú", "U", $municipio);
+            $municipio = str_replace("Ç", "C", $municipio);
+            $municipio = str_replace("Ü", "U", $municipio);
+            $municipio = str_replace("/", "", $municipio);
+            $municipio = str_replace("-", "", $municipio);
+            
+            $uf = str_replace("'", "", $uf);
+            $uf = strtoupper($uf);
+            
+            $tipologia = str_replace("'", "", $tipologia);
+            $tipologia = strtoupper($tipologia);
+            $tipologia = str_replace("Á", "A", $tipologia);
+            $tipologia = str_replace("É", "E", $tipologia);
+            $tipologia = str_replace("Í", "I", $tipologia);
+            $tipologia = str_replace("Ó", "O", $tipologia);
+            $tipologia = str_replace("Ú", "U", $tipologia);
+            $tipologia = str_replace("Ç", "C", $tipologia);
+            $tipologia = str_replace("Ü", "U", $tipologia);
+            $tipologia = str_replace("/", "", $tipologia);
+            $tipologia = str_replace("-", "", $tipologia);
+            
+            $cnes = str_replace("'", "", $cnes);
+            $ine = str_replace("'", "", $ine);
+            $ibge = str_replace("'", "", $ibge);
+>>>>>>> devRicardo
 
             //formata a máscara do cpf (caso venha ou não com a máscara)
             $cpftratado = str_replace("-", "", $cpf);
@@ -104,14 +163,22 @@ if (!empty($_FILES["arquivo"]["tmp_name"])) {
                 echo "<h6 class='mt-2'>Na linha $a, coluna 1: o conteúdo <label class='text-primary'>$cpftratado</label> inválido.</h6>";
                 return;
             }
+<<<<<<< HEAD
 //            var_dump($a,$cpftratado,$nome,$admissao,$cargo,$tipologia,$uf,$municipio,$cnes,$ine,$ibge,
 //                    $prenatal_consultas,$prenatal_sifilis_hiv,$cobertura_citopatologico,
 //                    $hipertensao,$diabetes,$ano,$periodo,$datahoje);
             
+=======
+//            echo "$a,$cpftratado,$nome,$admissao,$cargo,$tipologia,$uf,$municipio,$cnes,$ine,$ibge,
+//                    $prenatal_consultas,$prenatal_sifilis_hiv,$cobertura_citopatologico,
+//                    $hipertensao,$diabetes,2024,24,$datahoje<br>";
+           
+>>>>>>> devRicardo
             $sql = "select * from medico where cpf = '$cpftratado' and ibge = '$ibge' and cnes = '$cnes' and ine = '$ine' limit 1";
             $query = mysqli_query($conn, $sql) or die(mysqli_error($conn));
             $nrrs = mysqli_num_rows($query);
             if($nrrs==0){
+<<<<<<< HEAD
                 $sql2 = "insert into medico values ('$cpftratado','$ibge','$cnes','$ine','$nome','$admissao','$cargo','$tipologia','$uf','$municipio','$datahoje')";
                 mysqli_query($conn, $sql2) or die(mysqli_error($conn));
             }
@@ -124,6 +191,21 @@ if (!empty($_FILES["arquivo"]["tmp_name"])) {
                 mysqli_query($conn, $sql2) or die(mysqli_error($conn));
             }else{
                 echo "$cpftratado - $nome - $ibge - $cnes - $ine - Ano $ano e período $periodo cadastrado anteriormente<br>";
+=======
+                $sql2 = "insert into medico (cpf,ibge,cnes,ine,nome,admissao,cargo,tipologia,uf,municipio,datacadastro) "
+                        . "values ('$cpftratado','$ibge','$cnes','$ine','$nome','$admissao','$cargo','$tipologia','$uf','$municipio','$datahoje')";
+                mysqli_query($conn, $sql2) or die(mysqli_error($conn));
+            }
+            $sql4 = "select iddesempenho from desempenho where cpf = '$cpftratado' and ibge = '$ibge' and cnes = '$cnes' and ine = '$ine' and ano = '2024' and idperiodo = '24' limit 1";
+            $query3 = mysqli_query($conn, $sql4) or die(mysqli_error($conn));
+            $nrrs3 = mysqli_num_rows($query3); 
+            if($nrrs3 === 0){
+                $sql2 = "insert into desempenho (ano,idperiodo,cpf,ibge,cnes,ine,demonstrativo_ano,demonstrativo_ciclo) "
+                        . "values ('2024','24','$cpftratado','$ibge','$cnes','$ine','2024','3')";
+                mysqli_query($conn, $sql2) or die(mysqli_error($conn));
+            }else{
+                echo "$cpftratado - $nome - $ibge - $cnes - $ine - Ano 2024 e período 24 cadastrado anteriormente<br>";
+>>>>>>> devRicardo
             }
         }
     }

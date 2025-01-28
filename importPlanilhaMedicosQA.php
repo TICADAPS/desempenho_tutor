@@ -42,16 +42,17 @@ if(!isset($_SESSION['msg'])){
                         <form method="post" enctype="multipart/form-data" action="importPlanilhaMedicosResp.php">
                             <h5 class="mt-2">Arquivo CSV com colunas na seguinte ordem:</h5>
                             <h6 class="mt-2">1º CPF</h6>
-                            <h6 class="mt-2">8º CNES</h6>
-                            <h6 class="mt-2">9º INE</h6>
-                            <h6 class="mt-2">10º IBGE</h6>
-                            <h6 class="mt-2">11º prenatal_consultas</h6>
-                            <h6 class="mt-2">12º prenatal_sifilis_hiv</h6>
-                            <h6 class="mt-2">13º cobertura_citopatologico</h6>
-                            <h6 class="mt-2">14º hipertensao</h6>
-                            <h6 class="mt-2">15º diabetes</h6>
-                            <h6 class="mt-2">16º Ano</h6>
-                            <h6 class="mt-2">17º Período (quadrimestre)</h6>
+                            <h6 class="mt-2">2º CNES</h6>
+                            <h6 class="mt-2">3º INE</h6>
+                            <h6 class="mt-2">4º IBGE</h6>
+                            <h6 class="mt-2">5º prenatal_consultas</h6>
+                            <h6 class="mt-2">6º prenatal_sifilis_hiv</h6>
+                            <h6 class="mt-2">7º cobertura_citopatologico</h6>
+                            <h6 class="mt-2">8º hipertensao</h6>
+                            <h6 class="mt-2">9º diabetes</h6>
+                            <h6 class="mt-2">10º Ano</h6>
+                            <h6 class="mt-2">11º Período (quadrimestre)</h6>
+                            <h6 class="mt-2">12º Ciclo</h6>
                             <input type="file" class="form-control form-control-lg mb-2" name="arquivo">
                             <input type="submit" class="form-control form-control-lg mb-2 bnt btn-success" name="enviar" value="Enviar">
                         </form>
@@ -60,8 +61,6 @@ if(!isset($_SESSION['msg'])){
                         <?php
                         if($_SESSION['msg']!=""){
                             echo $_SESSION['msg'];
-                            echo "<META HTTP-EQUIV='REFRESH' CONTENT=\"2;
-                                URL='importPlanilhaMedicos.php'\">";
                             $_SESSION['msg']="";
                         }
                         ?>

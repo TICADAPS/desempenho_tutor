@@ -52,28 +52,16 @@ if (!empty($_FILES["arquivo"]["tmp_name"])) {
             }
             //captura cada item separado por vírgula na sequência
             $cpf = trim(utf8_encode($dados[0]));
-            $nome = trim(utf8_encode($dados[1]));
-            $ibge = trim(utf8_encode($dados[2]));
-            $ine = trim(utf8_encode($dados[3]));
-            $cnes = trim(utf8_encode($dados[4]));
-            $notasenior = trim(utf8_encode($dados[5]));
-            $autosimnao = trim(utf8_encode($dados[6]));
-            $notasispmb = trim(utf8_encode($dados[7]));
-            $ano = trim(utf8_encode($dados[8]));
-            $ciclo = trim(utf8_encode($dados[9]));
-            $periodo = trim(utf8_encode($dados[10]));
-            
-            $nome = strtoupper($nome);
-            $nome = str_replace("'", "", $nome);
-            $nome = str_replace("Á", "A", $nome);
-            $nome = str_replace("É", "E", $nome);
-            $nome = str_replace("Í", "I", $nome);
-            $nome = str_replace("Ó", "O", $nome);
-            $nome = str_replace("Ú", "U", $nome);
-            $nome = str_replace("Ç", "C", $nome);
-            $nome = str_replace("Ü", "U", $nome);
-            $nome = str_replace("/", "", $nome);
-            $nome = str_replace("-", "", $nome);
+            $ibge = trim(utf8_encode($dados[1]));
+            $ine = trim(utf8_encode($dados[2]));
+            $cnes = trim(utf8_encode($dados[3]));
+            $notasenior = trim(utf8_encode($dados[4]));
+            $autoavaliacao = trim(utf8_encode($dados[5]));
+            $notasispmb = trim(utf8_encode($dados[6]));
+            $ano = trim(utf8_encode($dados[7]));
+            $ciclo = trim(utf8_encode($dados[8]));
+            $periodo = trim(utf8_encode($dados[9]));
+            $incentivo = trim(utf8_encode($dados[10]));
             
             //formata a máscara do cpf (caso venha ou não com a máscara)
             $cpftratado = str_replace("-", "", $cpf);
@@ -108,15 +96,10 @@ if (!empty($_FILES["arquivo"]["tmp_name"])) {
             $notasispmb = str_replace("'", "", $notasispmb);
             $notasispmb = str_replace(",", ".", $notasispmb);
             
-            $autosimnao = str_replace("'", "", $autosimnao);
-            $autosimnao = strtoupper($autosimnao);
-            if($autosimnao === 'SIM'){
-                $autosimnao = 1;  
-            }else{
-                 $autosimnao = 0;  
-            }
+            $autoavaliacao = str_replace("'", "", $autoavaliacao);
+            $autoavaliacao = strtoupper($autoavaliacao);
                
-//            var_dump($a,$cpftratado,$nome,$notasenior,$notasispmb,$autosimnao);
+//            var_dump($a,$cpftratado,$nome,$notasenior,$notasispmb,$autoavaliacao);
 //            var_dump($a,$cpftratado,$nome,$admissao,$cargo,$tipologia,$uf,$municipio,$cnes,$ine,$ibge,
 //                    $prenatal_consultas,$prenatal_sifilis_hiv,$cobertura_citopatologico,
 //                    $hipertensao,$diabetes,$ano,$periodo,$datahoje);
@@ -125,23 +108,19 @@ if (!empty($_FILES["arquivo"]["tmp_name"])) {
             $query = mysqli_query($conn, $sql) or die(mysql0i_error($conn));
             $nrrs = mysqli_num_rows($query);
             if($nrrs > 0){
-                $fkincentivo = 1;
 //                echo "$a - passou aqui <br>";
                 $linha = mysqli_fetch_array($query);
                 do{
-                    $cnes=$linha['cnes'];
-                    $ibge=$linha['ibge'];
-                    $ine=$linha['ine'];
                     $sqlq = "select * from demonstrativo where fkcpf = '$cpftratado' and fkibge = '$ibge' and fkcnes = '$cnes' and fkine = '$ine' and "
-                            . "fkincentivo = '$fkincentivo' and ano = '$ano' and ciclo = '$ciclo' and fkperiodo = '$periodo' limit 1";
+                            . "fkincentivo = '$incentivo' and ano = '$ano' and ciclo = '$ciclo' and fkperiodo = '$periodo' limit 1";
                     $queryq = mysqli_query($conn, $sqlq) or die(mysqli_error($conn));
                     $nrrsq = mysqli_num_rows($queryq);
                     if($nrrsq === 0){
                         $sqliq = "insert into demonstrativo (ano,ciclo,competencias,aperfeicoamento,qualidade,desempenho,fkcpf,fkibge,fkcnes,fkine,fkincentivo,fkperiodo)"
-                                . "values ('$ano', '$ciclo', '$autosimnao','$notasenior', '$notasispmb', "
-                                . "null, '$cpftratado','$ibge','$cnes','$ine','$fkincentivo','$periodo')";
+                                . "values ('$ano', '$ciclo', '$autoavaliacao','$notasenior', '$notasispmb', "
+                                . "null, '$cpftratado','$ibge','$cnes','$ine','$incentivo','$periodo')";
                         mysqli_query($conn, $sqliq) or die(mysqli_error($conn));
-                        echo "$a - $cpftratado - $nome - $autosimnao - $notasenior - $notasispmb<br>";
+                        echo "$a - $cpftratado - $nome - $autoavaliacao - $notasenior - $notasispmb - CADASTRADO<br>";
                     }
                 }while($linha = mysqli_fetch_array($query));
             }
@@ -149,6 +128,6 @@ if (!empty($_FILES["arquivo"]["tmp_name"])) {
     }
 }else{
     echo "Selecione o arquivo desejado.";
-    header ("Location: importPlanilhaMedicos.php");
+    header ("Location: importPlanilhaMedicosCPAv.php");
 }
 

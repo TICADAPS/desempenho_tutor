@@ -42,16 +42,16 @@ if(!isset($_SESSION['msg'])){
                         <form method="post" enctype="multipart/form-data" action="importPlanilhaMedicosResp2.php">
                             <h5 class="mt-2">Arquivo CSV com colunas na seguinte ordem:</h5>
                             <h6 class="mt-2">1º CPF</h6>
-                            <h6 class="mt-2">2º Nome completo</h6>
-                            <h6 class="mt-2">3º IBGE</h6>
-                            <h6 class="mt-2">4 INE</h6>
-                            <h6 class="mt-2">5º CNES</h6>
-                            <h6 class="mt-2">6º Nota Comprovante aperfeiçoamento profissional (SÊNIOR)</h6>
-                            <h6 class="mt-2">7º Nota Autoavaliação - Sim ou Não</h6>
-                            <h6 class="mt-2">8º Nota da avaliação do Bolsista sobre tutor  (SISPMB)</h6>
-                            <h6 class="mt-2">9º Ano</h6>
-                            <h6 class="mt-2">10º Ciclo</h6>
-                            <h6 class="mt-2">11º Período</h6>
+                            <h6 class="mt-2">2º IBGE</h6>
+                            <h6 class="mt-2">3º INE</h6>
+                            <h6 class="mt-2">4º CNES</h6>
+                            <h6 class="mt-2">5º Nota Comprovante aperfeiçoamento profissional (SÊNIOR)</h6>
+                            <h6 class="mt-2">6º Nota Autoavaliação - 1 ou 0</h6>
+                            <h6 class="mt-2">7º Nota da avaliação do Bolsista sobre tutor  (SISPMB)</h6>
+                            <h6 class="mt-2">8º Ano</h6>
+                            <h6 class="mt-2">9º Ciclo</h6>
+                            <h6 class="mt-2">10º Período</h6>
+                            <h6 class="mt-2">11º Incentivo</h6>
                             <input type="file" class="form-control form-control-lg mb-2" name="arquivo">
                             <input type="submit" class="form-control form-control-lg mb-2 bnt btn-success" name="enviar" value="Enviar">
                         </form>
@@ -60,8 +60,6 @@ if(!isset($_SESSION['msg'])){
                         <?php
                         if($_SESSION['msg']!=""){
                             echo $_SESSION['msg'];
-                            echo "<META HTTP-EQUIV='REFRESH' CONTENT=\"2;
-                                URL='importPlanilhaMedicos2.php'\">";
                             $_SESSION['msg']="";
                         }
                         ?>

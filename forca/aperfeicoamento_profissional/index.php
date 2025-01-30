@@ -240,19 +240,19 @@ $contt = $continat = 0;
                                 <li class="nav-item">
                                     <a href="../index.php" class="nav-link">Inicio </a>
                                 </li>
-                                <li class="nav-item">
+<!--                                <li class="nav-item">
                                     <a class="nav-link" href="">|</a>
                                 </li>
-                                <!-- Navbar dropdown -->
+                                 Navbar dropdown 
                                 <li class="nav-item dropdown">
-                                    <!--<a class="nav-link dropdown-toggle" href="../relatorios/relatorio_geral_igad.php">Relatório Geral IGAD - 1º ciclo de 2023</a>-->
+                                    <a class="nav-link dropdown-toggle" href="../relatorios/relatorio_geral_igad.php">Relatório Geral IGAD - 1º ciclo de 2023</a>
                                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">Relatórios</a>
                                     <div class="dropdown-menu">
                                         <?php if (($perfil === '3' && $nivel === '1') || ($perfil === '1' && $nivel === '2')) { ?>
                                             <a class="dropdown-item" href="../../relatorios/relatorioGeralAP.php?a=<?= $ano ?>&c=<?= $ciclo ?>">Relatório Aperfeiçoamento Profissional Ano <?= $ano ?> - <?= $ciclo ?>º Ciclo</a>
                                         <?php } ?>
                                     </div>
-                                </li>
+                                </li>-->
                                 <li class="nav-item">
                                     <a class="nav-link" href="">|</a>
                                 </li>
@@ -707,7 +707,7 @@ $contt = $continat = 0;
                                     <button type="button" id="btenvemailall" class="btn btn-outline-warning shadow-sm border-warning text-dark" data-toggle="modal" data-target="#modalEmailAll"><b><i class="fas fa-mail-bulk"></i>&nbsp; Enviar E-Mail aos pendentes</b></button>
                                 </div>-->
                                 <div class="col-sm-3">
-                                    <button type="button" id="btenvemailall" class="btn btn-outline-primary shadow-sm border-primary" data-toggle="modal" data-target="#modalEnvDemonstrativo"><b><i class="fas fa-paper-plane"></i>&nbsp; Enviar para o demonstrativo</b></button>
+                                    <button type="button" id="btenvemailall" class="btn btn-outline-primary shadow-sm border-primary" data-toggle="modal" data-target="#modalEnvDemonstrativo"><b><i class="far fa-file-excel"></i>&nbsp; Relatório Final</b></button>
                                 </div>
                                 <?php } ?>
                             </div>

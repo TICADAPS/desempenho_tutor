@@ -39,10 +39,10 @@ if ($ano !== '' && $ciclo !== '') {
             $cnes = $rsm['cnes'];
             $ine = $rsm['ine'];
             $flagenvio = $rsm['flagenvio'];
-            $flagenviotxt = "NÃO";
+            $flagenviotxt = "0";
             if($flagenvio !== '1'){
                 $flagenvio = '0';
-                $flagenviotxt = "SIM";
+                $flagenviotxt = "1";
             }
             $flaginativo = $rsm['flaginativo'];
             $flaginativotxt = "";

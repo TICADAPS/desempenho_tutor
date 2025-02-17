@@ -28,7 +28,7 @@ if(!isset($_SESSION['msg'])){
                     <img src="./img_agsus/Logo_400x200.png" class="img-fluid" alt="logoAdaps" title="Logo Adaps">
                 </div>
                 <div class="col-12 col-md-8 col-sm-6 mt-5 ">
-                    <h3 class="mb-4">Cadastro de Médicos - Planilha da Unidade de Serviços em Saúde</h3>
+                    <h3 class="mb-4">QUALIDADE - DEMONSTRATIVO - Planilha da Unidade de Serviços em Saúde</h3>
                 </div>
             </div>
             <div class="container bg-light mt-4 p-5 mx-auto col-md-8 col-sm-6">
@@ -39,19 +39,16 @@ if(!isset($_SESSION['msg'])){
                 </div>
                 <div class="row">
                     <div class="col-12 col-md-8 col-sm-6 mx-auto">
-                        <form method="post" enctype="multipart/form-data" action="importPlanilhaMedicosResp2.php">
+                        <form method="post" enctype="multipart/form-data" action="importPlanilhaMedicosQualidDemonstrativoResp.php">
                             <h5 class="mt-2">Arquivo CSV com colunas na seguinte ordem:</h5>
                             <h6 class="mt-2">1º CPF</h6>
                             <h6 class="mt-2">2º IBGE</h6>
-                            <h6 class="mt-2">3º INE</h6>
-                            <h6 class="mt-2">4º CNES</h6>
-                            <h6 class="mt-2">5º Nota Comprovante aperfeiçoamento profissional (SÊNIOR)</h6>
-                            <h6 class="mt-2">6º Nota Autoavaliação - 1 ou 0</h6>
-                            <h6 class="mt-2">7º Nota da avaliação do Bolsista sobre tutor  (SISPMB)</h6>
-                            <h6 class="mt-2">8º Ano</h6>
-                            <h6 class="mt-2">9º Ciclo</h6>
-                            <h6 class="mt-2">10º Período</h6>
-                            <h6 class="mt-2">11º Incentivo</h6>
+                            <h6 class="mt-2">3º CNES</h6>
+                            <h6 class="mt-2">4º INE</h6>
+                            <h6 class="mt-2">5º Qualidade</h6>
+                            <h6 class="mt-2">6º Ano</h6>
+                            <h6 class="mt-2">7º Período (quadrimestre)</h6>
+                            <h6 class="mt-2">8º Ciclo</h6>
                             <input type="file" class="form-control form-control-lg mb-2" name="arquivo">
                             <input type="submit" class="form-control form-control-lg mb-2 bnt btn-success" name="enviar" value="Enviar">
                         </form>

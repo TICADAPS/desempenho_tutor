@@ -16,10 +16,10 @@ $idperiodo = $_REQUEST['p'];
 $cpftratado = str_replace("-", "", $cpf);
 $cpftratado = str_replace(".", "", $cpftratado);
 $cpftratado = str_replace(".", "", $cpftratado);
-$sql = "select * from medico m inner join desempenho d on m.cpf = d.cpf and m.ibge = d.ibge"
+$sql = "select * from medico m inner join desempenho d on m.cpf = d.cpf and m.ibge = d.ibge and m.cnes = d.cnes and m.ine = d.ine "
         . " inner join periodo p on p.idperiodo = d.idperiodo "
         . " left join ivs on idivs = fkivs "
-        . " where m.cpf = '$cpftratado' and ano = '$ano';";
+        . " where m.cpf = '$cpftratado' and ano = '$ano' ;";
 $query = mysqli_query($conn, $sql);
 $nrrs = mysqli_num_rows($query);
 $rs = mysqli_fetch_array($query);
@@ -126,6 +126,29 @@ if ($nrrs > 0) {
                         $municipio = $rsant['municipio'];
                         $cnes = $rsant['cnes'];
                         $ine = $rsant['ine'];
+                        
+                        //verificando qual o quadrimestre avalidado para o IGAD
+                        $sqligad = "select * from medico m inner join demonstrativo dm on m.cpf = dm.fkcpf and m.ibge = dm.fkibge and m.cnes = dm.fkcnes and m.ine = dm.fkine "
+                                . " where dm.fkcpf = '$cpftratado' and dm.fkibge = '$ibge' and dm.fkcnes = '$cnes' and dm.fkine = '$ine' and ano = '$ano' and dm.ciclo='$ciclo';";
+                        $queryigad = mysqli_query($conn, $sqligad);
+                        $rsigad = mysqli_fetch_array($queryigad);
+                        $fkpigad = $pigad = '';
+                        if($rsigad){
+                            do{
+                                $fkpigad = $rsigad['fkperiodo'];
+                            }while($rsigad = mysqli_fetch_array($queryigad));
+                        }
+                        if($fkpigad !== ''){
+                            $sqligad2 = "select * from periodo where idperiodo='$fkpigad';";
+                            $queryigad2 = mysqli_query($conn, $sqligad2);
+                            $rsigad2 = mysqli_fetch_array($queryigad2);
+                            if($rsigad2){
+                                do{
+                                    $pigad = $rsigad2['descricaoperiodo'];
+                                }while($rsigad2 = mysqli_fetch_array($queryigad2));
+                            }
+                        }
+                        
                         $datacadastro = $rsant['datacadastro'];
                         $ano = $rsant['ano'];
                         $periodo[$a] = $rsant['descricaoperiodo'];
@@ -262,15 +285,7 @@ if ($nrrs > 0) {
                                                             <h6 class="text-info font-weight-bold"><?php echo "Ano: $ano" ?></h6>
                                                         </div>
                                                         <div class="col-md-3">
-                                                            <h6 class="text-info font-weight-bold">
-                                                                <?php
-                                                                if ($a === 2) {
-                                                                    echo "Períodos: 1º e 2º Quadrimestre";
-                                                                } else {
-                                                                    echo "Períodos: 1º, 2º e 3º Quadrimestre";
-                                                                }
-                                                                ?>
-                                                            </h6>
+                                                            <h6 class="text-info font-weight-bold">Período utilizado no IGAD: <?= $pigad ?></h6>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -703,6 +718,29 @@ if ($nrrs > 0) {
                         }else{
                             $ivs = "";
                         }
+                        
+                        //verificando qual o quadrimestre avalidado para o IGAD
+                        $sqligad = "select * from medico m inner join demonstrativo dm on m.cpf = dm.fkcpf and m.ibge = dm.fkibge and m.cnes = dm.fkcnes and m.ine = dm.fkine "
+                                . " where dm.fkcpf = '$cpftratado' and dm.fkibge = '$ibge' and dm.fkcnes = '$cnes' and dm.fkine = '$ine' and ano = '$ano' and dm.ciclo='$ciclo';";
+                        $queryigad = mysqli_query($conn, $sqligad);
+                        $rsigad = mysqli_fetch_array($queryigad);
+                        $fkpigad = $pigad = '';
+                        if($rsigad){
+                            do{
+                                $fkpigad = $rsigad['fkperiodo'];
+                            }while($rsigad = mysqli_fetch_array($queryigad));
+                        }
+                        if($fkpigad !== ''){
+                            $sqligad2 = "select * from periodo where idperiodo='$fkpigad';";
+                            $queryigad2 = mysqli_query($conn, $sqligad2);
+                            $rsigad2 = mysqli_fetch_array($queryigad2);
+                            if($rsigad2){
+                                do{
+                                    $pigad = $rsigad2['descricaoperiodo'];
+                                }while($rsigad2 = mysqli_fetch_array($queryigad2));
+                            }
+                        }
+                        
                         $datacadastro = $rs['datacadastro'];
                         $ano = $rs['ano'];
                         $periodo = $rs['descricaoperiodo'];
@@ -1353,6 +1391,29 @@ if ($nrrs > 0) {
                         $municipio = $rs['municipio'];
                         $cnes = $rs['cnes'];
                         $ine = $rs['ine'];
+                        
+                        //verificando qual o quadrimestre avalidado para o IGAD
+                        $sqligad = "select * from medico m inner join demonstrativo dm on m.cpf = dm.fkcpf and m.ibge = dm.fkibge and m.cnes = dm.fkcnes and m.ine = dm.fkine "
+                                . " where dm.fkcpf = '$cpftratado' and dm.fkibge = '$ibge' and dm.fkcnes = '$cnes' and dm.fkine = '$ine' and ano = '$ano' and dm.ciclo='$ciclo';";
+                        $queryigad = mysqli_query($conn, $sqligad);
+                        $rsigad = mysqli_fetch_array($queryigad);
+                        $fkpigad = $pigad = '';
+                        if($rsigad){
+                            do{
+                                $fkpigad = $rsigad['fkperiodo'];
+                            }while($rsigad = mysqli_fetch_array($queryigad));
+                        }
+                        if($fkpigad !== ''){
+                            $sqligad2 = "select * from periodo where idperiodo='$fkpigad';";
+                            $queryigad2 = mysqli_query($conn, $sqligad2);
+                            $rsigad2 = mysqli_fetch_array($queryigad2);
+                            if($rsigad2){
+                                do{
+                                    $pigad = $rsigad2['descricaoperiodo'];
+                                }while($rsigad2 = mysqli_fetch_array($queryigad2));
+                            }
+                        }
+                        
                         $datacadastro = $rs['datacadastro'];
                         $ano = $rs['ano'];
                         $periodo[$a] = $rs['descricaoperiodo'];
@@ -1432,15 +1493,7 @@ if ($nrrs > 0) {
                                                         <h6 class="text-info font-weight-bold"><?php echo "Ano: $ano" ?></h6>
                                                     </div>
                                                     <div class="col-md-3">
-                                                        <h6 class="text-info font-weight-bold">
-                                                        <?php 
-                                                            if($a === 2){
-                                                                echo "Períodos: 1º e 2º Quadrimestre";
-                                                            }else{
-                                                                echo "Períodos: 1º, 2º e 3º Quadrimestre";
-                                                            }
-                                                        ?>
-                                                        </h6>
+                                                        <h6 class="text-info font-weight-bold">Período utilizado no IGAD: <?= $pigad ?></h6>
                                                     </div>
                                                 </div>
                                             </div>

@@ -56,9 +56,9 @@ if (!empty($_FILES["arquivo"]["tmp_name"])) {
             $admissao = trim(utf8_encode($dados[2]));
             $cargo = trim(utf8_encode($dados[3]));
             $tipologia = trim(utf8_encode($dados[4]));
-            $cnes = trim(utf8_encode($dados[5]));
-            $ine = trim(utf8_encode($dados[6]));
-            $ibge = trim(utf8_encode($dados[7]));
+            $ibge = trim(utf8_encode($dados[5]));
+            $cnes = trim(utf8_encode($dados[6]));
+            $ine = trim(utf8_encode($dados[7]));
             $ivs = trim(utf8_encode($dados[8]));
             
             $nome = strtoupper($nome);
@@ -125,6 +125,7 @@ if (!empty($_FILES["arquivo"]["tmp_name"])) {
            
             $sql = "select * from medico where cpf = '$cpftratado' and ibge = '$ibge' and cnes = '$cnes' and ine = '$ine' limit 1";
             $query = mysqli_query($conn, $sql) or die(mysqli_error($conn));
+            $rs = mysqli_fetch_array($query);
             $nrrs = mysqli_num_rows($query);
             if($nrrs==0){
                 $sqlmun = "select * from municipio m inner join estado e on m.Estado_cod_uf = e.cod_uf where cod_munc = '$ibge'";
@@ -139,6 +140,17 @@ if (!empty($_FILES["arquivo"]["tmp_name"])) {
                 $sql2 = "insert into medico values ('$cpftratado','$ibge','$cnes','$ine','$ivs','$nome','$admissao','$cargo','$tipologia','$uf','$mun','$datahoje', null, null)";
                 mysqli_query($conn, $sql2) or die(mysqli_error($conn));
                 echo "$cpftratado - $nome - $ibge - $cnes - $ine - Cadastrado<br>";
+            }else{
+                do{
+                    if($ivs !== '' && $ivs !== null){
+                        $sql2 = "update medico set fkivs = '$ivs', admissao = '$admissao', tipologia = '$tipologia'  where cpf = '$cpftratado' and ibge = '$ibge' and cnes = '$cnes' and ine = '$ine'";
+                        mysqli_query($conn, $sql2) or die(mysqli_error($conn));
+                    }else{
+                        $sql2 = "update medico set admissao = '$admissao', tipologia = '$tipologia'  where cpf = '$cpftratado' and ibge = '$ibge' and cnes = '$cnes' and ine = '$ine'";
+                        mysqli_query($conn, $sql2) or die(mysqli_error($conn));
+                    }
+                    
+                }while ($rs = mysqli_fetch_array($query));
             }
         }
     }

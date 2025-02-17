@@ -28,7 +28,7 @@ if(!isset($_SESSION['msg'])){
                     <img src="./img_agsus/Logo_400x200.png" class="img-fluid" alt="logoAdaps" title="Logo Adaps">
                 </div>
                 <div class="col-12 col-md-8 col-sm-6 mt-5 ">
-                    <h3 class="mb-4">QUALIDADE ASSISTENCIAL - Planilha da Unidade de Serviços em Saúde</h3>
+                    <h3 class="mb-4">QUALIDADE ASSISTENCIAL - DESEMPENHO - Planilha da Unidade de Serviços em Saúde</h3>
                 </div>
             </div>
             <div class="container bg-light mt-4 p-5 mx-auto col-md-8 col-sm-6">
@@ -39,12 +39,12 @@ if(!isset($_SESSION['msg'])){
                 </div>
                 <div class="row">
                     <div class="col-12 col-md-8 col-sm-6 mx-auto">
-                        <form method="post" enctype="multipart/form-data" action="importPlanilhaMedicosResp.php">
+                        <form method="post" enctype="multipart/form-data" action="importPlanilhaMedicosQADesempenhoResp.php">
                             <h5 class="mt-2">Arquivo CSV com colunas na seguinte ordem:</h5>
                             <h6 class="mt-2">1º CPF</h6>
-                            <h6 class="mt-2">2º CNES</h6>
-                            <h6 class="mt-2">3º INE</h6>
-                            <h6 class="mt-2">4º IBGE</h6>
+                            <h6 class="mt-2">2º IBGE</h6>
+                            <h6 class="mt-2">3º CNES</h6>
+                            <h6 class="mt-2">4º INE</h6>
                             <h6 class="mt-2">5º prenatal_consultas</h6>
                             <h6 class="mt-2">6º prenatal_sifilis_hiv</h6>
                             <h6 class="mt-2">7º cobertura_citopatologico</h6>

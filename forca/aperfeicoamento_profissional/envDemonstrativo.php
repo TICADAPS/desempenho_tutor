@@ -10,11 +10,12 @@ $ciclo = isset($_POST['ciclo']) ? $_POST['ciclo'] : '';
 // Verificar se os dados foram recebidos corretamente
 if ($ano !== '' && $ciclo !== '') {
     $sqlm = "select distinct m.nome, m.admissao, m.cargo, m.tipologia, m.uf, m.municipio, 
-    m.datacadastro, m.cpf, m.ibge, m.cnes, m.ine, ap.flagterminou, ap.flaginativo, 
+    m.datacadastro, m.cpf, m.ibge, m.cnes, m.ine, ap.flagterminou, 
+    IF(ap.flaginativo is null and ap.flagterminou is null,'NÃO ENTREGOU', ap.flaginativo) as flaginativo, 
     ap.pontuacao, ap.id 
-    from medico m inner join aperfeicoamentoprofissional ap on 
-    m.cpf = ap.cpf and m.ibge = ap.ibge and m.cnes = ap.cnes and m.ine = ap.ine 
-    where ap.ano = '$ano' and ap.ciclo = '$ciclo' and ap.flagterminou = 1 order by m.nome";
+    from medico m left join aperfeicoamentoprofissional ap on 
+    m.cpf = ap.cpf and m.ibge = ap.ibge and m.cnes = ap.cnes and m.ine = ap.ine  
+    where ap.ano = '$ano' and ap.ciclo = '$ciclo' order by m.nome";
     $querym = mysqli_query($conn, $sqlm) or die(mysqli_error($conn));
     $rsm = mysqli_fetch_array($querym);
     if($rsm){
@@ -43,7 +44,7 @@ if ($ano !== '' && $ciclo !== '') {
             $pontuacao = $rsm['pontuacao'];
             $smpontuacao += $pontuacao;
             $flaginativo = $rsm['flaginativo'];
-            $flaginativotxt = "";
+            $flaginativotxt = $flaginativo;
             if ($flaginativo === '1'){
                 $flaginativotxt = "INATIVO EM APERFEIÇOAMENTO PROFISSIONAL";
             }
@@ -85,7 +86,7 @@ if ($ano !== '' && $ciclo !== '') {
                     if($flaginativo === '1'){
                         $sqlup = "update demonstrativo set aperfeicoamento = '$smpontuacao', flaginativo = 1 where iddemonstrativo = '$iddemonstrativo'";
                         $queryup = mysqli_query($conn, $sqlup) or die(mysqli_error($conn));
-                    }else{
+                    }elseif($flaginativo !== 'NÃO ENTREGOU'){
                         $sqlup = "update demonstrativo set aperfeicoamento = '$smpontuacao', flaginativo = null where iddemonstrativo = '$iddemonstrativo'";
                         $queryup = mysqli_query($conn, $sqlup) or die(mysqli_error($conn));
                     }

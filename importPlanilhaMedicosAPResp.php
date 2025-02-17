@@ -99,17 +99,18 @@ if (!empty($_FILES["arquivo"]["tmp_name"])) {
             $query = mysqli_query($conn, $sql) or die(mysqli_error($conn));
             $nrrs = mysqli_num_rows($query);
             if($nrrs==0){
-                echo "$cpftratado - $nome - $ibge - $cnes - $ine - NÃO CADASTRADO NA TABELA MEDICO<br>";
-            }
-            $sql4 = "select id from aperfeicoamentoprofissional where cpf = '$cpftratado' and ibge = '$ibge' and cnes = '$cnes' and ine = '$ine' and ano = '$ano' and ciclo = '$ciclo' limit 1";
-            $query3 = mysqli_query($conn, $sql4) or die(mysqli_error($conn));
-            $nrrs3 = mysqli_num_rows($query3); 
-            if($nrrs3 === 0){
-                $sql2 = "insert into aperfeicoamentoprofissional (cpf,ibge,cnes,ine,ano,ciclo,dthrcadastro) "
-                        . "values ('$cpftratado','$ibge','$cnes','$ine','$ano','$ciclo','$dthrhoje')";
-                mysqli_query($conn, $sql2) or die(mysqli_error($conn));
+                echo "$cpftratado - $ibge - $cnes - $ine - NÃO CADASTRADO NA TABELA MEDICO<br>";
             }else{
-                echo "$cpftratado - $ibge - $cnes - $ine - Ano $ano e ciclo $ciclo cadastrado anteriormente<br>";
+                $sql4 = "select id from aperfeicoamentoprofissional where cpf = '$cpftratado' and ibge = '$ibge' and cnes = '$cnes' and ine = '$ine' and ano = '$ano' and ciclo = '$ciclo' limit 1";
+                $query3 = mysqli_query($conn, $sql4) or die(mysqli_error($conn));
+                $nrrs3 = mysqli_num_rows($query3); 
+                if($nrrs3 === 0){
+                    $sql2 = "insert into aperfeicoamentoprofissional (cpf,ibge,cnes,ine,ano,ciclo,dthrcadastro) "
+                            . "values ('$cpftratado','$ibge','$cnes','$ine','$ano','$ciclo','$dthrhoje')";
+                    mysqli_query($conn, $sql2) or die(mysqli_error($conn));
+                }else{
+                    echo "$cpftratado - $ibge - $cnes - $ine - Ano $ano e ciclo $ciclo cadastrado anteriormente<br>";
+                }
             }
         }
     }

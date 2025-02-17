@@ -53,16 +53,30 @@ if (!empty($_FILES["arquivo"]["tmp_name"])) {
             //captura cada item separado por vírgula na sequência
             $cpf = trim(utf8_encode($dados[0]));
             $ibge = trim(utf8_encode($dados[1]));
-            $ine = trim(utf8_encode($dados[2]));
-            $cnes = trim(utf8_encode($dados[3]));
-            $notasenior = trim(utf8_encode($dados[4]));
-            $autoavaliacao = trim(utf8_encode($dados[5]));
-            $notasispmb = trim(utf8_encode($dados[6]));
-            $ano = trim(utf8_encode($dados[7]));
-            $ciclo = trim(utf8_encode($dados[8]));
-            $periodo = trim(utf8_encode($dados[9]));
-            $incentivo = trim(utf8_encode($dados[10]));
+            $cnes = trim(utf8_encode($dados[2]));
+            $ine = trim(utf8_encode($dados[3]));
+            $prenatal_consultas = trim(utf8_encode($dados[4]));
+            $prenatal_sifilis_hiv= trim(utf8_encode($dados[5]));
+            $cobertura_citopatologico = trim(utf8_encode($dados[6]));
+            $hipertensao = trim(utf8_encode($dados[7]));
+            $diabetes = trim(utf8_encode($dados[8]));
+            $ano = trim(utf8_encode($dados[9]));
+            $periodo = trim(utf8_encode($dados[10]));
+            $ciclo = trim(utf8_encode($dados[11]));
             
+            $cpf = str_replace("'", "", $cpf);
+            $cnes = str_replace("'", "", $cnes);
+            $ine = str_replace("'", "", $ine);
+            $ibge = str_replace("'", "", $ibge);
+            $prenatal_consultas = str_replace("'", "", $prenatal_consultas);
+            $prenatal_sifilis_hiv = str_replace("'", "", $prenatal_sifilis_hiv);
+            $cobertura_citopatologico = str_replace("'", "", $cobertura_citopatologico);
+            $hipertensao = str_replace("'", "", $hipertensao);
+            $diabetes = str_replace("'", "", $diabetes);
+            $ano = str_replace("'", "", $ano);
+            $periodo = str_replace("'", "", $periodo);
+            $ciclo = str_replace("'", "", $ciclo);
+
             //formata a máscara do cpf (caso venha ou não com a máscara)
             $cpftratado = str_replace("-", "", $cpf);
             $cpftratado = str_replace(".", "", $cpftratado);
@@ -89,45 +103,31 @@ if (!empty($_FILES["arquivo"]["tmp_name"])) {
                 echo "<h6 class='mt-2'>Na linha $a, coluna 1: o conteúdo <label class='text-primary'>$cpftratado</label> inválido.</h6>";
                 return;
             }
-            
-            $notasenior = str_replace("'", "", $notasenior);
-            $notasenior = str_replace(",", ".", $notasenior);
-            
-            $notasispmb = str_replace("'", "", $notasispmb);
-            $notasispmb = str_replace(",", ".", $notasispmb);
-            
-            $autoavaliacao = str_replace("'", "", $autoavaliacao);
-            $autoavaliacao = strtoupper($autoavaliacao);
-               
-//            var_dump($a,$cpftratado,$nome,$notasenior,$notasispmb,$autoavaliacao);
-//            var_dump($a,$cpftratado,$nome,$admissao,$cargo,$tipologia,$uf,$municipio,$cnes,$ine,$ibge,
+//            echo "$a,$cpftratado,$nome,$admissao,$cargo,$tipologia,$uf,$municipio,$cnes,$ine,$ibge,
 //                    $prenatal_consultas,$prenatal_sifilis_hiv,$cobertura_citopatologico,
-//                    $hipertensao,$diabetes,$ano,$periodo,$datahoje);
-                        
+//                    $hipertensao,$diabetes,$ano,$periodo,$datahoje<br>";
+           
             $sql = "select * from medico where cpf = '$cpftratado' and ibge = '$ibge' and cnes = '$cnes' and ine = '$ine' limit 1";
-            $query = mysqli_query($conn, $sql) or die(mysql0i_error($conn));
+            $query = mysqli_query($conn, $sql) or die(mysqli_error($conn));
             $nrrs = mysqli_num_rows($query);
             if($nrrs > 0){
-//                echo "$a - passou aqui <br>";
-                $linha = mysqli_fetch_array($query);
-                do{
-                    $sqlq = "select * from demonstrativo where fkcpf = '$cpftratado' and fkibge = '$ibge' and fkcnes = '$cnes' and fkine = '$ine' and "
-                            . "fkincentivo = '$incentivo' and ano = '$ano' and ciclo = '$ciclo' and fkperiodo = '$periodo' limit 1";
-                    $queryq = mysqli_query($conn, $sqlq) or die(mysqli_error($conn));
-                    $nrrsq = mysqli_num_rows($queryq);
-                    if($nrrsq === 0){
-                        $sqliq = "insert into demonstrativo (ano,ciclo,competencias,aperfeicoamento,qualidade,desempenho,fkcpf,fkibge,fkcnes,fkine,fkincentivo,fkperiodo)"
-                                . "values ('$ano', '$ciclo', '$autoavaliacao','$notasenior', '$notasispmb', "
-                                . "null, '$cpftratado','$ibge','$cnes','$ine','$incentivo','$periodo')";
-                        mysqli_query($conn, $sqliq) or die(mysqli_error($conn));
-                        echo "$a - $cpftratado - $nome - $autoavaliacao - $notasenior - $notasispmb - CADASTRADO<br>";
-                    }
-                }while($linha = mysqli_fetch_array($query));
+                $sql4 = "select iddesempenho from desempenho where cpf = '$cpftratado' and ibge = '$ibge' and cnes = '$cnes' and ine = '$ine' and ano = '$ano' and idperiodo = '$periodo' limit 1";
+                $query3 = mysqli_query($conn, $sql4) or die(mysqli_error($conn));
+                $nrrs3 = mysqli_num_rows($query3); 
+                if($nrrs3 == 0){
+                    $sql2 = "insert into desempenho (ano,idperiodo,prenatal_consultas,prenatal_sifilis_hiv,cobertura_citopatologico,hipertensao,diabetes,cpf,ibge,cnes,ine,demonstrativo_ano,demonstrativo_ciclo) "
+                            . "values ('$ano','$periodo','$prenatal_consultas','$prenatal_sifilis_hiv','$cobertura_citopatologico','$hipertensao','$diabetes','$cpftratado','$ibge','$cnes','$ine','$ano','$ciclo')";
+                    mysqli_query($conn, $sql2) or die(mysqli_error($conn));
+                }else{
+                    echo "$cpftratado - $nome - $ibge - $cnes - $ine - Ano $ano e período $periodo cadastrado anteriormente<br>";
+                }
+            }else{
+                echo "$cpftratado - $ibge - $cnes - $ine - TUTOR NÃO CADASTRADO<br>";
             }
         }
     }
 }else{
     echo "Selecione o arquivo desejado.";
-    header ("Location: importPlanilhaMedicosCPAv.php");
+    header ("Location: importPlanilhaMedicosQADesempenho.php");
 }
 

@@ -11,7 +11,8 @@ $ciclo = isset($_POST['ciclo']) ? $_POST['ciclo'] : '';
 // Verificar se os dados foram recebidos corretamente
 if ($ano !== '' && $ciclo !== '') {
     $sqlm = "select distinct m.nome, m.admissao, m.cargo, m.tipologia, m.uf, m.municipio, 
-        m.datacadastro, m.cpf, m.ibge, m.cnes, m.ine, cp.flagenvio, cp.flaginativo 
+        m.datacadastro, m.cpf, m.ibge, m.cnes, m.ine, cp.flagenvio, 
+        IF(cp.flaginativo is null and cp.flagterminou is null,'NÃO ENTREGOU', cp.flaginativo) as flaginativo, 
         from medico m inner join competencias_profissionais cp on 
         m.cpf = cp.cpf and m.ibge = cp.ibge and m.cnes = cp.cnes and m.ine = cp.ine 
         where cp.ano = '$ano' and cp.ciclo = '$ciclo' order by m.nome";
@@ -45,7 +46,7 @@ if ($ano !== '' && $ciclo !== '') {
                 $flagenviotxt = "1";
             }
             $flaginativo = $rsm['flaginativo'];
-            $flaginativotxt = "";
+            $flaginativotxt = $flaginativo;
             if ($flaginativo === '1'){
                 $flaginativotxt = "INATIVO EM COMPETÊNCIAS PROFISSIONAIS";
             }
@@ -60,7 +61,7 @@ if ($ano !== '' && $ciclo !== '') {
                     if($flaginativo === '1'){
                         $sqlup = "update demonstrativo set competencias = '$flagenvio', flaginativo = 1 where iddemonstrativo = '$iddemonstrativo'";
                         $queryup = mysqli_query($conn, $sqlup) or die(mysqli_error($conn));
-                    }else{
+                    }elseif($flaginativo !== 'NÃO ENTREGOU'){
                         $sqlup = "update demonstrativo set competencias = '$flagenvio', flaginativo = null where iddemonstrativo = '$iddemonstrativo'";
                         $queryup = mysqli_query($conn, $sqlup) or die(mysqli_error($conn));
                     }

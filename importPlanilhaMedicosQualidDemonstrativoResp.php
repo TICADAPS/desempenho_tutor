@@ -52,27 +52,20 @@ if (!empty($_FILES["arquivo"]["tmp_name"])) {
             }
             //captura cada item separado por vírgula na sequência
             $cpf = trim(utf8_encode($dados[0]));
-            $cnes = trim(utf8_encode($dados[1]));
-            $ine = trim(utf8_encode($dados[2]));
-            $ibge = trim(utf8_encode($dados[3]));
-            $prenatal_consultas = trim(utf8_encode($dados[4]));
-            $prenatal_sifilis_hiv= trim(utf8_encode($dados[5]));
-            $cobertura_citopatologico = trim(utf8_encode($dados[6]));
-            $hipertensao = trim(utf8_encode($dados[7]));
-            $diabetes = trim(utf8_encode($dados[8]));
-            $ano = trim(utf8_encode($dados[9]));
-            $periodo = trim(utf8_encode($dados[10]));
-            $ciclo = trim(utf8_encode($dados[11]));
+            $ibge = trim(utf8_encode($dados[1]));
+            $cnes = trim(utf8_encode($dados[2]));
+            $ine = trim(utf8_encode($dados[3]));
+            $q = trim(utf8_encode($dados[4]));
+            $ano = trim(utf8_encode($dados[5]));
+            $periodo = trim(utf8_encode($dados[6]));
+            $ciclo = trim(utf8_encode($dados[7]));
             
             $cpf = str_replace("'", "", $cpf);
             $cnes = str_replace("'", "", $cnes);
             $ine = str_replace("'", "", $ine);
             $ibge = str_replace("'", "", $ibge);
-            $prenatal_consultas = str_replace("'", "", $prenatal_consultas);
-            $prenatal_sifilis_hiv = str_replace("'", "", $prenatal_sifilis_hiv);
-            $cobertura_citopatologico = str_replace("'", "", $cobertura_citopatologico);
-            $hipertensao = str_replace("'", "", $hipertensao);
-            $diabetes = str_replace("'", "", $diabetes);
+            $q = str_replace("'", "", $q);
+            $q = str_replace(",", ".", $q);
             $ano = str_replace("'", "", $ano);
             $periodo = str_replace("'", "", $periodo);
             $ciclo = str_replace("'", "", $ciclo);
@@ -111,12 +104,12 @@ if (!empty($_FILES["arquivo"]["tmp_name"])) {
             $query = mysqli_query($conn, $sql) or die(mysqli_error($conn));
             $nrrs = mysqli_num_rows($query);
             if($nrrs > 0){
-                $sql4 = "select iddesempenho from desempenho where cpf = '$cpftratado' and ibge = '$ibge' and cnes = '$cnes' and ine = '$ine' and ano = '$ano' and idperiodo = '$periodo' limit 1";
+                $sql4 = "select iddemonstrativo from demonstrativo where fkcpf = '$cpftratado' and fkibge = '$ibge' and fkcnes = '$cnes' and fkine = '$ine' and ano = '$ano' and ciclo = '$ciclo' limit 1";
                 $query3 = mysqli_query($conn, $sql4) or die(mysqli_error($conn));
                 $nrrs3 = mysqli_num_rows($query3); 
                 if($nrrs3 == 0){
-                    $sql2 = "insert into desempenho (ano,idperiodo,prenatal_consultas,prenatal_sifilis_hiv,cobertura_citopatologico,hipertensao,diabetes,cpf,ibge,cnes,ine,demonstrativo_ano,demonstrativo_ciclo) "
-                            . "values ('$ano','$periodo','$prenatal_consultas','$prenatal_sifilis_hiv','$cobertura_citopatologico','$hipertensao','$diabetes','$cpftratado','$ibge','$cnes','$ine','$ano','$ciclo')";
+                    $sql2 = "insert into demonstrativo (ano,ciclo,competencias,aperfeicoamento,qualidade,fkcpf,fkibge,fkcnes,fkine,fkincentivo,fkperiodo) "
+                            . "values ('$ano','$ciclo','0','0','$q','$cpftratado','$ibge','$cnes','$ine','1','$periodo')";
                     mysqli_query($conn, $sql2) or die(mysqli_error($conn));
                 }else{
                     echo "$cpftratado - $nome - $ibge - $cnes - $ine - Ano $ano e período $periodo cadastrado anteriormente<br>";
@@ -128,6 +121,6 @@ if (!empty($_FILES["arquivo"]["tmp_name"])) {
     }
 }else{
     echo "Selecione o arquivo desejado.";
-    header ("Location: importPlanilhaMedicos.php");
+    header ("Location: importPlanilhaMedicosQualidDemonstrativo.php");
 }
 

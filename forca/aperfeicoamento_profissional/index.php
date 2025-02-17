@@ -707,7 +707,7 @@ $contt = $continat = 0;
                                     <button type="button" id="btenvemailall" class="btn btn-outline-warning shadow-sm border-warning text-dark" data-toggle="modal" data-target="#modalEmailAll"><b><i class="fas fa-mail-bulk"></i>&nbsp; Enviar E-Mail aos pendentes</b></button>
                                 </div>-->
                                 <div class="col-sm-3">
-                                    <button type="button" id="btenvemailall" class="btn btn-outline-primary shadow-sm border-primary" data-toggle="modal" data-target="#modalEnvDemonstrativo"><b><i class="far fa-file-excel"></i>&nbsp; Relatório Final</b></button>
+                                    <button type="button" id="modalEnvDemonstrativo" class="btn btn-outline-primary shadow-sm border-primary" data-toggle="modal" data-target="#modalEnvDemonstrativo"><b><i class="far fa-file-excel"></i>&nbsp; Relatório Final</b></button>
                                 </div>
                                 <?php } ?>
                             </div>
@@ -857,7 +857,7 @@ $contt = $continat = 0;
                 document.getElementById("loading").style.display = "block";
                 let ano = $('#ano').val();
                 let ciclo = $('#ciclo').val();
-                console.log(ano,ciclo);
+                //console.log(ano,ciclo);
                 envDemonstrativo(ano,ciclo);
                 var i = setInterval(function () {
                     clearInterval(i);

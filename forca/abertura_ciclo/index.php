@@ -214,6 +214,18 @@ $perfil = '3';
                                               <option value="1">1º CICLO</option>
                                               <option value="2">2º CICLO</option>
                                               <option value="3">3º CICLO</option>
+                                              <option value="4">4º CICLO</option>
+                                              <option value="5">5º CICLO</option>
+                                              <option value="6">6º CICLO</option>
+                                              <option value="7">7º CICLO</option>
+                                              <option value="8">8º CICLO</option>
+                                              <option value="9">9º CICLO</option>
+                                              <option value="10">10º CICLO</option>
+                                              <option value="11">11º CICLO</option>
+                                              <option value="12">12º CICLO</option>
+                                              <option value="13">13º CICLO</option>
+                                              <option value="14">14º CICLO</option>
+                                              <option value="15">15º CICLO</option>
                                           </select>
                                       </div>
                                       <div class="col-md-12"><b>DESCRIÇÃO: </b></div>
@@ -222,11 +234,11 @@ $perfil = '3';
                                       </div>
                                       <div class="col-md-12"><b>INÍCIO: </b></div>
                                       <div class="col-md-12">
-                                          <input type="date" min="<?= $dthoje ?>" class="form-control" name="dtinicio" id="dtinicio" />
+                                          <input type="date" class="form-control" name="dtinicio" id="dtinicio" />
                                       </div>
                                       <div class="col-md-12"><b>FIM: </b></div>
                                       <div class="col-md-12">
-                                          <input type="date" min="<?= $dthoje ?>" class="form-control" name="dtfim" id="dtfim" />
+                                          <input type="date" class="form-control" name="dtfim" id="dtfim" />
                                       </div>
                                       <div class="col-md-12 mt-4">
                                           <button type="submit" class="btn btn-info form-control shadow-sm border-white" name="btenv">SALVAR NOVO CICLO &nbsp;<i class="fas fa-save"></i></button>

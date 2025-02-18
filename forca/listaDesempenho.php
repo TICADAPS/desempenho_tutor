@@ -48,7 +48,7 @@ if($rsp){
     }while($rsp = mysqli_fetch_array($queryp));
 }
 $sql = "select distinct m.nome, m.admissao, m.cargo, m.tipologia, m.uf, m.municipio, m.datacadastro, m.cpf, m.ibge, m.cnes,
- m.ine, ivs.descricao as ivs, p.descricaoperiodo, de.iddemonstrativo, de.ano, de.ciclo, de.competencias, de.aperfeicoamento, de.qualidade 
+ m.ine, ivs.descricao as ivs, p.descricaoperiodo, de.iddemonstrativo, de.ano, de.ciclo, de.competencias, de.aperfeicoamento, de.qualidade, de.flaginativo 
  from medico m inner join demonstrativo de on de.fkcpf = m.cpf and de.fkibge = m.ibge and de.fkcnes = m.cnes and de.fkine = m.ine 
  inner join periodo p on p.idperiodo = de.fkperiodo 
  left join ivs on m.fkivs = ivs.idivs 
@@ -61,7 +61,7 @@ $rscpf = false;
 if ($nrrs > 0) {
     $rscpf = true;
 }
-$contt = $conta = $contb = 0;
+$contt = $conta = $contb = $continat = 0;
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -322,6 +322,10 @@ $contt = $conta = $contb = 0;
                                                         $ibge = $rs['ibge'];
                                                         $cnes = $rs['cnes'];
                                                         $ine = $rs['ine'];
+                                                        $flaginativo = '';
+                                                        if ($rs['flaginativo'] !== null){
+                                                            $flaginativo = $rs['flaginativo'];
+                                                        }
                                                         $ivs = strtoupper($rs['ivs']);
 //                                                        $datacadastro = vemdata($rs['datacadastro']);
                                                         $sql2 = "select p.idperiodo, p.descricaoperiodo, d.prenatal_consultas, d.prenatal_sifilis_hiv, d.cobertura_citopatologico, 
@@ -421,6 +425,11 @@ $contt = $conta = $contb = 0;
                                                         $faltamtext = number_format($faltam, 2, ',', '.');
                                             ?>
                                             <tr>
+                                            <?php if($flaginativo === '1'){ 
+                                                    $continat++;
+                                                ?>
+                                                <td class="text-danger">INATIVO</td>
+                                            <?php }else{ ?>
                                                 <?php if($perfil === '3' && $nivel === '1'){ ?>
                                                 <td>
                                                     <?php
@@ -635,6 +644,7 @@ $contt = $conta = $contb = 0;
                                                    <?php }?>
                                                 </td>
                                                 <?php } ?>
+                                            <?php } ?>
                                                 <td><?= $nome ?></td>
                                                 <td><?= $cpf ?></td>
                                                 <td><?= $tipologia ?></td>
@@ -667,6 +677,14 @@ $contt = $conta = $contb = 0;
                                 </div>
                             </fieldset>
                             <div class="row">
+                                <div class="col-sm-12">
+                                    <label class="">Total de Tutores Ativos: </label>
+                                    <label class="text-info"><?= ($contt - $continat) ?></label>
+                                </div>
+                                <div class="col-sm-12">
+                                    <label class="">Total de Tutores Inativos: </label>
+                                    <label class="text-info"><?= $continat ?></label>
+                                </div>
                                 <div class="col-sm-12">
                                     <label class="">Total de Tutores: </label>
                                     <label class="text-info"><?= $contt ?></label>
